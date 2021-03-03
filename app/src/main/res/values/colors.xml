@@ -11,5 +11,14 @@
     <color name="whiteForBackground">#FFFFFF</color>
     <color name="blackForText">#4a4a4a</color>
     <color name="redForText">#d9534f</color>
+    <color name="gray">#888484</color>
+
+    <!-- 프로젝트 컬러-->
+    <color name="orange">#FFAE2A</color>
+    <color name="white_orange">#FCBC71</color>
+    <color name="white_red">#FF8484</color>
+    <color name="purple">#AB93FA</color>
+    <color name="blue">#7CC3FF</color>
+    <color name="green">#7ED391</color>
 
 </resources>

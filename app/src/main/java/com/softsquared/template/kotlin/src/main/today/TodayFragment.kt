@@ -20,6 +20,8 @@ class TodayFragment :
         // 더미데이터로 리사이클러뷰 테스트
         for(i in 1..5){
             memoList.add(MemoItem(i,"202021",i,"제목","내용",false,"BLUE"))
+            memoList.add(MemoItem(i,"202021",i,"제목","내용",true,"BLUE"))
+
         }
 
         // 어댑터

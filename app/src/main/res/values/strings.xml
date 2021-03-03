@@ -5,19 +5,25 @@
     <!-- 도메인명_컴포넌트함축어_용도(=목적) -->
 
     <!-- Common -->
+    <string name="none">없음</string>
+    <string name="save">저장</string>
+    <string name="cancel">취소</string>
+
 
     <!-- Main -->
-    <string name="main_btm_nav_home_title">홈</string>
-    <string name="main_btm_nav_my_page_title">마이페이지</string>
 
-    <!-- Home -->
-    <string name="home_btn_try_get_http_method">GET API 보내기</string>
-    <string name="home_btn_try_post_http_method">POST API 보내기</string>
-    <string name="home_et_id">아이디를 입력하세요.</string>
-    <string name="home_et_pw">비밀번호를 입력하세요.</string>
 
-    <!-- MyPage -->
-    <string name="my_page_tv_counter">%1d 번 눌렀습니다.</string>
-    <string name="my_page_btn_counting_number">숫자 세기</string>
+    <!--Today -->
+    <string name="check">확인</string>
+
+
+    <!--Add Memo -->
+    <string name="add_memo_write_title">제목 입력</string>
+    <string name="add_memo_add_schedule">오늘 일정 추가하기</string>
+    <string name="add_memo_add_memo">일정 메모하기</string>
+    <string name="add_memo_setting_time">시간 설정</string>
+    <string name="add_memo_time">시간</string>
+    <string name="add_memo_alarm">알람</string>
+    <string name="add_memo_repeat">반복</string>
 
 </resources>

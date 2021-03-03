@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#fcfcfc</color>
-    <color name="colorPrimaryDark">#889dfe</color>
-    <color name="colorAccent">#889dfe</color>
+    <color name="colorPrimaryDark">#D7D6D7</color>
+    <color name="colorAccent">#FFAE2A</color>
 
     <!-- 기본 -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <!-- 스테이터스 바-->
+    <color name="colorForStatusBar">#D7D6D7</color>
     <color name="whiteForBackground">#FFFFFF</color>
     <color name="blackForText">#4a4a4a</color>
     <color name="redForText">#d9534f</color>
     <color name="gray">#888484</color>
+
+    <color name="transparent_black">#77000000</color>
+    <color name="light_gray">#F9FAFC</color>
 
     <!-- 프로젝트 컬러-->
     <color name="orange">#FFAE2A</color>
@@ -20,5 +25,8 @@
     <color name="purple">#AB93FA</color>
     <color name="blue">#7CC3FF</color>
     <color name="green">#7ED391</color>
+
+    <color name="stroke_gray">#B0B7C3</color>
+    <color name="button_gray">#E7E8ED</color>
 
 </resources>

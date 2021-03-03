@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.today.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,12 @@ class MemoAdapter(var memoList:MutableList<MemoItem>):RecyclerView.Adapter<MemoA
 
     override fun onBindViewHolder(holder: MemoAdapter.MemoViewHolder, position: Int) {
         holder.binding.todayMemo = memoList[position]
+        val memo = memoList[position]
+        if(memo.isChecked){
+            holder.binding.todayItemBtnMemoCheck.setBackgroundResource(R.drawable.background_btn_acttive)
+        }else{
+            holder.binding.todayItemBtnMemoCheck.setBackgroundResource(R.drawable.background_check_button_passive)
+        }
 
     }
 

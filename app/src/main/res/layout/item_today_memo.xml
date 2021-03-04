@@ -15,6 +15,8 @@
     android:layout_height="150dp">
 
     <TextView
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:id="@+id/textView2"

@@ -49,6 +49,22 @@
         app:layout_constraintTop_toBottomOf="@+id/main_tab_layout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:tint="@color/white"
+        android:backgroundTint="@color/light_dark"
+        android:id="@+id/main_btn_action_sub2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@color/black"
+        android:visibility="invisible"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/main_btn_action_sub"
+        app:layout_constraintEnd_toEndOf="@+id/main_btn_action_sub"
+        app:layout_constraintStart_toStartOf="@+id/main_btn_action_sub" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:tint="@color/white"
+        android:backgroundTint="@color/light_dark"
         android:visibility="invisible"
         app:fabSize="normal"
         android:background="@color/black"
@@ -62,11 +78,11 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:tint="@color/white"
         app:fabSize="normal"
         app:borderWidth="0dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/light_dark"
         android:src="@drawable/ic_sharp_add_24"
-        android:background="@color/black"
         android:id="@+id/main_btn_action_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

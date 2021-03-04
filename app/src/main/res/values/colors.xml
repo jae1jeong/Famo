@@ -28,5 +28,6 @@
 
     <color name="stroke_gray">#B0B7C3</color>
     <color name="button_gray">#E7E8ED</color>
+    <color name="light_dark">#32363C</color>
 
 </resources>

@@ -6,6 +6,6 @@ data class MemoItem (
     val createAtDay:Int,
     val title:String,
     val description:String,
-    val isChecked:Boolean,
+    var isChecked:Boolean,
     val colorState:String
         )

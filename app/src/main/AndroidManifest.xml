@@ -28,10 +28,35 @@
             android:name=".src.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--Auth-->
+
+        <!--Information-->
         <activity
-            android:name=".src.auth.InformationActivity"
+            android:name=".src.auth.information.InformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--Login_Information-->
+        <activity
+        android:name=".src.auth.loginInformation.LoginInformation"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- Login -->
+        <activity
+            android:name=".src.auth.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- SignUp -->
+        <activity
+            android:name=".src.auth.signup.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+
     </application>
 
 </manifest>

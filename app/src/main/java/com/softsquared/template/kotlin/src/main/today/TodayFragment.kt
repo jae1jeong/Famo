@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoSwipeHelper
 import com.softsquared.template.kotlin.src.main.today.adapter.SwipeButton
@@ -36,6 +38,17 @@ class TodayFragment :
         binding.todayRecyclerView.apply {
             layoutManager = mLayoutManager
             adapter = todayMemoAdapter
+        }
+
+        binding.todayImageNoItem.setOnClickListener {
+            (activity as MainActivity).showBottomAddScheduleSheetDialog()
+
+        }
+        // 메모가 없을 경우 메모가 없는 뷰 나타나게 하기, 있으면 GONE 처리
+        if(todayMemoAdapter.itemCount > 0){
+            binding.todayFrameLayoutNoItem.visibility = View.GONE
+        }else{
+            binding.todayFrameLayoutNoItem.visibility = View.VISIBLE
         }
 
         // 리사이클러뷰 아이템 스와이프

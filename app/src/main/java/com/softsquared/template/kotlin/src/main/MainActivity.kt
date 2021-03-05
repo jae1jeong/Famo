@@ -14,7 +14,7 @@ import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
-import com.softsquared.template.kotlin.src.main.schedule.ScheduleFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -33,7 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val adapter = MainPagerAdapter(supportFragmentManager)
         adapter.addFragment(MonthlyFragment(),"월간")
         adapter.addFragment(TodayFragment(),"오늘")
-        adapter.addFragment(ScheduleFragment(),"일정 찾기")
+        adapter.addFragment(ScheduleFindFragment(),"일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 
@@ -46,8 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         // FAB 글쓰기 버튼
         binding.mainBtnActionSub.setOnClickListener {
-            val sheet = AddMemoFragment()
-            sheet.show(supportFragmentManager,"AddMemoFragment")
+            showBottomAddScheduleSheetDialog()
         }
 
         // 다른 부분을 눌렀을때 FAB 버튼 비활성화
@@ -88,4 +87,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
 
+    // 프래그먼트에서도 BottomSheetDialog를 호출할 수 있게 메서드로 작성
+    fun showBottomAddScheduleSheetDialog(){
+        val sheet = AddMemoFragment()
+        sheet.show(supportFragmentManager,"AddMemoFragment")
+    }
 }

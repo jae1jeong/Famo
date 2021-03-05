@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:text="@string/sign_up_text"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:hint="@string/sign_up_text_id"
+        android:padding="10dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/sign_up_edit_id"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/light_gray"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <EditText
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:hint="@string/sign_up_text_password"
+        android:layout_marginTop="20dp"
+        android:id="@+id/sign_up_edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/light_gray"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_id"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <EditText
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:hint="@string/sign_up_text_re_password"
+        android:layout_marginTop="20dp"
+        android:id="@+id/sign_up_edit_re_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/light_gray"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_password" />
+
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/sign_up_edit_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/light_gray"
+        android:hint="@string/login_text_nickname"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_re_password" />
+
+
+    <Button
+        android:id="@+id/sign_up_btn_sign_up"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:background="@drawable/background_btn"
+        android:text="@string/sign_up_text"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_nickname"
+        tools:layout_editor_absoluteX="15dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

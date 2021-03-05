@@ -15,7 +15,36 @@
 
     <!--Today -->
     <string name="check">확인</string>
+    <string name="today_text_no_item">아직 작성한 메모가 없습니다.\n메모를 작성해주세요</string>
 
+    <!--Auth-->
+    <string name="information1_title">빠르게 일정을 추가하세요</string>
+    <string name="information2_title">친구들과 빠르게 일정을 공유하세요</string>
+    <string name="information3_title">필요한 일정을 쉽게 찾으세요</string>
+    <string name="information1_description">메인화면에서 일정을 바로 작성하고\n체크하여 쉽고 빠르게 관리할 수 있어요</string>
+    <string name="information2_description">친구와 일정을 공유하고 싶다면\n 친구를 추가하여 빠르게 일정을 공유해요</string>
+    <string name="information3_description">원하는 일정을 검색으로 찾을 수 있고\n카테고리로 분류하여 정리할 수 있어요</string>
+
+    <!--Login -->
+    <string name="login_text">로그인</string>
+    <string name="login_text_id">아이디</string>
+    <string name="login_text_password">비밀번호</string>
+
+    <!--SignUp -->
+    <string name="sign_up_text">회원가입</string>
+    <string name="sign_up_text_id">아이디</string>
+    <string name="sign_up_text_password">비밀번호</string>
+    <string name="sign_up_text_re_password">비밀번호 확인</string>
+    <string name="login_text_nickname">닉네임</string>
+
+    <!--LoginInfo-->
+    <string name="login_info_title">쉽고 빠른 메모의 시작!</string>
+    <string name="login_info_btn_login">FAMO에 로그인하기</string>
+    <string name="login_info_sign_up"><u>FAMO에 가입하기</u></string>
+    <string name="login_info_find_id_password"><u>아이디/비밀번호 찾기</u></string>
+
+
+    <string name="information_get_start">시작하기</string>
 
     <!--Add Memo -->
     <string name="add_memo_write_title">제목 입력</string>
@@ -26,4 +55,27 @@
     <string name="add_memo_alarm">알람</string>
     <string name="add_memo_repeat">반복</string>
 
+    <!--My Page -->
+    <string name="my_page_tv_title">내 정보</string>
+    <string name="my_page_tv_name">님</string>
+    <string name="my_page_tv_schedule">기말고사까지 D-20일\n남았어요!</string>
+    <string name="my_page_tv_complete_schedule">해낸일정</string>
+    <string name="my_page_tv_remain_schedule">남은일정</string>
+    <string name="my_page_tv_all_schedule">전체일정</string>
+    <string name="my_page_tv_schedule_achievement_rat">일정 달성률</string>
+    <string name="my_page_tv_info_setting">정보 및 설정</string>
+    <string name="my_page_tv_frined_add">친구 추가</string>
+    <string name="my_page_tv_allim_setting">알림 설정</string>
+
+    <string name="category_edit_tv_title">카테고리 편집</string>
+
+    <!--Find Schedule -->
+    <string name="schedule_find_et_search_hint">검색어를 입력해주세요.</string>
+    <string name="schedule_find_tag1">학교</string>
+    <string name="schedule_find_tv_today">오늘의 일정이</string>
+    <string name="schedule_find_tv_today2">개 남았어요!</string>
+    <string name="schedule_find_tv_bookmark">즐겨찾기</string>
+    <string name="schedule_find_tv_lately">최근</string>
+    <string name="schedule_find_tv_detail_see">자세히 보러가기</string>
+    <string name="schedule_find_tv_whole_schedule">전체일정</string>
 </resources>

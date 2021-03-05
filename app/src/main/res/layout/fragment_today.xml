@@ -54,7 +54,40 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <FrameLayout
+                android:layout_marginTop="50dp"
+                android:id="@+id/today_frame_layout_no_item"
+                android:layout_marginHorizontal="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:id="@+id/today_image_no_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/today_memo_write"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/today_text_no_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/today_text_no_item"
+                        android:textColor="@color/text_gray"
+                        android:textSize="18sp"
+                        app:layout_constraintTop_toBottomOf="@+id/today_image_no_item" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/today_recycler_view"
                 android:layout_width="match_parent"

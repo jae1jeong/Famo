@@ -8,6 +8,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="view_color">#E1DDDD</color>
     <!-- 스테이터스 바-->
     <color name="colorForStatusBar">#D7D6D7</color>
     <color name="whiteForBackground">#FFFFFF</color>
@@ -17,6 +18,7 @@
 
     <color name="transparent_black">#77000000</color>
     <color name="light_gray">#F9FAFC</color>
+    <color name="text_gray">#AEB7C4</color>
 
     <!-- 프로젝트 컬러-->
     <color name="orange">#FFAE2A</color>
@@ -29,5 +31,7 @@
     <color name="stroke_gray">#B0B7C3</color>
     <color name="button_gray">#E7E8ED</color>
     <color name="light_dark">#32363C</color>
+
+
 
 </resources>

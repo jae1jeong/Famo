@@ -8,11 +8,19 @@
             type="com.softsquared.template.kotlin.src.main.today.models.MemoItem" />
     </data>
 
+    <androidx.cardview.widget.CardView
+        android:layout_marginHorizontal="1dp"
+        app:cardCornerRadius="20dp"
+        android:background="@drawable/background_item_memo"
+        android:layout_marginBottom="15dp"
+        app:cardElevation="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        >
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:background="@drawable/background_item_memo"
-    android:layout_marginBottom="15dp"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="match_parent"
+    >
 
     <TextView
         android:textStyle="bold"
@@ -70,5 +78,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 </layout>

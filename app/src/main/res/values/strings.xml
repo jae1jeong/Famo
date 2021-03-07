@@ -65,7 +65,21 @@
     <string name="my_page_tv_schedule_achievement_rat">일정 달성률</string>
     <string name="my_page_tv_info_setting">정보 및 설정</string>
     <string name="my_page_tv_frined_add">친구 추가</string>
-    <string name="my_page_tv_allim_setting">알림 설정</string>
+    <string name="my_page_tv_help">도움말</string>
+    <string name="my_page_tv_notice">공지사항</string>
+    <string name="my_page_tv_terms_of_service">이용약관</string>
+
+    <string name="my_page_edit_tv_title">프로필 편집</string>
+    <string name="my_page_edit_tv_phote_update">프로필 사진 변경</string>
+    <string name="my_page_edit_tv_name">Name</string>
+    <string name="my_page_edit_tv_top_ment">상단 멘트 설정</string>
+    <string name="my_page_edit_tv_account_setting">계정 설정</string>
+    <string name="my_page_edit_tv_logout">로그아웃</string>
+    <string name="my_page_edit_tv_account_delete">탈퇴 및 계정 삭제</string>
+    <string name="my_page_edit_tv_dday_setting">디데이 설정</string>
+    <string name="my_page_edit_et_top_ment_hint">상단 멘트 작성</string>
+    <string name="my_page_edit_tv_dday">까지</string>
+    <string name="my_page_edit_tv_dday2">일 남았어요!</string>
 
     <string name="category_edit_tv_title">카테고리 편집</string>
 
@@ -78,4 +92,5 @@
     <string name="schedule_find_tv_lately">최근</string>
     <string name="schedule_find_tv_detail_see">자세히 보러가기</string>
     <string name="schedule_find_tv_whole_schedule">전체일정</string>
+
 </resources>

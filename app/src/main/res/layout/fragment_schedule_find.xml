@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/schedule_find_linear">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="100dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
@@ -26,8 +27,8 @@
                 android:layout_height="130dp">
 
                 <ImageView
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
                     android:layout_above="@+id/schedule_find_btn"
                     android:background="@drawable/schedule_find_btn" />
 
@@ -50,30 +51,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </androidx.recyclerview.widget.RecyclerView>
+<!--                <android.widget.Button-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:background="@drawable/background_schedule_find_tag_btn"-->
+<!--                    android:text="@string/schedule_find_tag1"-->
+<!--                    android:textSize="18dp" />-->
+
+<!--                <android.widget.Button-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_marginLeft="8dp"-->
+<!--                    android:background="@drawable/background_schedule_find_tag_btn"-->
+<!--                    android:text="@string/schedule_find_tag1"-->
+<!--                    android:textSize="18dp" />-->
+
+<!--                <android.widget.Button-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_marginLeft="8dp"-->
+<!--                    android:background="@drawable/background_schedule_find_tag_btn"-->
+<!--                    android:text="@string/schedule_find_tag1"-->
+<!--                    android:textSize="18dp" />-->
 
                 <android.widget.Button
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/background_schedule_find_tag_btn"
-                    android:text="@string/schedule_find_tag1"
-                    android:textSize="18dp" />
-
-                <android.widget.Button
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
+                    android:id="@+id/schedule_find_btn_category"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:background="@drawable/category_edit_plus"
                     android:layout_marginLeft="8dp"
-                    android:background="@drawable/background_schedule_find_tag_btn"
-                    android:text="@string/schedule_find_tag1"
-                    android:textSize="18dp" />
-
-                <android.widget.Button
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/background_schedule_find_tag_btn"
-                    android:text="@string/schedule_find_tag1"
-                    android:textSize="18dp" />
+                    />
 
             </LinearLayout>
 
@@ -167,51 +182,105 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/schedule_find_tv_bookmark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
                         android:text="@string/schedule_find_tv_bookmark"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/schedule_find_tv_lately"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:text="@string/schedule_find_tv_lately"
                         android:textSize="18dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-                        app:layout_constraintStart_toEndOf="@+id/textView4"
-                        app:layout_constraintTop_toTopOf="@+id/textView4" />
+                        app:layout_constraintBottom_toBottomOf="@+id/schedule_find_tv_bookmark"
+                        app:layout_constraintStart_toEndOf="@+id/schedule_find_tv_bookmark"
+                        app:layout_constraintTop_toTopOf="@+id/schedule_find_tv_bookmark" />
 
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/view_color"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView_part"
+                    <RelativeLayout
+                        android:id="@+id/schedule_find_view_tap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/view">
+                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_tv_bookmark">
 
-                    </androidx.recyclerview.widget.RecyclerView>
+                        <View
+                            android:id="@+id/schedule_find_bookmark_view"
+                            android:layout_width="90dp"
+                            android:layout_height="2dp"
+                            android:background="@color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:layout_editor_absoluteY="57dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="14dp"
+                            android:visibility="visible"/>
+
+                        <View
+                            android:id="@+id/schedule_find_lately_view"
+                            android:layout_width="90dp"
+                            android:layout_height="2dp"
+                            android:background="@color/view_color"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:layout_editor_absoluteY="57dp"
+                            android:layout_marginTop="14dp"
+                            android:layout_toRightOf="@+id/schedule_find_bookmark_view"
+                            android:visibility="visible"/>
+
+                        <View
+                            android:id="@+id/schedule_find_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@color/view_color"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            android:layout_toRightOf="@id/schedule_find_lately_view"/>
+
+                    </RelativeLayout>
+
+                    <FrameLayout
+                        android:id="@+id/schedule_find_fragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap">
+
+                    </FrameLayout>
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerView_bookmark"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginEnd="20dp"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap"-->
+<!--                        >-->
+<!--                    </androidx.recyclerview.widget.RecyclerView>-->
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerView_lately"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginEnd="20dp"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap">-->
+<!--                    </androidx.recyclerview.widget.RecyclerView>-->
 
                     <View
                         android:id="@+id/view2"
@@ -223,28 +292,37 @@
                         android:background="@color/view_color"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recyclerView_part" />
+                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_fragment" />
 
-                    <TextView
-                        android:id="@+id/aa"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/schedule_find_btn_detail"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/schedule_find_tv_detail_see"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/view2" />
+                        app:layout_constraintTop_toBottomOf="@+id/view2">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:background="@drawable/my_info_setting_arrow"
-                        app:layout_constraintBottom_toBottomOf="@+id/aa"
-                        app:layout_constraintStart_toEndOf="@+id/aa"
-                        app:layout_constraintTop_toTopOf="@+id/aa" />
+                        <TextView
+                            android:id="@+id/aa"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="@string/schedule_find_tv_detail_see"
+                            android:layout_centerVertical="true"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:background="@drawable/my_info_setting_arrow"
+                            android:layout_toRightOf="@+id/aa"
+                            android:layout_centerVertical="true"/>
+
+                    </RelativeLayout>
+
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

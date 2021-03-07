@@ -24,8 +24,9 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/my_page_btn_back"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/my_info_back_btn" />
 
@@ -47,8 +48,8 @@
 
                 <ImageView
                     android:id="@+id/my_page_imt_circle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
                     android:layout_marginEnd="261dp"
                     android:background="@drawable/my_page_img"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -56,8 +57,9 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/my_page_img"
+                    android:layout_width="93dp"
+                    android:layout_height="93dp"
                     android:background="@drawable/my_page_img2"
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_imt_circle"
                     app:layout_constraintEnd_toEndOf="@+id/my_page_imt_circle"
@@ -66,8 +68,8 @@
 
                 <ImageView
                     android:id="@+id/my_page_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
                     android:background="@drawable/my_info_img_setting2"
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_img_btn"
                     app:layout_constraintEnd_toEndOf="@+id/my_page_img_btn"
@@ -76,8 +78,8 @@
 
                 <ImageView
                     android:id="@+id/my_page_img_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginEnd="257dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/my_info_img_setting"
@@ -297,7 +299,59 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_page_tv_allim_setting"
+                    android:text="@string/my_page_tv_help"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_info_setting_arrow"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/view_color"
+                android:layout_marginTop="20dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_tv_notice"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_info_setting_arrow"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/view_color"
+                android:layout_marginTop="20dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_tv_terms_of_service"
                     android:textSize="20dp"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>

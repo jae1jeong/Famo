@@ -1,27 +1,37 @@
 package com.softsquared.template.kotlin.src.main
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
+import com.softsquared.template.kotlin.src.main.category.CategoryFragment.Companion.newInstance
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
+import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
+import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     private var clicked = false // FAB 버튼 변수
     // FAB 버튼 애니메이션
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim) }
+
+
+
 
 
 
@@ -36,7 +46,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         adapter.addFragment(ScheduleFindFragment(),"일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-
 
 
         // FAB 메인 액션 버튼
@@ -56,8 +65,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }
 
+        //유저 이미지 클릭 시 마이페이지로 이동
+        binding.mainImageProfile.setOnClickListener {
+            binding.mainFrameLayout.visibility = View.VISIBLE
+            val intent = Intent(this,MyPageActivity::class.java)
+            startActivity(intent)
+//            supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,MyPageFragment())
+//                    .commit()
+        }
 
+//         val fragmentTransaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+//        fragmentTransaction.add(R.id.main_frame_layout, ScheduleFindFragment.newInstance()).commit();
     }
+
 
     // FAB 액션 버튼 메서드
     private fun onActionButtonClicked() {
@@ -92,4 +112,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val sheet = AddMemoFragment()
         sheet.show(supportFragmentManager,"AddMemoFragment")
     }
+
+    fun replaceFragment(fragment : Fragment) {
+        binding.mainFrameLayout.visibility = View.VISIBLE
+        binding.mainTabLayout.visibility = View.GONE
+        binding.mainImageProfile.visibility = View.GONE
+        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,fragment)
+                    .commitNowAllowingStateLoss()
+//        val fragmentManager : FragmentManager = supportFragmentManager;
+//        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.main_frame_layout, fragment).commit();      // Fragment로 사용할 MainActivity내의 layout공간을 선택합니다.
+    }
+
+    fun fragmentSetting() {
+        binding.mainTabLayout.visibility = View.VISIBLE
+        binding.mainImageProfile.visibility = View.VISIBLE
+    }
+
+    fun moveScheduleFindFragment() {
+        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
+            .commitNowAllowingStateLoss()
+        Log.d("TAG", "moveScheduleFindFragment: ㅇㅇㅇㅇㅇㅇㅇ")
+    }
+
 }

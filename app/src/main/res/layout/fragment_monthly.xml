@@ -2,10 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".src.main.monthly.MonthlyFragment">
-
+    <com.applikeysolutions.cosmocalendar.view.CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:connectedDayIconPosition="top"
+        app:currentDayTextColor="#f79256"
+        app:firstDayOfTheWeek="sunday"
+        app:orientation="horizontal"
+        app:selectedDayBackgroundColor="#FFEACA"
+        app:selectedDayBackgroundEndColor="#f79256"
+        app:selectedDayBackgroundStartColor="#f79256"
+        app:selectedDayTextColor="#FFFFFF"
+        app:selectionType="range"
+        app:weekendDayTextColor="#ef4550" />
 
 </LinearLayout>

@@ -10,15 +10,12 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.databinding.ItemTodayMemoBinding
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 
-class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
+class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
     class MemoViewHolder(val binding:ItemTodayMemoBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoAdapter.MemoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_today_memo,parent,false)
         val viewHolder = MemoViewHolder(ItemTodayMemoBinding.bind(view))
-        view.setOnClickListener {
-
-        }
         return viewHolder
     }
 
@@ -26,6 +23,9 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         holder.binding.todayMemo = memoList[position]
         val memo = memoList[position]
 
+        holder.binding.root.setOnClickListener {
+            clickListener(memo)
+        }
         // 체크 버튼 여부에 따라 백그라운드 변경
         changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
         // 체크 버튼 리스너

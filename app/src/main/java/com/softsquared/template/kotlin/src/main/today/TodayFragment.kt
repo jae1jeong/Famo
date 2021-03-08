@@ -16,6 +16,7 @@ import com.softsquared.template.kotlin.src.main.today.adapter.MemoSwipeHelper
 import com.softsquared.template.kotlin.src.main.today.adapter.SwipeButton
 import com.softsquared.template.kotlin.src.main.today.adapter.SwipeButtonClickListener
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class TodayFragment :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today) {
@@ -27,14 +28,20 @@ class TodayFragment :
 
         // 더미데이터로 리사이클러뷰 테스트
         for(i in 1..5){
-            memoList.add(MemoItem(i,"202021",i,"제목","내용",false,"BLUE"))
-            memoList.add(MemoItem(i,"202021",i,"제목","내용",true,"BLUE"))
+            memoList.add(MemoItem(i,"202021",i,"오늘","내용1",false,"BLUE"))
+            memoList.add(MemoItem(i,"202021",i,"테스트2","내용2에요",true,"BLUE"))
 
         }
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
-        todayMemoAdapter = MemoAdapter(memoList,context!!)
+        todayMemoAdapter = MemoAdapter(memoList,context!!){
+            val scheduleDetailDialog = ScheduleDetailDialog(context!!)
+            scheduleDetailDialog.setOnModifyBtnClickedListener {
+                (activity as MainActivity).showBottomAddScheduleSheetDialog()
+            }
+            scheduleDetailDialog.start(it)
+        }
         binding.todayRecyclerView.apply {
             layoutManager = mLayoutManager
             adapter = todayMemoAdapter

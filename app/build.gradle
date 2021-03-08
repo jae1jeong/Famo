@@ -86,4 +86,7 @@ dependencies {
     // 뷰페이저 indicator
     implementation 'me.relex:circleindicator:2.1.6'
 
+    // 달력
+    implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+
 }

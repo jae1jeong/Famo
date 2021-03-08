@@ -33,11 +33,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim) }
 
 
-
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

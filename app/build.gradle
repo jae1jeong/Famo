@@ -86,14 +86,13 @@ dependencies {
     // 뷰페이저 indicator
     implementation 'me.relex:circleindicator:2.1.6'
 
-<<<<<<< HEAD
     //카메라
     implementation 'gun0912.ted:tedpermission:2.2.3'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-=======
+
     // 달력
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
->>>>>>> b3b69881893e499debdd524c813870cd1df99aba
+
 
 }

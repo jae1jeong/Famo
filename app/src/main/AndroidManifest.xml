@@ -57,6 +57,7 @@
         <activity
             android:name=".src.auth.signup.SignUpActivity"
             android:screenOrientation="portrait"
+            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 카메라 -->

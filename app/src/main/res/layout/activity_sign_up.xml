@@ -75,6 +75,19 @@
         app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_re_password" />
 
 
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/sign_up_edit_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
+        android:background="@color/light_gray"
+        android:hint="@string/login_text_phone_number"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_nickname" />
+
     <Button
         android:id="@+id/sign_up_btn_sign_up"
         android:layout_marginTop="30dp"
@@ -86,7 +99,7 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_edit_phone_number"
         tools:layout_editor_absoluteX="15dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

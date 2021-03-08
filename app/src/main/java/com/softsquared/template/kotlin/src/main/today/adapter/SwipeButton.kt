@@ -65,9 +65,13 @@ class SwipeButton
     private fun drawableToBitmap(d: Drawable?): Bitmap {
         if(d is BitmapDrawable)return d.bitmap
         val bitmap = Bitmap.createBitmap(d!!.intrinsicWidth,d.intrinsicHeight,Bitmap.Config.ARGB_8888)
+//        val bitmap = Bitmap.createBitmap(25,25,Bitmap.Config.ARGB_8888)
+
         val canvas = Canvas(bitmap)
-        d.setBounds(0,0,canvas.width,canvas.height)
-        d.draw(canvas)
+//        d!!.setBounds(0,0,canvas.width,canvas.height)
+        d!!.setBounds(0,0,50,50)
+
+        d!!.draw(canvas)
         return bitmap
     }
 }

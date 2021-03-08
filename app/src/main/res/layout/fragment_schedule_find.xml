@@ -11,9 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< HEAD
         android:layout_marginBottom="10dp"
         android:layout_marginTop="30dp">
 
+=======
+        android:layout_marginBottom="10dp">
+>>>>>>> b3b69881893e499debdd524c813870cd1df99aba
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

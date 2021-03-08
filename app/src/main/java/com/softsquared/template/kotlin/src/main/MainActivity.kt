@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -118,7 +120,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainTabLayout.visibility = View.GONE
         binding.mainImageProfile.visibility = View.GONE
         supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,fragment)
-                    .commitNowAllowingStateLoss()
+                    .commit()
 //        val fragmentManager : FragmentManager = supportFragmentManager;
 //        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction();
 //        fragmentTransaction.replace(R.id.main_frame_layout, fragment).commit();      // Fragment로 사용할 MainActivity내의 layout공간을 선택합니다.

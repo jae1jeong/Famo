@@ -29,6 +29,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView): BaseFragment<F
             myPageActivityView.moveMyPageEdit()
         }
 
+        //뒤로가기
         binding.myPageBtnBack.setOnClickListener {
 //            binding.categoryEditLinear.visibility = View.GONE
 //            val intent = Intent(context,MyPageActivity::class.java)

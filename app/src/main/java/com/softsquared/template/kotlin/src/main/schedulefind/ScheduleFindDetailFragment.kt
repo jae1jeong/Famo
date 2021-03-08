@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -14,7 +15,6 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindDetailBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.CategoryFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkData
@@ -46,78 +46,75 @@ class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBindin
 //        }
 
         Log.d(TAG, "ScheduleFindDetailFragment: boolean null일경우 값 확인 : $boolean")
+        //일정 찾기 탭에서 즐겨찾기가 선택되있는 경우
         if (boolean == true){
-            binding.scheduleFindDetailTvBookmark.setTextColor(Color.BLACK)
-            binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindDetailViewBookmark.layoutParams.height = 4
-
-            binding.scheduleFindDetailTvLately.setTextColor(Color.GRAY)
-            binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindDetailViewLately.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindDetailViewLately.layoutParams.height = 2
+            //즐겨찾기가 선택됬을 때 글자 색상 등 설정
+            setUpBookmark()
+            //즐겨찾기 리사이클러뷰
+            createBookmarkRecyclerview()
 //            val test = ScheduleFindFragment()
 //            test.createWholeScheduleRecyclerview()
-            createWholeScheduleRecyclerview()
+        //최근 일 경우
         }else{
-            binding.scheduleFindDetailTvLately.setTextColor(Color.BLACK)
-            binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindDetailViewLately.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindDetailViewLately.layoutParams.height = 4
-
-            binding.scheduleFindDetailTvBookmark.setTextColor(Color.GRAY)
-            binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindDetailViewBookmark.layoutParams.height = 2
-
+            //최근이 선택됬을 때 글자 색상 등 설정
+            setUpLately()
+            //최근 리사이클러뷰
             createLatelyRecyclerview()
         }
 
+        //즐겨찾기 클릭 시
         binding.scheduleFindDetailLinearBookmark.setOnClickListener {
-            binding.scheduleFindDetailTvBookmark.setTextColor(Color.BLACK)
-            binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindDetailViewBookmark.layoutParams.height = 4
-
-            binding.scheduleFindDetailTvLately.setTextColor(Color.GRAY)
-            binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindDetailViewLately.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindDetailViewLately.layoutParams.height = 2
-
+            setUpBookmark()
             binding.recyclerviewWholeBookmark.visibility = View.VISIBLE
             binding.recyclerviewWholeLately.visibility = View.GONE
-
-            createWholeScheduleRecyclerview()
+            createBookmarkRecyclerview()
 
         }
 
+        //최근 클릭 시
         binding.scheduleFindDetailLinearLately.setOnClickListener {
-            binding.scheduleFindDetailTvLately.setTextColor(Color.BLACK)
-            binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindDetailViewLately.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindDetailViewLately.layoutParams.height = 4
-
-            binding.scheduleFindDetailTvBookmark.setTextColor(Color.GRAY)
-            binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindDetailViewBookmark.layoutParams.height = 2
-
+            setUpLately()
             binding.recyclerviewWholeLately.visibility = View.VISIBLE
             binding.recyclerviewWholeBookmark.visibility = View.GONE
-
             createLatelyRecyclerview()
         }
 
-
+        //X버튼 클릭 시
         binding.scheduleFindDetailXBtn.setOnClickListener {
-            (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
+//            (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
+            val intent = Intent(activity,MainActivity::class.java)
+            startActivity(intent)
         }
 
         ApplicationClass.sSharedPreferences.edit().remove("boolean")
         ApplicationClass.sSharedPreferences.edit().apply()
     }
 
-    private fun createWholeScheduleRecyclerview() {
+    private fun setUpLately() {
+        binding.scheduleFindDetailTvLately.setTextColor(Color.BLACK)
+        binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.BOLD)
+        binding.scheduleFindDetailViewLately.setBackgroundColor(Color.BLACK)
+        binding.scheduleFindDetailViewLately.layoutParams.height = 4
+
+        binding.scheduleFindDetailTvBookmark.setTextColor(Color.GRAY)
+        binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.NORMAL)
+        binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.parseColor("#E1DDDD"))
+        binding.scheduleFindDetailViewBookmark.layoutParams.height = 2
+    }
+
+    private fun setUpBookmark() {
+        binding.scheduleFindDetailTvBookmark.setTextColor(Color.BLACK)
+        binding.scheduleFindDetailTvBookmark.setTypeface(null, Typeface.BOLD)
+        binding.scheduleFindDetailViewBookmark.setBackgroundColor(Color.BLACK)
+        binding.scheduleFindDetailViewBookmark.layoutParams.height = 4
+
+        binding.scheduleFindDetailTvLately.setTextColor(Color.GRAY)
+        binding.scheduleFindDetailTvLately.setTypeface(null, Typeface.NORMAL)
+        binding.scheduleFindDetailViewLately.setBackgroundColor(Color.parseColor("#E1DDDD"))
+        binding.scheduleFindDetailViewLately.layoutParams.height = 2
+    }
+
+    private fun createBookmarkRecyclerview() {
         binding.recyclerviewWholeBookmark.visibility = View.VISIBLE
         binding.recyclerviewWholeLately.visibility = View.GONE
 

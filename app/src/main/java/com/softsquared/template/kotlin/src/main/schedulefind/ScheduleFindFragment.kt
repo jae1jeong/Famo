@@ -53,7 +53,9 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         binding.scheduleFindBookmarkView.layoutParams.height = 4
 
         // 일정찾기 탭 default설정 - 처음에는 즐겨찾기탭이 보이게, 카테고리 설정
-        createWholeScheduleRecyclerview()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
+            .commit()
         createCategoryRecyclerview()
 
         // +버튼 클릭 시 카테고리 편집으로 이동
@@ -70,9 +72,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         // 즐겨찾기 리사이클러뷰
 //        createBookmarkRecyclerview()
 //        val mFragmentTransaction : FragmentTransaction = childFragmentManager.beginTransaction();
-        childFragmentManager.beginTransaction()
-            .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
-            .commit()
+
 
 //        (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
 
@@ -123,6 +123,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             val bundle = Bundle()
             val scheduleFindDetailFragment = ScheduleFindDetailFragment()
 
+            // 즐겨찾기가 선택되어 있는 경우
             if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
                 binding.scheduleFindLinear.visibility = View.GONE
 //                val boolean = true
@@ -132,14 +133,12 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
 
+            //최근이 선택되어 있는 경우
             if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
                 binding.scheduleFindLinear.visibility = View.GONE
                 ApplicationClass.sSharedPreferences.edit().putBoolean("boolean",false).apply()
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
-
-
-
 
         }
 

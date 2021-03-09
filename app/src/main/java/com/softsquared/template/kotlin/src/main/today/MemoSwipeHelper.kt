@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.today.adapter
+package com.softsquared.template.kotlin.src.main.today
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,11 +11,13 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
-abstract class MemoSwipeHelper(context:Context,private val recyclerView:RecyclerView,internal var buttonWidth:Int)
-    :ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private val recyclerView:RecyclerView, internal var buttonWidth:Int)
+    :ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),ItemTouchHelper.LEFT) {
+    val dragAdapter = adapter
     private var buttonList:MutableList<SwipeButton> ?= null
     lateinit var gestureDetector:GestureDetector
     var swipePosition = -1
@@ -24,6 +26,7 @@ abstract class MemoSwipeHelper(context:Context,private val recyclerView:Recycler
     lateinit var removeQueue:LinkedList<Int>
 
     abstract fun instantiateMyButton(viewHolder:RecyclerView.ViewHolder,buffer:MutableList<SwipeButton>)
+
 
     private val gestureListener = object:GestureDetector.SimpleOnGestureListener(){
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
@@ -110,7 +113,8 @@ abstract class MemoSwipeHelper(context:Context,private val recyclerView:Recycler
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return false
+        dragAdapter.swapItems(viewHolder.adapterPosition,target.adapterPosition)
+        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

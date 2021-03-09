@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
@@ -44,7 +45,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 
-
         // FAB 메인 액션 버튼
         binding.mainBtnActionMain.setOnClickListener {
             onActionButtonClicked()
@@ -54,6 +54,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainBtnActionSub.setOnClickListener {
             showBottomAddScheduleSheetDialog()
         }
+
+        val jwt:String? = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null)
+        Log.d("토큰", "$jwt")
 
         // 다른 부분을 눌렀을때 FAB 버튼 비활성화
         binding.mainLayout.setOnClickListener {

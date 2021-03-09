@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.today.adapter
+package com.softsquared.template.kotlin.src.main.today
 
 import android.content.Context
 import android.content.res.Resources

@@ -10,29 +10,21 @@
     >
 
     <com.google.android.material.tabs.TabLayout
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="@color/text_gray"
+        app:tabSelectedTextColor="@color/orange"
         android:id="@+id/main_tab_layout"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </com.google.android.material.tabs.TabLayout>
 
     <ImageView
         android:id="@+id/main_image_profile"
-        android:layout_width="14dp"
-        android:layout_height="15dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginRight="30dp"
         android:src="@drawable/my_profile_icon"
         app:layout_constraintBottom_toBottomOf="@+id/main_tab_layout"

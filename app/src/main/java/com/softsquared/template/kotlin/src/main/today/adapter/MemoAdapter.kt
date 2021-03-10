@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.databinding.ItemTodayMemoBinding
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import java.util.ArrayList
 
 class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
     class MemoViewHolder(val binding:ItemTodayMemoBinding):RecyclerView.ViewHolder(binding.root)
@@ -50,6 +51,32 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
             imageView.setBackgroundResource(R.drawable.background_btn_acttive)
             imageView.setColorFilter(context.resources.getColor(R.color.white))
         }
+    }
+
+    fun swapItems(fromPosition:Int, toPosition:Int){
+        if (fromPosition != toPosition) {
+            if (fromPosition < toPosition) {
+                for (i in fromPosition until toPosition) {
+                    var temp = memoList[i+1]
+                    memoList[i + 1] = memoList[i]
+                    memoList[i] = temp
+
+                }
+            } else {
+                for (i in toPosition..fromPosition-1) {
+                    var temp = memoList[fromPosition-i]
+                    memoList[fromPosition-i] = memoList[fromPosition-i-1]
+                    memoList[fromPosition-i-1] = temp
+                }
+            }
+
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+
+    fun setNewMemoList(newMemoList:ArrayList<MemoItem>){
+        this.memoList = newMemoList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = memoList.size

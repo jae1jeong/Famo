@@ -30,6 +30,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -41,6 +42,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.android.material:material:1.2.1'
 
@@ -102,5 +104,6 @@ dependencies {
     implementation "com.kakao.sdk:v2-link:2.3.0" // 메시지(카카오링크)
     implementation "com.kakao.sdk:v2-navi:2.3.0" // 카카오내비
 
+    implementation 'com.github.kizitonwose:CalendarView:1.0.3'
 
 }

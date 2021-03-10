@@ -54,6 +54,7 @@
         <activity
             android:name=".src.auth.login.LoginActivity"
             android:screenOrientation="portrait"
+            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- SignUp -->
         <activity
             android:name=".src.auth.signup.SignUpActivity"

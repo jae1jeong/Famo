@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -16,6 +18,7 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
@@ -25,7 +28,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWhol
 
 
 class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
-    (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find) {
+    (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find),
+IScheduleCategoryRecyclerView{
 
     // 각각의 Fragment마다 Instance를 반환해 줄 메소드를 생성합니다.
 
@@ -35,12 +39,17 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
     private val partList: ArrayList<ScheduleWholeData> = arrayListOf()
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        Log.d("TAG", "일정찾기 홈 ")
         //프래그먼트 이동간 gone/visibility설정
         (activity as MainActivity).fragmentSetting()
+
+        binding.scheduleFindMainLinear.visibility = View.VISIBLE
+        binding.scheduleFindMainFragment.visibility = View.GONE
 
 //        레이아웃 마진 설정
 //        val layout1 = binding.scheduleFindLinear
@@ -56,6 +65,8 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
             .commit()
+
+        createWholeScheduleRecyclerview()
         createCategoryRecyclerview()
 
         // +버튼 클릭 시 카테고리 편집으로 이동
@@ -129,6 +140,9 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //                val boolean = true
 //                bundle.putBoolean("boolean", boolean)
 //                scheduleFindDetailFragment.arguments = bundle
+//                childFragmentManager.beginTransaction().replace(
+//                    R.id.main_frame_layout,
+//                    scheduleFindDetailFragment)
                 ApplicationClass.sSharedPreferences.edit().putBoolean("boolean",true).apply()
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
@@ -136,9 +150,46 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             //최근이 선택되어 있는 경우
             if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
                 binding.scheduleFindLinear.visibility = View.GONE
+//                val boolean = true
+//                bundle.putBoolean("boolean", boolean)
+//                scheduleFindDetailFragment.arguments = bundle
                 ApplicationClass.sSharedPreferences.edit().putBoolean("boolean",false).apply()
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
+
+//            binding.scheduleFindIvSearch.setOnClickListener {
+//                Log.d("TAG", "일정찾기 이미지클릭 확인 ")
+//                binding.scheduleFindMainFragment.visibility = View.GONE
+//                binding.scheduleFindMainLinear.visibility = View.VISIBLE
+//            }
+
+            binding.scheduleFindIvSearch.setOnTouchListener { _, event ->
+                when(event.action){
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.d("TAG", "일정찾기 이미지클릭 확인 ")
+                        binding.scheduleFindMainFragment.visibility = View.GONE
+                        binding.scheduleFindMainLinear.visibility = View.VISIBLE
+                    }
+                }
+                false
+            }
+
+//            binding.loginEtNumber.setOnTouchListener { _, event ->
+//                when (event.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        binding.loginEtNumber.hint = ""
+//                        binding.loginTvNumber.text = "전화번호"
+//                        binding.loginRlNumber.background = resources.getDrawable(
+//                            com.example.airbnb.R.drawable.login_info_input_emphasize,
+//                            null
+//                        )
+//                        binding.loginView.visibility = View.INVISIBLE
+//                    }
+//                }
+//                false
+//            }
+
+
 
         }
 
@@ -195,7 +246,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             context, LinearLayoutManager.HORIZONTAL, false
         )
         binding.recyclerviewCategory.setHasFixedSize(true)
-        binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList)
+        binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList,this)
     }
 
 //    private fun createBookmarkRecyclerview() {
@@ -235,5 +286,14 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         fun newInstance(): ScheduleFindFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
             return ScheduleFindFragment()
         }
+    }
+
+    //카테고리 클릭
+    override fun onItemMoveBtnClicked(position: Int) {
+        binding.scheduleFindMainLinear.visibility = View.GONE
+        binding.scheduleFindMainFragment.visibility = View.VISIBLE
+        childFragmentManager.beginTransaction()
+            .replace(R.id.schedule_find_main_fragment, ScheduleFindCategoryFragment())
+            .commit()
     }
 }

@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".src.main.mypage.MyPageActivity" />
+        <activity android:name=".src.main.mypage.MyPageActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".src.splash.SplashActivity"
             android:screenOrientation="portrait"
@@ -59,6 +60,22 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".src.auth.loginInformation.LoginInformation"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--카카오 로그인-->
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao850f56e3e5ba5613faf68a8aaa4b95bc" />
+            </intent-filter>
+
+        </activity>
 
         <!-- 카메라 -->
         <provider

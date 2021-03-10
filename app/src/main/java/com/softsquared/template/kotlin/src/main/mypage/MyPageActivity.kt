@@ -33,8 +33,19 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
 
+//    val token = intent.getStringExtra("token")
+//    val name = intent.getStringExtra("name")
+//    val img = intent.getStringExtra("img")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val myPageFragment = MyPageFragment(this)
+//        val bundle = Bundle()
+//        bundle.putString("token", token)
+//        bundle.putString("name", name)
+//        bundle.putString("img", img)
+//        myPageFragment.arguments = bundle
 
         supportFragmentManager.beginTransaction().add(R.id.main_my_page_fragment, MyPageFragment(this))
             .commitAllowingStateLoss()

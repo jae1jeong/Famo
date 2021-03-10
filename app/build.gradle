@@ -89,10 +89,18 @@ dependencies {
     //카메라
     implementation 'gun0912.ted:tedpermission:2.2.3'
 
+    //circleimage
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // 달력
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+
+    //카카오
+    implementation "com.kakao.sdk:v2-user:2.3.0" // 카카오 로그인
+    implementation "com.kakao.sdk:v2-talk:2.3.0" // 친구, 메시지(카카오톡)
+    implementation "com.kakao.sdk:v2-story:2.3.0" // 카카오스토리
+    implementation "com.kakao.sdk:v2-link:2.3.0" // 메시지(카카오링크)
+    implementation "com.kakao.sdk:v2-navi:2.3.0" // 카카오내비
 
 
 }

@@ -19,6 +19,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+        //카카오 로그인
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
 

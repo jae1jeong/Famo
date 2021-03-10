@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.category
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -28,13 +29,17 @@ class CategoryFragment() : BaseFragment<FragmentCategoryEditBinding>(FragmentCat
         createCategoryRecyclerview()
 
         binding.categoryEditBtnPlus.setOnClickListener {
-
+            val scheduleCategoryData =  ScheduleCategoryData("")
+            categoryEditAdapter.addItem(scheduleCategoryData)
+            categoryEditAdapter.notifyDataSetChanged()
         }
 
         //X 버튼
         binding.categoryEditXBtn.setOnClickListener {
 //            (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
-            (activity as MainActivity).onBackPressed()
+//            (activity as MainActivity).onBackPressed()
+            val intent = Intent(activity,MainActivity::class.java)
+            startActivity(intent)
         }
 
     }

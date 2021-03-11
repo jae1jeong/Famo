@@ -19,7 +19,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBook
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
 
 class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
-    FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category) {
+    FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
+) {
 
     companion object {
         fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
@@ -32,10 +33,12 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
         createRecyclerview()
 
+//        (activity as MainActivity).onBackPressed()
+
         binding.categoryFilter.setOnClickListener {
             val popup = PopupMenu(activity, binding.categoryFilter)
 
-            (activity as MainActivity).menuInflater.inflate(R.menu.schedule_find_filter,popup.menu)
+            (activity as MainActivity).menuInflater.inflate(R.menu.schedule_find_filter, popup.menu)
 
             popup.setOnMenuItemClickListener(PopupListener())
 
@@ -43,7 +46,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
     }
 
-    inner class PopupListener: PopupMenu.OnMenuItemClickListener {
+    inner class PopupListener : PopupMenu.OnMenuItemClickListener {
 
         override fun onMenuItemClick(item: MenuItem?): Boolean {
 
@@ -55,7 +58,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
 //            val chooser = Intent.createChooser(intent, "공유하기")
 
-            when(item?.itemId) {
+            when (item?.itemId) {
                 R.id.item1 -> println("aaaaaaaaaaaa")
 
 //                    startActivity(chooser)

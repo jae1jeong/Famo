@@ -10,7 +10,8 @@
             <solid android:color="@color/white" />
             <!--            <corners android:radius="5dp"/>-->
             <corners android:bottomRightRadius="5dp" />
-            <corners android:topLeftRadius="5dp" />
+            <corners android:radius="5dp"></corners>
+<!--            <corners android:topLeftRadius="5dp" />-->
             <!--            <corners android:topRightRadius="5dp"/>-->
             <!--            <corners android:bottomRightRadius="5dp"/>-->
         </shape>

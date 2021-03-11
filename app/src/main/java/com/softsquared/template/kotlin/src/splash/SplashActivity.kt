@@ -8,6 +8,7 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivitySplashBinding
 import com.softsquared.template.kotlin.src.auth.information.InformationActivity
+import com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation
 import com.softsquared.template.kotlin.src.main.MainActivity
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
@@ -18,14 +19,16 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 //        jwt?.let{
 //            showCustomToast(jwt)
 //        }
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (jwt == null){
-                startActivity(Intent(this, InformationActivity::class.java))
-                finish()
-            }else{
-                startActivity(Intent(this,MainActivity::class.java))
-                finish()
-            }
-        }, 1500)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            if (jwt == null){
+//                startActivity(Intent(this, InformationActivity::class.java))
+//                finish()
+//            }else{
+//                startActivity(Intent(this,MainActivity::class.java))
+//                finish()
+//            }
+////            startActivity(Intent(this,MainActivity::class.java))
+//        }, 1500)
+        startActivity(Intent(this, LoginInformation::class.java))
     }
 }

@@ -9,6 +9,8 @@
     <string name="save">저장</string>
     <string name="cancel">취소</string>
 
+    <!--Splash-->
+    <string name="splash_title">쉽고 빠른 메모의 시작!</string>
 
     <!-- Main -->
 
@@ -26,11 +28,22 @@
     <string name="information3_description">원하는 일정을 검색으로 찾을 수 있고\n카테고리로 분류하여 정리할 수 있어요</string>
 
     <!--Login -->
+    <string name="login_greeting_text">안녕하세요!\n페모입니다.</string>
     <string name="login_text">로그인</string>
     <string name="login_text_id">아이디</string>
     <string name="login_text_password">비밀번호</string>
+    <string name="login_text_find_id">아이디 찾기</string>
+    <string name="login_hint_id">아이디 입력</string>
+    <string name="login_hint_password">비밀번호 입력</string>
+    <string name="login_text_find_password">비밀번호 찾기</string>
+
 
     <!--SignUp -->
+    <string name="sign_up_hint_nickname">닉네임 입력</string>
+    <string name="sign_up_hint_password">영문,숫자,특수문자 포함 8자 이상</string>
+    <string name="sign_up_hint_id">아이디 입력</string>
+    <string name="sign_up_btn_auth">인증요청</string>
+    <string name="sign_up_btn_sign_up">가입하기</string>
     <string name="sign_up_text">회원가입</string>
     <string name="sign_up_text_id">아이디</string>
     <string name="sign_up_text_password">비밀번호</string>
@@ -95,4 +108,17 @@
     <string name="schedule_find_tv_detail_see">자세히 보러가기</string>
     <string name="schedule_find_tv_whole_schedule">전체일정</string>
 
+
+
+    <string name="btn_persistent">Persistent Bottom Sheet</string>
+    <string name="btn_modal">Modal Bottom Sheet</string>
+    <string name="tv_title">Learn Bottom Sheet</string>
+    <string name="tv_description">
+        A BottomSheet is a component that is used to display some information by sliding
+        the view up in the screen and also you can hide this BottomSheet when the message
+        is conveyed to the users. This is a nice way of conveying some message or performing
+        some task in Android. Types of BottomSheet \n\nA BottomSheet is of two types: \n\nPersistent BottomSheet \n\nModal BottomSheet</string>
+    <string name="btn_one">Button 1</string>
+    <string name="btn_two">Button 2</string>
+    <string name="btn_three">Button 3</string>
 </resources>

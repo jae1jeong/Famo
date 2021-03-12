@@ -16,6 +16,9 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setSupportActionBar(binding.loginToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // 로그인 버튼
         binding.loginBtnLogin.setOnClickListener {
@@ -57,4 +60,5 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inf
         dismissLoadingDialog()
         showCustomToast(message)
     }
+
 }

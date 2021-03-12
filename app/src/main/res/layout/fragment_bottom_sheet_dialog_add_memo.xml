@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            android:id="@+id/add_memo_edit_title"
             android:paddingLeft="10dp"
             android:hint="@string/add_memo_write_title"
             android:layout_marginEnd="10dp"
@@ -57,6 +58,7 @@
             android:layout_height="match_parent"
             />
         <Button
+            android:id="@+id/add_memo_dialog_btn_ok"
             android:textStyle="bold"
             android:text="@string/check"
             android:layout_gravity="center_vertical"
@@ -103,6 +105,7 @@
         >
 
         <EditText
+            android:id="@+id/add_memo_edit_content"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
             android:background="@null"
@@ -235,6 +238,7 @@
             android:layout_height="wrap_content"
             />
         <Button
+            android:id="@+id/add_memo_dialog_btn_save"
             android:text="@string/save"
             android:textStyle="bold"
             android:textColor="@color/white"

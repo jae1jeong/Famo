@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +9,10 @@
     tools:context=".src.main.MainActivity"
     android:background="@color/light_gray"
     >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <com.google.android.material.tabs.TabLayout
         app:tabTextAppearance="@style/tab_text"
@@ -83,10 +88,264 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
-        android:visibility="gone"
-        android:id="@+id/main_frame_layout"
+
+        android:background="@drawable/background_bottom_sheet_dialog_add_memo"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:id="@+id/main_frame_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="450dp"
+        >
+        <LinearLayout
+            android:id="@+id/add_memo_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="900dp"
+            android:orientation="vertical"
+            android:paddingTop="30dp"
+            android:paddingHorizontal="15dp"
+            android:background="@drawable/background_bottom_sheet_add_memo"
+            >
+
+            <LinearLayout
+                android:weightSum="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                >
+                <TextView
+                    android:layout_weight="9"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_memo_add_schedule"
+                    android:textColor="@android:color/black"
+                    android:textSize="19sp"
+                    />
+                <ImageView
+                    android:id="@+id/add_memo_image_scroll"
+                    android:layout_marginEnd="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:src="@drawable/today_write_up_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:weightSum="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/add_memo_edit_title"
+                    android:paddingLeft="10dp"
+                    android:hint="@string/add_memo_write_title"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/background_edit"
+                    android:layout_weight="10"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    />
+                <Button
+                    android:id="@+id/add_memo_dialog_btn_ok"
+                    android:textStyle="bold"
+                    android:text="@string/check"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:background="@drawable/background_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:weightSum="1"
+                android:background="@drawable/background_edit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                >
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/add_memo_date"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:id="@+id/add_memo_text_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+            </com.google.android.material.chip.ChipGroup>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@drawable/background_edit"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                >
+
+                <EditText
+                    android:id="@+id/add_memo_edit_content"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="@string/add_memo_add_memo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/today_write_mike"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_marginTop="50dp"
+                android:weightSum="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_memo_setting_time"
+                    />
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:background="@drawable/background_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_memo_time"
+                    android:textSize="16sp"
+                    />
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginVertical="10dp"
+                    android:text="@string/none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:background="@drawable/background_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                >
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_memo_alarm"
+                    android:textSize="16sp"
+                    />
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginVertical="10dp"
+                    android:text="@string/none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:background="@drawable/background_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_memo_repeat"
+                    android:textSize="16sp"
+                    />
+                <TextView
+                    android:layout_marginEnd="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginVertical="10dp"
+                    android:text="@string/none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:paddingBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:text="@string/cancel"
+                    android:background="@drawable/background_btn_passive"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <Button
+                    android:id="@+id/add_memo_dialog_btn_save"
+                    android:text="@string/save"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@drawable/background_btn"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

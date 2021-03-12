@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.today
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -100,30 +101,41 @@ class TodayFragment :
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
         if(response.isSuccess){
             when(response.code){
-                100->{
+                100 -> {
 
                     val memoJsonArray = response.data.asJsonArray
-                    for (i in 0 until memoJsonArray.size()){
+                    for (i in 0 until memoJsonArray.size()) {
                         val memoJsonObject = memoJsonArray[i].asJsonObject
                         val memoDate = memoJsonObject.get("scheduleDate").asString
                         val memoTitle = memoJsonObject.get("scheduleName").asString
-                        var memoContent :String? = memoJsonObject.get("scheduleMemo").toString()
+                        var memoContent: String? = memoJsonObject.get("scheduleMemo").toString()
                         val memoIsChecked = memoJsonObject.get("schedulePick").asBoolean
                         val memoId = memoJsonObject.get("scheduleID").asInt
                         val memoCreatedAt = memoDate.split(" ")
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
-                        for(i in 0 until memoCreatedAt.size){
-                            if(i > 0){
-                                memoCreatedAtMonth = memoCreatedAt[i]
-                            }else{
-                                memoCreatedAtDay = memoCreatedAt[i].toInt()
+                        Log.d("tag", "onGetScheduleItemsSuccess:[$memoDate] $memoCreatedAt")
+                        for (i in 0..1) {
+                            if (i > 0) {
+                                memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
+                            } else {
+                                memoCreatedAtDay = memoCreatedAt[i].replace(" ","").toInt()
                             }
                         }
-                        if(memoContent == null){
+                        if (memoContent == null) {
                             memoContent = ""
                         }
-                        memoList.add(MemoItem(memoId,memoCreatedAtMonth,memoCreatedAtDay,memoTitle,memoContent,memoIsChecked,"BLUE"))
+                        memoList.add(
+                            MemoItem(
+                                memoId,
+                                memoCreatedAtMonth,
+                                memoCreatedAtDay,
+                                memoTitle,
+                                memoContent,
+                                memoIsChecked,
+                                "BLUE"
+                            )
+                        )
                     }
                     todayMemoAdapter.setNewMemoList(memoList)
                     checkIsMemoListEmpty()

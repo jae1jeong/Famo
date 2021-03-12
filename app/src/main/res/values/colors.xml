@@ -33,4 +33,8 @@
     <color name="light_dark">#32363C</color>
 
 
+    <color name="auth_button_gray">#F2F3F7</color>
+    <color name="auth_button_text">#CED5D9</color>
+    <color name="auth_text_normal_black">#79879A</color>
+
 </resources>

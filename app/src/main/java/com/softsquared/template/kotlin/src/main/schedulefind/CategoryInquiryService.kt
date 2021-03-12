@@ -9,10 +9,10 @@ import retrofit2.Response
 
 class CategoryInquiryService(val view : CategoryInquiryView) {
 
-    fun tryGetCategoryInquiry(token: String){
+    fun tryGetCategoryInquiry(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryInquiry(token).enqueue(object :
+        homeRetrofitInterface.getCategoryInquiry().enqueue(object :
             Callback<CategoryInquiryResponse> {
             override fun onResponse(call: Call<CategoryInquiryResponse>, response: Response<CategoryInquiryResponse>) {
                 Log.d("값 확인", "tryGetCategoryInquiry body:  ${response.body()}")

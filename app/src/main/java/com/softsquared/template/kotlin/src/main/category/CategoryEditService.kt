@@ -11,10 +11,10 @@ import retrofit2.Response
 
 class CategoryEditService(val view: CategoryEditView) {
 
-    fun tryPostCategoryEditInsert(token: String, categoryInsertRequest : CategoryInsertRequest){
+    fun tryPostCategoryEditInsert(categoryInsertRequest : CategoryInsertRequest){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryInsert(token, categoryInsertRequest).enqueue(object :
+        homeRetrofitInterface.getCategoryInsert(categoryInsertRequest).enqueue(object :
             Callback<CategoryInsertResponse> {
             override fun onResponse(call: Call<CategoryInsertResponse>, response: Response<CategoryInsertResponse>) {
                 Log.d("값 확인", "tryPostCategoryEditInsert body:  ${response.body()}")
@@ -29,10 +29,10 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
-    fun tryDeleteCategoryEditDelete(token: String, categoryID : Int){
+    fun tryDeleteCategoryEditDelete(categoryID : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryDelete(token, categoryID).enqueue(object :
+        homeRetrofitInterface.getCategoryDelete(categoryID).enqueue(object :
             Callback<BaseResponse> {
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                 Log.d("값 확인", "tryPostCategoryEditDelete body:  ${response.body()}")
@@ -47,10 +47,10 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
-    fun tryPatchCategoryEditUpdate(token: String, categoryID : Int){
+    fun tryPatchCategoryEditUpdate(categoryID : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryUpdate(token, categoryID).enqueue(object :
+        homeRetrofitInterface.getCategoryUpdate(categoryID).enqueue(object :
             Callback<BaseResponse> {
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                 Log.d("값 확인", "tryPostCategoryEditDelete body:  ${response.body()}")

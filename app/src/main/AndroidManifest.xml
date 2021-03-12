@@ -25,8 +25,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+
+        <!-- MyPage -->
         <activity android:name=".src.main.mypage.MyPageActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <!-- CategoryEdit -->
+        <activity android:name=".src.main.category.CategoryEditActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".src.splash.SplashActivity"
             android:screenOrientation="portrait"

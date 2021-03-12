@@ -35,9 +35,6 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inf
                     edit.putString(ApplicationClass.X_ACCESS_TOKEN, response.jwt)
                     edit.putInt(Constants.USER_ID, response.userID)
                     edit.putString(Constants.USER_NICKNAME, response.nickname)
-                    // 여기 사이 다지우면됨
-                    intent.putExtra("test",response.jwt)
-                    //
                     edit.commit()
                     dismissLoadingDialog()
                     startActivity(Intent(this, MainActivity::class.java))

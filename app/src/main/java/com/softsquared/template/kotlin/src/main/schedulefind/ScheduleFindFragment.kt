@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -14,24 +15,24 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.CategoryEditFragment
+import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 
 
 class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find),
-IScheduleCategoryRecyclerView, CategoryInquiryView{
+    IScheduleCategoryRecyclerView, CategoryInquiryView {
 
-    // 각각의 Fragment마다 Instance를 반환해 줄 메소드를 생성합니다.
-
-//    fun newInstance() : ScheduleFindFragment{
-//        return newInstance()
-//    }
+    //카테고리 편집으로 보내줄 변수
+    var name = ""
+    var color = ""
+    var size = 0
 
     private val partList: ArrayList<ScheduleWholeData> = arrayListOf()
 
@@ -39,9 +40,15 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val token = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null).toString()
+        // 카테고리
+        // createCategoryRecyclerview()
+        CategoryInquiryService(this).tryGetCategoryInquiry()
 
+        val token =
+            ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
+                .toString()
         Log.d("TAG", "일정찾기 홈 ")
+
         //프래그먼트 이동간 gone/visibility설정
         (activity as MainActivity).fragmentSetting()
 
@@ -63,18 +70,18 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
             .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
             .commit()
 
-        //카테고리
-//        createCategoryRecyclerview()
-        CategoryInquiryService(this).tryGetCategoryInquiry(token)
-
         //전체일정
         createWholeScheduleRecyclerview()
 
         // +버튼 클릭 시 카테고리 편집으로 이동
         binding.scheduleFindBtnCategory.setOnClickListener {
-            showCustomToast("여기옴??")
-            (activity as MainActivity).replaceFragment(CategoryEditFragment.newInstance());
-            binding.scheduleFindLinear.visibility = View.GONE
+            val intent = Intent(activity, CategoryEditActivity::class.java)
+            intent.putExtra("name",name)
+            intent.putExtra("color",color)
+            intent.putExtra("size",size)
+            startActivity(intent)
+//            (activity as MainActivity).replaceFragment(CategoryEditFragment.newInstance());
+//            binding.scheduleFindLinear.visibility = View.GONE
         }
 
         //처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
@@ -144,7 +151,7 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
 //                childFragmentManager.beginTransaction().replace(
 //                    R.id.main_frame_layout,
 //                    scheduleFindDetailFragment)
-                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean",true).apply()
+                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
 
@@ -154,7 +161,7 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
 //                val boolean = true
 //                bundle.putBoolean("boolean", boolean)
 //                scheduleFindDetailFragment.arguments = bundle
-                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean",false).apply()
+                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", false).apply()
                 (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
             }
 
@@ -165,7 +172,7 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
 //            }
 
             binding.scheduleFindIvSearch.setOnTouchListener { _, event ->
-                when(event.action){
+                when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         Log.d("TAG", "일정찾기 이미지클릭 확인 ")
                         binding.scheduleFindMainFragment.visibility = View.GONE
@@ -189,7 +196,6 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
 //                }
 //                false
 //            }
-
 
 
         }
@@ -236,9 +242,9 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
     }
 
     fun createCategoryRecyclerview() {
-        //테스트 데이터
+//        테스트 데이터
 //        val categoryList = arrayListOf(
-//            ScheduleCategoryData("학교",),
+//            ScheduleCategoryData("학교"),
 //            ScheduleCategoryData("알바"),
 //            ScheduleCategoryData("친구")
 //        )
@@ -247,7 +253,7 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
 //            context, LinearLayoutManager.HORIZONTAL, false
 //        )
 //        binding.recyclerviewCategory.setHasFixedSize(true)
-//        binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList,this)
+//        binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this)
     }
 
 //    private fun createBookmarkRecyclerview() {
@@ -301,31 +307,38 @@ IScheduleCategoryRecyclerView, CategoryInquiryView{
     override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
         when (response.code) {
             100 -> {
-                response.data[0].categoryName
-                response.data[0].colorInfo
+//                response.data[0].categoryName
+//                response.data[0].colorInfo
 //                showCustomToast("성공 메시지 : ${response.message}")
 //                val intent = Intent(this, MainActivity::class.java)
 //                startActivity(intent)
+                showCustomToast("카테고리 조회성공")
+                Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
+                val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
 
-                if (response.data[0].categoryName != null && response.data[0].colorInfo != null) {
-                    val categoryList = arrayListOf(
+                for (i in 0 until response.data.size) {
+                    categoryList.add(
                         ScheduleCategoryData(
-                            response.data[0].categoryName,
-                            response.data[0].colorInfo
-                        ),
-//                    ScheduleCategoryData("알바",),
-//                    ScheduleCategoryData("친구")
+                            response.data[i].categoryName,
+                            response.data[i].colorInfo
+                        )
                     )
-
-                    binding.recyclerviewCategory.layoutManager = LinearLayoutManager(
-                        context, LinearLayoutManager.HORIZONTAL, false
-                    )
-                    binding.recyclerviewCategory.setHasFixedSize(true)
-                    binding.recyclerviewCategory.adapter =
-                        ScheduleCategoryAdapter(categoryList, this)
-                } else {
-                    Log.d("TAG", "onGetCategoryInquirySuccess: 여기와야함")
+                    name += response.data[i].categoryName + ":"
+                    color += response.data[i].colorInfo + ":"
+                    size = response.data.size
                 }
+
+                Log.d("TAG", "name: $name")
+                Log.d("TAG", "color: $color")
+                binding.recyclerviewCategory.layoutManager = LinearLayoutManager(
+                    context, LinearLayoutManager.HORIZONTAL, false
+                )
+                binding.recyclerviewCategory.setHasFixedSize(true)
+                binding.recyclerviewCategory.adapter =
+                    ScheduleCategoryAdapter(categoryList, this)
+
+
+
             }
             else -> {
                 showCustomToast("실패 메시지 : ${response.message}")

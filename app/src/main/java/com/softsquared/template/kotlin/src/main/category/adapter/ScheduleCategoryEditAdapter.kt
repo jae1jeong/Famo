@@ -31,6 +31,7 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 
     override fun onBindViewHolder(holder: ScheduleCategoryEditHolder, position: Int) {
         holder.text.setText(categoryEditList[position].text)
+        holder.color.setColorFilter(Color.parseColor(categoryEditList[position].color))
 //        holder.color.setColorFilter(categoryEditList[position].color)
 //        holder.text.addTextChangedListener()
     }
@@ -69,7 +70,7 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 //                    removeItem(adapterPosition)
 //                    notifyDataSetChanged()
                     CategoryEditService(this@ScheduleCategoryEditAdapter)
-                        .tryDeleteCategoryEditDelete("",1)
+                        .tryDeleteCategoryEditDelete(1)
 //                    this.mySearchRecyclerViewInterface.onSearchItemDeleteBtnClicked(adapterPosition)
                 }
                 color -> {

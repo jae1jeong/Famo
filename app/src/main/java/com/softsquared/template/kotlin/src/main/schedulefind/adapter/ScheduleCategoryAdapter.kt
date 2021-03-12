@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
-class ScheduleCategoryAdapter(
-    var categoryList: ArrayList<ScheduleCategoryData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-) :
-    RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>() {
+class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
+    RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>()
+    ,CategoryInquiryView{
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
@@ -40,9 +42,10 @@ class ScheduleCategoryAdapter(
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
 //        holder.text.text = categoryList[position].text
         holder.text.text = categoryList[position].text
+        holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
 //        holder.color.setImageResource(categoryList[position])
 //        holder.color.setImageResource(categoryList[position].color)
-        holder.color.setColorFilter(Color.parseColor("color"))
+//        holder.color.setColorFilter(Color.parseColor(response.data[0].colorInfo))
 //        img.setColorFilter(Color.parseColor("#FF0000"))
     }
 
@@ -83,6 +86,14 @@ class ScheduleCategoryAdapter(
             }
         }
 
+    }
+
+    override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
+
+
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
     }
 
 }

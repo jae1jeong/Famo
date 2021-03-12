@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 import com.softsquared.template.kotlin.config.BaseResponse
 
 data class CategoryInsertResponse(
-    @SerializedName("data") val data : Int
+    @SerializedName("data") val data : String
 ) : BaseResponse()

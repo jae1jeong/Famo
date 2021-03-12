@@ -9,6 +9,5 @@ interface CategoryInquiryRetrofitInterface {
 
     //카테고리 조회
     @GET("categories")
-    fun getCategoryInquiry(
-        @Header("x-access-token") token : String) : Call<CategoryInquiryResponse>
+    fun getCategoryInquiry() : Call<CategoryInquiryResponse>
 }

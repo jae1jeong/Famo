@@ -29,7 +29,7 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
-    fun tryDeleteCategoryEditDelete(categoryID : Int){
+    fun tryDeleteCategoryEditDelete(categoryID : String){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
         homeRetrofitInterface.getCategoryDelete(categoryID).enqueue(object :
@@ -47,7 +47,7 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
-    fun tryPatchCategoryEditUpdate(categoryID : Int){
+    fun tryPatchCategoryEditUpdate(categoryID : String){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
         homeRetrofitInterface.getCategoryUpdate(categoryID).enqueue(object :

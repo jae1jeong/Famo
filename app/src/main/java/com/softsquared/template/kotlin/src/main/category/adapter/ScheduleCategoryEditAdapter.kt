@@ -69,8 +69,8 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 //                    CategoryEditService(this).
 //                    removeItem(adapterPosition)
 //                    notifyDataSetChanged()
-                    CategoryEditService(this@ScheduleCategoryEditAdapter)
-                        .tryDeleteCategoryEditDelete(1)
+//                    CategoryEditService(this@ScheduleCategoryEditAdapter)
+//                        .tryDeleteCategoryEditDelete(1)
 //                    this.mySearchRecyclerViewInterface.onSearchItemDeleteBtnClicked(adapterPosition)
                 }
                 color -> {

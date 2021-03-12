@@ -37,8 +37,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             memoList.add(MemoItem(i, "202021", i, "오늘", "내용1", false, "BLUE"))
             memoList.add(MemoItem(i, "202021", i, "테스트2", "내용2에요", true, "BLUE"))
 
-<<<<<<< HEAD
-//
 //            binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
 //                override fun bind(container: CalendarViewContainer, day: CalendarDay) {
 //                    container.textView.text = day.date.dayOfMonth.toString()
@@ -58,7 +56,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 //            val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
 //            binding.calendarView.setup(firstMonth,lastMonth,firstDayOfWeek)
 //            binding.calendarView.scrollToMonth(currentMonth)
-=======
 
             userCheckedDateList.add(LocalDate.parse("2021-03-31"))
             binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
@@ -109,7 +106,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
             binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
             binding.calendarView.scrollToMonth(currentMonth)
->>>>>>> a6bfbaf912a6764a361756f886bc08389ced1a82
 
 
             // 어댑터

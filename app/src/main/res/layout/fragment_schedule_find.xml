@@ -48,37 +48,42 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/recyclerview_category_text"
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:text="미선택"
-                    android:textSize="18dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/background_schedule_find_tag_btn"/>
+            <Button
+                android:id="@+id/recyclerview_category_text"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/background_schedule_find_tag_btn"
+                android:text="미선택"
+                android:textSize="18dp" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp">
-                </androidx.recyclerview.widget.RecyclerView>
+                    android:layout_marginLeft="8dp" />
+            </androidx.core.widget.NestedScrollView>
 
-                <android.widget.Button
-                    android:id="@+id/schedule_find_btn_category"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/category_edit_plus" />
+            <android.widget.Button
+                android:id="@+id/schedule_find_btn_category"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/category_edit_plus" />
 
-            </LinearLayout>
+        </LinearLayout>
+
 
             <FrameLayout
                 android:id="@+id/schedule_find_main_fragment"

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:src="@drawable/background_bottom_sheet_dialog_add_memo">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/category_color_x_btn"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/category_edit_x_btn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="카테고리 색상 지정"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <TableRow>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_1" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color1_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_2" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color2_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_3" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color3_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_4"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_4" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color4_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_5"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_5" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color5_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="20dp">
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_6"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_6" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color6_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_7"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_7" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color7_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_8"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_8" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color8_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_9"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_9" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color9_check"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp">
+
+                <ImageView
+                    android:id="@+id/category_edit_color_10"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/category_color_10" />
+
+                <ImageView
+                    android:id="@+id/category_edit_color1_check10"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/category_color_check"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

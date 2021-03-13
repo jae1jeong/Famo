@@ -1,12 +1,13 @@
 package com.softsquared.template.kotlin.src.main.category
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityCategoryEditBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
@@ -24,6 +25,9 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     var name: List<String>? = null
     var color: List<String>? = null
     var size: Int? = null
+    var getCategoryID: String? = null
+
+    var tempCategoryID : Array<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,17 +35,47 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         wholeName = intent.getStringExtra("name")
         wholeColor = intent.getStringExtra("color")
         size = intent.getIntExtra("size", 0)
+        getCategoryID = intent.getStringExtra("categoryID")
         Log.d("TAG", "CategoryEditActivity : name : $wholeName")
-        Log.d("TAG", "CategoryEditActivity : color : $wholeColor")
-        Log.d("TAG", "CategoryEditActivity : color : $size")
+        Log.d("TAG", "CategoryEditActivity : wholeColor : $wholeColor")
+        Log.d("TAG", "CategoryEditActivity : size : $size")
+        Log.d("TAG", "CategoryEditActivity : categoryID : $getCategoryID")
 
-        name = wholeName!!.split(":")
-        color = wholeColor!!.split(":")
+//        val a = "생성된 카테고리번호 : 20"
+//        val b = a.split(":".toRegex()).toTypedArray()
+//        println(b[0])
+//        println(b[1])
+//        val c = b[1].substring(1, b[1].length)
+//        println(c)
 
-        //카테고리 리사이클러뷰
-        createCategoryRecyclerview()
+        if (wholeName != null && wholeColor != null){
+            name = wholeName!!.split(":")
+            color = wholeColor!!.split(":")
 
+            //카테고리 리사이클러뷰
+            createCategoryRecyclerview()
+        }
+
+        if (getCategoryID != null){
+            tempCategoryID = getCategoryID!!.split(":".toRegex()).toTypedArray()
+            Log.d("TAG", "getCategoryID: $getCategoryID")
+        }
+
+
+        //카테고리 추가
         binding.categoryEditBtnPlus.setOnClickListener {
+
+            val categoryAddBottomDialogFragment = CategoryAddBottomDialogFragment()
+            val bunble = Bundle()
+            bunble.putString("name", wholeName)
+            bunble.putString("color", wholeColor)
+            bunble.putInt("size", size!!)
+            categoryAddBottomDialogFragment.arguments = bunble
+            categoryAddBottomDialogFragment.show(
+                supportFragmentManager,
+                categoryAddBottomDialogFragment.tag
+            )
+
 
 //            val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjUsIm1ldGhvZCI6IkYiLCJpYXQiOjE2MTUzODYyMTEsImV4cCI6MTY0NjkyMjIxMSwic3ViIjoidXNlckluZm8ifQ.laZCThzA823-i5-ZTVyfvqq8PMIgHUdAnP97woIHufQ"
 
@@ -59,28 +93,15 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         binding.categoryEditXBtn.setOnClickListener {
 //            (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
 //            (activity as MainActivity).onBackPressed()
-            val token = ApplicationClass.sSharedPreferences.getString(
-                ApplicationClass.X_ACCESS_TOKEN,
-                null
-            ).toString()
-//            val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEzLCJtZXRob2QiOiJGIiwiaWF0IjoxNjE1NTI3OTA2LCJleHAiOjE2NDcwNjM5MDYsInN1YiI6InVzZXJJbmZvIn0.qd1_zNvzZWWfDp54uzEyIml5X6mfmNhFfQcyQN23_6U"
 
-            Log.d(
-                "TAG", "CategoryEditFragment: ${
-                    ApplicationClass.sSharedPreferences.getString(
-                        ApplicationClass.X_ACCESS_TOKEN,
-                        null
-                    )
-                }"
-            )
-            val categoryInsertRequest = CategoryInsertRequest(
-                categoryName = "aaaaaㅠ",
-                categoryColor = 3
-            )
-
-            CategoryEditService(this).tryPostCategoryEditInsert(categoryInsertRequest)
-//            val intent = Intent(activity,MainActivity::class.java)
-//            startActivity(intent)
+//            CategoryEditService(this).tryPatchCategoryEditUpdate("")
+//            val categoryInsertRequest = CategoryInsertRequest(
+//                categoryName = categoryEditAdapter.onBindViewHolder()
+//                categoryColor = categoryID
+//            )
+//            CategoryEditService(this).tryPostCategoryEditInsert(categoryInsertRequest)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
     }
@@ -100,7 +121,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 //            ScheduleCategoryData("친구")
 //        )
 
-        categoryEditAdapter = ScheduleCategoryEditAdapter(categoryEditList)
+        categoryEditAdapter = ScheduleCategoryEditAdapter(categoryEditList,this)
 
 //        this.photoGridRecyeclerViewAdapter = PhotoGridRecyclerViewAdapter()
 //        this.photoGridRecyeclerViewAdapter.submitList(photoList)
@@ -119,6 +140,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     //삭제버튼 클릭
     override fun onItemDeleteBtnClicked(position: Int) {
         Log.d("aa", "onSearchItemDeleteBtnClicked: ")
+
         //해당 번쨰를 삭제 및 저장
         categoryEditList.removeAt(position)
         //데이터 덮어쓰기
@@ -126,6 +148,21 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         //데이터 변경알림
         this.categoryEditAdapter.notifyDataSetChanged()
     }
+
+    override fun onCategoryID() : String{
+
+        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
+        Log.d("TAG", "onCategoryID함수: $categoryID")
+        return categoryID
+    }
+
+    override fun onMoveFragment() {
+        val categoryAddBottomDialogFragment = CategoryEditBottomDialogFragment()
+        categoryAddBottomDialogFragment.show(
+            supportFragmentManager, categoryAddBottomDialogFragment.tag
+        )
+    }
+
 
     companion object {
         fun newInstance(): CategoryEditActivity {    // shs: 함수의 반환 형이 Fragment 형이라...

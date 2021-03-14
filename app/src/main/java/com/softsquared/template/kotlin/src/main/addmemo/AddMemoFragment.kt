@@ -17,6 +17,7 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.AddMemoService
 import com.softsquared.template.kotlin.src.main.AddMemoView
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 
 class AddMemoFragment: SuperBottomSheetFragment(), AddMemoView {
@@ -90,6 +91,20 @@ class AddMemoFragment: SuperBottomSheetFragment(), AddMemoView {
     }
     override fun onPostAddMemoFailure(message: String) {
         Log.d("AddMemoFragment", "onPostAddMemoFailure: $message")
+    }
+
+    override fun onPatchMemoSuccess(response: BaseResponse) {
+
+    }
+
+    override fun onPatchMemoFailure(message: String) {
+    }
+
+    override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
+
+    }
+
+    override fun onGetDetailMemoFailure(message: String) {
     }
 
 }

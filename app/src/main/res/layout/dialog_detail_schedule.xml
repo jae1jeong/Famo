@@ -18,6 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:layout_marginStart="10dp"
+        android:id="@+id/dialog_detail_text_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_detail_text_date"
+        app:layout_constraintStart_toEndOf="@+id/dialog_detail_text_date"
+        app:layout_constraintTop_toTopOf="@+id/dialog_detail_text_date" />
+
 <!--    <com.google.android.material.chip.Chip-->
 <!--        android:layout_marginStart="15dp"-->
 <!--        android:id="@+id/chip4"-->
@@ -124,6 +133,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/dialog_detail_text_memo_time_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="없음"

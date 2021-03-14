@@ -78,6 +78,7 @@
         android:tint="@color/white"
         app:fabSize="normal"
         app:borderWidth="0dp"
+        android:visibility="invisible"
         android:backgroundTint="@color/light_dark"
         android:src="@drawable/ic_sharp_add_24"
         android:id="@+id/main_btn_action_main"
@@ -136,6 +137,20 @@
 
 
             <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
                 android:weightSum="10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -179,6 +194,10 @@
                     android:layout_height="wrap_content"
                     />
                 <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:textColor="@color/black"
+                    android:id="@+id/add_memo_text_date_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -269,7 +288,6 @@
                 android:background="@drawable/background_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                >
                 <TextView
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"

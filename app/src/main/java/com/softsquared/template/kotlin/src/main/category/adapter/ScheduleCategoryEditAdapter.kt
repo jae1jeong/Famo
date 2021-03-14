@@ -1,21 +1,24 @@
 package com.softsquared.template.kotlin.src.main.category.adapter
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.category.CategoryEditService
+import com.softsquared.template.kotlin.src.main.category.CategoryEditView
 import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
+import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
 class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCategoryData>) :
-    RecyclerView.Adapter<ScheduleCategoryEditAdapter.ScheduleCategoryEditHolder>() {
+    RecyclerView.Adapter<ScheduleCategoryEditAdapter.ScheduleCategoryEditHolder>(),
+    CategoryEditView{
 
     private var iCategoryRecyclerView: ICategoryRecyclerView? = null
 
@@ -26,10 +29,11 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
         return ScheduleCategoryEditHolder(view)
     }
 
-
-
     override fun onBindViewHolder(holder: ScheduleCategoryEditHolder, position: Int) {
         holder.text.setText(categoryEditList[position].text)
+        holder.color.setColorFilter(Color.parseColor(categoryEditList[position].color))
+//        holder.color.setColorFilter(categoryEditList[position].color)
+//        holder.text.addTextChangedListener()
     }
 
     override fun getItemCount(): Int = categoryEditList.size
@@ -42,17 +46,17 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
         categoryEditList.removeAt(position)
     }
 
-    inner class ScheduleCategoryEditHolder(
-        itemView: View)
+    inner class ScheduleCategoryEditHolder(itemView: View)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val text = itemView.findViewById<EditText>(R.id.recyclerview_category_edit_et_content)
         val delete = itemView.findViewById<ImageView>(R.id.category_edit_btn_delete)
+        val color = itemView.findViewById<ImageView>(R.id.category_edit_btn_color)
 
         init {
-            Log.d("ㅇㅇ", "SearchItemViewHolder: ")
             //리스너연결
             delete.setOnClickListener(this)
+            color.setOnClickListener(this)
         }
 
         override fun onClick(view: View?) {
@@ -62,9 +66,16 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
                     Log.d("로그", "deleteSearchBtn: 검색 삭제 버튼 클릭")
                     Log.d("로그", "adapterPosition: $adapterPosition")
 //                    iCategoryRecyclerView!!.onItemDeleteBtnClicked(adapterPosition)
-                    removeItem(adapterPosition)
-                    notifyDataSetChanged()
+//                    CategoryEditService(this).
+//                    removeItem(adapterPosition)
+//                    notifyDataSetChanged()
+//                    CategoryEditService(this@ScheduleCategoryEditAdapter)
+//                        .tryDeleteCategoryEditDelete(1)
 //                    this.mySearchRecyclerViewInterface.onSearchItemDeleteBtnClicked(adapterPosition)
+                }
+                color -> {
+                    color.setColorFilter(Color.parseColor("#FF0000"))
+                    Log.d("로그", "색상변경 버튼 클릭")
                 }
             }
         }
@@ -72,6 +83,24 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 
     }
 
+    override fun onPostCategoryInsertSuccess(response: CategoryInsertResponse) {
+    }
+
+    override fun onPostCategoryInsertFail(message: String) {
+    }
+
+    override fun onDeleteCategoryDeleteSuccess(response: BaseResponse) {
+    }
+
+    override fun onDeleteCategoryDeleteFail(message: String) {
+    }
+
+
+    override fun onPatchCategoryUpdateSuccess(response: BaseResponse) {
+    }
+
+    override fun onPatchCategoryUpdateFail(message: String) {
+    }
 
 
 //    override fun onClick(view: View?) {

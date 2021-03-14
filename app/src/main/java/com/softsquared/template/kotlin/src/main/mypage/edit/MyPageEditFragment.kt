@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
@@ -37,8 +39,28 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
 
+    var token : String? = null
+    var name : String? = null
+    var img : String?= null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var extra = this.arguments
+        if (extra != null) {
+            extra = arguments
+            token = extra?.getString("token")
+            name = extra?.getString("name")
+            img = extra?.getString("img").toString()
+            Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
+            Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
+            Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
+            Glide.with(this).load(img)
+                .centerCrop().into(binding.myPageEditImg)
+        }
+
+
+        binding.myPageEditTvName.text = name
 
         //클릭에 따른 visible/gone을 위한 변수
         var topMentCnt = 1

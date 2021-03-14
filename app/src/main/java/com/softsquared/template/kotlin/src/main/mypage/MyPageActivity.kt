@@ -33,31 +33,36 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
 
-//    val token = intent.getStringExtra("token")
-//    val name = intent.getStringExtra("name")
-//    val img = intent.getStringExtra("img")
+    var myPageEditFragment = MyPageEditFragment(this)
+    var myPageFragment = MyPageFragment(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val myPageFragment = MyPageFragment(this)
-//        val bundle = Bundle()
-//        bundle.putString("token", token)
-//        bundle.putString("name", name)
-//        bundle.putString("img", img)
-//        myPageFragment.arguments = bundle
+        val token = intent.getStringExtra("token")
+        val name = intent.getStringExtra("name")
+        val img = intent.getStringExtra("img")
 
-        supportFragmentManager.beginTransaction().add(R.id.main_my_page_fragment, MyPageFragment(this))
+        myPageFragment = MyPageFragment(this)
+        myPageEditFragment = MyPageEditFragment(this)
+        val bundle = Bundle()
+        bundle.putString("token", token)
+        bundle.putString("name", name)
+        bundle.putString("img", img)
+        myPageFragment.arguments = bundle
+        myPageEditFragment.arguments = bundle
+
+        supportFragmentManager.beginTransaction().add(R.id.main_my_page_fragment, myPageFragment)
             .commitAllowingStateLoss()
     }
 
     override fun moveMyPage() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, MyPageFragment(this))
+        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, myPageFragment)
                 .commit()
     }
 //
     override fun moveMyPageEdit() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, MyPageEditFragment(this))
+        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, myPageEditFragment)
                 .commit()
     }
 

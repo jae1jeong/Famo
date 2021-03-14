@@ -40,8 +40,8 @@ class TodayFragment :
 //
 //        }
 
-        showLoadingDialog(context!!)
-        TodayService(this).onGetScheduleItems()
+//        showLoadingDialog(context!!)
+//        TodayService(this).onGetScheduleItems()
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)

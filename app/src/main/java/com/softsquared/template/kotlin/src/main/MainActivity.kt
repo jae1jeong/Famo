@@ -1,25 +1,21 @@
 package com.softsquared.template.kotlin.src.main
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+<<<<<<< HEAD
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+=======
+>>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.tabs.TabLayout
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
@@ -27,14 +23,15 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
+<<<<<<< HEAD
 import com.softsquared.template.kotlin.src.main.category.CategoryFragment.Companion.newInstance
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
+=======
+>>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
@@ -50,9 +47,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val token = intent.getStringExtra("token")
+//        val name = intent.getStringExtra("name")
+//        val img = intent.getStringExtra("img")
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
@@ -74,6 +74,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         val jwt:String? = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null)
         Log.d("토큰", "$jwt")
+        //여기 지움
+        val test = intent.getStringExtra("test")
+        Log.d("테스트 토큰", "$test")
+        //
 
         // 다른 부분을 눌렀을때 FAB 버튼 비활성화
         binding.mainLayout.setOnClickListener {
@@ -85,14 +89,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
+//            binding.mainFrameLayout.visibility = View.VISIBLE
             val token = intent.getStringExtra("token")
             val name = intent.getStringExtra("name")
             val img = intent.getStringExtra("img")
 //            binding.mainFrameLayout.visibility = View.VISIBLE
             val intent = Intent(this,MyPageActivity::class.java)
-            intent.putExtra("token",token)
-            intent.putExtra("name",name)
-            intent.putExtra("img",img)
+//            intent.putExtra("token",token)
+//            intent.putExtra("name",name)
+//            intent.putExtra("img",img)
             startActivity(intent)
 //            supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,MyPageFragment())
 //                    .commit()
@@ -235,6 +240,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 //        fragmentTransaction.replace(R.id.main_frame_layout, fragment).commit();      // Fragment로 사용할 MainActivity내의 layout공간을 선택합니다.
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+//        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
+//            .commit()
+
+    }
     fun fragmentSetting() {
         binding.mainTabLayout.visibility = View.VISIBLE
         binding.mainImageProfile.visibility = View.VISIBLE

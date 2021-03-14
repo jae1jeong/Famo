@@ -1,24 +1,24 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.RelativeLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.CategoryFragment
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindBookmarkFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
-class ScheduleCategoryAdapter(
-    var categoryList: ArrayList<ScheduleCategoryData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-) :
-    RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>() {
+class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
+    RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>()
+    ,CategoryInquiryView{
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
@@ -41,7 +41,12 @@ class ScheduleCategoryAdapter(
 
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
 //        holder.text.text = categoryList[position].text
-        holder.button.text = categoryList[position].text
+        holder.text.text = categoryList[position].text
+        holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
+//        holder.color.setImageResource(categoryList[position])
+//        holder.color.setImageResource(categoryList[position].color)
+//        holder.color.setColorFilter(Color.parseColor(response.data[0].colorInfo))
+//        img.setColorFilter(Color.parseColor("#FF0000"))
     }
 
     override fun getItemCount(): Int = categoryList.size
@@ -60,26 +65,35 @@ class ScheduleCategoryAdapter(
 
         private var iSearchRecyclerViewInterface : IScheduleCategoryRecyclerView
 
-//        val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
-        val button = itemView.findViewById<Button>(R.id.recyclerview_category_text)
+        val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
+        val color = itemView.findViewById<ImageView>(R.id.recyclerview_category_color)
+//        val button = itemView.findViewById<Button>(R.id.recyclerview_category_text)
 //        val category = itemView.findViewById<RelativeLayout>(R.id.item_category_list)
 
         init {
             //리스너연결
 //            category.setOnClickListener(this)
-            button.setOnClickListener(this)
+            text.setOnClickListener(this)
             this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
         }
 
         override fun onClick(view: View?) {
             when (view) {
-                button -> {
-                    Log.d("로그", "onClick: 카테고리 클릭되나?")
+                text -> {
+                    Log.d("로그", "onClick: 카테고리 클릭")
                     this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(adapterPosition)
                 }
             }
         }
 
+    }
+
+    override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
+
+
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
     }
 
 }

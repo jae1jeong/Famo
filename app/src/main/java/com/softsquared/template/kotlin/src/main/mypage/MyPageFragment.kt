@@ -1,19 +1,12 @@
 package com.softsquared.template.kotlin.src.main.mypage
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
-import com.softsquared.template.kotlin.databinding.FragmentMonthlyBinding
 import com.softsquared.template.kotlin.databinding.FragmentMypageBinding
-import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.CategoryFragment
-import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
-import java.lang.reflect.Array.newInstance
 
 class MyPageFragment(val myPageActivityView: MyPageActivityView): BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::bind,
         R.layout.fragment_mypage) {
@@ -48,6 +41,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView): BaseFragment<F
         binding.myPageImg.setOnClickListener {
 //            val intent = Intent(activity,MyPageActivity::class.java)
 //            startActivity(intent)
+
             myPageActivityView.moveMyPageEdit()
         }
 

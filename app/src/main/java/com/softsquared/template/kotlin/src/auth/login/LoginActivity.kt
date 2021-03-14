@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.auth.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityLoginBinding
@@ -31,16 +32,17 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inf
     override fun onPostLoginSuccess(response: LoginResponse) {
         if(response.isSuccess){
             when(response.code){
-                100 ->{
+                100 -> {
                     val edit = ApplicationClass.sSharedPreferences.edit()
                     // jwt 삽입
-                    edit.putString(ApplicationClass.X_ACCESS_TOKEN,response.jwt)
-                    edit.putInt(Constants.USER_ID,response.userID)
-                    edit.putString(Constants.USER_NICKNAME,response.nickname)
+                    edit.putString(ApplicationClass.X_ACCESS_TOKEN, response.jwt)
+                    edit.putInt(Constants.USER_ID, response.userID)
+                    edit.putString(Constants.USER_NICKNAME, response.nickname)
                     edit.commit()
                     dismissLoadingDialog()
-                    startActivity(Intent(this,MainActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     showCustomToast("로그인이 완료되었습니다!")
+                    Log.d("TAG", "onPostLoginSuccess: ${ApplicationClass.X_ACCESS_TOKEN}")
                     finish()
                 }
                 else ->{

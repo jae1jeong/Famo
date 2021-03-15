@@ -7,13 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-<<<<<<< HEAD
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-=======
->>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.softsquared.template.kotlin.R
@@ -23,12 +17,8 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
-<<<<<<< HEAD
-import com.softsquared.template.kotlin.src.main.category.CategoryFragment.Companion.newInstance
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
-=======
->>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity

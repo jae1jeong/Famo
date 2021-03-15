@@ -16,14 +16,12 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
-import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
-import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 
 
 class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
@@ -304,13 +302,15 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onItemMoveBtnClicked(position: Int) {
         binding.scheduleFindMainLinear.visibility = View.GONE
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
+
+
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_main_fragment, ScheduleFindCategoryFragment())
             .commit()
     }
 
-    override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
-        when (response.code) {
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+        when (responseUser.code) {
             100 -> {
 //                response.data[0].categoryName
 //                response.data[0].colorInfo
@@ -322,20 +322,20 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
                 val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
 
-                for (i in 0 until response.data.size) {
+                for (i in 0 until responseUser.data.size) {
                     categoryList.add(
                         ScheduleCategoryData(
-                            response.data[i].categoryID,
-                            response.data[i].categoryName,
-                            response.data[i].colorInfo
+                            responseUser.data[i].categoryID,
+                            responseUser.data[i].categoryName,
+                            responseUser.data[i].colorInfo
                         )
                     )
 //                    1 2 3  123
-                    name += response.data[i].categoryName + ":"
-                    color += response.data[i].colorInfo + ":"
-                    size = response.data.size
+                    name += responseUser.data[i].categoryName + ":"
+                    color += responseUser.data[i].colorInfo + ":"
+                    size = responseUser.data.size
 
-                    categoryID += "${response.data[i].categoryID}:"
+                    categoryID += "${responseUser.data[i].categoryID}:"
                 }
 
                 Log.d("TAG", "name: $name")
@@ -351,9 +351,15 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
             }
             else -> {
-                showCustomToast("실패 메시지 : ${response.message}")
+                showCustomToast("실패 메시지 : ${responseUser.message}")
             }
         }
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

@@ -62,9 +62,6 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
         }
 
-        Log.d("TAG", "tempCategoryID: ${tempCategoryID?.get(0)}")
-        Log.d("TAG", "tempCategoryID: ${tempCategoryID?.get(1)}")
-
         if (tempCategoryID != null){
 
             for (i in 0 until size!!){
@@ -179,6 +176,13 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 //        val categoryID = tempCategoryID
 //        Log.d("TAG", "onCategoryID함수: $categoryID")
         return categoryID
+    }
+
+    override fun onCategoryID2() : Int{
+//        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
+//        val categoryID = tempCategoryID
+//        Log.d("TAG", "onCategoryID함수: $categoryID")
+        return Integer.parseInt(tempCategoryID!![0])
     }
 
     override fun onMoveFragment(categoryID : Int, text : String) {

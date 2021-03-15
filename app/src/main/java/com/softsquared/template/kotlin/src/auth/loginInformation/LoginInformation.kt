@@ -15,6 +15,7 @@ import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.KakaoLoginResponse
 import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
 import com.softsquared.template.kotlin.src.auth.test.Test
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 
 class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoBinding::inflate),
@@ -49,12 +50,14 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
                     )
                     val accessToken = token.accessToken
                     val refreshToken = token.refreshToken
-//                    val name = user.kakaoAccount!!.profile!!.nickname
-//                    val img = user.kakaoAccount!!.profile!!.thumbnailImageUrl
+                    val name = user.kakaoAccount!!.profile!!.nickname
+                    val img = user.kakaoAccount!!.profile!!.thumbnailImageUrl
 
-                    val intent = Intent(this, Test::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("accessToken",accessToken)
                     intent.putExtra("refreshToken",refreshToken)
+                    intent.putExtra("name",name)
+                    intent.putExtra("img",img)
                     startActivity(intent)
 //                    LoginInformationService(this).tryGetKakaoLogin()
                 }
@@ -69,7 +72,6 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
 //        카카오 로그인 버튼 클릭
         binding.loginInfoBtnKakaoLogin.setOnClickListener {
             LoginInformationService(this).tryGetKakaoLogin()
-//            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dev.risingsoi.site/users/kakao")))
 
 //             어플에 카톡이 깔려있는 경우
             if (LoginClient.instance.isKakaoTalkLoginAvailable(this)) {

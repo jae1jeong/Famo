@@ -1,18 +1,16 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
 class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
@@ -88,7 +86,13 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
 
     }
 
-    override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
 
 
     }

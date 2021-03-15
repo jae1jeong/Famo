@@ -25,7 +25,7 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageEditResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageEditCommentsResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
@@ -57,14 +57,17 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
             Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
             Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
             Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
-            Glide.with(this).load(img)
-                .centerCrop().into(binding.myPageEditImg)
+//            Glide.with(this).load(img)
+//                .centerCrop().into(binding.myPageEditImg)
         }
 
         val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
 
-        Glide.with(this).load(img)
-            .centerCrop().into(binding.myPageEditImg)
+        if (img == null){
+
+            Glide.with(this).load(R.drawable.my_page_img2)
+                .centerCrop().into(binding.myPageEditImg)
+        }
 
         binding.myPageEditTvName.text = name
 
@@ -261,14 +264,14 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
         }
     }
 
-    override fun onGetMyPageEditSuccess(editResponse: MyPageEditResponse) {
+    override fun onGetMyPageEditSuccess(editCommentsResponse: MyPageEditCommentsResponse) {
 
-        when(editResponse.code){
+        when(editCommentsResponse.code){
             100 -> {
                 showCustomToast("MyPage조회 성공")
             }else -> {
-            showCustomToast("실패 메시지 : ${editResponse.message}")
-            Log.d("TAG", "조회실패: ${editResponse.message}")
+            showCustomToast("실패 메시지 : ${editCommentsResponse.message}")
+            Log.d("TAG", "조회실패: ${editCommentsResponse.message}")
         }
 
         }

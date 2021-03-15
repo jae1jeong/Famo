@@ -68,7 +68,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
         when(response.code){
             100 -> {
                 Log.d("TAG", "onGetMyPageCommentsSuccess: 상단코멘트 성공")
-                showCustomToast("상단코맨트성공")
+//                showCustomToast("상단코맨트성공")
                 binding.myPageTvComments.text = response.titleComment
            }
         }

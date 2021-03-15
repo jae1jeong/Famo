@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.databinding.ItemTodayMemoBinding
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import com.softsquared.template.kotlin.util.CategoryColorPicker
 import java.util.ArrayList
 
 class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,private val checkListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
@@ -41,6 +42,7 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
                 memo.isChecked = !memo.isChecked
             }
         }
+        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
 
     }
 

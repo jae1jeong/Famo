@@ -27,7 +27,7 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:id="@+id/textView2"
+                android:id="@+id/item_monthly_category_color"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="15dp"
@@ -41,9 +41,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{monthlyMemo.createAtMonth}"
-                app:layout_constraintBottom_toBottomOf="@+id/textView2"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="@+id/textView2" />
+                app:layout_constraintBottom_toBottomOf="@+id/item_monthly_category_color"
+                app:layout_constraintStart_toEndOf="@+id/item_monthly_category_color"
+                app:layout_constraintTop_toTopOf="@+id/item_monthly_category_color" />
 
             <TextView
                 android:layout_marginTop="20dp"
@@ -54,8 +54,8 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintStart_toStartOf="@+id/item_monthly_category_color"
+                app:layout_constraintTop_toBottomOf="@+id/item_monthly_category_color" />
 
             <TextView
                 android:layout_marginTop="10dp"

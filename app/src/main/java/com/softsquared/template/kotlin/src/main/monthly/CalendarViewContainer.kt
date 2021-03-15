@@ -14,9 +14,5 @@ class CalendarViewContainer(view: View):ViewContainer(view) {
     val textView = view.findViewById<TextView>(R.id.calendar_day_text)
     lateinit var day:CalendarDay
 
-    init{
-        view.setOnClickListener {
-            }
-        }
 
 }

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
@@ -33,15 +34,8 @@ class TodayFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//         더미데이터로 리사이클러뷰 테스트
-//        for(i in 1..5){
-//            memoList.add(MemoItem(i,"202021",i,"오늘","내용1",false,"BLUE"))
-//            memoList.add(MemoItem(i,"202021",i,"테스트2","내용2에요",true,"BLUE"))
-//
-//        }
-
-//        showLoadingDialog(context!!)
-//        TodayService(this).onGetScheduleItems()
+        showLoadingDialog(context!!)
+        TodayService(this).onGetScheduleItems()
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
@@ -104,11 +98,6 @@ class TodayFragment :
         }
     }
 
-    fun reloadItems(context:Context){
-        showLoadingDialog(context)
-        TodayService(this).onGetScheduleItems()
-    }
-
     fun checkIsMemoListEmpty(){
         // 메모가 없을 경우 메모가 없는 뷰 나타나게 하기, 있으면 GONE 처리
         todayMemoAdapter?.let{
@@ -130,13 +119,24 @@ class TodayFragment :
                         val memoJsonObject = memoJsonArray[i].asJsonObject
                         val memoDate = memoJsonObject.get("scheduleDate").asString
                         val memoTitle = memoJsonObject.get("scheduleName").asString
-                        var memoContent: String? = memoJsonObject.get("scheduleMemo").toString()
+                        val memoContentJsonElement: JsonElement? = memoJsonObject.get("scheduleMemo")
                         val memoPick = memoJsonObject.get("schedulePick").asInt
                         val memoId = memoJsonObject.get("scheduleID").asInt
                         val memoCreatedAt = memoDate.split(" ")
+                        val memoColorInfoJsonElement:JsonElement? = memoJsonObject.get("colorInfo")
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
-                        Log.d("tag", "onGetScheduleItemsSuccess:[$memoDate] $memoCreatedAt")
+                        var memoContent = ""
+                        if(!memoContentJsonElement!!.isJsonNull) {
+                            memoContent = memoContentJsonElement.asString
+                        }
+
+                        var memoColorInfo:String? = null
+                        if(!memoColorInfoJsonElement!!.isJsonNull){
+                            memoColorInfo = memoColorInfoJsonElement.asString
+                        }
+
+                        // 날짜 동그란 뷰에 들어갈 날짜와 월 스트링 분리
                         for (i in 0..1) {
                             if (i > 0) {
                                 memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
@@ -144,11 +144,12 @@ class TodayFragment :
                                 memoCreatedAtDay = memoCreatedAt[i].replace(" ","").toInt()
                             }
                         }
-                        if (memoContent == null) {
-                            memoContent = ""
-                        }
+
+                        // 메모 체크되어있는지
                         var memoIsChecked :Boolean? = null
                         memoIsChecked = memoPick >= 0
+
+
                         memoList.add(
                             MemoItem(
                                 memoId,
@@ -157,11 +158,12 @@ class TodayFragment :
                                 memoTitle,
                                 memoContent,
                                 memoIsChecked,
-                                "BLUE"
+                                memoColorInfo
                             )
                         )
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
+                    // 메모가 없으면 뷰를 보여줘야하기 때문에 체크 메서드 함수 호출
                     checkIsMemoListEmpty()
                     dismissLoadingDialog()
                 }

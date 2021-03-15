@@ -19,22 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-<!--            <com.applikeysolutions.cosmocalendar.view.CalendarView-->
-<!--                android:id="@+id/calendar_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:connectedDayIconPosition="top"-->
-<!--                app:currentDayTextColor="#f79256"-->
-<!--                app:firstDayOfTheWeek="sunday"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:orientation="horizontal"-->
-<!--                app:selectedDayBackgroundColor="#FFEACA"-->
-<!--                app:selectedDayBackgroundEndColor="#f79256"-->
-<!--                app:selectedDayBackgroundStartColor="#f79256"-->
-<!--                app:selectedDayTextColor="#FFFFFF"-->
-<!--                app:selectionType="range"-->
-<!--                app:weekendDayTextColor="#ef4550" />-->
-
             <com.kizitonwose.calendarview.CalendarView
                 app:cv_monthHeaderResource="@layout/calendar_month_header_layout"
                 app:cv_dayViewResource="@layout/calendar_day_layout"

@@ -7,15 +7,15 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-<<<<<<< HEAD
+
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
-=======
->>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
+
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
@@ -23,12 +23,9 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
-<<<<<<< HEAD
-import com.softsquared.template.kotlin.src.main.category.CategoryFragment.Companion.newInstance
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
-=======
->>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
+
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
@@ -69,7 +66,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // FAB 글쓰기 버튼
         binding.mainBtnActionSub.setOnClickListener {
-            showBottomAddScheduleSheetDialog()
+//            showBottomAddScheduleSheetDialog()
         }
 
         val jwt:String? = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null)
@@ -135,7 +132,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 }
             }
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                showCustomToast("slide")
                 if(Constants.IS_EDIT){
                     showCustomToast("수정모드")
                     val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID,-1)
@@ -224,10 +220,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     // 삭제 예정
     // 프래그먼트에서도 BottomSheetDialog를 호출할 수 있게 메서드로 작성
-    fun showBottomAddScheduleSheetDialog(){
-        val sheet = AddMemoFragment()
-        sheet.show(supportFragmentManager,"AddMemoFragment")
-    }
+//    fun showBottomAddScheduleSheetDialog(){
+//        val sheet = AddMemoFragment()
+//        sheet.show(supportFragmentManager,"AddMemoFragment")
+//    }
 
     fun replaceFragment(fragment : Fragment) {
 //        binding.mainFrameLayout.visibility = View.VISIBLE
@@ -260,18 +256,18 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         if(response.isSuccess){
             when(response.code){
                 100->{
-                    dismissLoadingDialog()
                     showCustomToast("일정이 작성 되었습니다!")
+                    stateChangeBottomSheet(Constants.COLLASPE)
                     TodayService(this).onGetScheduleItems()
                     // 초기화
                     binding.addMemoEditTitle.setText("")
                     binding.addMemoEditContent.setText("")
                 }
                 else->{
-                    dismissLoadingDialog()
                     showCustomToast(response.message.toString())
                 }
             }
+            dismissLoadingDialog()
         }else{
             dismissLoadingDialog()
             showCustomToast(response.message.toString())
@@ -317,7 +313,11 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         val memoJsonObject = it.asJsonObject
                         val memoTitle = memoJsonObject.get("scheduleName").asString
                         val memoDate = memoJsonObject.get("scheduleDate").asString
-                        val memoContent = memoJsonObject.get("scheduleMemo").asString
+                        val memoContentJsonElement:JsonElement? = memoJsonObject.get("scheduleMemo")
+                        var memoContent = ""
+                        if(!memoContentJsonElement!!.isJsonNull) {
+                            memoContent = memoContentJsonElement.asString
+                        }
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
 
@@ -326,14 +326,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         binding.addMemoTextDateInfo.text = memoDate
 
                     }
-                    dismissLoadingDialog()
                     showCustomToast(response.message.toString())
                 }
                 else->{
-                    dismissLoadingDialog()
                     showCustomToast(response.message.toString())
                 }
             }
+            dismissLoadingDialog()
         }else{
             dismissLoadingDialog()
             showCustomToast(response.message.toString())
@@ -361,7 +360,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         val memoCreatedAt = memoDate.split(" ")
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
-                        Log.d("tag", "onGetScheduleItemsSuccess:[$memoDate] $memoCreatedAt")
                         for (i in 0..1) {
                             if (i > 0) {
                                 memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
@@ -387,6 +385,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         )
                     }
                     TodayFragment.todayMemoAdapter?.setNewMemoList(TodayFragment.memoList)
+//                    // 오늘 프래그먼트에서 함수 사용
+//                    val todayFragment:TodayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
+//                    todayFragment.checkIsMemoListEmpty()
                     dismissLoadingDialog()
                 }
                 else->{

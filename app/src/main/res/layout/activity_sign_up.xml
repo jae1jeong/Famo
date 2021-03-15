@@ -197,6 +197,7 @@
                     tools:layout_editor_absoluteX="30dp" />
 
                 <Button
+                    android:id="@+id/sign_up_btn_auth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -205,6 +206,52 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_btn_auth"
                     android:text="인증요청"
+                    android:textColor="@color/auth_button_text"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/sign_up_edit_phone_number"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/sign_up_edit_phone_number" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:id="@+id/sign_up_linear_auth_zone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <EditText
+                    android:id="@+id/sign_up_edit_auth_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="10"
+                    android:background="@drawable/background_edit_auth"
+                    android:hint="@string/sign_up_hint_auth"
+                    android:maxLines="1"
+                    android:paddingVertical="10dp"
+                    android:paddingLeft="15dp"
+                    android:singleLine="true"
+                    android:textColorHint="@color/auth_button_text"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12"
+                    tools:layout_editor_absoluteX="30dp" />
+
+                <Button
+                    android:id="@+id/sign_up_btn_auth_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_btn_auth"
+                    android:text="@string/check"
                     android:textColor="@color/auth_button_text"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="@+id/sign_up_edit_phone_number"
@@ -225,20 +272,20 @@
                 app:layout_constraintTop_toTopOf="@+id/sign_up_edit_nickname" />
 
             <Button
-                android:layout_marginBottom="25dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/sign_up_btn_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginBottom="25dp"
                 android:background="@drawable/background_btn"
                 android:text="@string/sign_up_btn_sign_up"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                app:layout_constraintVertical_bias="0.123" />
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_linear_auth_zone"
+                tools:layout_editor_absoluteX="15dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

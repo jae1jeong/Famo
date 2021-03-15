@@ -59,7 +59,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // FAB 메인 액션 버튼
         binding.mainBtnActionMain.setOnClickListener {
-            onActionButtonClicked()
+//            onActionButtonClicked()
         }
 
         // FAB 글쓰기 버튼
@@ -77,7 +77,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         // 다른 부분을 눌렀을때 FAB 버튼 비활성화
         binding.mainLayout.setOnClickListener {
             if(clicked){
-                onActionButtonClicked()
+//                onActionButtonClicked()
             }
         }
 
@@ -116,35 +116,44 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             bottomSheetBehavior.apply {
             peekHeight = 200
             this.state = BottomSheetBehavior.STATE_COLLAPSED
-        }.addBottomSheetCallback(object:BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState){
-                    BottomSheetBehavior.STATE_EXPANDED->{
+        }.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            if (Constants.IS_EDIT) {
+                                showCustomToast("수정모드")
+                                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID, -1)
+                                if (editScheduleID != -1) {
+                                    AddMemoService(this@MainActivity).tryGetDetailMemo(editScheduleID)
+                                }
+                            }
+                        }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+                    // 바텀 시트 다이얼로그 절반 이하인 상태일때
+                    if(slideOffset < 0.5){
+                        binding.addMemoDialogBtnOk.visibility = View.VISIBLE
+                        binding.addMemoImageScroll.setImageResource(R.drawable.today_write_up_arrow)
+
+                    }
+                    // 바텀 시트 다이얼로그 절반 이상인 상태일때
+                    else{
                         binding.addMemoImageScroll.setImageResource(R.drawable.today_write_down_arrow)
                         binding.addMemoDialogBtnOk.visibility = View.GONE
                     }
-                    BottomSheetBehavior.STATE_COLLAPSED->{
-                        binding.addMemoDialogBtnOk.visibility = View.VISIBLE
-                        binding.addMemoImageScroll.setImageResource(R.drawable.today_write_up_arrow)
-                    }
                 }
-            }
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if(Constants.IS_EDIT){
-                    showCustomToast("수정모드")
-                    val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID,-1)
-                    if(editScheduleID != -1){
-                        showLoadingDialog(this@MainActivity)
-                        AddMemoService(this@MainActivity).tryGetDetailMemo(editScheduleID)
-                    }
-                }
-            }
 
-        })
+            })
 
         // 바텀시트 다이얼로그 방향키
         binding.addMemoImageScroll.setOnClickListener {
-            stateChangeBottomSheet(Constants.COLLASPE)
+            bottomSheetBehavior.peekHeight = 400
+            stateChangeBottomSheet(Constants.EXPAND)
         }
 
 
@@ -188,21 +197,23 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
+    // 삭제 예정
     // FAB 액션 버튼 메서드
-    private fun onActionButtonClicked() {
-        setVisibility(clicked)
-        setAnimation(clicked)
-        clicked  = !clicked
-    }
+//    private fun onActionButtonClicked() {
+//        setVisibility(clicked)
+//        setAnimation(clicked)
+//        clicked  = !clicked
+//    }
 
+    // 삭제 예정
     // FAB 액션 버튼 애니메이션
-    private fun setAnimation(clicked: Boolean) {
-        if(!clicked){
-            binding.mainBtnActionSub.startAnimation(fromBottom)
-        }else{
-            binding.mainBtnActionSub.startAnimation(toBottom)
-        }
-    }
+//    private fun setAnimation(clicked: Boolean) {
+//        if(!clicked){
+//            binding.mainBtnActionSub.startAnimation(fromBottom)
+//        }else{
+//            binding.mainBtnActionSub.startAnimation(toBottom)
+//        }
+//    }
 
     // FAB 액션 버튼 비저빌리티
     private fun setVisibility(clicked:Boolean){
@@ -330,8 +341,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     showCustomToast(response.message.toString())
                 }
             }
-            dismissLoadingDialog()
-        }else{
+        }
+        else{
             dismissLoadingDialog()
             showCustomToast(response.message.toString())
         }
@@ -352,12 +363,19 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         val memoJsonObject = memoJsonArray[i].asJsonObject
                         val memoDate = memoJsonObject.get("scheduleDate").asString
                         val memoTitle = memoJsonObject.get("scheduleName").asString
-                        var memoContent: String? = memoJsonObject.get("scheduleMemo").toString()
+                        var memoContentJsonElement: JsonElement? = memoJsonObject.get("scheduleMemo")
                         val memoPick = memoJsonObject.get("schedulePick").asInt
                         val memoId = memoJsonObject.get("scheduleID").asInt
                         val memoCreatedAt = memoDate.split(" ")
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
+                        var memoContent =""
+                        val memoColorInfoJsonElement:JsonElement? = memoJsonObject.get("colorInfo")
+
+                        if(!memoContentJsonElement!!.isJsonNull) {
+                            memoContent = memoContentJsonElement.asString
+                        }
+
                         for (i in 0..1) {
                             if (i > 0) {
                                 memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
@@ -365,9 +383,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 memoCreatedAtDay = memoCreatedAt[i].replace(" ","").toInt()
                             }
                         }
-                        if (memoContent == null) {
-                            memoContent = ""
+
+                        var memoColorInfo:String? = null
+                        if(!memoColorInfoJsonElement!!.isJsonNull){
+                            memoColorInfo = memoColorInfoJsonElement.asString
                         }
+
                         var memoIsChecked :Boolean? = null
                         memoIsChecked = memoPick >= 0
                         TodayFragment.memoList.add(
@@ -378,7 +399,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                         memoTitle,
                                         memoContent,
                                         memoIsChecked,
-                                        "BLUE"
+                                        memoColorInfo
                                 )
                         )
                     }

@@ -90,14 +90,19 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <FrameLayout
 
+    <FrameLayout
         android:background="@drawable/background_bottom_sheet_dialog_add_memo"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:id="@+id/main_frame_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="450dp"
         >
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
         <LinearLayout
             android:id="@+id/add_memo_linear_layout"
             android:layout_width="match_parent"
@@ -203,12 +208,6 @@
                     />
             </LinearLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-
-            </com.google.android.material.chip.ChipGroup>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:background="@drawable/background_edit"
                 android:layout_marginTop="15dp"
@@ -362,8 +361,9 @@
 
             </LinearLayout>
         </LinearLayout>
-
+        </androidx.core.widget.NestedScrollView>
     </FrameLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

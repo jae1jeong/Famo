@@ -40,16 +40,23 @@ class TodayFragment :
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
         todayMemoAdapter = MemoAdapter(memoList,context!!,{
+            // 디테일 다이얼로그
             val scheduleDetailDialog = ScheduleDetailDialog(context!!)
+            // 디테일 다이얼로그 수정하기 버튼
             scheduleDetailDialog.setOnModifyBtnClickedListener {
+                // 스케쥴 ID 보내기
                 val edit = ApplicationClass.sSharedPreferences.edit()
                 edit.putInt(Constants.EDIT_SCHEDULE_ID,it.id)
                 edit.apply()
+
                 Constants.IS_EDIT = true
+
+                //바텀 시트 다이얼로그 확장
                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
             }
             scheduleDetailDialog.start(it)
         },{
+            // 일정완료 버튼
             showLoadingDialog(context!!)
             TodayService(this).onPostCheckItem(it.id)
         })

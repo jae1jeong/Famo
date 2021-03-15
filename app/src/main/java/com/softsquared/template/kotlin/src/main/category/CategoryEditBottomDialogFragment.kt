@@ -456,7 +456,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
 
     //완료버튼 활성화확인 함수
     fun check() {
-        text = category_add_et.text.toString()
+        text = category_edit_et.text.toString()
 
         //이미 선택되있는 색상
         for (i in 0 until num.size) {

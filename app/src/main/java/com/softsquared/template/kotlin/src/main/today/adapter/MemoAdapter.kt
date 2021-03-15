@@ -11,7 +11,7 @@ import com.softsquared.template.kotlin.databinding.ItemTodayMemoBinding
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import java.util.ArrayList
 
-class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
+class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,private val checkListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
     class MemoViewHolder(val binding:ItemTodayMemoBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoAdapter.MemoViewHolder {
@@ -32,9 +32,11 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         // 체크 버튼 리스너
         holder.binding.todayItemBtnMemoCheck.setOnClickListener {
             if(memo.isChecked){
+                checkListener(memo)
                 changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
                 memo.isChecked = !memo.isChecked
             }else{
+                checkListener(memo)
                 changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
                 memo.isChecked = !memo.isChecked
             }
@@ -44,12 +46,12 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
 
     private fun changeCheckBtnBackground(isChecked:Boolean,imageView: ImageView){
         if(isChecked){
-            imageView.setBackgroundResource(R.drawable.background_check_button_passive)
-            imageView.setColorFilter(context.resources.getColor(R.color.button_gray))
-        }
-        else{
             imageView.setBackgroundResource(R.drawable.background_btn_acttive)
             imageView.setColorFilter(context.resources.getColor(R.color.white))
+        }
+        else{
+            imageView.setBackgroundResource(R.drawable.background_check_button_passive)
+            imageView.setColorFilter(context.resources.getColor(R.color.button_gray))
         }
     }
 

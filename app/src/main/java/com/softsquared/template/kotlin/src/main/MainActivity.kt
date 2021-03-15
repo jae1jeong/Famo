@@ -7,6 +7,12 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+<<<<<<< HEAD
+import android.widget.FrameLayout
+import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
+=======
+>>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,17 +23,26 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
+<<<<<<< HEAD
+import com.softsquared.template.kotlin.src.main.category.CategoryFragment.Companion.newInstance
+import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
+import com.softsquared.template.kotlin.src.main.models.PatchMemo
+=======
+>>>>>>> cdfaa7ab66efb83d7b9303afee4b9ddf09903e55
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
+import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
+import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
+import com.softsquared.template.kotlin.util.Constants
 
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView {
     private var clicked = false // FAB 버튼 변수
-    private lateinit var bottomSheetBehavior:BottomSheetBehavior<ConstraintLayout>
+    private lateinit var bottomSheetBehavior:BottomSheetBehavior<FrameLayout>
     // FAB 버튼 애니메이션
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim) }
@@ -99,45 +114,85 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         val bottomSheetDialogHeight = deviceHeight - 470
         val params = binding.mainFrameBottomSheet.layoutParams
         params.height = bottomSheetDialogHeight
-        Log.d(
-            "TAG",
-            "onCreate: $bottomSheetDialogHeight $deviceHeight ${binding.mainTabLayout.height}"
-        )
 
         // 바텀 시트 다이얼로그
-        BottomSheetBehavior.from(binding.mainFrameBottomSheet).apply {
-            peekHeight = 500
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.mainFrameBottomSheet)
+
+            bottomSheetBehavior.apply {
+            peekHeight = 200
             this.state = BottomSheetBehavior.STATE_COLLAPSED
         }.addBottomSheetCallback(object:BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when(newState){
                     BottomSheetBehavior.STATE_EXPANDED->{
-                        showCustomToast("Expanded!!")
                         binding.addMemoImageScroll.setImageResource(R.drawable.today_write_down_arrow)
                         binding.addMemoDialogBtnOk.visibility = View.GONE
                     }
                     BottomSheetBehavior.STATE_COLLAPSED->{
-                        showCustomToast("Collased!!")
                         binding.addMemoDialogBtnOk.visibility = View.VISIBLE
                         binding.addMemoImageScroll.setImageResource(R.drawable.today_write_up_arrow)
                     }
                 }
             }
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                showCustomToast("slide")
+                if(Constants.IS_EDIT){
+                    showCustomToast("수정모드")
+                    val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID,-1)
+                    if(editScheduleID != -1){
+                        showLoadingDialog(this@MainActivity)
+                        AddMemoService(this@MainActivity).tryGetDetailMemo(editScheduleID)
+                    }
+                }
             }
 
         })
 
+        // 바텀시트 다이얼로그 방향키
+        binding.addMemoImageScroll.setOnClickListener {
+            stateChangeBottomSheet(Constants.COLLASPE)
+        }
 
 
+        // 바텀시트 다이얼로그 저장 버튼
         binding.addMemoDialogBtnSave.setOnClickListener {
-            showLoadingDialog(this)
-            AddMemoService(this).tryPostAddMemo(PostTodayRequestAddMemo(binding.addMemoEditTitle.text.toString(),binding.addMemoEditContent.text.toString(),1))
+
+            if(Constants.IS_EDIT){
+                // 수정하기
+                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID,-1)
+                if(editScheduleID != -1){
+                    showLoadingDialog(this)
+                    AddMemoService(this).tryPatchMemo(editScheduleID, PatchMemo(binding.addMemoEditTitle.text.toString(),null,null,binding.addMemoEditContent.text.toString()))
+                }
+                else{
+                    showCustomToast("수정 오류 스케줄 아이디를 볼러오지 못하였습니다.")
+                }
+            }else{
+                //일정 추가하기
+                showLoadingDialog(this)
+                AddMemoService(this).tryPostAddMemo(PostTodayRequestAddMemo(binding.addMemoEditTitle.text.toString(),binding.addMemoEditContent.text.toString(),1))
+            }
         }
 
 
     }
 
+    // 바텀시트 다이얼로그 상태 관리
+    fun stateChangeBottomSheet(state:String){
+        when(state){
+            Constants.EXPAND ->{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            Constants.COLLASPE->{
+                bottomSheetBehavior.peekHeight = 350
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+            Constants.HIDE_SHEET->{
+                bottomSheetBehavior.peekHeight = 200
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+    }
 
     // FAB 액션 버튼 메서드
     private fun onActionButtonClicked() {
@@ -167,6 +222,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
 
+    // 삭제 예정
     // 프래그먼트에서도 BottomSheetDialog를 호출할 수 있게 메서드로 작성
     fun showBottomAddScheduleSheetDialog(){
         val sheet = AddMemoFragment()
@@ -198,7 +254,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     fun moveScheduleFindFragment() {
 //        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
 //            .commitNowAllowingStateLoss()
-        Log.d("TAG", "moveScheduleFindFragment: ㅇㅇㅇㅇㅇㅇㅇ")
     }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {
@@ -207,6 +262,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 100->{
                     dismissLoadingDialog()
                     showCustomToast("일정이 작성 되었습니다!")
+                    TodayService(this).onGetScheduleItems()
+                    // 초기화
+                    binding.addMemoEditTitle.setText("")
+                    binding.addMemoEditContent.setText("")
                 }
                 else->{
                     dismissLoadingDialog()
@@ -225,11 +284,142 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         showCustomToast(message)
     }
 
+    override fun onPatchMemoSuccess(response: BaseResponse) {
+        if(response.isSuccess){
+            when(response.code){
+                100->{
+                    Constants.IS_EDIT = false
+                    dismissLoadingDialog()
+                    showCustomToast(response.message.toString())
+                }
+                else->{
+                    dismissLoadingDialog()
+                    showCustomToast(response.message.toString())
+                }
+            }
+        }else{
+            dismissLoadingDialog()
+            showCustomToast(response.message.toString())
+        }
+    }
+
+    override fun onPatchMemoFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
+    override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
+        if(response.isSuccess){
+            when(response.code){
+                100 ->{
+                    val responseJsonArray = response.data.asJsonArray
+                    responseJsonArray.forEach {
+                        val memoJsonObject = it.asJsonObject
+                        val memoTitle = memoJsonObject.get("scheduleName").asString
+                        val memoDate = memoJsonObject.get("scheduleDate").asString
+                        val memoContent = memoJsonObject.get("scheduleMemo").asString
+//                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
+//                        val memoColor = memoJsonObject.get("colorInfo").asString
+
+                        binding.addMemoEditTitle.setText(memoTitle)
+                        binding.addMemoEditContent.setText(memoContent)
+                        binding.addMemoTextDateInfo.text = memoDate
+
+                    }
+                    dismissLoadingDialog()
+                    showCustomToast(response.message.toString())
+                }
+                else->{
+                    dismissLoadingDialog()
+                    showCustomToast(response.message.toString())
+                }
+            }
+        }else{
+            dismissLoadingDialog()
+            showCustomToast(response.message.toString())
+        }
+    }
+
+    override fun onGetDetailMemoFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
+        if(response.isSuccess){
+            when(response.code){
+                100 -> {
+                    TodayFragment.memoList.clear()
+                    val memoJsonArray = response.data.asJsonArray
+                    for (i in 0 until memoJsonArray.size()) {
+                        val memoJsonObject = memoJsonArray[i].asJsonObject
+                        val memoDate = memoJsonObject.get("scheduleDate").asString
+                        val memoTitle = memoJsonObject.get("scheduleName").asString
+                        var memoContent: String? = memoJsonObject.get("scheduleMemo").toString()
+                        val memoPick = memoJsonObject.get("schedulePick").asInt
+                        val memoId = memoJsonObject.get("scheduleID").asInt
+                        val memoCreatedAt = memoDate.split(" ")
+                        var memoCreatedAtMonth = ""
+                        var memoCreatedAtDay = 0
+                        Log.d("tag", "onGetScheduleItemsSuccess:[$memoDate] $memoCreatedAt")
+                        for (i in 0..1) {
+                            if (i > 0) {
+                                memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
+                            } else {
+                                memoCreatedAtDay = memoCreatedAt[i].replace(" ","").toInt()
+                            }
+                        }
+                        if (memoContent == null) {
+                            memoContent = ""
+                        }
+                        var memoIsChecked :Boolean? = null
+                        memoIsChecked = memoPick >= 0
+                        TodayFragment.memoList.add(
+                                MemoItem(
+                                        memoId,
+                                        memoCreatedAtMonth,
+                                        memoCreatedAtDay,
+                                        memoTitle,
+                                        memoContent,
+                                        memoIsChecked,
+                                        "BLUE"
+                                )
+                        )
+                    }
+                    TodayFragment.todayMemoAdapter?.setNewMemoList(TodayFragment.memoList)
+                    dismissLoadingDialog()
+                }
+                else->{
+                    dismissLoadingDialog()
+                    showCustomToast(response.message.toString())
+                }
+            }
+        }else{
+            dismissLoadingDialog()
+            showCustomToast(response.message.toString())
+        }
     }
 
 
     override fun onGetScheduleItemsFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
+    override fun onDeleteMemoSuccess(response: BaseResponse, scheduleID: Int) {
+    }
+
+    override fun onDeleteMemoFailure(message: String) {
+    }
+
+    override fun onPostItemCheckSuccess(response: BaseResponse) {
+    }
+
+    override fun onPostItemCheckFailure(message: String) {
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
 }

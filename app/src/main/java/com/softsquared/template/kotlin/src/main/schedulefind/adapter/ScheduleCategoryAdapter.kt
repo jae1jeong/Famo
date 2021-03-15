@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
@@ -92,9 +93,7 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
-
-
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

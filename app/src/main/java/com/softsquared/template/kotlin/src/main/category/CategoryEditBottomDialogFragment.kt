@@ -17,6 +17,7 @@ import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRe
 import com.softsquared.template.kotlin.src.main.category.models.CategoryUpdateRequest
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.util.onMyTextChanged
 import kotlinx.android.synthetic.main.fragment_category_add_bottom_dialog.*
@@ -495,7 +496,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onPatchCategoryUpdateSuccess: 카테고리 수정 성공")
-                CategoryInquiryService(this).tryGetCategoryInquiry()
+                CategoryInquiryService(this).tryGetUserCategoryInquiry()
             }
             else -> {
 
@@ -537,7 +538,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

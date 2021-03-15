@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 
 interface CategoryInquiryView {
@@ -9,6 +10,6 @@ interface CategoryInquiryView {
     fun onGetUserCategoryInquiryFail(message: String)
 
 //    카테고리 조회
-    fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse)
+    fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse)
     fun onGetCategoryInquiryFail(message: String)
 }

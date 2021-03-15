@@ -16,6 +16,7 @@ import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRe
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.util.onMyTextChanged
@@ -480,7 +481,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                 categoryEditAdapter.notifyDataSetChanged()
 
                 //생성 후 바로 최신화를 위해서 조회
-                CategoryInquiryService(this).tryGetCategoryInquiry()
+                CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
 //                val categoryEditList = ArrayList<ScheduleCategoryData>()
 //                text = category_add_et.text.toString()
@@ -549,7 +550,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

@@ -220,9 +220,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     fun replaceFragment(fragment : Fragment) {
+        val adapter = MainPagerAdapter(supportFragmentManager)
+        adapter.addFragment(fragment,"월간")
+        binding.mainViewPager.adapter = adapter
+        binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 //        binding.mainFrameLayout.visibility = View.VISIBLE
-        binding.mainTabLayout.visibility = View.GONE
-        binding.mainImageProfile.visibility = View.GONE
+//        binding.mainTabLayout.visibility = View.GONE
+//        binding.mainImageProfile.visibility = View.GONE
 //        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,fragment)
 //                    .commit()
 //        val fragmentManager : FragmentManager = supportFragmentManager;

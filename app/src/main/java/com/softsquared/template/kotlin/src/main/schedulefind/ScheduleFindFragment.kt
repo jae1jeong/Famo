@@ -19,6 +19,7 @@ import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
@@ -44,7 +45,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
         // 카테고리
         // createCategoryRecyclerview()
-        CategoryInquiryService(this).tryGetCategoryInquiry()
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         val token =
             ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
@@ -304,6 +305,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
 
 
+        
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_main_fragment, ScheduleFindCategoryFragment())
             .commit()
@@ -359,7 +361,13 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+        
+        when(categoryInquiryResponse.code){
+            100 -> {
+                Log.d("TAG", "onGetCategoryInquirySuccess: 카레고리별일정조회 성공")
+            }
+        }
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

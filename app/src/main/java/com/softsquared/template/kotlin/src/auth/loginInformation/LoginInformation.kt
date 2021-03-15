@@ -9,17 +9,24 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.User
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
+import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityLoginInfoBinding
 import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.KakaoLoginResponse
+import com.softsquared.template.kotlin.src.auth.loginInformation.models.PostKakaoLoginRequest
 import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
 import com.softsquared.template.kotlin.src.auth.test.Test
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.util.Constants
 
 class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoBinding::inflate),
     LoginInformationView{
+
+    var kakaoUrl = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 로그인 버튼
@@ -50,16 +57,23 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
                     )
                     val accessToken = token.accessToken
                     val refreshToken = token.refreshToken
-                    val name = user.kakaoAccount!!.profile!!.nickname
-                    val img = user.kakaoAccount!!.profile!!.thumbnailImageUrl
+                    if (user.kakaoAccount?.profile!!.thumbnailImageUrl != null){
 
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.putExtra("accessToken",accessToken)
-                    intent.putExtra("refreshToken",refreshToken)
-                    intent.putExtra("name",name)
-                    intent.putExtra("img",img)
-                    startActivity(intent)
-//                    LoginInformationService(this).tryGetKakaoLogin()
+                        kakaoUrl = user.kakaoAccount!!.profile!!.thumbnailImageUrl
+                    }
+
+//                    val intent = Intent(this, MainActivity::class.java)
+//                    intent.putExtra("accessToken",accessToken)
+//                    intent.putExtra("refreshToken",refreshToken)
+//                    intent.putExtra("name",name)
+//                    intent.putExtra("img",img)
+//                    startActivity(intent)
+                    val postKakaoLoginRequest = PostKakaoLoginRequest(
+                        kakaoAccessToken = accessToken,
+                        kakaoRefreshToken = refreshToken
+                    )
+
+                    LoginInformationService(this).tryGetKakaoLogin(postKakaoLoginRequest)
                 }
                 if (throwable != null) {
                     Log.w("로그", "invoke: " + throwable.localizedMessage)
@@ -71,12 +85,10 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
 
 //        카카오 로그인 버튼 클릭
         binding.loginInfoBtnKakaoLogin.setOnClickListener {
-            LoginInformationService(this).tryGetKakaoLogin()
 
 //             어플에 카톡이 깔려있는 경우
             if (LoginClient.instance.isKakaoTalkLoginAvailable(this)) {
                 LoginClient.instance.loginWithKakaoTalk(this, callback = callback)
-
 //             어플이 없을 경우 카톡홈페이지를 통하여 연결
             } else {
                 LoginClient.instance.loginWithKakaoAccount(this, callback = callback)
@@ -86,23 +98,40 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
         }
     }
 
-    override fun onGetKakaoLoginSuccess(kakaoLoginResponse: KakaoLoginResponse) {
-        when(kakaoLoginResponse.code){
-            100 -> {
-                Log.d("TAG", "onGetKakaoLoginSuccess: 카카오로그인 성공")
-                showCustomToast("카카오 로그인 성공")
-                val intent = Intent(this,MyPageActivity::class.java)
-                startActivity(intent)
+    override fun onPostKakaoLoginSuccess(response: KakaoLoginResponse) {
 
-            }else -> {
-                showCustomToast("실패 메시지 : ${kakaoLoginResponse.message}")
-            Log.d("TAG", "실패매시지: ${kakaoLoginResponse.message}")
+        val edit = ApplicationClass.sSharedPreferences.edit()
+//        edit.putString(Constants.KAKAO_JWT, response.jwt)
+        edit.putString(ApplicationClass.X_ACCESS_TOKEN, response.jwt)
+        edit.putInt(Constants.KAKAO_USER_ID, response.userID)
+        edit.putString(Constants.KAKAO_USER_NICKNAME, response.nickname)
+        edit.putString(Constants.KAKAO_THUMBNAILIMAGEURL, kakaoUrl)
+        edit.apply()
+
+        when(response.code){
+
+            100 -> {
+                Log.d("TAG", "onGetKakaoLoginSuccess: 소셜로그인 요청 성공, 이미있는 계정인 경우동 홈화면으로 이동")
+                val intent = Intent(this,MainActivity::class.java)
+                startActivity(intent)
             }
+
+            101 -> {
+                Log.d("TAG", "onGetKakaoLoginSuccess: 소셜로그인 요청 성공,  계정인 경우첫 번호 입력 화면으로 이")
+                showCustomToast("카카오 로그인 성공")
+                val intent = Intent(this,Test::class.java)
+                startActivity(intent)
+            }
+
         }
     }
 
-    override fun onGetKakaoLoginFail(message: String) {
-        Log.d("TAG", "onGetKakaoLoginFail 실패매시지: 실패")
+    override fun onPostKakaoLoginFail(message: String) {
+    }
 
+    override fun onPatchKakaoLoginNumberSuccess(response: BaseResponse) {
+    }
+
+    override fun onPatchKakaoLoginNumberFail(message: String) {
     }
 }

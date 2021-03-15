@@ -14,6 +14,7 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.*
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
@@ -205,7 +206,7 @@ class ScheduleCategoryEditAdapter(
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

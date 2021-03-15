@@ -10,8 +10,8 @@
 
         <ImageView
             android:id="@+id/category_filter"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:background="@drawable/schedule_find_filter"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"/>

@@ -12,7 +12,7 @@
         android:layout_marginTop="20dp">
 
         <ImageView
-            android:id="@+id/category_edit_x_btn"
+            android:id="@+id/category_add_x_btn"
             android:layout_width="21dp"
             android:layout_height="21dp"
             android:layout_centerVertical="true"
@@ -36,6 +36,7 @@
         android:hint="카테고리명을 입력해주세요."
         android:text=""
         android:textSize="20dp"
+        android:maxLines="1"
         android:background="@drawable/background_category_edit"
         android:layout_marginTop="30dp"
         android:paddingLeft="15dp"

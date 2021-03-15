@@ -22,12 +22,18 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
     var wholeName: String? = null
     var wholeColor: String? = null
-    var name: List<String>? = null
+
     var color: List<String>? = null
+    var name: List<String>? = null
+    var tempCategoryID : List<String>? = null
+
+
     var size: Int? = null
     var getCategoryID: String? = null
 
-    var tempCategoryID : Array<String>? = null
+    val intCategoryID = ArrayList<Int>()
+
+//    var tempCategoryID : List<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,29 +54,46 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 //        val c = b[1].substring(1, b[1].length)
 //        println(c)
 
-        if (wholeName != null && wholeColor != null){
+        if (wholeName != null && wholeColor != null && getCategoryID != null){
             name = wholeName!!.split(":")
             color = wholeColor!!.split(":")
+            tempCategoryID = getCategoryID!!.split(":")
 
-            //카테고리 리사이클러뷰
-            createCategoryRecyclerview()
+
         }
 
-        if (getCategoryID != null){
-            tempCategoryID = getCategoryID!!.split(":".toRegex()).toTypedArray()
-            Log.d("TAG", "getCategoryID: $getCategoryID")
+        Log.d("TAG", "tempCategoryID: ${tempCategoryID?.get(0)}")
+        Log.d("TAG", "tempCategoryID: ${tempCategoryID?.get(1)}")
+
+        if (tempCategoryID != null){
+
+            for (i in 0 until size!!){
+                intCategoryID.add(tempCategoryID?.get(i)!!.toInt())
+                Log.d("TAG", "intCategoryID: $intCategoryID")
+            }
         }
 
+        //            카테고리 리사이클러뷰
+        createCategoryRecyclerview()
+
+
+
+//        val categoryID : List<String> = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
+//        if (getCategoryID != null){
+//            tempCategoryID = getCategoryID!!.split(":".toRegex()).toTypedArray()
+//            Log.d("TAG", "getCategoryID: $getCategoryID")
+//        }
+//        val categoryID : List<String> = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
 
         //카테고리 추가
         binding.categoryEditBtnPlus.setOnClickListener {
 
             val categoryAddBottomDialogFragment = CategoryAddBottomDialogFragment()
-            val bunble = Bundle()
-            bunble.putString("name", wholeName)
-            bunble.putString("color", wholeColor)
-            bunble.putInt("size", size!!)
-            categoryAddBottomDialogFragment.arguments = bunble
+            val bundle = Bundle()
+            bundle.putString("name", wholeName)
+            bundle.putString("color", wholeColor)
+            bundle.putInt("size", size!!)
+            categoryAddBottomDialogFragment.arguments = bundle
             categoryAddBottomDialogFragment.show(
                 supportFragmentManager,
                 categoryAddBottomDialogFragment.tag
@@ -106,13 +129,13 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
     }
 
+
     fun createCategoryRecyclerview() {
-        //테스트 데이터
 
         for (i in 0 until size!!) {
 
             categoryEditList.add(
-                ScheduleCategoryData(name!![i], color!![i])
+                ScheduleCategoryData(intCategoryID[i],name!![i], color!![i])
             )
         }
 //        categoryEditList = arrayListOf(
@@ -138,29 +161,50 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     //삭제버튼 클릭
-    override fun onItemDeleteBtnClicked(position: Int) {
+    override fun onItemDeleteBtnClicked(categoryID: Int) {
         Log.d("aa", "onSearchItemDeleteBtnClicked: ")
 
         //해당 번쨰를 삭제 및 저장
-        categoryEditList.removeAt(position)
+        categoryEditList.removeAt(categoryID)
         //데이터 덮어쓰기
 //        SharedPrefManager.storeSearchHisotryList(this.searchHistoryList)
         //데이터 변경알림
         this.categoryEditAdapter.notifyDataSetChanged()
+
+//        CategoryEditService(this).tryDeleteCategoryEditDelete()
     }
 
-    override fun onCategoryID() : String{
-
-        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
-        Log.d("TAG", "onCategoryID함수: $categoryID")
+    override fun onCategoryID(categoryID: Int) : Int{
+//        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
+//        val categoryID = tempCategoryID
+//        Log.d("TAG", "onCategoryID함수: $categoryID")
         return categoryID
     }
 
-    override fun onMoveFragment() {
-        val categoryAddBottomDialogFragment = CategoryEditBottomDialogFragment()
-        categoryAddBottomDialogFragment.show(
-            supportFragmentManager, categoryAddBottomDialogFragment.tag
+    override fun onMoveFragment(categoryID : Int, text : String) {
+        val categoryEditBottomDialogFragment = CategoryEditBottomDialogFragment()
+        val bunble = Bundle()
+        bunble.putString("color", wholeColor)
+        bunble.putString("name", text)
+        bunble.putInt("size", size!!)
+        bunble.putInt("categoryID",categoryID)
+        categoryEditBottomDialogFragment.arguments = bunble
+        categoryEditBottomDialogFragment.show(
+            supportFragmentManager, categoryEditBottomDialogFragment.tag
         )
+    }
+
+    override fun getColor(color: String) {
+
+    }
+
+    override fun onMoveDeleteUpdate() {
+        val intent = Intent(this,CategoryEditActivity::class.java)
+        intent.putExtra("color", wholeColor)
+        intent.putExtra("name", wholeName)
+        intent.putExtra("size", size)
+        intent.putExtra("categoryID", getCategoryID)
+        startActivity(intent)
     }
 
 

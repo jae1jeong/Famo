@@ -4,7 +4,11 @@ interface ICategoryRecyclerView {
 
     fun onItemDeleteBtnClicked(position: Int)
 
-    fun onCategoryID() : String
+    fun onCategoryID(categoryID: Int) : Int
 
-    fun onMoveFragment()
+    fun onMoveFragment(categoryID : Int, text : String)
+
+    fun getColor(color : String)
+
+    fun onMoveDeleteUpdate()
 }

@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.category.adapter
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,10 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.*
@@ -22,12 +26,16 @@ import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
-class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCategoryData>,
-                                  categoryRecyclerView: ICategoryRecyclerView) :
+class ScheduleCategoryEditAdapter(
+    var categoryEditList: ArrayList<ScheduleCategoryData>,
+    categoryRecyclerView: ICategoryRecyclerView
+) :
     RecyclerView.Adapter<ScheduleCategoryEditAdapter.ScheduleCategoryEditHolder>(),
     CategoryEditView, CategoryInquiryView {
 
     private var iCategoryRecyclerView: ICategoryRecyclerView? = null
+
+    val categoryID = 0
 
     init {
         Log.d(TAG, "SearchHistoryRecyclerViewAdapter - init() called")
@@ -39,20 +47,20 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
         val scheduleCategoryEditHolder = ScheduleCategoryEditHolder(
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.recyclerview_category_edit_item, parent, false)
-            , this.iCategoryRecyclerView!!
+                .inflate(R.layout.recyclerview_category_edit_item, parent, false),
+            this.iCategoryRecyclerView!!
         )
 
         return scheduleCategoryEditHolder
 
-    //        val view = LayoutInflater.from(parent.context)
+        //        val view = LayoutInflater.from(parent.context)
 //            .inflate(R.layout.recyclerview_category_edit_item, parent, false)
 //
 //        return ScheduleCategoryEditHolder(view)
     }
 
     override fun onBindViewHolder(holder: ScheduleCategoryEditHolder, position: Int) {
-        holder.text.setText(categoryEditList[position].text)
+        holder.text.text = categoryEditList[position].text
         holder.color.setColorFilter(Color.parseColor(categoryEditList[position].color))
 //        holder.color.setColorFilter(categoryEditList[position].color)
 //        holder.text.addTextChangedListener()
@@ -68,23 +76,28 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
         categoryEditList.removeAt(position)
     }
 
-    inner class ScheduleCategoryEditHolder(itemView: View,
-                                           categoryRecyclerView: ICategoryRecyclerView) : RecyclerView.ViewHolder(itemView),
+    inner class ScheduleCategoryEditHolder(
+        itemView: View,
+        categoryRecyclerView: ICategoryRecyclerView
+    ) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        val text = itemView.findViewById<EditText>(R.id.recyclerview_category_edit_et_content)
+        //        val text = itemView.findViewById<EditText>(R.id.recyclerview_category_edit_et_content)
+        val text = itemView.findViewById<TextView>(R.id.recyclerview_category_edit_tv_content)
         val delete = itemView.findViewById<ImageView>(R.id.category_edit_btn_delete)
         val color = itemView.findViewById<ImageView>(R.id.category_edit_btn_color)
-        private lateinit var mCategoryRecyclerView : ICategoryRecyclerView
+        private lateinit var mCategoryRecyclerView: ICategoryRecyclerView
 
         init {
             //리스너연결
             delete.setOnClickListener(this)
             color.setOnClickListener(this)
+            text.setOnClickListener(this)
             mCategoryRecyclerView = categoryRecyclerView
         }
 
         override fun onClick(view: View?) {
+
             Log.d("로그", "view: ")
             when (view) {
                 delete -> {
@@ -96,27 +109,46 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 
 //                    iCategoryRecyclerView!!.onItemDeleteBtnClicked(adapterPosition)
 //                    CategoryEditService(this).
-                    removeItem(adapterPosition)
-                    notifyDataSetChanged()
+
 //                    CategoryEditService(this@ScheduleCategoryEditAdapter)
 //                        .tryDeleteCategoryEditDelete(categoryID)
 //                    this.mySearchRecyclerViewInterface.onSearchItemDeleteBtnClicked(adapterPosition)
 
-                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
-                }
-                color -> {
+//                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
 
+                    removeItem(adapterPosition)
+
+                    val categoryID =
+                        iCategoryRecyclerView!!.onCategoryID(categoryEditList[adapterPosition].id)
+                            .toString()
+                    CategoryEditService(this@ScheduleCategoryEditAdapter)
+                        .tryDeleteCategoryEditDelete(categoryID)
+
+                    notifyDataSetChanged()
+                }
+                color, text -> {
+                    Log.d("로그", "색상변경 버튼 클릭")
+                    Log.d("로그", "위치값 :$adapterPosition")
                     val categoryAddBottomDialogFragment = CategoryEditBottomDialogFragment()
-                    val bunble = Bundle()
+//                    val bunble = Bundle()
 //                    bunble.putString("color", wholeColor)
 //                    bunble.putInt("size", size!!)
 //                                (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
 
-                    categoryAddBottomDialogFragment.arguments = bunble
-                    iCategoryRecyclerView!!.onMoveFragment()
+//                    categoryAddBottomDialogFragment.arguments = bunble
 
-                    color.setColorFilter(Color.parseColor("#FF0000"))
-                    Log.d("로그", "색상변경 버튼 클릭")
+                    iCategoryRecyclerView!!.onMoveFragment(
+                        categoryEditList[adapterPosition].id,
+                        categoryEditList[adapterPosition].text
+                    )
+                    Log.d(TAG, "클릭:${categoryEditList[adapterPosition].id} ")
+                    Log.d(TAG, "클릭:${categoryEditList[adapterPosition].text} ")
+//
+//                    val getColor = ApplicationClass.sSharedPreferences.getString("color", "#FFA2BE")
+//
+//                    color.setColorFilter(Color.parseColor(getColor))
+
+
                 }
             }
         }
@@ -136,6 +168,7 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onDeleteCategoryDeleteSuccess: 카테고리삭제 테스트")
+//                CategoryInquiryService(this).tryGetCategoryInquiry()
 
             }
             else -> {
@@ -158,22 +191,15 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
     override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
         when (response.code) {
             100 -> {
-                Log.d("TAG", "onDeleteCategoryDeleteSuccess: 카테고리삭제 테스트")
-
-
-//                val tempCategoryID = response.data[0].categoryID.toString().split(":".toRegex()).toTypedArray()
-//                val categoryID = tempCategoryID[1].substring(1, tempCategoryID[1].length)
-                val categoryID = response.data[0].categoryID.toString()
-                Log.d("TAG", "삭제 번호 categoryID: $categoryID")
-
-                CategoryEditService(this@ScheduleCategoryEditAdapter)
-                    .tryDeleteCategoryEditDelete(categoryID)
-
+                Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리 조회 성공")
+//                iCategoryRecyclerView!!.onMoveDeleteUpdate()
             }
             else -> {
                 Log.d(TAG, "onDeleteCategoryDeleteSuccess: ${response.message.toString()}")
             }
         }
+
+
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

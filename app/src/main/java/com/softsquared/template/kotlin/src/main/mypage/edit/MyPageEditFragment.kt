@@ -13,8 +13,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,17 +21,19 @@ import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
-import com.softsquared.template.kotlin.databinding.FragmentMypageBinding
 import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageEditResponse
+import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragment<FragmentMypageEditBinding>(FragmentMypageEditBinding::bind,
-        R.layout.fragment_mypage_edit) {
+        R.layout.fragment_mypage_edit),MyPageEditView {
 
     private val GET_GALLERY_IMAGE = 200
     val REQUEST_IMAGE_CAPTURE = 1
@@ -45,6 +45,8 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        MyPageEditService(this).tryGetMyPage()
 
         var extra = this.arguments
         if (extra != null) {
@@ -59,6 +61,10 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
                 .centerCrop().into(binding.myPageEditImg)
         }
 
+        val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
+
+        Glide.with(this).load(img)
+            .centerCrop().into(binding.myPageEditImg)
 
         binding.myPageEditTvName.text = name
 
@@ -255,5 +261,20 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
         }
     }
 
+    override fun onGetMyPageEditSuccess(editResponse: MyPageEditResponse) {
+
+        when(editResponse.code){
+            100 -> {
+                showCustomToast("MyPage조회 성공")
+            }else -> {
+            showCustomToast("실패 메시지 : ${editResponse.message}")
+            Log.d("TAG", "조회실패: ${editResponse.message}")
+        }
+
+        }
+    }
+
+    override fun onGetMyPageEditFail(message: String) {
+    }
 
 }

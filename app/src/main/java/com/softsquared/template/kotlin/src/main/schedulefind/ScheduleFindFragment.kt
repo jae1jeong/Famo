@@ -34,6 +34,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     var name = ""
     var color = ""
     var size = 0
+    var categoryID = ""
 
     private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
 
@@ -82,6 +83,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             intent.putExtra("name",name)
             intent.putExtra("color",color)
             intent.putExtra("size",size)
+            intent.putExtra("categoryID",categoryID)
             startActivity(intent)
 //            (activity as MainActivity).replaceFragment(CategoryEditFragment.newInstance());
 //            binding.scheduleFindLinear.visibility = View.GONE
@@ -323,13 +325,17 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 for (i in 0 until response.data.size) {
                     categoryList.add(
                         ScheduleCategoryData(
+                            response.data[i].categoryID,
                             response.data[i].categoryName,
                             response.data[i].colorInfo
                         )
                     )
+//                    1 2 3  123
                     name += response.data[i].categoryName + ":"
                     color += response.data[i].colorInfo + ":"
                     size = response.data.size
+
+                    categoryID += "${response.data[i].categoryID}:"
                 }
 
                 Log.d("TAG", "name: $name")

@@ -12,7 +12,7 @@
         android:layout_marginTop="20dp">
 
         <ImageView
-            android:id="@+id/category_color_x_btn"
+            android:id="@+id/category_edit_x_btn"
             android:layout_width="21dp"
             android:layout_height="21dp"
             android:layout_centerVertical="true"
@@ -23,11 +23,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="카테고리 색상 지정"
+            android:text="카테고리 편집"
             android:textColor="@color/black"
             android:textSize="22dp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <EditText
+        android:id="@+id/category_edit_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="카테고리명을 입력해주세요."
+        android:text=""
+        android:textSize="20dp"
+        android:background="@drawable/background_category_edit"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="15dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="색상"
+        android:textSize="18dp"
+        android:layout_marginTop="40dp"/>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -240,7 +260,7 @@
                     android:src="@drawable/category_color_10" />
 
                 <ImageView
-                    android:id="@+id/category_edit_color1_check10"
+                    android:id="@+id/category_edit_color10_check"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
@@ -252,5 +272,21 @@
         </TableRow>
 
     </TableLayout>
+
+    <android.widget.Button
+        android:id="@+id/category_edit_no_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="완료"
+        android:layout_marginTop="40dp"/>
+
+    <android.widget.Button
+        android:id="@+id/category_edit_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="완료"
+        android:layout_marginTop="40dp"
+        android:background="@color/add_btn"
+        android:visibility="gone"/>
 
 </LinearLayout>

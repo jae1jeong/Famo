@@ -46,8 +46,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         super.onCreate(savedInstanceState)
 
 //        val token = intent.getStringExtra("token")
-//        val name = intent.getStringExtra("name")
-//        val img = intent.getStringExtra("img")
+        val name = intent.getStringExtra("name")
+        val img = intent.getStringExtra("img")
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
@@ -85,14 +85,14 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
 //            binding.mainFrameLayout.visibility = View.VISIBLE
-            val token = intent.getStringExtra("token")
-            val name = intent.getStringExtra("name")
-            val img = intent.getStringExtra("img")
+//            val token = intent.getStringExtra("token")
+//            val name = intent.getStringExtra("name")
+//            val img = intent.getStringExtra("img")
 //            binding.mainFrameLayout.visibility = View.VISIBLE
             val intent = Intent(this,MyPageActivity::class.java)
 //            intent.putExtra("token",token)
-//            intent.putExtra("name",name)
-//            intent.putExtra("img",img)
+            intent.putExtra("name",name)
+            intent.putExtra("img",img)
             startActivity(intent)
 //            supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,MyPageFragment())
 //                    .commit()
@@ -224,9 +224,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 //    }
 
     fun replaceFragment(fragment : Fragment) {
+        val adapter = MainPagerAdapter(supportFragmentManager)
+        adapter.addFragment(fragment,"월간")
+        binding.mainViewPager.adapter = adapter
+        binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 //        binding.mainFrameLayout.visibility = View.VISIBLE
-        binding.mainTabLayout.visibility = View.GONE
-        binding.mainImageProfile.visibility = View.GONE
+//        binding.mainTabLayout.visibility = View.GONE
+//        binding.mainImageProfile.visibility = View.GONE
 //        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,fragment)
 //                    .commit()
 //        val fragmentManager : FragmentManager = supportFragmentManager;

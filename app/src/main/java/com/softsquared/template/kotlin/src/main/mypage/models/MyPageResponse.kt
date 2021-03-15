@@ -3,7 +3,7 @@ package com.softsquared.template.kotlin.src.main.mypage.models
 import com.google.gson.annotations.SerializedName
 import com.softsquared.template.kotlin.config.BaseResponse
 
-data class MyPageEditResponse(
+data class MyPageResponse(
     @SerializedName("loginID") val loginID : String,
     @SerializedName("loginMethod") val loginMethod : String,
     @SerializedName("nickname") val nickname : String,

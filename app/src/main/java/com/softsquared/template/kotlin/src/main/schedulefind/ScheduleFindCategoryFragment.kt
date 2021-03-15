@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
@@ -15,12 +16,14 @@ import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBin
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 
 class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
     FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
-) {
+),CategoryInquiryView {
 
     companion object {
         fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
@@ -30,6 +33,8 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        CategoryInquiryService(this).tryGetCategoryInquiry()
 
         createRecyclerview()
 
@@ -98,5 +103,23 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             )
         binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
         binding.recyclerviewScheduleFindCategory.adapter = ScheduleWholeAdapter(categorySelectList)
+    }
+
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+        when(categoryInquiryResponse.code){
+            100 -> {
+                Log.d("TAG", "onGetCategoryInquirySuccess: 카레고리별일정조회 성공")
+
+            }
+        }
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
     }
 }

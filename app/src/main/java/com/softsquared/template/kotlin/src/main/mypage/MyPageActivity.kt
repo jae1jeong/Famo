@@ -32,14 +32,14 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val token = intent.getStringExtra("token")
+//        val token = intent.getStringExtra("token")
         val name = intent.getStringExtra("name")
         val img = intent.getStringExtra("img")
 
         myPageFragment = MyPageFragment(this)
         myPageEditFragment = MyPageEditFragment(this)
         val bundle = Bundle()
-        bundle.putString("token", token)
+//        bundle.putString("token", token)
         bundle.putString("name", name)
         bundle.putString("img", img)
         myPageFragment.arguments = bundle

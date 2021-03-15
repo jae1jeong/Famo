@@ -25,7 +25,9 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageEditResponse
+import com.softsquared.template.kotlin.src.main.mypage.MyPageService
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
@@ -44,9 +46,10 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
     var img : String?= null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         MyPageEditService(this).tryGetMyPage()
+
+        super.onViewCreated(view, savedInstanceState)
 
         var extra = this.arguments
         if (extra != null) {
@@ -57,14 +60,17 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
             Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
             Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
             Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
-            Glide.with(this).load(img)
-                .centerCrop().into(binding.myPageEditImg)
+//            Glide.with(this).load(img)
+//                .centerCrop().into(binding.myPageEditImg)
         }
 
         val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
 
-        Glide.with(this).load(img)
-            .centerCrop().into(binding.myPageEditImg)
+        if (img == null){
+
+            Glide.with(this).load(R.drawable.my_page_img2)
+                .centerCrop().into(binding.myPageEditImg)
+        }
 
         binding.myPageEditTvName.text = name
 
@@ -261,20 +267,48 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
         }
     }
 
-    override fun onGetMyPageEditSuccess(editResponse: MyPageEditResponse) {
 
-        when(editResponse.code){
+    override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
+    }
+
+    override fun onGetMyPageCommentsFail(message: String) {
+    }
+
+    override fun onGetMyPageSuccess(response: MyPageResponse) {
+
+        when(response.code){
             100 -> {
-                showCustomToast("MyPage조회 성공")
-            }else -> {
-            showCustomToast("실패 메시지 : ${editResponse.message}")
-            Log.d("TAG", "조회실패: ${editResponse.message}")
-        }
+                Log.d("TAG", "onGetMyPageSuccess: MyPage수정 조회성공")
+                showCustomToast("MyPage수정 조회성공")
 
+                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
+                val kakaoImg:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_THUMBNAILIMAGEURL,null)
+
+                if (response.loginMethod == "K"){
+                    binding.myPageEditTvName.text = kakaoName
+
+                    if (kakaoImg != null){
+                        Glide.with(this).load(kakaoImg)
+                            .centerCrop().into(binding.myPageEditImg)
+                    }else{
+                        Glide.with(this).load(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageEditImg)
+                    }
+                }else{
+                    binding.myPageEditTvName.text = name
+                    Glide.with(this).load(R.drawable.my_page_img2)
+                        .centerCrop().into(binding.myPageEditImg)
+                }
+
+            }
+            else -> {
+                Log.d("TAG", "onGetMyPageSuccess: ${response.message.toString()}")
+                showCustomToast("${response.message.toString()}}")
+            }
         }
     }
 
-    override fun onGetMyPageEditFail(message: String) {
+    override fun onGetMyPageFail(message: String) {
     }
 
 }

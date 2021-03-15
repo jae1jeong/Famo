@@ -17,6 +17,7 @@ import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRe
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.util.onMyTextChanged
 import kotlinx.android.synthetic.main.fragment_category_add_bottom_dialog.*
@@ -480,7 +481,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                 categoryEditAdapter.notifyDataSetChanged()
 
                 //생성 후 바로 최신화를 위해서 조회
-                CategoryInquiryService(this).tryGetCategoryInquiry()
+                CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
 //                val categoryEditList = ArrayList<ScheduleCategoryData>()
 //                text = category_add_et.text.toString()
@@ -516,9 +517,9 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
     override fun onPatchCategoryUpdateFail(message: String) {
     }
 
-    override fun onGetCategoryInquirySuccess(response: CategoryInquiryResponse) {
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
 
-        when (response.code) {
+        when (responseUser.code) {
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리 조회 성공")
                 val intent = Intent(activity, CategoryEditActivity::class.java)
@@ -527,12 +528,12 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                 var inputSize = 0
                 var inputCategoryID = ""
 
-                for (i in 0 until response.data.size) {
-                    inputName += response.data[i].categoryName + ":"
-                    inputColor += response.data[i].colorInfo + ":"
-                    inputCategoryID += "${response.data[i].categoryID}:"
+                for (i in 0 until responseUser.data.size) {
+                    inputName += responseUser.data[i].categoryName + ":"
+                    inputColor += responseUser.data[i].colorInfo + ":"
+                    inputCategoryID += "${responseUser.data[i].categoryID}:"
                 }
-                inputSize = response.data.size
+                inputSize = responseUser.data.size
                 intent.putExtra("name", inputName)
                 intent.putExtra("color", inputColor)
                 intent.putExtra("size", inputSize)
@@ -544,6 +545,12 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
             }
         }
 
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

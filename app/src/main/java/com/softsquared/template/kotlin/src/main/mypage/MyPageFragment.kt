@@ -8,7 +8,7 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentMypageBinding
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.util.Constants
 
 class MyPageFragment(val myPageActivityView: MyPageActivityView):
@@ -21,7 +21,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        MyPageService(this).tryGetMyPageComments()
+        MyPageService(this).tryGetMyPage()
 
         super.onViewCreated(view, savedInstanceState)
 
@@ -63,18 +63,42 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
         }
     }
 
-    override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
+    override fun onGetMyPageSuccess(response: MyPageResponse) {
 
         when(response.code){
             100 -> {
-                Log.d("TAG", "onGetMyPageCommentsSuccess: 상단코멘트 성공")
-                showCustomToast("상단코맨트성공")
-                binding.myPageTvComments.text = response.titleComment
-           }
+                Log.d("TAG", "onGetMyPageSuccess: MyPage조회성공")
+                showCustomToast("MyPage조회성공")
+
+                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
+                val kakaoImg:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_THUMBNAILIMAGEURL,null)
+
+                if (response.loginMethod == "K"){
+                    binding.myPageTvName.text = kakaoName
+
+                    if (kakaoImg != null){
+                        Glide.with(this).load(kakaoImg)
+                            .centerCrop().into(binding.myPageImg)
+                    }else{
+                        Glide.with(this).load(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageImg)
+                    }
+                }else{
+                    binding.myPageTvName.text = name
+                    Glide.with(this).load(R.drawable.my_page_img2)
+                        .centerCrop().into(binding.myPageImg)
+                }
+
+
+            }
+            else -> {
+                Log.d("TAG", "onGetMyPageSuccess: ${response.message.toString()}")
+                showCustomToast("${response.message.toString()}}")
+            }
         }
     }
 
-    override fun onGetMyPageCommentsFail(message: String) {
+    override fun onGetMyPageFail(message: String) {
     }
 
 

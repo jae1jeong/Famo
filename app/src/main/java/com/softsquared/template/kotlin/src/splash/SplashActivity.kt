@@ -19,16 +19,15 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         jwt?.let{
             showCustomToast(jwt)
         }
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            if (jwt == null){
-//                startActivity(Intent(this, InformationActivity::class.java))
-//                finish()
-//            }else{
-//                startActivity(Intent(this,MainActivity::class.java))
-//                finish()
-//            }
-////            startActivity(Intent(this,MainActivity::class.java))
-//        }, 1500)
-        startActivity(Intent(this, InformationActivity::class.java))
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (jwt == null){
+                startActivity(Intent(this, InformationActivity::class.java))
+                finish()
+            }else{
+                startActivity(Intent(this,MainActivity::class.java))
+                finish()
+            }
+//            startActivity(Intent(this,MainActivity::class.java))
+        }, 1500)
     }
 }

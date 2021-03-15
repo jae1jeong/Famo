@@ -31,6 +31,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!-- CategoryEdit -->
         <activity android:name=".src.main.category.CategoryEditActivity"
+            android:theme="@style/AppTheme2"/>
+        <activity android:name=".src.auth.test.Test"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity

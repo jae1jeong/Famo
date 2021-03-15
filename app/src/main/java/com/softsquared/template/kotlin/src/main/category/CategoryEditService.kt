@@ -5,12 +5,14 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
+import com.softsquared.template.kotlin.src.main.category.models.CategoryUpdateRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class CategoryEditService(val view: CategoryEditView) {
 
+    //카테고리 생성
     fun tryPostCategoryEditInsert(categoryInsertRequest : CategoryInsertRequest){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
@@ -29,6 +31,7 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
+    //카테고리 삭제
     fun tryDeleteCategoryEditDelete(categoryID : String){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
@@ -47,10 +50,11 @@ class CategoryEditService(val view: CategoryEditView) {
         })
     }
 
-    fun tryPatchCategoryEditUpdate(categoryID : String){
+    //카테고리 수정
+    fun tryPatchCategoryEditUpdate(categoryID : String, categoryUpdateRequest: CategoryUpdateRequest){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryEditRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryUpdate(categoryID).enqueue(object :
+        homeRetrofitInterface.getCategoryUpdate(categoryID,categoryUpdateRequest).enqueue(object :
             Callback<BaseResponse> {
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                 Log.d("값 확인", "tryPostCategoryEditDelete body:  ${response.body()}")

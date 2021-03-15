@@ -16,6 +16,7 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
+import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
@@ -33,6 +34,9 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     var name = ""
     var color = ""
     var size = 0
+    var categoryID = ""
+
+    private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
 
     private val partList: ArrayList<ScheduleWholeData> = arrayListOf()
 
@@ -79,6 +83,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             intent.putExtra("name",name)
             intent.putExtra("color",color)
             intent.putExtra("size",size)
+            intent.putExtra("categoryID",categoryID)
             startActivity(intent)
 //            (activity as MainActivity).replaceFragment(CategoryEditFragment.newInstance());
 //            binding.scheduleFindLinear.visibility = View.GONE
@@ -312,6 +317,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //                showCustomToast("성공 메시지 : ${response.message}")
 //                val intent = Intent(this, MainActivity::class.java)
 //                startActivity(intent)
+
                 showCustomToast("카테고리 조회성공")
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
                 val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
@@ -319,13 +325,17 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 for (i in 0 until response.data.size) {
                     categoryList.add(
                         ScheduleCategoryData(
+                            response.data[i].categoryID,
                             response.data[i].categoryName,
                             response.data[i].colorInfo
                         )
                     )
+//                    1 2 3  123
                     name += response.data[i].categoryName + ":"
                     color += response.data[i].colorInfo + ":"
                     size = response.data.size
+
+                    categoryID += "${response.data[i].categoryID}:"
                 }
 
                 Log.d("TAG", "name: $name")
@@ -334,8 +344,8 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                     context, LinearLayoutManager.HORIZONTAL, false
                 )
                 binding.recyclerviewCategory.setHasFixedSize(true)
-                binding.recyclerviewCategory.adapter =
-                    ScheduleCategoryAdapter(categoryList, this)
+                binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this)
+//                scheduleCategoryAdapter.notifyDataSetChanged()
 
 
 

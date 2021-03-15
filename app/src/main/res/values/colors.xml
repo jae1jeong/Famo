@@ -37,4 +37,6 @@
     <color name="auth_button_text">#CED5D9</color>
     <color name="auth_text_normal_black">#79879A</color>
 
+    <color name="add_btn">#FFAE2A</color>
+
 </resources>

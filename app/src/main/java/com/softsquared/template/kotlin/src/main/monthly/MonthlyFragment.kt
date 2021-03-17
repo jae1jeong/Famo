@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonElement
@@ -138,7 +139,9 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
 
             // 어댑터
-            monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!) {}
+            monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!,{},{
+
+            })
             binding.monthlyRecyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter

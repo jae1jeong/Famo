@@ -115,6 +115,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         when(categoryInquiryResponse.code){
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카레고리별일정조회 성공")
+                categoryInquiryResponse.data[0].colorInfo
 
             }
         }

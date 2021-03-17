@@ -83,22 +83,24 @@
                 android:layout_marginTop="30dp"
                 android:text="@string/my_page_edit_tv_name" />
 
-            <TextView
-                android:id="@+id/my_page_edit_tv_name"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/my_page_edit_et_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="현주"
                 android:textColor="@color/black"
-                android:textSize="19dp" />
+                android:textSize="19dp"
+                android:background="@null"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/view_color" />
 
             <RelativeLayout
+                android:id="@+id/my_page_edit_btn_top_ment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
@@ -112,7 +114,6 @@
                     android:textSize="21dp" />
 
                 <ImageView
-                    android:id="@+id/my_page_edit_btn_top_ment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -137,6 +138,7 @@
                 android:visibility="gone">
 
                 <EditText
+                    android:id="@+id/my_page_edit_et_comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -202,9 +204,10 @@
                     android:paddingBottom="10dp">
 
                     <EditText
+                        android:id="@+id/my_page_edit_et_goaltitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="내용 작성"
+                        android:hint="내용 작성"
                         android:textColor="@color/black"
                         android:textSize="22dp"
                         android:textStyle="bold" />
@@ -217,9 +220,10 @@
                         android:textSize="21dp" />
 
                     <EditText
+                        android:id="@+id/my_page_edit_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="작성2"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="22dp"
                         android:textStyle="bold" />
@@ -258,6 +262,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/my_page_edit_btn_account_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
@@ -271,7 +276,6 @@
                     android:textSize="19dp" />
 
                 <ImageView
-                    android:id="@+id/my_page_edit_btn_account_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

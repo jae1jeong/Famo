@@ -304,7 +304,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         binding.scheduleFindMainLinear.visibility = View.GONE
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
 
-
+        CategoryInquiryService(this).tryGetCategoryInquiry()
         
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_main_fragment, ScheduleFindCategoryFragment())

@@ -13,6 +13,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.DatePicker.OnDateChangedListener
+import android.widget.DatePicker.getChildMeasureSpec
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,61 +26,65 @@ import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
+import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
+import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.MyPageService
+import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
-class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragment<FragmentMypageEditBinding>(FragmentMypageEditBinding::bind,
-        R.layout.fragment_mypage_edit),MyPageEditView {
 
+class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
+    BaseFragment<FragmentMypageEditBinding>(FragmentMypageEditBinding::bind,
+    R.layout.fragment_mypage_edit), MyPageEditView {
+
+    //카메라 변수
     private val GET_GALLERY_IMAGE = 200
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
 
-    var token : String? = null
-    var name : String? = null
-    var img : String?= null
+    //클릭에 따른 visible/gone을 위한 변수
+    var topMentCnt = 1
+    var dDaySettingCnt = 1
+    var accountSettingCnt = 1
 
+    // 날짜
+    var strDate = ""
+    // 날짜를 선택유무에 대한 변수
+    var dateCnt = 0
+
+    //번들 변수
+//    var token : String? = null
+//    var name : String? = null
+//    var img : String?= null
+
+    @SuppressLint("SimpleDateFormat", "WeekBasedYear")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         MyPageEditService(this).tryGetMyPage()
 
         super.onViewCreated(view, savedInstanceState)
 
-        var extra = this.arguments
-        if (extra != null) {
-            extra = arguments
-            token = extra?.getString("token")
-            name = extra?.getString("name")
-            img = extra?.getString("img").toString()
-            Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
-            Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
-            Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
-//            Glide.with(this).load(img)
-//                .centerCrop().into(binding.myPageEditImg)
-        }
-
-        val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
-
-        if (img == null){
-
-            Glide.with(this).load(R.drawable.my_page_img2)
-                .centerCrop().into(binding.myPageEditImg)
-        }
-
-        binding.myPageEditTvName.text = name
-
-        //클릭에 따른 visible/gone을 위한 변수
-        var topMentCnt = 1
-        var dDaySettingCnt = 1
-        var accountSettingCnt = 1
+//        var extra = this.arguments
+//        if (extra != null) {
+//            extra = arguments
+//            token = extra?.getString("token")
+//            name = extra?.getString("name")
+//            img = extra?.getString("img").toString()
+//            Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
+//            Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
+//            Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
+////            Glide.with(this).load(img)
+////                .centerCrop().into(binding.myPageEditImg)
+//        }
 
         //이미지 클릭 시
         binding.myPageEditImg.setOnClickListener {
@@ -168,6 +175,62 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
             accountSettingCnt++
         }
 
+        //날짜 변화에 대한
+        val listener = OnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
+
+            if (monthOfYear+1 < 10 && dayOfMonth < 10){
+                strDate = year.toString() + "-" + "0" + (monthOfYear + 1) + "-" + "0" + dayOfMonth
+            }else if (monthOfYear+1 >= 10 && dayOfMonth < 10){
+                strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + "0" + dayOfMonth
+            }else if(monthOfYear+1 < 10 && dayOfMonth >= 10){
+                strDate = year.toString() + "-" + "0" + (monthOfYear + 1) + "-" + dayOfMonth
+            }else{
+                strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
+            }
+
+            Toast.makeText(activity, strDate, Toast.LENGTH_SHORT).show()
+            dateCnt++
+            }
+
+        val month: Int = binding.dataPicker.month
+        val year = binding.dataPicker.year
+        val day = binding.dataPicker.dayOfMonth
+        binding.dataPicker.init(year, month, day, listener)
+
+
+        //체크표시
+        binding.myPageEditBtnSave.setOnClickListener {
+            val onlyDate: LocalDate = LocalDate.now()
+
+            if (dateCnt == 0){
+//                binding.myPageEditEtComments.setText(onlyDate.toString())
+                val str = onlyDate.toString()
+                val format = SimpleDateFormat("YYYY-MM-DD")
+                val nowDate : Date? = format.parse(str)
+                strDate = str
+            }else{
+//                binding.myPageEditEtComments.setText(strDate)
+
+            }
+
+            if (dDaySettingCnt % 2 != 0){
+                dDaySettingCnt = 1
+            }else{
+                dDaySettingCnt = -1
+            }
+
+            Log.d("TAG", "상단멘트사전확인: ${binding.myPageEditEtComments.text}")
+            val myPageUpdateRequest = PutMyPageUpdateRequest(
+                nickname = binding.myPageEditEtName.text.toString(),
+                titleComment = binding.myPageEditEtComments.text.toString(),
+                goalStatus = dDaySettingCnt,
+                goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
+                goalDate = strDate
+            )
+
+            MyPageEditService(this).tryPutMyPageUpdate(myPageUpdateRequest)
+        }
+
         //X버튼 클릭 시 내정보로 이동
         binding.myPageEditBtnX.setOnClickListener {
             myPageActivityView.moveMyPage()
@@ -196,7 +259,8 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
             .setPermissions(
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.CAMERA)
+                android.Manifest.permission.CAMERA
+            )
             .check()
     }
 
@@ -259,8 +323,10 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
                     .getBitmap(activity!!.contentResolver, Uri.fromFile(file))
                 binding.myPageEditImg.setImageBitmap(bitmap)
             } else {
-                val decode = ImageDecoder.createSource(activity!!.contentResolver,
-                    Uri.fromFile(file))
+                val decode = ImageDecoder.createSource(
+                    activity!!.contentResolver,
+                    Uri.fromFile(file)
+                )
                 val bitmap = ImageDecoder.decodeBitmap(decode)
                 binding.myPageEditImg.setImageBitmap(bitmap)
             }
@@ -281,24 +347,40 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
                 Log.d("TAG", "onGetMyPageSuccess: MyPage수정 조회성공")
                 showCustomToast("MyPage수정 조회성공")
 
-                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
-                val kakaoImg:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_THUMBNAILIMAGEURL,null)
+//                val kakaoName: String? = ApplicationClass.sSharedPreferences.getString(
+//                    Constants.KAKAO_USER_NICKNAME,
+//                    null
+//                )
+//                val famoName = ApplicationClass.sSharedPreferences.getString(
+//                    Constants.USER_NICKNAME,
+//                    null
+//                )
+                val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
+                    Constants.KAKAO_THUMBNAILIMAGEURL,
+                    null
+                )
+                val name =
+                    ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
 
-                if (response.loginMethod == "K"){
-                    binding.myPageEditTvName.text = kakaoName
+                Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
+                if (response.loginMethod == "K") {
 
-                    if (kakaoImg != null){
+                    if (kakaoImg!!.isNotEmpty()) {
+                        Log.d("TAG", "onGetMyPageSuccess: 카로확인")
                         Glide.with(this).load(kakaoImg)
                             .centerCrop().into(binding.myPageEditImg)
-                    }else{
+                    } else {
+                        Log.d("TAG", "onGetMyPageSuccess: 카로확인2")
                         Glide.with(this).load(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageEditImg)
                     }
-                }else{
-                    binding.myPageEditTvName.text = name
+                } else {
                     Glide.with(this).load(R.drawable.my_page_img2)
                         .centerCrop().into(binding.myPageEditImg)
                 }
+
+                //이름 적용
+                binding.myPageEditEtName.setText(name)
 
             }
             else -> {
@@ -309,6 +391,58 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) : BaseFragm
     }
 
     override fun onGetMyPageFail(message: String) {
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    override fun onPutMyPageUpdateSuccess(response: BaseResponse) {
+
+        when(response.code){
+            100 -> {
+                Log.d("TAG", "onPutMyPageUpdateSuccess: MyPage수정성공")
+                showCustomToast("수정성공")
+
+                val sampleDate = strDate
+                val sf = SimpleDateFormat("yyyy-MM-dd")
+                val date = sf.parse(sampleDate)
+                val today = Calendar.getInstance()
+                val day = ((date.time - today.time.time) / (60 * 60 * 24 * 1000)) + 1
+
+                binding.myPageEditDay.setText(day.toString())
+                val name = binding.myPageEditEtName.text.toString()
+                val comments = binding.myPageEditEtComments.text.toString()
+                val goalTitle = binding.myPageEditEtGoaltitle.text.toString()
+
+                val edit = ApplicationClass.sSharedPreferences.edit()
+                edit.putString(Constants.USER_NICKNAME, name)
+                edit.putString(Constants.COMMENTS,comments)
+                edit.putString(Constants.DAY,day.toString())
+                edit.putString(Constants.GOALTITLE,goalTitle)
+                edit.putString(Constants.DDAY_SETTING,dDaySettingCnt.toString())
+                edit.apply()
+
+                val intent = Intent(activity,MyPageActivity::class.java)
+                intent.putExtra("day", day)
+                intent.putExtra("goalTitle",binding.myPageEditEtGoaltitle.toString())
+                startActivity(intent)
+//                myPageActivityView.moveMyPage()
+//                nickname = binding.myPageEditEtName.text.toString(),
+//                titleComment = binding.myPageEditEtComments.text.toString(),
+//                goalStatus = dDaySettingCnt,
+//                goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
+//                goalDate = goalDate!!
+
+
+            }
+            else -> {
+                Log.d("TAG", "onPutMyPageUpdateSuccess: ${response.message.toString()}")
+                showCustomToast("${response.message.toString()}}")
+            }
+        }
+
+    }
+
+    override fun onPutMyPageUpdateFail(message: String) {
+
     }
 
 }

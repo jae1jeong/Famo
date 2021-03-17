@@ -10,6 +10,10 @@ object Constants {
     val HIDE_SHEET = "HIDE_SHEET"
     val EDIT_SCHEDULE_ID = "EDIT_SCHEDULE_ID"
     var IS_EDIT = false
+    val COMMENTS = "COMMENTS"
+    val DAY = "DAY"
+    val GOALTITLE = "GOALTITLE"
+    val DDAY_SETTING = "DDAY_SETTING"
 
     val KAKAO_USER_NICKNAME = "KAKAO_USER_NICKNAME"
     val KAKAO_USER_ID = "KAKAO_USER_ID"

@@ -103,8 +103,8 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
         val edit = ApplicationClass.sSharedPreferences.edit()
 //        edit.putString(Constants.KAKAO_JWT, response.jwt)
         edit.putString(ApplicationClass.X_ACCESS_TOKEN, response.jwt)
-        edit.putInt(Constants.KAKAO_USER_ID, response.userID)
-        edit.putString(Constants.KAKAO_USER_NICKNAME, response.nickname)
+        edit.putInt(Constants.USER_ID, response.userID)
+        edit.putString(Constants.USER_NICKNAME, response.nickname)
         edit.putString(Constants.KAKAO_THUMBNAILIMAGEURL, kakaoUrl)
         edit.apply()
 

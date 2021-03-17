@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
@@ -45,7 +46,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val token = intent.getStringExtra("token")
         val name = intent.getStringExtra("name")
         val img = intent.getStringExtra("img")
 
@@ -56,30 +56,31 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         adapter.addFragment(ScheduleFindFragment(),"일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
+        binding.mainViewPager.addOnPageChangeListener(object:ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-        // FAB 메인 액션 버튼
-        binding.mainBtnActionMain.setOnClickListener {
-//            onActionButtonClicked()
-        }
+            }
 
-        // FAB 글쓰기 버튼
-        binding.mainBtnActionSub.setOnClickListener {
-//            showBottomAddScheduleSheetDialog()
-        }
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 ->{showCustomToast(position.toString())}
+                    1 ->{showCustomToast(position.toString())}
+                    2 ->{showCustomToast(position.toString())}
+                }
+            }
 
-        val jwt:String? = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null)
-        Log.d("토큰", "$jwt")
-        //여기 지움
-        val test = intent.getStringExtra("test")
-        Log.d("테스트 토큰", "$test")
-        //
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+        })
 
         // 다른 부분을 눌렀을때 FAB 버튼 비활성화
         binding.mainLayout.setOnClickListener {
             if(clicked){
-//                onActionButtonClicked()
+
             }
         }
+
 
 
         //유저 이미지 클릭 시 마이페이지로 이동
@@ -114,8 +115,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mainFrameBottomSheet)
 
             bottomSheetBehavior.apply {
-            peekHeight = 200
-            this.state = BottomSheetBehavior.STATE_COLLAPSED
+            peekHeight = 400
+                isHideable = true
+            this.state = BottomSheetBehavior.STATE_HIDDEN
         }.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
@@ -150,12 +152,14 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
             })
 
-        // 바텀시트 다이얼로그 방향키
-        binding.addMemoImageScroll.setOnClickListener {
-            bottomSheetBehavior.peekHeight = 400
-            stateChangeBottomSheet(Constants.EXPAND)
+        binding.mainFloatingBtn.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        // 바텀시트 다이얼로그 방향키
+        binding.addMemoImageScroll.setOnClickListener {
+            stateChangeBottomSheet(Constants.EXPAND)
+        }
 
         // 바텀시트 다이얼로그 저장 버튼
         binding.addMemoDialogBtnSave.setOnClickListener {
@@ -180,6 +184,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     }
 
+
     // 바텀시트 다이얼로그 상태 관리
     fun stateChangeBottomSheet(state:String){
         when(state){
@@ -197,43 +202,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
-    // 삭제 예정
-    // FAB 액션 버튼 메서드
-//    private fun onActionButtonClicked() {
-//        setVisibility(clicked)
-//        setAnimation(clicked)
-//        clicked  = !clicked
-//    }
 
-    // 삭제 예정
-    // FAB 액션 버튼 애니메이션
-//    private fun setAnimation(clicked: Boolean) {
-//        if(!clicked){
-//            binding.mainBtnActionSub.startAnimation(fromBottom)
-//        }else{
-//            binding.mainBtnActionSub.startAnimation(toBottom)
-//        }
-//    }
-
-    // FAB 액션 버튼 비저빌리티
-    private fun setVisibility(clicked:Boolean){
-        if(!clicked){
-            binding.mainBtnActionSub.visibility = View.VISIBLE
-//            binding.mainFrameLayout.setBackgroundColor(resources.getColor(R.color.transparent_black))
-        }else{
-            binding.mainBtnActionSub.visibility = View.GONE
-//            binding.mainFrameLayout.setBackgroundColor(Color.TRANSPARENT)
-        }
-    }
-
-
-
-    // 삭제 예정
-    // 프래그먼트에서도 BottomSheetDialog를 호출할 수 있게 메서드로 작성
-//    fun showBottomAddScheduleSheetDialog(){
-//        val sheet = AddMemoFragment()
-//        sheet.show(supportFragmentManager,"AddMemoFragment")
-//    }
 
     fun replaceFragment(fragment : Fragment) {
         val adapter = MainPagerAdapter(supportFragmentManager)

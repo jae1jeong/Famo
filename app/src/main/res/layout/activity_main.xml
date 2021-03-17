@@ -14,6 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/main_floating_btn"
+            app:borderWidth="0dp"
+            android:backgroundTint="#242424"
+            android:src="@drawable/floating_action_btn"
+            android:layout_margin="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.tabs.TabLayout
         app:tabTextAppearance="@style/tab_text"
         app:tabTextColor="@color/text_gray"
@@ -45,49 +56,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_tab_layout" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:tint="@color/white"
-        android:backgroundTint="@color/light_dark"
-        android:id="@+id/main_btn_action_sub2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@color/black"
-        android:visibility="invisible"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/main_btn_action_sub"
-        app:layout_constraintEnd_toEndOf="@+id/main_btn_action_sub"
-        app:layout_constraintStart_toStartOf="@+id/main_btn_action_sub" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:tint="@color/white"
-        android:backgroundTint="@color/light_dark"
-        android:visibility="invisible"
-        app:fabSize="normal"
-        android:background="@color/black"
-        android:id="@+id/main_btn_action_sub"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/main_btn_action_main"
-        app:layout_constraintEnd_toEndOf="@+id/main_btn_action_main"
-        app:layout_constraintStart_toStartOf="@+id/main_btn_action_main" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:tint="@color/white"
-        app:fabSize="normal"
-        app:borderWidth="0dp"
-        android:visibility="invisible"
-        android:backgroundTint="@color/light_dark"
-        android:src="@drawable/ic_sharp_add_24"
-        android:id="@+id/main_btn_action_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -363,6 +331,7 @@
         </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
+
 
 
 

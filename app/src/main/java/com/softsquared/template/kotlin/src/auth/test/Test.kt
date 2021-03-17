@@ -1,11 +1,14 @@
 package com.softsquared.template.kotlin.src.auth.test
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import com.bumptech.glide.util.Util
+import com.kakao.sdk.common.util.Utility
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
@@ -36,6 +39,9 @@ class Test: BaseActivity<ActivityTestBinding>(ActivityTestBinding::inflate),
 
         val number : EditText = findViewById(R.id.number)
         val button : Button = findViewById(R.id.button)
+
+
+
 
         button.setOnClickListener {
 
@@ -75,4 +81,9 @@ class Test: BaseActivity<ActivityTestBinding>(ActivityTestBinding::inflate),
 
     override fun onPatchKakaoLoginNumberFail(message: String) {
     }
+
+//    fun getKeyHash(context:Context):String{
+//        val packageInfo = Utility
+//        packageInfo.
+//    }
 }

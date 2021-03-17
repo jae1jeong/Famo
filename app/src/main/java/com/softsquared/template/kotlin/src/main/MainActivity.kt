@@ -227,6 +227,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
 
+
     // 삭제 예정
     // 프래그먼트에서도 BottomSheetDialog를 호출할 수 있게 메서드로 작성
 //    fun showBottomAddScheduleSheetDialog(){
@@ -250,7 +251,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
 //        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
 //            .commit()
 
@@ -300,6 +300,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
                     showCustomToast(response.message.toString())
+                    showLoadingDialog(this)
+                    TodayService(this).onGetScheduleItems()
                 }
                 else->{
                     dismissLoadingDialog()

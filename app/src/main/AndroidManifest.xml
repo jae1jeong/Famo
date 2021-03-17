@@ -54,18 +54,35 @@
         <activity
             android:name=".src.auth.information.InformationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- Login_Information -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- Login_Information -->
         <activity
             android:name=".src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- Login -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- Login -->
         <activity
             android:name=".src.auth.login.LoginActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".src.auth.loginInformation.LoginInformation"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- SignUp -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- SignUp -->
         <activity
             android:name=".src.auth.signup.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--아이디/비밀번호 찾기 -->
+        <activity
+            android:name=".src.auth.find.FindUserActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--아이디/비밀번호 찾기 결과 -->
+        <activity
+            android:name=".src.auth.findresult.FindResultActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".src.auth.loginInformation.LoginInformation"
             android:theme="@style/AppTheme.NoActionBar" />

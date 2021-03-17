@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface TodayRetrofitInterface {
-    @GET("schedules")
+    @GET("schedules/today")
     fun getTodayMemos(): Call<ScheduleItemsResponse>
 
     @PUT("schedules/{scheduleID}")

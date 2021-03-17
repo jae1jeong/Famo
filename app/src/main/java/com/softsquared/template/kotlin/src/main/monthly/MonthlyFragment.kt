@@ -108,8 +108,22 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
             }
 
+        val currentMonth = YearMonth.now()
+        val firstMonth = currentMonth.minusMonths(0)
+        val lastMonth = currentMonth.plusMonths(0)
+        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+        val daysOfWeek = arrayOf(
+                DayOfWeek.SUNDAY,
+                DayOfWeek.MONDAY,
+                DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY,
+                DayOfWeek.FRIDAY,
+                DayOfWeek.SATURDAY
+        )
+        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
 
-            // 달력 헤더
+
+        // 달력 헤더
             binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
                 override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
                     container.headerMonthTextTitle.text = "${month.yearMonth.month}"
@@ -118,19 +132,8 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 override fun create(view: View): CalendarViewHeader  = CalendarViewHeader(view)
 
             }
-            val daysOfWeek = arrayOf(
-                DayOfWeek.SUNDAY,
-                DayOfWeek.MONDAY,
-                DayOfWeek.WEDNESDAY,
-                DayOfWeek.THURSDAY,
-                DayOfWeek.FRIDAY,
-                DayOfWeek.SATURDAY
-            )
-            val currentMonth = YearMonth.now()
-            val firstMonth = currentMonth.minusMonths(0)
-            val lastMonth = currentMonth.plusMonths(0)
-            val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-            binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
+
+
             binding.calendarView.scrollToMonth(currentMonth)
 
 

@@ -10,10 +10,7 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivitySignUpBinding
 import com.softsquared.template.kotlin.src.auth.login.LoginActivity
-import com.softsquared.template.kotlin.src.auth.signup.models.CheckAuthNumberResponse
-import com.softsquared.template.kotlin.src.auth.signup.models.PostRequestSendMessage
-import com.softsquared.template.kotlin.src.auth.signup.models.PostRequestSignUp
-import com.softsquared.template.kotlin.src.auth.signup.models.SignUpResponse
+import com.softsquared.template.kotlin.src.auth.signup.models.*
 
 class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate)
 ,SignUpView{
@@ -24,6 +21,7 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
         val editRePassword = binding.signUpEditRePassword
         val editNickname = binding.signUpEditNickname
         val editPhoneNumber = binding.signUpEditPhoneNumber
+        val editAuthNumber = binding.signUpEditAuthNumber
         var isAuth = false
 
         setSupportActionBar(binding.signUpToolbar)
@@ -33,26 +31,23 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
         binding.signUpLinearAuthZone.visibility = View.GONE
         // 회원가입 검증
         binding.signUpBtnSignUp.setOnClickListener {
-
-            if(isAuth){
-//                showCustomToast(" ${editId.text} ${editPassword.text} ${editRePassword.text} ${editNickname.text} ${editPhoneNumber.text}")
-                showLoadingDialog(this)
-                SignUpService(this).tryPostSignUp(PostRequestSignUp(editId.text.toString(),editPassword.text.toString(),editNickname.text.toString(),editPhoneNumber.text.toString()))
-            }else{
-                showCustomToast("휴대폰 인증을 완료해주세요.")
-            }
+            showLoadingDialog(this)
+            SignUpService(this).tryPostSignUp(PostRequestSignUp(editId.text.toString(),editPassword.text.toString(),editNickname.text.toString(),editPhoneNumber.text.toString()))
         }
 
         // 휴대폰 인증 완료 버튼
         binding.signUpBtnAuthCheck.setOnClickListener {
-
+            showLoadingDialog(this)
+            SignUpService(this).tryGetCheckAuthNumber(GetRequestCheckAuthNumber(binding.signUpEditPhoneNumber.text.toString(),binding.signUpEditAuthNumber.text.toString()))
         }
 
         // 휴대폰 인증 문자전송 버튼
         binding.signUpBtnAuth.setOnClickListener {
             binding.signUpLinearAuthZone.visibility = View.VISIBLE
-            showLoadingDialog(this)
-            SignUpService(this).tryPostSendMessage(PostRequestSendMessage(binding.signUpEditPhoneNumber.text.toString()))
+            if(isAuth){
+                showLoadingDialog(this)
+                SignUpService(this).tryPostSendMessage(PostRequestSendMessage(binding.signUpEditPhoneNumber.text.toString()))
+            }
         }
 
         // 닉네임 글자수 제한
@@ -110,8 +105,17 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
     }
 
     override fun onGetCheckAuthNumberSuccess(response: CheckAuthNumberResponse) {
+        if(response.isSuccess && response.code == 100){
+            showCustomToast(response.message.toString())
+        }
+        else{
+            showCustomToast(response.message.toString())
+        }
+        dismissLoadingDialog()
     }
 
     override fun onGetCheckAuthNumberFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
     }
 }

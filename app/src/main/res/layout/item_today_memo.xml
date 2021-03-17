@@ -37,6 +37,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textSize="17sp"
+        android:textColor="@color/item_today_month_text"
         android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

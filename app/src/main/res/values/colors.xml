@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#fcfcfc</color>
-    <color name="colorPrimaryDark">#D7D6D7</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FFAE2A</color>
 
     <!-- 기본 -->
@@ -38,5 +38,7 @@
     <color name="auth_text_normal_black">#79879A</color>
 
     <color name="add_btn">#FFAE2A</color>
+
+    <color name="item_today_month_text">#505C6C</color>
 
 </resources>

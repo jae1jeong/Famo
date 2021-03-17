@@ -17,7 +17,6 @@ class ScheduleDetailDialog(context: Context) {
     private lateinit var modifyBtn: Button
     private lateinit var closeBtn: ImageView
     private lateinit var listener: scheduleDetailDialogClickListener
-//    private lateinit var
 
     interface scheduleDetailDialogClickListener{
         fun modifyBtnClicked()

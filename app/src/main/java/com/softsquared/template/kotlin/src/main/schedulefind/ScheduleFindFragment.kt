@@ -23,6 +23,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInqu
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 
 
 class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
@@ -148,15 +149,12 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
             // 즐겨찾기가 선택되어 있는 경우
             if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
+
                 binding.scheduleFindLinear.visibility = View.GONE
-//                val boolean = true
-//                bundle.putBoolean("boolean", boolean)
-//                scheduleFindDetailFragment.arguments = bundle
-//                childFragmentManager.beginTransaction().replace(
-//                    R.id.main_frame_layout,
-//                    scheduleFindDetailFragment)
                 ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
-                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
+//                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
+                val intent = Intent(activity,WholeScheduleActivity::class.java)
+                startActivity(intent)
             }
 
             //최근이 선택되어 있는 경우

@@ -110,13 +110,11 @@
     <string name="schedule_find_tv_whole_schedule">전체일정</string>
 
 
-
     <!--Find User-->
     <string name="find_user_text_toolbar">아이디/비밀번호 찾기</string>
     <string name="find_user_text_phone">휴대폰 번호</string>
     <string name="find_id_text_find_id">아이디 찾기</string>
     <string name="find_password_text_find_password">비밀번호 찾기</string>
-
 
 
 </resources>

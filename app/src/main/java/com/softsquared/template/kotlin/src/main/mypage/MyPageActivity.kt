@@ -65,8 +65,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     //일정찾기로 이동
     override fun moveScheduleFind() {
 //        val intent = Intent(this,MainActivity::class.java)
-        val main = MainActivity()
-        main.moveScheduleFindFragment()
+//        val main = MainActivity()
+//        main.moveScheduleFindFragment()
         finish()
 //        startActivity(intent)
 //        MainActivity.replaceFragment(ScheduleFindFragment.newInstance());

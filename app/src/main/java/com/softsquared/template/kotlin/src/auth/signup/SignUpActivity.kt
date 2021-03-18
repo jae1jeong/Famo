@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivitySignUpBinding
@@ -14,6 +15,8 @@ import com.softsquared.template.kotlin.src.auth.signup.models.*
 
 class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate)
 ,SignUpView{
+    private var isAuthMessage = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val editId = binding.signUpEditId
@@ -22,7 +25,6 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
         val editNickname = binding.signUpEditNickname
         val editPhoneNumber = binding.signUpEditPhoneNumber
         val editAuthNumber = binding.signUpEditAuthNumber
-        var isAuth = false
 
         setSupportActionBar(binding.signUpToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -31,20 +33,25 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
         binding.signUpLinearAuthZone.visibility = View.GONE
         // 회원가입 검증
         binding.signUpBtnSignUp.setOnClickListener {
-            showLoadingDialog(this)
-            SignUpService(this).tryPostSignUp(PostRequestSignUp(editId.text.toString(),editPassword.text.toString(),editNickname.text.toString(),editPhoneNumber.text.toString()))
+            if(isAuthMessage){
+                showLoadingDialog(this)
+                SignUpService(this).tryPostSignUp(PostRequestSignUp(editId.text.toString(),editPassword.text.toString(),editNickname.text.toString(),editPhoneNumber.text.toString()))
+            }
         }
 
-        // 휴대폰 인증 완료 버튼
+        // 휴대폰 인증 확인 버튼
         binding.signUpBtnAuthCheck.setOnClickListener {
             showLoadingDialog(this)
             SignUpService(this).tryGetCheckAuthNumber(GetRequestCheckAuthNumber(binding.signUpEditPhoneNumber.text.toString(),binding.signUpEditAuthNumber.text.toString()))
         }
 
         // 휴대폰 인증 문자전송 버튼
-        binding.signUpBtnAuth.setOnClickListener {
+        binding.signUpBtnSendAuth.setOnClickListener {
             binding.signUpLinearAuthZone.visibility = View.VISIBLE
-            if(isAuth){
+            if(editPhoneNumber.text.length != 11){
+                showCustomToast("휴대폰 번호를 확인해주세요.")
+            }else{
+//                binding.signUpBtnSendAuth.backgroundTintList = resources.getColorStateList(R.color.black)
                 showLoadingDialog(this)
                 SignUpService(this).tryPostSendMessage(PostRequestSendMessage(binding.signUpEditPhoneNumber.text.toString()))
             }
@@ -62,6 +69,26 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
             override fun afterTextChanged(p0: Editable?) {
             }
 
+        })
+
+        // 휴대폰 번호 EditText
+        binding.signUpEditPhoneNumber.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0!!.length == 11) {
+                    binding.signUpBtnSendAuth.setTextColor(resources.getColor(R.color.black))
+                } else {
+                    binding.signUpBtnSendAuth.setTextColor(resources.getColor(R.color.auth_button_text))
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                showCustomToast(p0.toString())
+                Log.d("TAG", "afterTextChanged: $p0")
+
+            }
         })
     }
 
@@ -84,7 +111,6 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
 
     }
 
-    // test1234 James1234@
     override fun onPostSignUpFailure(message: String) {
         dismissLoadingDialog()
         showCustomToast(message)
@@ -106,6 +132,7 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
 
     override fun onGetCheckAuthNumberSuccess(response: CheckAuthNumberResponse) {
         if(response.isSuccess && response.code == 100){
+            isAuthMessage = true
             showCustomToast(response.message.toString())
         }
         else{

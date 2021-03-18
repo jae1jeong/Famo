@@ -14,7 +14,7 @@ import com.softsquared.template.kotlin.databinding.ItemMonthlyMemoBinding
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.util.CategoryColorPicker
 
-class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,private val otherCheckListener:(MemoItem)->Unit):RecyclerView.Adapter<MonthlyMemoAdapter.MonthlyMemoViewHolder>(){
+class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,private val deleteListener:(MemoItem)->Unit,private val shareListener:(MemoItem)->Unit):RecyclerView.Adapter<MonthlyMemoAdapter.MonthlyMemoViewHolder>(){
     class MonthlyMemoViewHolder(val binding:ItemMonthlyMemoBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthlyMemoViewHolder {
@@ -35,10 +35,10 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
                     when(item?.itemId){
                         R.id.other_btn_share->{
-
+                            shareListener(memo)
                         }
                         R.id.other_btn_delete->{
-
+                            deleteListener(memo)
                         }
                     }
                     return true

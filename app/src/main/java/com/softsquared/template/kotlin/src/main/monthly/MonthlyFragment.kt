@@ -16,11 +16,16 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
+import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentMonthlyBinding
 import com.softsquared.template.kotlin.src.main.monthly.adapter.MonthlyMemoAdapter
 import com.softsquared.template.kotlin.src.main.monthly.models.AllMemoResponse
 import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyMemoItemResponse
+import com.softsquared.template.kotlin.src.main.today.TodayFragment
+import com.softsquared.template.kotlin.src.main.today.TodayService
+import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import kotlinx.coroutines.flow.callbackFlow
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -29,7 +34,7 @@ import java.time.temporal.WeekFields
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBinding::bind, R.layout.fragment_monthly),MonthlyView{
+class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBinding::bind, R.layout.fragment_monthly),MonthlyView,TodayView{
 
     lateinit var monthlyMemoAdapter:MonthlyMemoAdapter
     val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -140,13 +145,15 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
             // 어댑터
             monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!,{},{
+                showLoadingDialog(context!!)
+                TodayService(this).onPutDeleteMemo(it.id)
+            },{
 
             })
             binding.monthlyRecyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter
             }
-
         }
 
 
@@ -217,5 +224,43 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     override fun onGetAllMemosFailure(message: String) {
         dismissLoadingDialog()
         showCustomToast(message)
+    }
+
+    override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
+    }
+
+    override fun onGetScheduleItemsFailure(message: String) {
+    }
+
+    override fun onDeleteMemoSuccess(response: BaseResponse, scheduleID: Int) {
+        if(response.isSuccess){
+            when(response.code){
+                100->{
+                    showCustomToast(response.message.toString())
+                    memoList.removeIf {
+                        it.id == scheduleID
+                    }
+                    monthlyMemoAdapter.setNewMemoList(memoList)
+                    dismissLoadingDialog()
+                }else->{
+                dismissLoadingDialog()
+                showCustomToast(response.message.toString())
+            }
+            }
+        }else{
+            dismissLoadingDialog()
+            showCustomToast(response.message.toString())
+        }
+    }
+
+    override fun onDeleteMemoFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
+    override fun onPostItemCheckSuccess(response: BaseResponse) {
+    }
+
+    override fun onPostItemCheckFailure(message: String) {
     }
 }

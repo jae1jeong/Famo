@@ -1,7 +1,9 @@
 package com.softsquared.template.kotlin.src.main.today
 
+import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,10 +39,11 @@ class TodayService(val view:TodayView){
         })
     }
 
-    fun onPostCheckItem(scheduleID: Int){
+    fun onPostCheckItem(checkItemRequest: CheckItemRequest){
         val todayRetrofitInterface = ApplicationClass.sRetrofit.create(TodayRetrofitInterface::class.java)
-        todayRetrofitInterface.postItemCheck(scheduleID).enqueue(object:Callback<BaseResponse>{
+        todayRetrofitInterface.postItemCheck(checkItemRequest).enqueue(object : Callback<BaseResponse> {
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                Log.d("TAG", "onResponse: $response")
                 view.onPostItemCheckSuccess(response.body() as BaseResponse)
             }
 

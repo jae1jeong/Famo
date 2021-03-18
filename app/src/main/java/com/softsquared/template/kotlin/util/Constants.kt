@@ -14,6 +14,8 @@ object Constants {
     val DAY = "DAY"
     val GOALTITLE = "GOALTITLE"
     val DDAY_SETTING = "DDAY_SETTING"
+    val FIND_USER_ID = "FIND_USER_ID"
+    val OTP_TOKEN = "OTP_TOKEN"
 
     val KAKAO_USER_NICKNAME = "KAKAO_USER_NICKNAME"
     val KAKAO_USER_ID = "KAKAO_USER_ID"

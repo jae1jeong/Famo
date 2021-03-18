@@ -15,6 +15,6 @@ interface SignUpRetrofitInterface {
     @POST("users/phone")
     fun postSendMessage(@Body sendMessageRequest:PostRequestSendMessage):Call<BaseResponse>
 
-    @GET("users/phone/auth")
+    @POST("users/phone/auth")
     fun getCheckAuthNumber(@Body getRequestCheckAuthNumber: GetRequestCheckAuthNumber):Call<CheckAuthNumberResponse>
 }

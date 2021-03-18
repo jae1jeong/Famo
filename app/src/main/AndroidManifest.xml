@@ -84,8 +84,16 @@
         <activity
             android:name=".src.auth.findresult.FindResultActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:parentActivityName=".src.auth.find.FindUserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 비밀번호 재설정 -->
+        <activity
+            android:name=".src.auth.setnewpassword.SetNewPasswordActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".src.auth.find.FindUserActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
 
         <!--카카오 로그인-->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">

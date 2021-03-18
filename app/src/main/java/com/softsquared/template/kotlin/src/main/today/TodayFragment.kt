@@ -16,6 +16,7 @@ import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.AddMemoService
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
+import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.util.Constants
@@ -39,32 +40,31 @@ class TodayFragment :
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
-        todayMemoAdapter = MemoAdapter(memoList,context!!,{
+        todayMemoAdapter = MemoAdapter(memoList, context!!, {
             // 디테일 다이얼로그
             val scheduleDetailDialog = ScheduleDetailDialog(context!!)
             // 디테일 다이얼로그 수정하기 버튼
             scheduleDetailDialog.setOnModifyBtnClickedListener {
                 // 스케쥴 ID 보내기
                 val edit = ApplicationClass.sSharedPreferences.edit()
-                edit.putInt(Constants.EDIT_SCHEDULE_ID,it.id)
+                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
                 edit.apply()
-
                 Constants.IS_EDIT = true
 
                 //바텀 시트 다이얼로그 확장
                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
             }
             scheduleDetailDialog.start(it)
-        },{
+        }, {
             // 일정완료 버튼
-            showLoadingDialog(context!!)
-            TodayService(this).onPostCheckItem(it.id)
+            TodayService(this).onPostCheckItem(CheckItemRequest(it.id))
+        },{
+
         })
         binding.todayRecyclerView.apply {
             layoutManager = mLayoutManager
             adapter = todayMemoAdapter
         }
-
 
         // 메모가 없을때
         binding.todayImageNoItem.setOnClickListener {
@@ -196,6 +196,7 @@ class TodayFragment :
                 100->{
                     showCustomToast(response.message.toString())
                     memoList.removeIf {
+                        showCustomToast(scheduleID.toString())
                         it.id == scheduleID
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
@@ -221,14 +222,12 @@ class TodayFragment :
         if(response.isSuccess && response.code == 100){
             Log.d("todayFragment", "onPostItemCheckSuccess: 일정 체크 성공")
         }else{
-            dismissLoadingDialog()
             showCustomToast(response.message.toString())
         }
 
     }
 
     override fun onPostItemCheckFailure(message: String) {
-        dismissLoadingDialog()
         showCustomToast(message)
     }
 

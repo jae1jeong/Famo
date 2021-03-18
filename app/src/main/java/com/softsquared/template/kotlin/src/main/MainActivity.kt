@@ -3,15 +3,10 @@ package com.softsquared.template.kotlin.src.main
 import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -22,7 +17,6 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
-import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
@@ -36,12 +30,13 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.util.Constants
 
+
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView {
     private var clicked = false // FAB 버튼 변수
     private lateinit var bottomSheetBehavior:BottomSheetBehavior<FrameLayout>
     // FAB 버튼 애니메이션
-    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.from_bottom_anim) }
-    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,21 +46,27 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MonthlyFragment(),"월간")
-        adapter.addFragment(TodayFragment(),"오늘")
-        adapter.addFragment(ScheduleFindFragment(),"일정 찾기")
+        adapter.addFragment(MonthlyFragment(), "월간")
+        adapter.addFragment(TodayFragment(), "오늘")
+        adapter.addFragment(ScheduleFindFragment(), "일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-        binding.mainViewPager.addOnPageChangeListener(object:ViewPager.OnPageChangeListener{
+        binding.mainViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
             }
 
             override fun onPageSelected(position: Int) {
-                when(position){
-                    0 ->{showCustomToast(position.toString())}
-                    1 ->{showCustomToast(position.toString())}
-                    2 ->{showCustomToast(position.toString())}
+                when (position) {
+                    0 -> {
+                        showCustomToast(position.toString())
+                    }
+                    1 -> {
+                        showCustomToast(position.toString())
+                    }
+                    2 -> {
+                        showCustomToast(position.toString())
+                    }
                 }
             }
 
@@ -90,10 +91,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 //            val name = intent.getStringExtra("name")
 //            val img = intent.getStringExtra("img")
 //            binding.mainFrameLayout.visibility = View.VISIBLE
-            val intent = Intent(this,MyPageActivity::class.java)
+            val intent = Intent(this, MyPageActivity::class.java)
 //            intent.putExtra("token",token)
-            intent.putExtra("name",name)
-            intent.putExtra("img",img)
+            intent.putExtra("name", name)
+            intent.putExtra("img", img)
             startActivity(intent)
 //            supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,MyPageFragment())
 //                    .commit()
@@ -138,13 +139,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
                     // 바텀 시트 다이얼로그 절반 이하인 상태일때
-                    if(slideOffset < 0.5){
+                    if (slideOffset < 0.5) {
                         binding.addMemoDialogBtnOk.visibility = View.VISIBLE
                         binding.addMemoImageScroll.setImageResource(R.drawable.today_write_up_arrow)
 
                     }
                     // 바텀 시트 다이얼로그 절반 이상인 상태일때
-                    else{
+                    else {
                         binding.addMemoImageScroll.setImageResource(R.drawable.today_write_down_arrow)
                         binding.addMemoDialogBtnOk.visibility = View.GONE
                     }
@@ -166,10 +167,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
             if(Constants.IS_EDIT){
                 // 수정하기
-                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID,-1)
+                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID, -1)
                 if(editScheduleID != -1){
                     showLoadingDialog(this)
-                    AddMemoService(this).tryPatchMemo(editScheduleID, PatchMemo(binding.addMemoEditTitle.text.toString(),null,null,binding.addMemoEditContent.text.toString()))
+                    AddMemoService(this).tryPatchMemo(editScheduleID, PatchMemo(binding.addMemoEditTitle.text.toString(), null, null, binding.addMemoEditContent.text.toString()))
                 }
                 else{
                     showCustomToast("수정 오류 스케줄 아이디를 볼러오지 못하였습니다.")
@@ -177,7 +178,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             }else{
                 //일정 추가하기
                 showLoadingDialog(this)
-                AddMemoService(this).tryPostAddMemo(PostTodayRequestAddMemo(binding.addMemoEditTitle.text.toString(),binding.addMemoEditContent.text.toString(),1))
+                AddMemoService(this).tryPostAddMemo(PostTodayRequestAddMemo(binding.addMemoEditTitle.text.toString(), binding.addMemoEditContent.text.toString(), 1))
             }
         }
 
@@ -186,16 +187,16 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 
     // 바텀시트 다이얼로그 상태 관리
-    fun stateChangeBottomSheet(state:String){
+    fun stateChangeBottomSheet(state: String){
         when(state){
-            Constants.EXPAND ->{
+            Constants.EXPAND -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
-            Constants.COLLASPE->{
+            Constants.COLLASPE -> {
                 bottomSheetBehavior.peekHeight = 350
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
-            Constants.HIDE_SHEET->{
+            Constants.HIDE_SHEET -> {
                 bottomSheetBehavior.peekHeight = 200
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -204,9 +205,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 
 
-    fun replaceFragment(fragment : Fragment) {
+    fun replaceFragment(fragment: Fragment) {
         val adapter = MainPagerAdapter(supportFragmentManager)
-        adapter.addFragment(fragment,"월간")
+        adapter.addFragment(fragment, "월간")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 //        binding.mainFrameLayout.visibility = View.VISIBLE
@@ -237,7 +238,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onPostAddMemoSuccess(response: BaseResponse) {
         if(response.isSuccess){
             when(response.code){
-                100->{
+                100 -> {
                     showCustomToast("일정이 작성 되었습니다!")
                     stateChangeBottomSheet(Constants.COLLASPE)
                     TodayService(this).onGetScheduleItems()
@@ -265,7 +266,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onPatchMemoSuccess(response: BaseResponse) {
         if(response.isSuccess){
             when(response.code){
-                100->{
+                100 -> {
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
                     showCustomToast(response.message.toString())
@@ -291,15 +292,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
         if(response.isSuccess){
             when(response.code){
-                100 ->{
+                100 -> {
                     val responseJsonArray = response.data.asJsonArray
                     responseJsonArray.forEach {
                         val memoJsonObject = it.asJsonObject
                         val memoTitle = memoJsonObject.get("scheduleName").asString
                         val memoDate = memoJsonObject.get("scheduleDate").asString
-                        val memoContentJsonElement:JsonElement? = memoJsonObject.get("scheduleMemo")
+                        val memoContentJsonElement: JsonElement? = memoJsonObject.get("scheduleMemo")
                         var memoContent = ""
-                        if(!memoContentJsonElement!!.isJsonNull) {
+                        if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
@@ -344,27 +345,27 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         val memoCreatedAt = memoDate.split(" ")
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
-                        var memoContent =""
-                        val memoColorInfoJsonElement:JsonElement? = memoJsonObject.get("colorInfo")
+                        var memoContent = ""
+                        val memoColorInfoJsonElement: JsonElement? = memoJsonObject.get("colorInfo")
 
-                        if(!memoContentJsonElement!!.isJsonNull) {
+                        if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
 
                         for (i in 0..1) {
                             if (i > 0) {
-                                memoCreatedAtMonth = memoCreatedAt[i].replace(" ","")
+                                memoCreatedAtMonth = memoCreatedAt[i].replace(" ", "")
                             } else {
-                                memoCreatedAtDay = memoCreatedAt[i].replace(" ","").toInt()
+                                memoCreatedAtDay = memoCreatedAt[i].replace(" ", "").toInt()
                             }
                         }
 
-                        var memoColorInfo:String? = null
-                        if(!memoColorInfoJsonElement!!.isJsonNull){
+                        var memoColorInfo: String? = null
+                        if (!memoColorInfoJsonElement!!.isJsonNull) {
                             memoColorInfo = memoColorInfoJsonElement.asString
                         }
 
-                        var memoIsChecked :Boolean? = null
+                        var memoIsChecked: Boolean? = null
                         memoIsChecked = memoPick >= 0
                         TodayFragment.memoList.add(
                                 MemoItem(
@@ -379,9 +380,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         )
                     }
                     TodayFragment.todayMemoAdapter?.setNewMemoList(TodayFragment.memoList)
-//                    // 오늘 프래그먼트에서 함수 사용
-//                    val todayFragment:TodayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
+                    // 오늘 프래그먼트에서 함수 사용
+//                    val todayFragment: TodayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
 //                    todayFragment.checkIsMemoListEmpty()
+
                     dismissLoadingDialog()
                 }
                 else->{

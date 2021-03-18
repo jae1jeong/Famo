@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.today.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,7 +13,9 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.util.CategoryColorPicker
 import java.util.ArrayList
 
-class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,private val checkListener:(MemoItem)->Unit):RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
+class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Context,private val clickListener:(MemoItem)->Unit,
+                  private val checkListener:(MemoItem)->Unit,private val noItemListener:()->Unit)
+    :RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
     class MemoViewHolder(val binding:ItemTodayMemoBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoAdapter.MemoViewHolder {
@@ -33,13 +36,13 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         // 체크 버튼 리스너
         holder.binding.todayItemBtnMemoCheck.setOnClickListener {
             if(memo.isChecked){
-                checkListener(memo)
                 changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
                 memo.isChecked = !memo.isChecked
+                checkListener(memo)
             }else{
-                checkListener(memo)
                 changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
                 memo.isChecked = !memo.isChecked
+                checkListener(memo)
             }
         }
         CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
@@ -83,6 +86,13 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = memoList.size
+    override fun getItemCount(): Int {
+        Log.d("adapter size", "getItemCount: ${memoList.size}")
+        if(memoList.size == 0){
+            noItemListener()
+        }
+        return memoList.size
+    }
+
 
 }

@@ -1,6 +1,8 @@
 package com.softsquared.template.kotlin.src.auth.signup.models
 
+import com.google.gson.annotations.SerializedName
+
 data class GetRequestCheckAuthNumber (
-      val phoneNumber:String,
-      val authCode:String
+        @SerializedName("phoneNumber") val phoneNumber:String,
+        @SerializedName("authCode") val authCode:String
         )

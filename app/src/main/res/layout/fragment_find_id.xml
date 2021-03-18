@@ -46,6 +46,8 @@
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
         <Button
+
+            android:textStyle="bold"
             android:id="@+id/find_id_btn_auth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +95,7 @@
             tools:layout_editor_absoluteX="30dp" />
 
         <Button
+            android:textStyle="bold"
             android:id="@+id/find_id_btn_auth_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +105,7 @@
             android:layout_weight="1"
             android:background="@drawable/background_btn_auth"
             android:text="@string/check"
-            android:textColor="@color/auth_button_text"
+            android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/sign_up_edit_phone_number"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,6 +114,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/find_id_btn_find_id"
         android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/white"

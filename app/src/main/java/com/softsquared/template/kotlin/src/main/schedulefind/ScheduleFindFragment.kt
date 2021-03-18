@@ -214,33 +214,33 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
     fun createWholeScheduleRecyclerview() {
         //테스트 데이터
-        val wholeList = arrayListOf(
-            ScheduleWholeData(
-                "2021.02.10", "제목", "내용",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목2", "내용2",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목3", "내용3",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목4", "내용4",
-                R.drawable.schedule_find_bookmark
-            )
-        )
-
-        //전체일정 리사이큘러뷰 연결
-        binding.recyclerviewWhole.layoutManager =
-            GridLayoutManager(
-                context, 2, GridLayoutManager.VERTICAL,
-                false
-            )
-        binding.recyclerviewWhole.setHasFixedSize(true)
-        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
+//        val wholeList = arrayListOf(
+//            ScheduleWholeData(
+//                "2021.02.10", "제목", "내용",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목2", "내용2",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목3", "내용3",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목4", "내용4",
+//                R.drawable.schedule_find_bookmark
+//            )
+//        )
+//
+//        //전체일정 리사이큘러뷰 연결
+//        binding.recyclerviewWhole.layoutManager =
+//            GridLayoutManager(
+//                context, 2, GridLayoutManager.VERTICAL,
+//                false
+//            )
+//        binding.recyclerviewWhole.setHasFixedSize(true)
+//        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
     }
 
     fun createCategoryRecyclerview() {
@@ -301,12 +301,20 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onItemMoveBtnClicked(position: Int) {
         binding.scheduleFindMainLinear.visibility = View.GONE
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
-
-        CategoryInquiryService(this).tryGetCategoryInquiry()
-        
+        Log.d("TAG", "onItemMoveBtnClicked: $position")
+//        CategoryInquiryService(this).tryGetCategoryInquiry()
+        val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
+        val bundle = Bundle()
+        bundle.putInt("categoryID",position)
+        scheduleFindCategoryFragment.arguments = bundle
         childFragmentManager.beginTransaction()
-            .replace(R.id.schedule_find_main_fragment, ScheduleFindCategoryFragment())
+            .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
             .commit()
+    }
+
+    override fun onColor() : String {
+
+        return color
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -327,7 +335,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                         ScheduleCategoryData(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            responseUser.data[i].colorInfo
+                            "#EAEAEA"
                         )
                     )
 //                    1 2 3  123

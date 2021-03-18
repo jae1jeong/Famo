@@ -135,11 +135,6 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                 ScheduleCategoryData(intCategoryID[i],name!![i], color!![i])
             )
         }
-//        categoryEditList = arrayListOf(
-//            ScheduleCategoryData("학교"),
-//            ScheduleCategoryData("알바"),
-//            ScheduleCategoryData("친구")
-//        )
 
         categoryEditAdapter = ScheduleCategoryEditAdapter(categoryEditList,this)
 

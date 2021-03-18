@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -10,20 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
-import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBookmarkBinding
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindCategoryBinding
-import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 
 class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
     FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
-),CategoryInquiryView {
+), CategoryInquiryView {
 
     companion object {
         fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
@@ -31,12 +26,21 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
     }
 
+    var categoryID = ""
+    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CategoryInquiryService(this).tryGetCategoryInquiry()
-
-        createRecyclerview()
+        var extra = this.arguments
+        if (extra != null) {
+            extra = arguments
+            categoryID = extra?.getInt("categoryID", 10).toString()
+            Log.d("ScheduleFindCategoryFragment categoryID", "값: $categoryID")
+        }
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID))
+//        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+//        createRecyclerview()
 
 //        (activity as MainActivity).onBackPressed()
 
@@ -75,48 +79,121 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
     }
 
-    private fun createRecyclerview() {
-        //테스트 데이터
-        val categorySelectList = arrayListOf(
-            ScheduleWholeData(
-                "2021.02.10", "제목", "내용",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목2", "내용2",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목3", "내용3",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목4", "내용4",
-                R.drawable.schedule_find_bookmark
-            )
-        )
-
-        binding.recyclerviewScheduleFindCategory.layoutManager =
-            GridLayoutManager(
-                context, 2, GridLayoutManager.VERTICAL,
-                false
-            )
-        binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-        binding.recyclerviewScheduleFindCategory.adapter = ScheduleWholeAdapter(categorySelectList)
-    }
+//    private fun createRecyclerview() {
+////        테스트 데이터
+//
+//        val categorySelectList = arrayListOf(
+//            ScheduleWholeData(
+//                "2021.02.10", "제목", "내용",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목2", "내용2",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목3", "내용3",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목4", "내용4",
+//                R.drawable.schedule_find_bookmark
+//            )
+//        )
+//
+//        binding.recyclerviewScheduleFindCategory.layoutManager =
+//            GridLayoutManager(
+//                context, 2, GridLayoutManager.VERTICAL,
+//                false
+//            )
+//        binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
+//        binding.recyclerviewScheduleFindCategory.adapter = ScheduleWholeAdapter(categorySelectList)
+//
+////        val latelyList = arrayListOf(
+////            ScheduleBookmarkData("최근제목", "최근시간"),
+////            ScheduleBookmarkData("최근제목", "최근시간")
+////        )
+////
+////        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+////        binding.recyclerviewScheduleFindCategory.layoutManager = LinearLayoutManager(
+////            context, LinearLayoutManager.VERTICAL, false
+////        )
+////        binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
+////        binding.recyclerviewScheduleFindCategory.adapter = ScheduleBookmarkAdapter(latelyList)
+//    }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+        Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
     }
 
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
-        when(categoryInquiryResponse.code){
+        Log.d("TAG", "onGetCategoryInquirySuccess: $categoryInquiryResponse")
+        when (categoryInquiryResponse.code) {
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카레고리별일정조회 성공")
-                categoryInquiryResponse.data[0].colorInfo
+                showCustomToast("카레고리별일정조회 성공")
 
+                val categorySelectList = arrayListOf(
+                    ScheduleWholeData(
+                        "2021.02.10", "제목", "내용",
+                        R.drawable.schedule_find_bookmark
+                    ),
+                    ScheduleWholeData(
+                        "2021.02.10", "제목2", "내용2",
+                        R.drawable.schedule_find_bookmark
+                    ),
+                    ScheduleWholeData(
+                        "2021.02.10", "제목3", "내용3",
+                        R.drawable.schedule_find_bookmark
+                    ),
+                    ScheduleWholeData(
+                        "2021.02.10", "제목4", "내용4",
+                        R.drawable.schedule_find_bookmark
+                    )
+                )
+
+//                categoryEditAdapter = ScheduleCategoryEditAdapter(categoryEditList,this)
+                scheduleWholeAdapter = ScheduleWholeAdapter(categorySelectList)
+
+                binding.recyclerviewScheduleFindCategory.layoutManager =
+                    GridLayoutManager(
+                        context, 2, GridLayoutManager.VERTICAL,
+                        false
+                    )
+                binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
+                binding.recyclerviewScheduleFindCategory.adapter = scheduleWholeAdapter
+                scheduleWholeAdapter.notifyDataSetChanged()
+
+//                binding.recyclerviewScheduleFindCategory.adapter = ScheduleWholeAdapter(categorySelectList)
+//                createRecyclerview()
+
+//                var categorySelectList: ArrayList<ScheduleWholeData> = arrayListOf()
+//
+//                for (i in  0 until categoryInquiryResponse.data.size) {
+//
+//                    categorySelectList = arrayListOf(
+//                        ScheduleWholeData(
+//                            categoryInquiryResponse.data[i].scheduleDate,
+//                            categoryInquiryResponse.data[i].scheduleName,
+//                            categoryInquiryResponse.data[i].scheduleMemo,
+//                            categoryInquiryResponse.data[i].schedulePick
+//                        )
+//                    )
+//
+//                    binding.recyclerviewScheduleFindCategory.layoutManager = LinearLayoutManager(
+//                        context, LinearLayoutManager.VERTICAL, false
+//                    )
+//                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
+//                    binding.recyclerviewScheduleFindCategory.adapter =
+//                        ScheduleWholeAdapter(categorySelectList)
+
+
+//                }
+            }else -> {
+            Log.d("TAG", "onGetCategoryInquirySuccess: ${categoryInquiryResponse.message}")
             }
         }
     }

@@ -54,7 +54,7 @@ class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBindin
 
         populateData()
         initAdapter()
-        initScrollListener()
+//        initScrollListener()
 
         Log.d(TAG, "ScheduleFindDetailFragment: boolean null일경우 값 확인 : $boolean")
         //일정 찾기 탭에서 즐겨찾기가 선택되있는 경우
@@ -105,7 +105,7 @@ class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBindin
         for (i in 0..12) {
 //            items.add(ScheduleBookmarkData("$i","$i"))
 
-            items.add(ScheduleWholeData("2021.02.10","$i","$i+1",R.drawable.schedule_find_bookmark))
+//            items.add(ScheduleWholeData("2021.02.10","$i","$i+1",R.drawable.schedule_find_bookmark))
         }
     }
 
@@ -119,47 +119,47 @@ class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBindin
         binding.recyclerviewWholeBookmark.layoutManager = layoutManager
     }
 
-    private fun initScrollListener() {
-        binding.recyclerviewWholeBookmark.setOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
+//    private fun initScrollListener() {
+//        binding.recyclerviewWholeBookmark.setOnScrollListener(object :
+//            RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//            }
+//
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                val layoutManager = recyclerView.layoutManager as GridLayoutManager?
+//                if (!isLoading) {
+//                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == items.size - 1) {
+//                        //리스트 마지막
+//                        loadMore()
+//                        isLoading = true
+//                    }
+//                }
+//            }
+//        })
+//    }
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager?
-                if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == items.size - 1) {
-                        //리스트 마지막
-                        loadMore()
-                        isLoading = true
-                    }
-                }
-            }
-        })
-    }
-
-    private fun loadMore() {
-//        items.add(ScheduleBookmarkData("cc", "cc"))
-        items.add(ScheduleWholeData("2021.02.10","멈추기","멈추기",R.drawable.schedule_find_bookmark))
-        adapter!!.notifyItemInserted(items.size - 1)
-        val handler = Handler()
-        handler.postDelayed({
-            items.removeAt(items.size - 1)
-            val scrollPosition = items.size
-            adapter!!.notifyItemRemoved(scrollPosition)
-            var currentSize = scrollPosition
-            val nextLimit = currentSize + 10
-            while (currentSize - 1 < nextLimit) {
-//                items.add(ScheduleBookmarkData("0", "1"))
-                items.add(ScheduleWholeData("2021.02.10","??","??",R.drawable.schedule_find_bookmark))
-                currentSize++
-            }
-            adapter!!.notifyDataSetChanged()
-            isLoading = false
-        }, 2000)
-    }
+//    private fun loadMore() {
+////        items.add(ScheduleBookmarkData("cc", "cc"))
+//        items.add(ScheduleWholeData("2021.02.10","멈추기","멈추기",R.drawable.schedule_find_bookmark))
+//        adapter!!.notifyItemInserted(items.size - 1)
+//        val handler = Handler()
+//        handler.postDelayed({
+//            items.removeAt(items.size - 1)
+//            val scrollPosition = items.size
+//            adapter!!.notifyItemRemoved(scrollPosition)
+//            var currentSize = scrollPosition
+//            val nextLimit = currentSize + 10
+//            while (currentSize - 1 < nextLimit) {
+////                items.add(ScheduleBookmarkData("0", "1"))
+//                items.add(ScheduleWholeData("2021.02.10","??","??",R.drawable.schedule_find_bookmark))
+//                currentSize++
+//            }
+//            adapter!!.notifyDataSetChanged()
+//            isLoading = false
+//        }, 2000)
+//    }
 
     private fun setUpLately() {
         binding.scheduleFindDetailTvLately.setTextColor(Color.BLACK)
@@ -190,32 +190,32 @@ class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBindin
         binding.recyclerviewWholeLately.visibility = View.GONE
 
         //테스트 데이터
-        val wholeList = arrayListOf(
-            ScheduleWholeData(
-                "2021.02.10", "제목", "내용",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목2", "내용2",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목3", "내용3",
-                R.drawable.schedule_find_bookmark
-            ),
-            ScheduleWholeData(
-                "2021.02.10", "제목4", "내용4",
-                R.drawable.schedule_find_bookmark
-            )
-        )
-        //전체일정 리사이큘러뷰 연결
-        binding.recyclerviewWholeBookmark.layoutManager =
-            GridLayoutManager(
-                context, 2, GridLayoutManager.VERTICAL,
-                false
-            )
-        binding.recyclerviewWholeBookmark.setHasFixedSize(true)
-        binding.recyclerviewWholeBookmark.adapter = ScheduleWholeAdapter(wholeList)
+//        val wholeList = arrayListOf(
+//            ScheduleWholeData(
+//                "2021.02.10", "제목", "내용",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목2", "내용2",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목3", "내용3",
+//                R.drawable.schedule_find_bookmark
+//            ),
+//            ScheduleWholeData(
+//                "2021.02.10", "제목4", "내용4",
+//                R.drawable.schedule_find_bookmark
+//            )
+//        )
+//        //전체일정 리사이큘러뷰 연결
+//        binding.recyclerviewWholeBookmark.layoutManager =
+//            GridLayoutManager(
+//                context, 2, GridLayoutManager.VERTICAL,
+//                false
+//            )
+//        binding.recyclerviewWholeBookmark.setHasFixedSize(true)
+//        binding.recyclerviewWholeBookmark.adapter = ScheduleWholeAdapter(wholeList)
     }
 
     private fun createLatelyRecyclerview() {

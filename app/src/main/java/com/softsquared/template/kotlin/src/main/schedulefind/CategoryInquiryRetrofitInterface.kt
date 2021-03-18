@@ -4,6 +4,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInqu
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface CategoryInquiryRetrofitInterface {
 
@@ -12,6 +13,6 @@ interface CategoryInquiryRetrofitInterface {
     fun getUserCategoryInquiry() : Call<UserCategoryInquiryResponse>
 
     //일정별 카테고리조회
-    @GET("schedules?scheduleCategoryID=")
-    fun getCategoryInquiry() : Call<CategoryInquiryResponse>
+    @GET("category-schedules")
+    fun getCategoryInquiry(@Query("scheduleCategoryID") scheduleCategoryID : Int) : Call<CategoryInquiryResponse>
 }

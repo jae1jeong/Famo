@@ -16,8 +16,8 @@ class CategoryInquiryService(val view : CategoryInquiryView) {
         homeRetrofitInterface.getUserCategoryInquiry().enqueue(object :
             Callback<UserCategoryInquiryResponse> {
             override fun onResponse(call: Call<UserCategoryInquiryResponse>, responseUser: Response<UserCategoryInquiryResponse>) {
-                Log.d("값 확인", "tryGetCategoryInquiry body:  ${responseUser.body()}")
-                Log.d("값 확인", "tryGetCategoryInquiry code:  ${responseUser.code()}")
+                Log.d("값 확인", "tryGetUserCategoryInquiry body:  ${responseUser.body()}")
+                Log.d("값 확인", "tryGetUserCategoryInquiry code:  ${responseUser.code()}")
                 view.onGetUserCategoryInquirySuccess(responseUser.body() as UserCategoryInquiryResponse)
             }
 
@@ -28,10 +28,10 @@ class CategoryInquiryService(val view : CategoryInquiryView) {
         })
     }
 
-    fun tryGetCategoryInquiry(){
+    fun tryGetCategoryInquiry(scheduleCategoryID : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryInquiry().enqueue(object :
+        homeRetrofitInterface.getCategoryInquiry(scheduleCategoryID).enqueue(object :
             Callback<CategoryInquiryResponse> {
             override fun onResponse(call: Call<CategoryInquiryResponse>, responseUser: Response<CategoryInquiryResponse>) {
                 Log.d("값 확인", "tryGetCategoryInquiry body:  ${responseUser.body()}")

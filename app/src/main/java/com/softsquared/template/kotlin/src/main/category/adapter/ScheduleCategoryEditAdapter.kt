@@ -147,7 +147,7 @@ class ScheduleCategoryEditAdapter(
 //
 //                    val getColor = ApplicationClass.sSharedPreferences.getString("color", "#FFA2BE")
 //
-//                    color.setColorFilter(Color.parseColor(getColor))
+                    color.setColorFilter(Color.parseColor("getColor"))
 
 
                 }

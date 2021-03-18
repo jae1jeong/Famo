@@ -34,7 +34,7 @@
                 android:id="@+id/recycler_whole_isboolean"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/schedule_find_bookmark"
+                android:background="@drawable/schedule_find_inbookmark"
                 android:layout_alignParentRight="true"/>
 
         </RelativeLayout>

@@ -14,7 +14,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.DatePicker.OnDateChangedListener
-import android.widget.DatePicker.getChildMeasureSpec
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +29,6 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
@@ -43,8 +41,10 @@ import java.util.*
 
 
 class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
-    BaseFragment<FragmentMypageEditBinding>(FragmentMypageEditBinding::bind,
-    R.layout.fragment_mypage_edit), MyPageEditView {
+    BaseFragment<FragmentMypageEditBinding>(
+        FragmentMypageEditBinding::bind,
+        R.layout.fragment_mypage_edit
+    ), MyPageEditView {
 
     //카메라 변수
     private val GET_GALLERY_IMAGE = 200
@@ -231,6 +231,13 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
             MyPageEditService(this).tryPutMyPageUpdate(myPageUpdateRequest)
         }
 
+        //로그아웃
+        binding.mypageEditBtnLogout.setOnClickListener {
+
+            myPageActivityView.moveLogoutDialog()
+
+        }
+
         //X버튼 클릭 시 내정보로 이동
         binding.myPageEditBtnX.setOnClickListener {
             myPageActivityView.moveMyPage()
@@ -414,15 +421,15 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
 
                 val edit = ApplicationClass.sSharedPreferences.edit()
                 edit.putString(Constants.USER_NICKNAME, name)
-                edit.putString(Constants.COMMENTS,comments)
-                edit.putString(Constants.DAY,day.toString())
-                edit.putString(Constants.GOALTITLE,goalTitle)
-                edit.putString(Constants.DDAY_SETTING,dDaySettingCnt.toString())
+                edit.putString(Constants.COMMENTS, comments)
+                edit.putString(Constants.DAY, day.toString())
+                edit.putString(Constants.GOALTITLE, goalTitle)
+                edit.putString(Constants.DDAY_SETTING, dDaySettingCnt.toString())
                 edit.apply()
 
-                val intent = Intent(activity,MyPageActivity::class.java)
+                val intent = Intent(activity, MyPageActivity::class.java)
                 intent.putExtra("day", day)
-                intent.putExtra("goalTitle",binding.myPageEditEtGoaltitle.toString())
+                intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
                 startActivity(intent)
 //                myPageActivityView.moveMyPage()
 //                nickname = binding.myPageEditEtName.text.toString(),

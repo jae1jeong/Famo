@@ -23,9 +23,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".src.wholeschedule.WholeScheduleActivity"
+
+        <!--일정검색        -->
+        <activity android:name=".src.schedulesearch.ScheduleSearchActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <!-- MyPage -->
+        <activity
+            android:name=".src.wholeschedule.WholeScheduleActivity"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- MyPage -->
         <activity
             android:name=".src.main.mypage.MyPageActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- CategoryEdit -->
@@ -33,7 +37,7 @@
             android:name=".src.main.category.CategoryEditActivity"
             android:theme="@style/AppTheme2" />
         <activity
-            android:name=".src.auth.test.Test"
+            android:name=".src.auth.kakaologin.KakaoLoginNumberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".src.splash.SplashActivity"

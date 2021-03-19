@@ -25,7 +25,7 @@ class ScheduleCategoryAdapter(
     var mPreviousIndex = -1
 
     init {
-        Log.d("TAG", "SearchHistoryRecyclerViewAdapter: init() called ")
+        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
         this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
     }
 
@@ -82,7 +82,7 @@ class ScheduleCategoryAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
-                color -> {
+                color,text -> {
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
                     var size = 0
@@ -142,22 +142,31 @@ class ScheduleCategoryAdapter(
                         color.setColorFilter(Color.parseColor("#FF8484"))
                     } else if (adapterPosition == 1) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[1])
+                        color.setColorFilter(Color.parseColor("#FCBC71"))
                     } else if (adapterPosition == 2) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[2])
+                        color.setColorFilter(Color.parseColor("#FCDC71"))
                     } else if (adapterPosition == 3) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[3])
+                        color.setColorFilter(Color.parseColor("#C6EF84"))
                     } else if (adapterPosition == 4) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[4])
+                        color.setColorFilter(Color.parseColor("#7ED391"))
                     } else if (adapterPosition == 5) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[5])
+                        color.setColorFilter(Color.parseColor("#93EAD9"))
                     } else if (adapterPosition == 6) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[6])
+                        color.setColorFilter(Color.parseColor("#7CC3FF"))
                     } else if (adapterPosition == 7) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[7])
+                        color.setColorFilter(Color.parseColor("#6D92F7"))
                     } else if (adapterPosition == 8) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[8])
+                        color.setColorFilter(Color.parseColor("#AB93FA"))
                     } else if (adapterPosition == 9) {
                         this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[9])
+                        color.setColorFilter(Color.parseColor("#FFA2BE"))
                     }
 
                     Log.d("TAG", "onClick: 다시돌아옴?")

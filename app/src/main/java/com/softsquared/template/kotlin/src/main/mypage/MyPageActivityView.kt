@@ -8,6 +8,8 @@ interface MyPageActivityView {
     fun moveMyPageEdit()
     //일정찾기로 이동
     fun moveScheduleFind()
+    //로그아웃 알림창
+    fun moveLogoutDialog()
 
 //    fun settingPermission()
 //

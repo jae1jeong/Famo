@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.auth.loginInformation.models
+package com.softsquared.template.kotlin.src.auth.kakaologin.models
 
 import com.google.gson.annotations.SerializedName
 

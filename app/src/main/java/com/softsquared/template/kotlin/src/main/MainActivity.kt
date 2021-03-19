@@ -17,12 +17,15 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
+import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
+import com.softsquared.template.kotlin.src.main.category.CategoryEditBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
@@ -42,9 +45,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val name = intent.getStringExtra("name")
-        val img = intent.getStringExtra("img")
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
@@ -76,8 +76,17 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         })
 
 
+        // 다른 부분을 눌렀을때 FAB 버튼 비활성화
+        binding.mainLayout.setOnClickListener {
+            if(clicked){
+
+            }
+        }
+
+
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
+
 //            binding.mainFrameLayout.visibility = View.VISIBLE
 //            val token = intent.getStringExtra("token")
 //            val name = intent.getStringExtra("name")
@@ -85,14 +94,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 //            binding.mainFrameLayout.visibility = View.VISIBLE
             val intent = Intent(this, MyPageActivity::class.java)
 //            intent.putExtra("token",token)
-            intent.putExtra("name", name)
-            intent.putExtra("img", img)
+
             startActivity(intent)
-//            supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,MyPageFragment())
-//                    .commit()
         }
-//         val fragmentTransaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-//        fragmentTransaction.add(R.id.main_frame_layout, ScheduleFindFragment.newInstance()).commit();
 
         // 디바이스 화면 높이 구하기
         val display = windowManager.defaultDisplay
@@ -222,9 +226,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainImageProfile.visibility = View.VISIBLE
     }
 
-    fun moveScheduleFindFragment() {
-//        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
-//            .commitNowAllowingStateLoss()
+    //일정찾기 - 필터 바텀다이얼로그로 이동
+    fun onMoveFilterFragment() {
+        val scheduleFindFilterBottomDialogBinding = SchedulefindFilterBottomDialogFragment()
+        scheduleFindFilterBottomDialogBinding.show(
+            supportFragmentManager, scheduleFindFilterBottomDialogBinding.tag
+        )
     }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {

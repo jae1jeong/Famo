@@ -13,22 +13,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
+import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.*
+import com.softsquared.template.kotlin.src.schedulesearch.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
-
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find),
-    IScheduleCategoryRecyclerView, CategoryInquiryView {
+    IScheduleCategoryRecyclerView, CategoryInquiryView, ScheduleFindView {
 
     //카테고리 편집으로 보내줄 변수
     var name = ""
@@ -43,6 +46,21 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        // 카테고리
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+        // createCategoryRecyclerview()
+
+        //전체일정
+//        createWholeScheduleRecyclerview()
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(10,10)
+
+
+        val token =
+            ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
+                .toString()
+        Log.d("TAG", "일정찾기 홈 $token")
 
 
         //프래그먼트 이동간 gone/visibility설정
@@ -66,31 +84,35 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
             .commit()
 
-        //전체일정
-        createWholeScheduleRecyclerview()
-
         // +버튼 클릭 시 카테고리 편집으로 이동
         binding.scheduleFindBtnCategory.setOnClickListener {
             val intent = Intent(activity, CategoryEditActivity::class.java)
-            intent.putExtra("name",name)
-            intent.putExtra("color",color)
-            intent.putExtra("size",size)
-            intent.putExtra("categoryID",categoryID)
+            intent.putExtra("name", name)
+            intent.putExtra("color", color)
+            intent.putExtra("size", size)
+            intent.putExtra("categoryID", categoryID)
             startActivity(intent)
 //            (activity as MainActivity).replaceFragment(CategoryEditFragment.newInstance());
 //            binding.scheduleFindLinear.visibility = View.GONE
         }
 
-        //처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
-//        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
-//        binding.scheduleFindLatelyView.visibility = View.GONE
+//        처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
+        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
+        binding.scheduleFindLatelyView.visibility = View.GONE
 
         // 즐겨찾기 리사이클러뷰
 //        createBookmarkRecyclerview()
 //        val mFragmentTransaction : FragmentTransaction = childFragmentManager.beginTransaction();
 
-
 //        (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
+
+
+        //검색창 클릭 시
+        binding.scheduleFindBtn.setOnClickListener {
+            val intent = Intent(activity,ScheduleSearchActivity::class.java)
+            startActivity(intent)
+        }
+
 
         //즐겨찾기 탭
         binding.scheduleFindTvBookmark.setOnClickListener {
@@ -106,10 +128,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             binding.scheduleFindLatelyView.layoutParams.height = 2
 
             childFragmentManager.beginTransaction().replace(
-                R.id.schedule_find_fragment,
-                ScheduleFindBookmarkFragment()
-            )
-                .commit()
+                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()).commit()
 //            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
         }
 
@@ -145,7 +164,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 binding.scheduleFindLinear.visibility = View.GONE
                 ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
 //                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
-                val intent = Intent(activity,WholeScheduleActivity::class.java)
+                val intent = Intent(activity, WholeScheduleActivity::class.java)
                 startActivity(intent)
             }
 
@@ -176,22 +195,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 false
             }
 
-//            binding.loginEtNumber.setOnTouchListener { _, event ->
-//                when (event.action) {
-//                    MotionEvent.ACTION_DOWN -> {
-//                        binding.loginEtNumber.hint = ""
-//                        binding.loginTvNumber.text = "전화번호"
-//                        binding.loginRlNumber.background = resources.getDrawable(
-//                            com.example.airbnb.R.drawable.login_info_input_emphasize,
-//                            null
-//                        )
-//                        binding.loginView.visibility = View.INVISIBLE
-//                    }
-//                }
-//                false
-//            }
-
-
         }
 
         // viewPager
@@ -205,6 +208,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     }
 
 
+
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         // 카테고리
@@ -213,83 +217,77 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     }
 
 
+
+    @SuppressLint("SimpleDateFormat")
     fun createWholeScheduleRecyclerview() {
+        //전체일정 테스트데이터
+        val onlyDate: LocalDate = LocalDate.now()
+
+//                binding.myPageEditEtComments.setText(onlyDate.toString())
+            val str = onlyDate.toString()
+            val format = SimpleDateFormat("YYYY-MM-DD")
+            val nowDate : Date? = format.parse(str)
+
+        val wholeList = arrayListOf(
+            ScheduleWholeData(
+                72, nowDate!!, "내용",
+                "내용",R.drawable.schedule_find_bookmark,1,"1"
+            ),
+            ScheduleWholeData(
+                1, nowDate!!, "내용",
+                "내용",R.drawable.schedule_find_bookmark,1,"1"
+            ),ScheduleWholeData(
+                1, nowDate!!, "내용",
+                "내용",R.drawable.schedule_find_bookmark,1,"1"
+            ),ScheduleWholeData(
+                1, nowDate!!, "내용",
+                "내용",R.drawable.schedule_find_bookmark,1,"1"
+            )
+        )
+
+        //전체일정 리사이큘러뷰 연결
+        binding.recyclerviewWhole.layoutManager =
+            GridLayoutManager(
+                context, 2, GridLayoutManager.VERTICAL,
+                false
+            )
+        binding.recyclerviewWhole.setHasFixedSize(true)
+        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
+    }
+
+    //즐겨찾기 일정 테스트
+    private fun createBookmarkRecyclerview() {
         //테스트 데이터
-//        val wholeList = arrayListOf(
-//            ScheduleWholeData(
-//                "2021.02.10", "제목", "내용",
-//                R.drawable.schedule_find_bookmark
-//            ),
-//            ScheduleWholeData(
-//                "2021.02.10", "제목2", "내용2",
-//                R.drawable.schedule_find_bookmark
-//            ),
-//            ScheduleWholeData(
-//                "2021.02.10", "제목3", "내용3",
-//                R.drawable.schedule_find_bookmark
-//            ),
-//            ScheduleWholeData(
-//                "2021.02.10", "제목4", "내용4",
-//                R.drawable.schedule_find_bookmark
-//            )
-//        )
-//
-//        //전체일정 리사이큘러뷰 연결
-//        binding.recyclerviewWhole.layoutManager =
-//            GridLayoutManager(
-//                context, 2, GridLayoutManager.VERTICAL,
-//                false
-//            )
-//        binding.recyclerviewWhole.setHasFixedSize(true)
-//        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
+        val bookmarkList = arrayListOf(
+                ScheduleBookmarkData("제목", "시간"),
+                ScheduleBookmarkData("제목", "시간")
+        )
+
+        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL, false
+        )
+        binding.recyclerViewBookmark.setHasFixedSize(true)
+        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
     }
 
-    fun createCategoryRecyclerview() {
-//        테스트 데이터
-//        val categoryList = arrayListOf(
-//            ScheduleCategoryData("학교"),
-//            ScheduleCategoryData("알바"),
-//            ScheduleCategoryData("친구")
-//        )
-//
-//        binding.recyclerviewCategory.layoutManager = LinearLayoutManager(
-//            context, LinearLayoutManager.HORIZONTAL, false
-//        )
-//        binding.recyclerviewCategory.setHasFixedSize(true)
-//        binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this)
-    }
+    //최근 일정 테스트
+    private fun createLatelyRecyclerview() {
+        //테스트 데이터
+        val latelyList = arrayListOf(
+            ScheduleBookmarkData("제목", "시간"),
+            ScheduleBookmarkData("제목", "시간")
+        )
 
-//    private fun createBookmarkRecyclerview() {
-//        //테스트 데이터
-//        val bookmarkList = arrayListOf(
-//                ScheduleBookmarkData("제목", "시간"),
-//                ScheduleBookmarkData("제목", "시간")
-//        )
-//
-//        // 즐겨찾기/최근 일정 리사이클러뷰 연결
-//        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-//                context,
-//                LinearLayoutManager.VERTICAL, false
-//        )
-//        binding.recyclerViewBookmark.setHasFixedSize(true)
-//        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
-//    }
-//
-//    private fun createLatelyRecyclerview() {
-//        //테스트 데이터
-//        val latelyList = arrayListOf(
-//            ScheduleBookmarkData("제목", "시간"),
-//            ScheduleBookmarkData("제목", "시간")
-//        )
-//
-//        // 즐겨찾기/최근 일정 리사이클러뷰 연결
-//        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-//            context,
-//            LinearLayoutManager.VERTICAL, false
-//        )
-//        binding.recyclerViewBookmark.setHasFixedSize(true)
-//        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(latelyList)
-//    }
+        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL, false
+        )
+        binding.recyclerViewBookmark.setHasFixedSize(true)
+        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(latelyList)
+    }
 
     //프래그먼트 간 이동하기 위한 선언
     companion object {
@@ -298,7 +296,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         }
     }
 
-    //카테고리 클릭
+    //카테고리 클릭 시 카테고리별 일정으로 이동
     override fun onItemMoveBtnClicked(position: Int) {
         binding.scheduleFindMainLinear.visibility = View.GONE
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
@@ -306,26 +304,24 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //        CategoryInquiryService(this).tryGetCategoryInquiry()
         val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
         val bundle = Bundle()
-        bundle.putInt("categoryID",position)
+        bundle.putInt("categoryID", position)
         scheduleFindCategoryFragment.arguments = bundle
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
             .commit()
     }
 
-    override fun onColor() : String {
+    //어댑터에서 color값을 가져오기위한 함수
+    override fun onColor(): String {
 
         return color
     }
 
+
+    //유저별 카테고리조회 성공
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         when (responseUser.code) {
             100 -> {
-//                response.data[0].categoryName
-//                response.data[0].colorInfo
-//                showCustomToast("성공 메시지 : ${response.message}")
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
 
                 showCustomToast("카테고리 조회성공")
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
@@ -336,10 +332,10 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                         ScheduleCategoryData(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            "#EAEAEA"
+                            "#00000000"
                         )
                     )
-//                    1 2 3  123
+
                     name += responseUser.data[i].categoryName + ":"
                     color += responseUser.data[i].colorInfo + ":"
                     size = responseUser.data.size
@@ -356,8 +352,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this)
 //                scheduleCategoryAdapter.notifyDataSetChanged()
 
-
-
             }
             else -> {
                 showCustomToast("실패 메시지 : ${responseUser.message}")
@@ -369,14 +363,67 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     }
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
-        
-        when(categoryInquiryResponse.code){
+
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
+    }
+
+    //전체일정조회 성공
+    override fun onGetWholeScheduleInquirySuccess(response: WholeScheduleInquiryResponse) {
+
+        when (response.code) {
             100 -> {
-                Log.d("TAG", "onGetCategoryInquirySuccess: 카레고리별일정조회 성공")
+                Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
+                binding.recyclerviewWhole.visibility = View.VISIBLE
+                //테스트 데이터
+//                var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
+//                for (i in 0 until response.data.size) {
+//                    wholeScheduleList = arrayListOf(
+//                        ScheduleWholeData(
+//                            response.data[i].scheduleID,
+//                            response.data[i].scheduleDate,
+//                            response.data[i].scheduleName,
+//                            response.data[i].scheduleMemo,
+//                            response.data[i].schedulePick,
+//                            response.data[i].scheduleStatus,
+//                            response.data[i].colorInfo)
+//                    )
+//                }
+//                //전체일정 리사이큘러뷰 연결
+//                binding.recyclerviewWhole.layoutManager =
+//                    GridLayoutManager(
+//                        context, 2, GridLayoutManager.VERTICAL,
+//                        false
+//                    )
+//                binding.recyclerviewWhole.setHasFixedSize(true)
+//                binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeScheduleList)
+
+            }
+            else -> {
+                Log.d("TAG", "onGetWholeScheduleInquirySuccess 100이 아닌: ${response.message.toString()}")
+            }
+        }
+
+    }
+
+    override fun onGetWholeScheduleInquiryFail(message: String) {
+    }
+
+    override fun onPostBookmarkSuccess(response: BaseResponse) {
+
+        when(response.code){
+            100 -> {
+                showCustomToast("즐겨찾기 성공")
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기 성공")
+            }
+            else -> {
+                showCustomToast("즐겨찾기 실패")
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기 실패 ${response.message.toString()}")
             }
         }
     }
 
-    override fun onGetCategoryInquiryFail(message: String) {
+    override fun onPostBookmarkFail(message: String) {
     }
 }

@@ -14,5 +14,7 @@ interface CategoryInquiryRetrofitInterface {
 
     //일정별 카테고리조회
     @GET("category-schedules")
-    fun getCategoryInquiry(@Query("scheduleCategoryID") scheduleCategoryID : Int) : Call<CategoryInquiryResponse>
+    fun getCategoryInquiry(@Query("scheduleCategoryID") scheduleCategoryID : Int,
+                           @Query("offset") offset : Int,
+                           @Query("limit") limit : Int) : Call<CategoryInquiryResponse>
 }

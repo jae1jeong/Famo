@@ -1,7 +1,6 @@
 package com.softsquared.template.kotlin.src.auth.loginInformation
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.kakao.sdk.auth.LoginClient
@@ -18,9 +17,8 @@ import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.KakaoLoginResponse
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.PostKakaoLoginRequest
 import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
-import com.softsquared.template.kotlin.src.auth.test.Test
+import com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberActivity
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.util.Constants
 
 class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoBinding::inflate),
@@ -122,7 +120,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
             101 -> {
                 Log.d("TAG", "onGetKakaoLoginSuccess: 소셜로그인 요청 성공,  계정인 경우첫 번호 입력 화면으로 이")
                 showCustomToast("카카오 로그인 성공")
-                val intent = Intent(this,Test::class.java)
+                val intent = Intent(this,KakaoLoginNumberActivity::class.java)
                 startActivity(intent)
             }
 
@@ -130,11 +128,5 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
     }
 
     override fun onPostKakaoLoginFail(message: String) {
-    }
-
-    override fun onPatchKakaoLoginNumberSuccess(response: BaseResponse) {
-    }
-
-    override fun onPatchKakaoLoginNumberFail(message: String) {
     }
 }

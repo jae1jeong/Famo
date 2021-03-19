@@ -28,10 +28,10 @@ class CategoryInquiryService(val view : CategoryInquiryView) {
         })
     }
 
-    fun tryGetCategoryInquiry(scheduleCategoryID : Int){
+    fun tryGetCategoryInquiry(scheduleCategoryID : Int, offset : Int, limit : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryInquiry(scheduleCategoryID).enqueue(object :
+        homeRetrofitInterface.getCategoryInquiry(scheduleCategoryID,offset,limit).enqueue(object :
             Callback<CategoryInquiryResponse> {
             override fun onResponse(call: Call<CategoryInquiryResponse>, responseUser: Response<CategoryInquiryResponse>) {
                 Log.d("값 확인", "tryGetCategoryInquiry body:  ${responseUser.body()}")

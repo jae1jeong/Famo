@@ -44,14 +44,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 카테고리
-        // createCategoryRecyclerview()
-        CategoryInquiryService(this).tryGetUserCategoryInquiry()
-
-        val token =
-            ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
-                .toString()
-        Log.d("TAG", "일정찾기 홈 ")
 
         //프래그먼트 이동간 gone/visibility설정
         (activity as MainActivity).fragmentSetting()
@@ -211,6 +203,15 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //        binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
 
     }
+
+
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        // 카테고리
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+
+    }
+
 
     fun createWholeScheduleRecyclerview() {
         //테스트 데이터

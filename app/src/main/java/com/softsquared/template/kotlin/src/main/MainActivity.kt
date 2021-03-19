@@ -38,6 +38,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -59,13 +61,11 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        showCustomToast(position.toString())
                     }
                     1 -> {
-                        showCustomToast(position.toString())
+
                     }
                     2 -> {
-                        showCustomToast(position.toString())
                     }
                 }
             }
@@ -74,14 +74,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             }
 
         })
-
-        // 다른 부분을 눌렀을때 FAB 버튼 비활성화
-        binding.mainLayout.setOnClickListener {
-            if(clicked){
-
-            }
-        }
-
 
 
         //유저 이미지 클릭 시 마이페이지로 이동

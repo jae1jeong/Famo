@@ -21,6 +21,7 @@ import com.softsquared.template.kotlin.databinding.FragmentMonthlyBinding
 import com.softsquared.template.kotlin.src.main.monthly.adapter.MonthlyMemoAdapter
 import com.softsquared.template.kotlin.src.main.monthly.models.AllMemoResponse
 import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyMemoItemResponse
+import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyUserDateListResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
@@ -35,6 +36,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBinding::bind, R.layout.fragment_monthly),MonthlyView,TodayView{
+    private var fragmentResume = false
+    private var fragmentVisible = false
+    private var fragmentOnCreated = false
+
 
     lateinit var monthlyMemoAdapter:MonthlyMemoAdapter
     val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -42,20 +47,16 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     private var todayDate:LocalDate ?= null
     private var selectedDate:LocalDate ?= null
     private val userMemos:ArrayList<String> = arrayListOf()
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        todayDate = LocalDate.now()
-        showLoadingDialog(context!!)
-        MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
 
 
-        userCheckedDateList.add(LocalDate.parse("2021-03-31"))
-
-
+//        userCheckedDateList.add(LocalDate.parse("2021-03-31"))
         class CalendarViewContainer(view: View): ViewContainer(view) {
             val textView = view.findViewById<TextView>(R.id.calendar_day_text)
             lateinit var day:CalendarDay
-
 
             // 달력 일자 클릭 리스너
             init {
@@ -111,7 +112,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     container.day = day
                 }
                 override fun create(view: View): CalendarViewContainer = CalendarViewContainer(view)
-
             }
 
         val currentMonth = YearMonth.now()
@@ -157,6 +157,12 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         }
 
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        todayDate = LocalDate.now()
+        showLoadingDialog(context!!)
+        MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
+    }
 
     override fun onGetMonthlyMemoItemSuccess(response: MonthlyMemoItemResponse) {
         if(response.isSuccess && response.code == 100){
@@ -222,6 +228,21 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     override fun onGetAllMemosFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
+    override fun onGetUserDateListSuccess(response: MonthlyUserDateListResponse) {
+        if(response.isSuccess && response.code == 100){
+            val dateResultArray = response.result.asJsonArray
+
+        }else{
+            showCustomToast(response.message.toString())
+        }
+        dismissLoadingDialog()
+    }
+
+    override fun onGetUserDateListFailure(message: String) {
         dismissLoadingDialog()
         showCustomToast(message)
     }

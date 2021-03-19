@@ -35,8 +35,6 @@ class TodayFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showLoadingDialog(context!!)
-        TodayService(this).onGetScheduleItems()
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
@@ -103,6 +101,13 @@ class TodayFragment :
                 ))
             }
         }
+    }
+
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        showLoadingDialog(context!!)
+        TodayService(this).onGetScheduleItems()
+
     }
 
     fun checkIsMemoListEmpty(){

@@ -117,4 +117,10 @@
     <string name="find_password_text_find_password">비밀번호 찾기</string>
 
 
+    <!--Set New Password-->
+    <string name="set_password_text_set_password">비밀번호 재설정</string>
+    <string name="set_password_text_new_password">새로운 비밀번호</string>
+    <string name="set_password_text_new_password_check">새 비밀번호 확인</string>
+    <string name="set_password_hint_repassword">비밀번호 확인 입력</string>
+
 </resources>

@@ -18,10 +18,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInqu
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
-class ScheduleCategoryEditAdapter(
-    var categoryEditList: ArrayList<ScheduleCategoryData>,
-    categoryRecyclerView: ICategoryRecyclerView
-) :
+class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCategoryData>,
+    categoryRecyclerView: ICategoryRecyclerView) :
     RecyclerView.Adapter<ScheduleCategoryEditAdapter.ScheduleCategoryEditHolder>(),
     CategoryEditView, CategoryInquiryView {
 
@@ -30,7 +28,7 @@ class ScheduleCategoryEditAdapter(
     val categoryID = 0
 
     init {
-        Log.d(TAG, "SearchHistoryRecyclerViewAdapter - init() called")
+        Log.d(TAG, "ScheduleCategoryEditAdapter - init() called")
         this.iCategoryRecyclerView = categoryRecyclerView
     }
 
@@ -108,20 +106,9 @@ class ScheduleCategoryEditAdapter(
 
 //                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
 
-
 //                    Log.d(TAG, "onClick: ")
-
                     val categoryID = categoryEditList[adapterPosition].id.toString()
-//                    if (adapterPosition == 0) {
-//                        categoryID =
-////                            iCategoryRecyclerView!!.onCategoryID2().toString()
-//                            Log.d(TAG, "0일때 삭제id값: ${categoryEditList[adapterPosition].id}").toString()
-//                    } else {
-//                        categoryID =
-////                            iCategoryRecyclerView!!.onCategoryID(categoryEditList[adapterPosition].id)
-////                                .toString()
-//                            Log.d(TAG, "삭제id값: ${categoryEditList[adapterPosition].id}").toString()
-//                    }
+
                     CategoryEditService(this@ScheduleCategoryEditAdapter)
                         .tryDeleteCategoryEditDelete(categoryID)
                     removeItem(adapterPosition)
@@ -130,6 +117,7 @@ class ScheduleCategoryEditAdapter(
                 color, text -> {
                     Log.d("로그", "색상변경 버튼 클릭")
                     Log.d("로그", "위치값 :$adapterPosition")
+
                     val categoryAddBottomDialogFragment = CategoryEditBottomDialogFragment()
 //                    val bunble = Bundle()
 //                    bunble.putString("color", wholeColor)
@@ -144,10 +132,8 @@ class ScheduleCategoryEditAdapter(
                     )
                     Log.d(TAG, "클릭:${categoryEditList[adapterPosition].id} ")
                     Log.d(TAG, "클릭:${categoryEditList[adapterPosition].text} ")
-//
-//                    val getColor = ApplicationClass.sSharedPreferences.getString("color", "#FFA2BE")
-//
-                    color.setColorFilter(Color.parseColor("getColor"))
+
+//                    color.setColorFilter(Color.parseColor("getColor"))
 
 
                 }

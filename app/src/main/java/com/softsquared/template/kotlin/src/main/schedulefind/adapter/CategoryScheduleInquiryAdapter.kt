@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
-import android.content.ContentValues
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
 
-class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
-) :
-    RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
+open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategoryScheduleInquiryData>) :
+    RecyclerView.Adapter<CategoryScheduleInquiryAdapter.ScheduleWholeHolder>() {
 
     val VIEW_TYPE_ITEM = 0
     val VIEW_TYPE_LOADING = 1
@@ -27,13 +21,6 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 //
 //    init {
 //        this.wholeList = wholeList
-//    }
-
-//    private var iCategoryRecyclerView: ICategoryRecyclerView? = null
-//
-//    init {
-//        Log.d(ContentValues.TAG, "ScheduleWholeAdapter - init() called")
-//        this.iCategoryRecyclerView = categoryRecyclerView
 //    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
@@ -50,17 +37,10 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recyclerview_schedule_find_whole_item, parent, false)
+        view.setOnClickListener {
 
+        }
         return ScheduleWholeHolder(view)
-
-//        val scheduleWholeHolder = ScheduleWholeHolder(
-//            LayoutInflater
-//                .from(parent.context)
-//                .inflate(R.layout.recyclerview_schedule_find_whole_item, parent, false),
-//            this.iCategoryRecyclerView!!
-//        )
-//
-//        return scheduleWholeHolder
     }
 
 //    open fun showLoadingView(holder: LoadingViewHolder, position: Int) {}
@@ -83,17 +63,16 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 //        }
 //        holder.cardView.setBackgroundResource(R.drawable.left_stroke);
 
-        holder.date.text = wholeList[position].date.toString()
-        holder.pick.setImageResource(wholeList[position].pick)
-        holder.name.text = wholeList[position].name
-        holder.memo.text = wholeList[position].memo
-
+        holder.date.text = categoryList[position].date.toString()
+        holder.pick.setImageResource(categoryList[position].pick)
+        holder.name.text = categoryList[position].name
+        holder.memo.text = categoryList[position].memo
 
     }
 
-    override fun getItemCount(): Int = wholeList.size
+    override fun getItemCount(): Int = categoryList!!.size
 
-    inner class ScheduleWholeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+    class ScheduleWholeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
          View.OnClickListener{
 
         //        val cardView = itemView.findViewById<CardView>(R.id.cardview)
@@ -101,29 +80,23 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
         val date = itemView.findViewById<TextView>(R.id.recycler_whole_times)
         val name = itemView.findViewById<TextView>(R.id.recycler_whole_title)
         val memo = itemView.findViewById<TextView>(R.id.recycler_whole_content)
-//        private lateinit var mCategoryRecyclerView: ICategoryRecyclerView
 
         init {
             //리스너연결
             pick.setOnClickListener(this)
-//            mCategoryRecyclerView = categoryRecyclerView
         }
-
-        var bookMarkCnt = 1
 
         override fun onClick(v: View?) {
 
+            var bookMarkCnt = 1
+
             when(v){
                 pick -> {
-
-                    if (bookMarkCnt % 2 != 0){
-
+                    if (bookMarkCnt % 2 != 0) {
                         pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(wholeList[adapterPosition].id)
                         Log.d("TAG", "pick: 클릭")
-                    }else{
+                    } else {
                         pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(wholeList[adapterPosition].id)
                         Log.d("TAG", "pick: X")
                     }
                     bookMarkCnt++
@@ -131,19 +104,6 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
             }
         }
 
-    }
-
-    override fun onGetWholeScheduleInquirySuccess(response: WholeScheduleInquiryResponse) {
-
-    }
-
-    override fun onGetWholeScheduleInquiryFail(message: String) {
-    }
-
-    override fun onPostBookmarkSuccess(response: BaseResponse) {
-    }
-
-    override fun onPostBookmarkFail(message: String) {
     }
 
 //    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

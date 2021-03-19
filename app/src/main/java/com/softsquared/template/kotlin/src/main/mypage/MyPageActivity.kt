@@ -7,6 +7,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -14,6 +15,8 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
+import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialogInterface
 import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
 import java.io.File
 import java.io.IOException
@@ -72,6 +75,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //        MainActivity.replaceFragment(ScheduleFindFragment.newInstance());
 
     }
+
+    //로그아웃 알림창
+    override fun moveLogoutDialog() {
+        val dialog = LogoutDialog(this)
+        dialog.show()
+    }
+
 
 //    override fun settingPermission() {
 //        val permis = object : PermissionListener {

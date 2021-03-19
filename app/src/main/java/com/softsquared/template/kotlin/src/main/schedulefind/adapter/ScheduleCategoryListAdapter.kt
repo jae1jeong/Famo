@@ -26,7 +26,6 @@ class ScheduleCategoryListAdapter(
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
     init {
-        Log.d("TAG", "SearchHistoryRecyclerViewAdapter: init() called ")
         this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
     }
 

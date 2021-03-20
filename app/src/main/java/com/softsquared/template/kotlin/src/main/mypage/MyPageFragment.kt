@@ -9,7 +9,9 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentMypageBinding
+import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.util.Constants
 
 class MyPageFragment(val myPageActivityView: MyPageActivityView):
@@ -35,6 +37,8 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
 //            Log.d("MyPageFragment 잘들어 왔나 goalTitle", "값: $goalTitle")
 //        }
 
+        MyPageService(this).tryGetRestScheduleCount("today")
+        MyPageService(this).tryGetDoneScheduleCount()
         MyPageService(this).tryGetMyPage()
 
         //이미지 앞으로 내보내기
@@ -53,7 +57,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
 //            binding.categoryEditLinear.visibility = View.GONE
 //            val intent = Intent(context,MyPageActivity::class.java)
 //            startActivity(intent)
-            (activity as MyPageActivity).moveScheduleFind()
+            (activity as MyPageActivity).goBack()
         }
     }
 
@@ -117,6 +121,43 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
     }
 
     override fun onGetMyPageFail(message: String) {
+        showCustomToast(message)
+    }
+
+    override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
+
+        showCustomToast(response.message.toString())
+        if(response.isSuccess && response.code == 100){
+            binding.myPageTextRestScheduleCount.text =  response.remainScheduleCount.toString()
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+
+    }
+
+    override fun onGetRestScheduleCountFailure(message: String) {
+        showCustomToast(message)
+    }
+
+    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
+        if (response.isSuccess && response.code == 100){
+            val totalDataJsonArray = response.totaldata.asJsonArray
+            totalDataJsonArray.forEach {
+                val totalData = it.asJsonObject.get("totalScheduleCount").asString
+                binding.myPageTextAllScheduleCount.text = totalData
+            }
+            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
+            DoneScheduleDataJsonArray.forEach {
+                val doneData = it.asJsonObject.get("doneScheduleCount").asString
+                binding.myPageTextDoneScheduleCount.text = doneData
+            }
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+    }
+
+    override fun onGetDoneScheduleCountFailure(message: String) {
+        showCustomToast(message)
     }
 
 

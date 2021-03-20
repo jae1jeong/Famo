@@ -2,12 +2,14 @@ package com.softsquared.template.kotlin.src.main.mypage
 
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
+import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyPageService(val editView : MyPageView) {
+class MyPageService(val pageView : MyPageView) {
 
     fun tryGetMyPage(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
@@ -17,11 +19,11 @@ class MyPageService(val editView : MyPageView) {
             override fun onResponse(call: Call<MyPageResponse>, response: Response<MyPageResponse>) {
                 Log.d("값 확인", "tryGetMyPage body:  ${response.body()}")
                 Log.d("값 확인", "tryGetMyPage code:  ${response.code()}")
-                editView.onGetMyPageSuccess(response.body() as MyPageResponse)
+                pageView.onGetMyPageSuccess(response.body() as MyPageResponse)
             }
 
             override fun onFailure(call: Call<MyPageResponse>, t: Throwable) {
-                editView.onGetMyPageFail(t.message ?: "통신 오류")
+                pageView.onGetMyPageFail(t.message ?: "통신 오류")
 //                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }
         })
@@ -44,4 +46,33 @@ class MyPageService(val editView : MyPageView) {
 //            }
 //        })
 //    }
+
+    fun tryGetRestScheduleCount(date:String){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
+        homeRetrofitInterface.getRestScheduleCount(date).enqueue(object:Callback<RestScheduleCountResponse>{
+            override fun onResponse(call: Call<RestScheduleCountResponse>, response: Response<RestScheduleCountResponse>) {
+                pageView.onGetRestScheduleCountSuccess(response.body() as RestScheduleCountResponse)
+            }
+
+            override fun onFailure(call: Call<RestScheduleCountResponse>, t: Throwable) {
+                pageView.onGetRestScheduleCountFailure(t.message ?: "남은 일정수 조회 관련 통신 오류")
+            }
+
+        })
+    }
+
+    fun tryGetDoneScheduleCount(){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
+        homeRetrofitInterface.getDoneScheduleCount().enqueue(object:Callback<DoneScheduleCountResponse>{
+            override fun onResponse(call: Call<DoneScheduleCountResponse>, response: Response<DoneScheduleCountResponse>) {
+                pageView.onGetDoneScheduleCountSuccess(response.body() as DoneScheduleCountResponse)
+            }
+
+            override fun onFailure(call: Call<DoneScheduleCountResponse>, t: Throwable) {
+                pageView.onGetDoneScheduleCountFailure(t.message ?: "해낸 일정수 조회 관련 통신 오류")
+            }
+
+        })
+
+    }
 }

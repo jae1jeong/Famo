@@ -83,10 +83,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 //            val token = intent.getStringExtra("token")
 //            val name = intent.getStringExtra("name")
 //            val img = intent.getStringExtra("img")
+//            intent.putExtra("token",token)
 //            binding.mainFrameLayout.visibility = View.VISIBLE
             val intent = Intent(this, MyPageActivity::class.java)
-//            intent.putExtra("token",token)
-
             startActivity(intent)
         }
 

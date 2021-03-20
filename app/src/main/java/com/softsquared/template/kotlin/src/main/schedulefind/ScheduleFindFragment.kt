@@ -10,7 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.JsonElement
+import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
@@ -18,6 +18,8 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
+import com.softsquared.template.kotlin.src.main.mypage.MyPageService
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
@@ -25,8 +27,6 @@ import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWho
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.schedulesearch.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -40,7 +40,13 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     var size = 0
     var categoryID = ""
 
+    //전체페이징수
+    var wholePagingCnt = 0
+
+    var pagingCnt = 1
+
     private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
+
     // 전체 일정 어댑터
     private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
 
@@ -50,13 +56,15 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        ScheduleFindService(this).tryGetWholeScheduleCount()
+
         // 카테고리
 //        CategoryInquiryService(this).tryGetUserCategoryInquiry()
         // createCategoryRecyclerview()
 
         //전체일정
 //        createWholeScheduleRecyclerview()
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(10,10)
+//        ScheduleFindService(this).tryGetWholeScheduleInquiry(0,10)
 
 
         val token =
@@ -111,7 +119,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
         //검색창 클릭 시
         binding.scheduleFindBtn.setOnClickListener {
-            val intent = Intent(activity,ScheduleSearchActivity::class.java)
+            val intent = Intent(activity, ScheduleSearchActivity::class.java)
             startActivity(intent)
         }
 
@@ -130,7 +138,8 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             binding.scheduleFindLatelyView.layoutParams.height = 2
 
             childFragmentManager.beginTransaction().replace(
-                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()).commit()
+                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()
+            ).commit()
 //            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
         }
 
@@ -199,16 +208,43 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
         }
 
-        // viewPager
-//        val adapter = ScheduleFindPagerAdapter(supportFragmentManager as FragmentManager)
-//        adapter.addFragment(MonthlyFragment(),"월간")
-//        adapter.addFragment(TodayFragment(),"오늘")
-//        adapter.addFragment(ScheduleFindFragment(),"일정 찾기")
-//        binding.mainViewPager.adapter = adapter
-//        binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
+        //한 번에 표시되는 버튼 수 (기본값 : 5)
+        binding.scheduleFindPaging.setPageItemCount(4);
+
+        //총 페이지 버튼 수와 현재 페이지 설정
+//        Log.d("TAG", "wholePagingCnt : ${wholePagingCnt} ")
+//        binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1);
+
+        //페이지 리스너를 클릭했을 때의 이벤트
+        binding.scheduleFindPaging.setOnPageSelectListener(object : OnPageSelectListener {
+            //PrevButton Click
+            override fun onPageBefore(now_page: Int) {
+                //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
+                binding.scheduleFindPaging.addBottomPageButton(10, now_page)
+            }
+
+            override fun onPageCenter(now_page: Int) {
+//                binding.recyclerviewWhole.visibility = View.GONE
+//                setFrag(Integer.parseInt(now_page.toString())-1)
+
+                for (i in 1 until 4) {
+
+                    if (now_page == i){
+                        ScheduleFindService(this@ScheduleFindFragment).tryGetWholeScheduleInquiry(((i-1)*10) , 10)
+                    }
+                }
+
+            }
+
+            //NextButton Click
+            override fun onPageNext(now_page: Int) {
+                //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
+                binding.scheduleFindPaging.addBottomPageButton(10, now_page)
+            }
+        })
+
 
     }
-
 
 
     override fun viewPagerApiRequest() {
@@ -217,8 +253,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         //전체일정
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0,10)
-
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
 
     }
 //    @SuppressLint("SimpleDateFormat")
@@ -262,14 +297,14 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     private fun createBookmarkRecyclerview() {
         //테스트 데이터
         val bookmarkList = arrayListOf(
-                ScheduleBookmarkData("제목", "시간"),
-                ScheduleBookmarkData("제목", "시간")
+            ScheduleBookmarkData("제목", "시간"),
+            ScheduleBookmarkData("제목", "시간")
         )
 
         // 즐겨찾기/최근 일정 리사이클러뷰 연결
         binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.VERTICAL, false
+            context,
+            LinearLayoutManager.VERTICAL, false
         )
         binding.recyclerViewBookmark.setHasFixedSize(true)
         binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
@@ -319,7 +354,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
         return color
     }
-
 
     //유저별 카테고리조회 성공
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -407,35 +441,71 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //                    partList.add(ScheduleWholeData(scheduleID,scheduleDate,scheduleName,scheduleContent,schedulePick,scheduleStatus,scheduleColorInfo))
 //                }
 
-                var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
-                for (i in 0 until response.data.size) {
-                    wholeScheduleList = arrayListOf(
-                        ScheduleWholeData(
-                            response.data[i].scheduleID,
-                            response.data[i].scheduleDate,
-                            response.data[i].scheduleName,
-                            response.data[i].scheduleMemo,
-                            response.data[i].schedulePick,
-                            response.data[i].scheduleStatus,
-                            response.data[i].colorInfo)
-                    )
+
+//                Log.d("TAG", "길이 : ${response.data.size} ")
+//                if (pagingCnt == 1) {
+//                    wholePagingCnt = (response.data.size / 10) + 1
+//                    //총 페이지 버튼 수와 현재 페이지 설정
+//                    Log.d("TAG", "처음 한번만 wholePagingCnt : ${wholePagingCnt} ")
+//                    binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1);
+//                    pagingCnt++
+//                }
+
+                val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
+
+                if (response.data.size > 0) {
+
+                    for (i in 0 until response.data.size) {
+                        //즐겨찾기 X
+                        if (response.data[i].schedulePick == -1) {
+                            wholeScheduleList.add(
+                                ScheduleWholeData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].scheduleStatus,
+                                    response.data[i].colorInfo
+                                )
+                            )
+                            //즐겨찾기 O
+                        } else {
+                            wholeScheduleList.add(
+                                ScheduleWholeData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_bookmark,
+                                    response.data[i].scheduleStatus,
+                                    response.data[i].colorInfo
+                                )
+                            )
+                        }
+
+                    }
                 }
+
 
                 scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList)
 
                 //전체일정 리사이큘러뷰 연결
                 binding.recyclerviewWhole.layoutManager =
-                        GridLayoutManager(
-                                context, 2, GridLayoutManager.VERTICAL,
-                                false
-                        )
+                    GridLayoutManager(
+                        context, 2, GridLayoutManager.VERTICAL,
+                        false
+                    )
                 binding.recyclerviewWhole.setHasFixedSize(true)
                 binding.recyclerviewWhole.adapter = scheduleWholeAdapter
 
 
             }
             else -> {
-                Log.d("TAG", "onGetWholeScheduleInquirySuccess 100이 아닌: ${response.message.toString()}")
+                Log.d(
+                    "TAG",
+                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${response.message.toString()}"
+                )
             }
         }
 
@@ -446,7 +516,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
     override fun onPostBookmarkSuccess(response: BaseResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 showCustomToast("즐겨찾기 성공")
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기 성공")
@@ -459,5 +529,29 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     }
 
     override fun onPostBookmarkFail(message: String) {
+    }
+
+    override fun onGetWholeScheduleCountSuccess(response: WholeScheduleCountResponse) {
+
+        when (response.code) {
+            100 -> {
+                showCustomToast("전체일정수 조회 성공")
+                val cnt : Int = response.totaldata[0].totalScheduleCount
+                val cnt2 : Int = response.totaldonedata[0].totalScheduleCount
+                Log.d("TAG", "onGetWholeScheduleCountSuccess - 전체일정수 - $cnt")
+                Log.d("TAG", "onGetWholeScheduleCountSuccess - 전체 해낸일정수 - $cnt2")
+
+                //페이징수 세팅
+                wholePagingCnt = (cnt/10) +1
+                binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1);
+            }
+            else -> {
+                showCustomToast("즐겨찾기 실패")
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기 실패 ${response.message.toString()}")
+            }
+        }
+    }
+
+    override fun onGetWholeScheduleCountFailure(message: String) {
     }
 }

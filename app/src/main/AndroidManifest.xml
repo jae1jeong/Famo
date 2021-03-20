@@ -24,9 +24,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
 
-        <!--일정검색        -->
-        <activity android:name=".src.schedulesearch.ScheduleSearchActivity"
+        <!-- MyPageEdit -->
+        <activity android:name=".src.mypageedit.MyPageEditActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 일정검색 -->
+        <activity
+            android:name=".src.schedulesearch.ScheduleSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".src.wholeschedule.WholeScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- MyPage -->
@@ -79,18 +83,14 @@
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 아이디/비밀번호 찾기 결과 -->
         <activity
             android:name=".src.auth.findresult.FindResultActivity"
-            android:screenOrientation="portrait"
             android:parentActivityName=".src.auth.find.FindUserActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- 비밀번호 재설정 -->
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 비밀번호 재설정 -->
         <activity
             android:name=".src.auth.setnewpassword.SetNewPasswordActivity"
-            android:screenOrientation="portrait"
             android:parentActivityName=".src.auth.find.FindUserActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- 카카오 로그인 -->
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 카카오 로그인 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -103,8 +103,7 @@
                     android:host="oauth"
                     android:scheme="kakao850f56e3e5ba5613faf68a8aaa4b95bc" />
             </intent-filter>
-        </activity>
-        <!-- 카메라 -->
+        </activity> <!-- 카메라 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.softsquared.template.kotlin.fileprovider"

@@ -39,7 +39,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             categoryID = extra?.getInt("categoryID", 10).toString()
             Log.d("ScheduleFindCategoryFragment categoryID", "값: $categoryID")
         }
-        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID),1,1)
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 1, 1)
 //        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 //        createRecyclerview()
 
@@ -51,6 +51,14 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
     }
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        // 카테고리
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 1, 1)
+
+
+    }
+
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
     }
@@ -60,10 +68,11 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
         Log.d("TAG", "onGetCategoryInquirySuccess: $categoryInquiryResponse")
+        Log.d("TAG", "1111111111")
 
         when (categoryInquiryResponse.code) {
             100 -> {
-                Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
+                Log.d("TAG", "onGetCategoryInquirySuccess 성공")
                 //테스트 데이터
                 var categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
                 for (i in 0 until categoryInquiryResponse.data.size) {
@@ -74,7 +83,8 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                             categoryInquiryResponse.data[i].scheduleName,
                             categoryInquiryResponse.data[i].scheduleMemo,
                             categoryInquiryResponse.data[i].schedulePick,
-                            categoryInquiryResponse.data[i].colorInfo)
+                            categoryInquiryResponse.data[i].colorInfo
+                        )
                     )
                 }
                 //전체일정 리사이큘러뷰 연결
@@ -84,11 +94,15 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         false
                     )
                 binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                binding.recyclerviewScheduleFindCategory.adapter = CategoryScheduleInquiryAdapter(categoryList)
+                binding.recyclerviewScheduleFindCategory.adapter =
+                    CategoryScheduleInquiryAdapter(categoryList)
 
             }
             else -> {
-                Log.d("TAG", "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}")
+                Log.d(
+                    "TAG",
+                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}"
+                )
             }
         }
 

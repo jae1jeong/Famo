@@ -59,6 +59,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
 //            startActivity(intent)
             (activity as MyPageActivity).goBack()
         }
+
     }
 
     //조회성공
@@ -85,6 +86,16 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
                     ApplicationClass.sSharedPreferences.getString(Constants.COMMENTS, null)
 //                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
 //                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
+
+                if (comments != null){
+                    binding.test.text = comments
+                }
+
+                if (day != null ){
+                    binding.myPageTextDoneScheduleCount.text = day
+                }
+
+
 
                 //카카오로그인일경우
                 if (response.loginMethod == "K") {

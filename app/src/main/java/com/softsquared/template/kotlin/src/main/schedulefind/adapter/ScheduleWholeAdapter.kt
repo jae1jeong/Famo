@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
+import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
 
-class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
+class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
 ) :
     RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
 
@@ -85,7 +88,7 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 
         holder.date.text = wholeList[position].date.toString()
         //임시
-//        holder.pick.setImageResource(wholeList[position].pick)
+        holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
 
@@ -110,24 +113,23 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 //            mCategoryRecyclerView = categoryRecyclerView
         }
 
-        var bookMarkCnt = 1
-
         override fun onClick(v: View?) {
+
+            val bookmarkRequest = BookmarkRequest(
+                scheduleID = wholeList[adapterPosition].id
+            )
 
             when(v){
                 pick -> {
-
-                    if (bookMarkCnt % 2 != 0){
-
+                    //즐겨찾기 안되있으면 별표시
+                    if (wholeList[adapterPosition].pick == 2131165416) {
                         pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(wholeList[adapterPosition].id)
-                        Log.d("TAG", "pick: 클릭")
-                    }else{
+                        wholeList[adapterPosition].pick = 2131165412
+                    } else {
                         pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(wholeList[adapterPosition].id)
-                        Log.d("TAG", "pick: X")
+                        wholeList[adapterPosition].pick = 2131165416
                     }
-                    bookMarkCnt++
+                    ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                 }
             }
         }
@@ -142,9 +144,25 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
     }
 
     override fun onPostBookmarkSuccess(response: BaseResponse) {
+
+        when(response.code){
+            100 -> {
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 성공")
+            }
+            else -> {
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 실패 ${response.message.toString()}")
+            }
+        }
+
     }
 
     override fun onPostBookmarkFail(message: String) {
+    }
+
+    override fun onGetWholeScheduleCountSuccess(response: WholeScheduleCountResponse) {
+    }
+
+    override fun onGetWholeScheduleCountFailure(message: String) {
     }
 
 //    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

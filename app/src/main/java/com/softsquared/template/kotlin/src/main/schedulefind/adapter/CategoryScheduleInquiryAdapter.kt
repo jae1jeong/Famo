@@ -91,16 +91,16 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
             var bookMarkCnt = 1
 
             when(v){
-                pick -> {
-                    if (bookMarkCnt % 2 != 0) {
-                        pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        Log.d("TAG", "pick: 클릭")
-                    } else {
-                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        Log.d("TAG", "pick: X")
-                    }
-                    bookMarkCnt++
-                }
+//                pick -> {
+//                    if (bookMarkCnt % 2 != 0) {
+//                        pick.setImageResource(R.drawable.schedule_find_bookmark)
+//                        Log.d("TAG", "pick: 클릭")
+//                    } else {
+//                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
+//                        Log.d("TAG", "pick: X")
+//                    }
+//                    bookMarkCnt++
+//                }
             }
         }
 

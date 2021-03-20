@@ -18,6 +18,8 @@ import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
 import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialogInterface
 import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -80,6 +82,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     override fun moveLogoutDialog() {
         val dialog = LogoutDialog(this)
         dialog.show()
+    }
+
+    // 뒤로가기
+    fun goBack(){
+        finish()
     }
 
 

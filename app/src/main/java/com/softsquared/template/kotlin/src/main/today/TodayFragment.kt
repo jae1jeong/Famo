@@ -121,6 +121,12 @@ class TodayFragment :
         }
     }
 
+
+    override fun onResume() {
+        showCustomToast("today fragment onResume")
+        super.onResume()
+    }
+
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
         if(response.isSuccess){
             when(response.code){
@@ -234,6 +240,12 @@ class TodayFragment :
 
     override fun onPostItemCheckFailure(message: String) {
         showCustomToast(message)
+    }
+
+    override fun onGetUserTopCommentSuccess() {
+    }
+
+    override fun onGetUserTopCommentFailure(message: String) {
     }
 
 }

@@ -10,4 +10,7 @@ interface TodayView {
     fun onDeleteMemoFailure(message: String)
     fun onPostItemCheckSuccess(response: BaseResponse)
     fun onPostItemCheckFailure(message: String)
+    fun onGetUserTopCommentSuccess()
+    fun onGetUserTopCommentFailure(message: String)
+
 }

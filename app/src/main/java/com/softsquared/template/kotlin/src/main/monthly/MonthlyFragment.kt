@@ -284,4 +284,10 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
     override fun onPostItemCheckFailure(message: String) {
     }
+
+    override fun onGetUserTopCommentSuccess() {
+    }
+
+    override fun onGetUserTopCommentFailure(message: String) {
+    }
 }

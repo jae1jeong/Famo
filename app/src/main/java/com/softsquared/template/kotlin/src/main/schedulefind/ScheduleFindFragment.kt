@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
@@ -40,13 +41,14 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     var categoryID = ""
 
     private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
+    // 전체 일정 어댑터
+    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
 
     private val partList: ArrayList<ScheduleWholeData> = arrayListOf()
 
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         // 카테고리
 //        CategoryInquiryService(this).tryGetUserCategoryInquiry()
@@ -214,10 +216,11 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         // 카테고리
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
+        //전체일정
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(0,10)
+
+
     }
-
-
-
 //    @SuppressLint("SimpleDateFormat")
 //    fun createWholeScheduleRecyclerview() {
 //        //전체일정 테스트데이터
@@ -322,8 +325,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         when (responseUser.code) {
             100 -> {
-
-                showCustomToast("카테고리 조회성공")
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
                 val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
 
@@ -376,28 +377,61 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
                 binding.recyclerviewWhole.visibility = View.VISIBLE
-                //테스트 데이터
-//                var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
-//                for (i in 0 until response.data.size) {
-//                    wholeScheduleList = arrayListOf(
-//                        ScheduleWholeData(
-//                            response.data[i].scheduleID,
-//                            response.data[i].scheduleDate,
-//                            response.data[i].scheduleName,
-//                            response.data[i].scheduleMemo,
-//                            response.data[i].schedulePick,
-//                            response.data[i].scheduleStatus,
-//                            response.data[i].colorInfo)
-//                    )
+
+//                val wholeScheduleJsonArray = response.data
+//                Log.d("TAG", "wholeScheduleJsonArray: $wholeScheduleJsonArray")
+//                wholeScheduleJsonArray.forEach {
+//                    val wholeScheduleJsonObject = it.asJsonObject
+//                    val scheduleDate = wholeScheduleJsonObject.get("scheduleDate").asString
+//                    val scheduleName = wholeScheduleJsonObject.get("scheduleName").asString
+//                    //  일정 내용을 그냥 작성 안 하고 작성할 경우도 인지해야합니다. null로 들어올 수 있어요.
+//                    val scheduleContentJson:JsonElement? = wholeScheduleJsonObject.get("scheduleMemo")
+//                    val schedulePick = wholeScheduleJsonObject.get("schedulePick").asInt
+//                    // 컬러는 카테고리가 없이 작성이 가능해서 null로 들어올 수 있습니다.
+//                    val scheduleColorInfoJson:JsonElement? = wholeScheduleJsonObject.get("colorInfo")
+//                    val scheduleStatus = wholeScheduleJsonObject.get("scheduleStatus").asInt
+//
+//                    val scheduleID = wholeScheduleJsonObject.get("scheduleID").asInt
+//                    var scheduleColorInfo = "#CED5D9"
+//                    var scheduleContent = ""
+//
+//                    // json이기 때문에 그냥 null 체크하면 null인지 모르기 때문에 isJsonNull을 써주세요.
+//                    if(scheduleColorInfoJson?.isJsonNull!!.equals(false)){
+//                        // 널이 아닌경우 그대로 컬러 스트링을 넣어줍니다.
+//                        scheduleColorInfo = scheduleColorInfoJson.asString
+//                    }
+//                    if(scheduleContentJson?.isJsonNull!!){
+//                        // 마찬가지로 일정 내용이 있으면 수정하고 없으면 위에 빈 스트링으로 일정에 넣어줍니다.
+//                        scheduleContent = scheduleContentJson.asString
+//                    }
+//                    partList.add(ScheduleWholeData(scheduleID,scheduleDate,scheduleName,scheduleContent,schedulePick,scheduleStatus,scheduleColorInfo))
 //                }
-//                //전체일정 리사이큘러뷰 연결
-//                binding.recyclerviewWhole.layoutManager =
-//                    GridLayoutManager(
-//                        context, 2, GridLayoutManager.VERTICAL,
-//                        false
-//                    )
-//                binding.recyclerviewWhole.setHasFixedSize(true)
-//                binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeScheduleList)
+
+                var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
+                for (i in 0 until response.data.size) {
+                    wholeScheduleList = arrayListOf(
+                        ScheduleWholeData(
+                            response.data[i].scheduleID,
+                            response.data[i].scheduleDate,
+                            response.data[i].scheduleName,
+                            response.data[i].scheduleMemo,
+                            response.data[i].schedulePick,
+                            response.data[i].scheduleStatus,
+                            response.data[i].colorInfo)
+                    )
+                }
+
+                scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList)
+
+                //전체일정 리사이큘러뷰 연결
+                binding.recyclerviewWhole.layoutManager =
+                        GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                        )
+                binding.recyclerviewWhole.setHasFixedSize(true)
+                binding.recyclerviewWhole.adapter = scheduleWholeAdapter
+
 
             }
             else -> {

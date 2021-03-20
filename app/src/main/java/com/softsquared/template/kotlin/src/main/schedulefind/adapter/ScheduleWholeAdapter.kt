@@ -84,7 +84,8 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
 //        holder.cardView.setBackgroundResource(R.drawable.left_stroke);
 
         holder.date.text = wholeList[position].date.toString()
-        holder.pick.setImageResource(wholeList[position].pick)
+        //임시
+//        holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
 

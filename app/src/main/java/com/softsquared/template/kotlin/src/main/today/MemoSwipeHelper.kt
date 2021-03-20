@@ -75,7 +75,6 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
         this.gestureDetector = GestureDetector(context,gestureListener)
         this.recyclerView.setOnTouchListener(onTouchListener)
         this.removeQueue = IntLinkedList()
-
         attachSwipe()
     }
 

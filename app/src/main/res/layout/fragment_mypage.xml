@@ -142,6 +142,7 @@
                         android:textSize="17dp"/>
 
                     <TextView
+                        android:id="@+id/my_page_text_done_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="120"
@@ -174,6 +175,7 @@
                         android:textSize="17dp"/>
 
                     <TextView
+                        android:id="@+id/my_page_text_rest_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="6"
@@ -205,6 +207,7 @@
                         android:textSize="17dp"/>
 
                     <TextView
+                        android:id="@+id/my_page_text_all_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="163"

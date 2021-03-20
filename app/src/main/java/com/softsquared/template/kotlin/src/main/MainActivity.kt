@@ -76,14 +76,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         })
 
 
-        // 다른 부분을 눌렀을때 FAB 버튼 비활성화
-        binding.mainLayout.setOnClickListener {
-            if(clicked){
-
-            }
-        }
-
-
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
 
@@ -172,7 +164,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     showCustomToast("수정 오류 스케줄 아이디를 볼러오지 못하였습니다.")
                 }
             }else{
-                //일정 추가하기
+                // 일정 추가하기
                 showLoadingDialog(this)
                 AddMemoService(this).tryPostAddMemo(PostTodayRequestAddMemo(binding.addMemoEditTitle.text.toString(), binding.addMemoEditContent.text.toString(), 1))
             }
@@ -412,6 +404,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onPostItemCheckFailure(message: String) {
+    }
+
+    override fun onGetUserTopCommentSuccess() {
+    }
+
+    override fun onGetUserTopCommentFailure(message: String) {
     }
 
     override fun onResume() {

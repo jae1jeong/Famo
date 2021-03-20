@@ -107,22 +107,6 @@
                     />
 
             </LinearLayout>
-
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-            </LinearLayout>
             <LinearLayout
                 android:weightSum="10"
                 android:layout_width="match_parent"
@@ -146,6 +130,25 @@
                     android:textColor="@color/white"
                     android:background="@drawable/background_btn"
                     android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <ImageButton
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    android:src="@drawable/category_edit_plus"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/add_memo_category_recyclerview"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
             </LinearLayout>

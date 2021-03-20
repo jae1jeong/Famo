@@ -28,7 +28,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
     }
 
     var categoryID = ""
-    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
+//    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,43 +48,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         binding.categoryFilter.setOnClickListener {
 
             (activity as MainActivity).onMoveFilterFragment()
-
-//            val popup = PopupMenu(activity, binding.categoryFilter)
-//
-//            (activity as MainActivity).menuInflater.inflate(R.menu.schedule_find_filter, popup.menu)
-//
-//            popup.setOnMenuItemClickListener(PopupListener())
-//
-//            popup.show()
         }
-    }
-
-    inner class PopupListener : PopupMenu.OnMenuItemClickListener {
-
-        override fun onMenuItemClick(item: MenuItem?): Boolean {
-
-//            val intent = Intent(this@MainActivity,ShareActivity::class.java)
-
-//            val intent = Intent(Intent.ACTION_SEND)
-//            intent.type = "text/plain"
-//            intent.putExtra(Intent.EXTRA_TEXT, "공유하기 테스트") // text는 공유하고 싶은 글자
-
-//            val chooser = Intent.createChooser(intent, "공유하기")
-
-            when (item?.itemId) {
-                R.id.item1 -> println("aaaaaaaaaaaa")
-
-//                    startActivity(chooser)
-//                    startActivity(intent)
-
-            }
-
-            return false
-        }
-    }
-
-    private fun createRecyclerview() {
-
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {

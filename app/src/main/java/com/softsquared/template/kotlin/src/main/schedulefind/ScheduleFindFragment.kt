@@ -49,7 +49,7 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
 
         // 카테고리
-        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+//        CategoryInquiryService(this).tryGetUserCategoryInquiry()
         // createCategoryRecyclerview()
 
         //전체일정
@@ -218,42 +218,42 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
 
 
-    @SuppressLint("SimpleDateFormat")
-    fun createWholeScheduleRecyclerview() {
-        //전체일정 테스트데이터
-        val onlyDate: LocalDate = LocalDate.now()
-
-//                binding.myPageEditEtComments.setText(onlyDate.toString())
-            val str = onlyDate.toString()
-            val format = SimpleDateFormat("YYYY-MM-DD")
-            val nowDate : Date? = format.parse(str)
-
-        val wholeList = arrayListOf(
-            ScheduleWholeData(
-                72, nowDate!!, "내용",
-                "내용",R.drawable.schedule_find_bookmark,1,"1"
-            ),
-            ScheduleWholeData(
-                1, nowDate!!, "내용",
-                "내용",R.drawable.schedule_find_bookmark,1,"1"
-            ),ScheduleWholeData(
-                1, nowDate!!, "내용",
-                "내용",R.drawable.schedule_find_bookmark,1,"1"
-            ),ScheduleWholeData(
-                1, nowDate!!, "내용",
-                "내용",R.drawable.schedule_find_bookmark,1,"1"
-            )
-        )
-
-        //전체일정 리사이큘러뷰 연결
-        binding.recyclerviewWhole.layoutManager =
-            GridLayoutManager(
-                context, 2, GridLayoutManager.VERTICAL,
-                false
-            )
-        binding.recyclerviewWhole.setHasFixedSize(true)
-        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
-    }
+//    @SuppressLint("SimpleDateFormat")
+//    fun createWholeScheduleRecyclerview() {
+//        //전체일정 테스트데이터
+//        val onlyDate: LocalDate = LocalDate.now()
+//
+////                binding.myPageEditEtComments.setText(onlyDate.toString())
+//            val str = onlyDate.toString()
+//            val format = SimpleDateFormat("YYYY-MM-DD")
+//            val nowDate : Date? = format.parse(str)
+//
+//        val wholeList = arrayListOf(
+//            ScheduleWholeData(
+//                72, nowDate!!, "내용",
+//                "내용",R.drawable.schedule_find_bookmark,1,"1"
+//            ),
+//            ScheduleWholeData(
+//                1, nowDate!!, "내용",
+//                "내용",R.drawable.schedule_find_bookmark,1,"1"
+//            ),ScheduleWholeData(
+//                1, nowDate!!, "내용",
+//                "내용",R.drawable.schedule_find_bookmark,1,"1"
+//            ),ScheduleWholeData(
+//                1, nowDate!!, "내용",
+//                "내용",R.drawable.schedule_find_bookmark,1,"1"
+//            )
+//        )
+//
+//        //전체일정 리사이큘러뷰 연결
+//        binding.recyclerviewWhole.layoutManager =
+//            GridLayoutManager(
+//                context, 2, GridLayoutManager.VERTICAL,
+//                false
+//            )
+//        binding.recyclerviewWhole.setHasFixedSize(true)
+//        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
+//    }
 
     //즐겨찾기 일정 테스트
     private fun createBookmarkRecyclerview() {

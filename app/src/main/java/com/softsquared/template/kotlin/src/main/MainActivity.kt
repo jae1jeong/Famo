@@ -24,8 +24,11 @@ import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
@@ -34,7 +37,7 @@ import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsRespon
 import com.softsquared.template.kotlin.util.Constants
 
 
-class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView {
+class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView,CategoryInquiryView {
     private var clicked = false // FAB 버튼 변수
     private lateinit var bottomSheetBehavior:BottomSheetBehavior<FrameLayout>
     // FAB 버튼 애니메이션
@@ -294,13 +297,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
+
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
-
                         binding.addMemoEditTitle.setText(memoTitle)
                         binding.addMemoEditContent.setText(memoContent)
                         binding.addMemoTextDateInfo.text = memoDate
-
                     }
                     showCustomToast(response.message.toString())
                 }
@@ -338,7 +340,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         var memoCreatedAtDay = 0
                         var memoContent = ""
                         val memoColorInfoJsonElement: JsonElement? = memoJsonObject.get("colorInfo")
-
                         if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
@@ -350,6 +351,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 memoCreatedAtDay = memoCreatedAt[i].replace(" ", "").toInt()
                             }
                         }
+
 
                         var memoColorInfo: String? = null
                         if (!memoColorInfoJsonElement!!.isJsonNull) {
@@ -414,6 +416,18 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onResume() {
         super.onResume()
+    }
+
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
     }
 
 }

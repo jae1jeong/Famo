@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +30,7 @@ import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import kotlinx.coroutines.flow.callbackFlow
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -47,6 +50,13 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     private var todayDate:LocalDate ?= null
     private var selectedDate:LocalDate ?= null
     private val userMemos:ArrayList<String> = arrayListOf()
+
+    private var targetMonth:Int? = null
+    private var targetYear:Int? = null
+
+    private var currentMonth:YearMonth = YearMonth.now()
+
+    private val simpleDateFormat:SimpleDateFormat = SimpleDateFormat("MMM")
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -114,7 +124,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 override fun create(view: View): CalendarViewContainer = CalendarViewContainer(view)
             }
 
-        val currentMonth = YearMonth.now()
         val firstMonth = currentMonth.minusMonths(0)
         val lastMonth = currentMonth.plusMonths(0)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
@@ -132,8 +141,30 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         // 달력 헤더
             binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
                 override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
-                    container.headerMonthTextTitle.text = "${month.yearMonth.month}"
+                    container.headerMonthTextTitle.text = "${month.yearMonth.month.name.capitalize()}"
+
+                    container.headerBtnMonthPlus.setOnClickListener {
+                        currentMonth = currentMonth.plusMonths(1)
+                        month.yearMonth.plusMonths(1)
+                        container.headerMonthTextTitle.text = "${month.yearMonth.month}"
+
+                        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
+                        Log.d("TAG", "bind: $currentMonth $month")
+                        binding.calendarView.scrollToMonth(currentMonth)
+
+
+                    }
+                    container.hedderBtnMonthMinus.setOnClickListener {
+                        month.yearMonth.minusMonths(1)
+                        currentMonth = currentMonth.minusMonths(1)
+                        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
+                        Log.d("TAG", "bind: $currentMonth")
+                        binding.calendarView.scrollToMonth(currentMonth)
+
+
+                    }
                 }
+
 
                 override fun create(view: View): CalendarViewHeader  = CalendarViewHeader(view)
 
@@ -160,6 +191,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         todayDate = LocalDate.now()
+
         showLoadingDialog(context!!)
         MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
     }

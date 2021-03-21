@@ -28,7 +28,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
     }
 
     var categoryID = ""
-    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
+//    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +39,8 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             categoryID = extra?.getInt("categoryID", 10).toString()
             Log.d("ScheduleFindCategoryFragment categoryID", "값: $categoryID")
         }
-        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID),1,1)
+
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 0, 10)
 //        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 //        createRecyclerview()
 
@@ -48,43 +49,13 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         binding.categoryFilter.setOnClickListener {
 
             (activity as MainActivity).onMoveFilterFragment()
-
-//            val popup = PopupMenu(activity, binding.categoryFilter)
-//
-//            (activity as MainActivity).menuInflater.inflate(R.menu.schedule_find_filter, popup.menu)
-//
-//            popup.setOnMenuItemClickListener(PopupListener())
-//
-//            popup.show()
         }
     }
 
-    inner class PopupListener : PopupMenu.OnMenuItemClickListener {
-
-        override fun onMenuItemClick(item: MenuItem?): Boolean {
-
-//            val intent = Intent(this@MainActivity,ShareActivity::class.java)
-
-//            val intent = Intent(Intent.ACTION_SEND)
-//            intent.type = "text/plain"
-//            intent.putExtra(Intent.EXTRA_TEXT, "공유하기 테스트") // text는 공유하고 싶은 글자
-
-//            val chooser = Intent.createChooser(intent, "공유하기")
-
-            when (item?.itemId) {
-                R.id.item1 -> println("aaaaaaaaaaaa")
-
-//                    startActivity(chooser)
-//                    startActivity(intent)
-
-            }
-
-            return false
-        }
-    }
-
-    private fun createRecyclerview() {
-
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        // 카테고리
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 0, 10)
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -96,21 +67,23 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
         Log.d("TAG", "onGetCategoryInquirySuccess: $categoryInquiryResponse")
+        Log.d("TAG", "1111111111")
 
         when (categoryInquiryResponse.code) {
             100 -> {
-                Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
+                Log.d("TAG", "onGetCategoryInquirySuccess 성공")
                 //테스트 데이터
                 var categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
                 for (i in 0 until categoryInquiryResponse.data.size) {
-                    categoryList = arrayListOf(
+                    categoryList.add(
                         CategoryScheduleInquiryData(
                             categoryInquiryResponse.data[i].scheduleID,
                             categoryInquiryResponse.data[i].scheduleDate,
                             categoryInquiryResponse.data[i].scheduleName,
                             categoryInquiryResponse.data[i].scheduleMemo,
                             categoryInquiryResponse.data[i].schedulePick,
-                            categoryInquiryResponse.data[i].colorInfo)
+                            categoryInquiryResponse.data[i].colorInfo
+                        )
                     )
                 }
                 //전체일정 리사이큘러뷰 연결
@@ -120,11 +93,15 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         false
                     )
                 binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                binding.recyclerviewScheduleFindCategory.adapter = CategoryScheduleInquiryAdapter(categoryList)
+                binding.recyclerviewScheduleFindCategory.adapter =
+                    CategoryScheduleInquiryAdapter(categoryList)
 
             }
             else -> {
-                Log.d("TAG", "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}")
+                Log.d(
+                    "TAG",
+                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}"
+                )
             }
         }
 

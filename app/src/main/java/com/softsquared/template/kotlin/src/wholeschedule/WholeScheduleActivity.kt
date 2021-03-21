@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.wholeschedule
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityWholeScheduleBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
@@ -19,10 +20,20 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val check = intent.getBooleanExtra("boolean",true)
+        Log.d("TAG", "WholeScheduleActivity : $check")
+
+        val scheduleFindBookmarkFragment = ScheduleFindBookmarkFragment()
+        val scheduleFindLatelyFragment = ScheduleFindLatelyFragment()
+        val bundle = Bundle()
+        bundle.getBoolean("boolean",check)
+        scheduleFindBookmarkFragment.arguments = bundle
+        scheduleFindLatelyFragment.arguments = bundle
+
         // viewPager
         val adapter = WholeScheduleAdapter(supportFragmentManager)
-        adapter.addFragment(ScheduleFindBookmarkFragment(),"즐겨찾기")
-        adapter.addFragment(ScheduleFindLatelyFragment(),"최근")
+        adapter.addFragment(scheduleFindBookmarkFragment,"즐겨찾기")
+        adapter.addFragment(scheduleFindLatelyFragment,"최근")
         binding.wholeScheduleViewPager.adapter = adapter
         binding.wholeScheduleTabLayout.setupWithViewPager(binding.wholeScheduleViewPager)
 

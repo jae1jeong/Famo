@@ -107,6 +107,9 @@ dependencies {
 
     implementation 'com.github.kizitonwose:CalendarView:1.0.3'
 
+    //페이징라이브러리
+    implementation 'com.github.lakue119:LakuePagingButton:1.0.0'
+
 //    implementation 'com.android.support:design:27.1.1'
 
 }

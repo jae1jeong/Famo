@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
-import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +16,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCate
 
 class ScheduleCategoryAdapter(
     var categoryList: ArrayList<ScheduleCategoryData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
+) :
     RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>(), CategoryInquiryView {
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
@@ -61,7 +61,8 @@ class ScheduleCategoryAdapter(
         categoryList.add(scheduleCategoryData)
     }
 
-    class ScheduleCategoryHolder(itemView: View,
+    inner class ScheduleCategoryHolder(
+        itemView: View,
         myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -82,16 +83,15 @@ class ScheduleCategoryAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
-                color,text -> {
+                color, text -> {
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
                     var size = 0
                     var colorList: List<String>? = null
-                    var categoryID = ArrayList<Int>()
+                    val colorStrList = ArrayList<String>()
+                    val colorID = ArrayList<Int>()
                     Log.d("로그", "칼라값 받아오기 테스트: $color")
                     colorList = wholeColor.split(":")
-
-                    val cnt = 0
 
                     for (i in wholeColor.indices) {
                         if (wholeColor.substring(i, i + 1) == ":") {
@@ -99,105 +99,65 @@ class ScheduleCategoryAdapter(
                         }
                     }
                     Log.d("로그", "사이즈 : $size")
-                    // 5 1 2
 
                     for (i in 0 until size) {
 
                         if (colorList[i] == "#FF8484") {
-                            categoryID!!.add(1)
+                            colorStrList!!.add("#FF8484")
+                            colorID.add(1)
                         }
                         if (colorList[i] == "#FCBC71") {
-                            categoryID!!.add(2)
+                            colorStrList!!.add("#FCBC71")
+                            colorID.add(2)
                         }
                         if (colorList[i] == "#FCDC71") {
-                            categoryID!!.add(3)
+                            colorStrList!!.add("#FCDC71")
+                            colorID.add(3)
                         }
                         if (colorList[i] == "#C6EF84") {
-                            categoryID!!.add(4)
+                            colorStrList!!.add("#C6EF84")
+                            colorID.add(4)
                         }
                         if (colorList[i] == "#7ED391") {
-                            categoryID!!.add(5)
+                            colorStrList!!.add("#7ED391")
+                            colorID.add(5)
                         }
                         if (colorList[i] == "#93EAD9") {
-                            categoryID!!.add(6)
+                            colorStrList!!.add("#93EAD9")
+                            colorID.add(6)
                         }
                         if (colorList[i] == "#7CC3FF") {
-                            categoryID!!.add(7)
+                            colorStrList!!.add("#7CC3FF")
+                            colorID.add(7)
                         }
                         if (colorList[i] == "#6D92F7") {
-                            categoryID!!.add(8)
+                            colorStrList!!.add("#6D92F7")
+                            colorID.add(8)
                         }
                         if (colorList[i] == "#AB93FA") {
-                            categoryID!!.add(9)
+                            colorStrList!!.add("#AB93FA")
+                            colorID.add(9)
                         }
                         if (colorList[i] == "#FFA2BE") {
-                            categoryID!!.add(10)
+                            colorStrList!!.add("#FFA2BE")
+                            colorID.add(10)
                         }
 
                     }
-                    Log.d("TAG", "categoryID: $categoryID")
+                    Log.d("TAG", "categoryID: $colorStrList")
 
-                    if (adapterPosition == 0) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[0])
-                        color.setColorFilter(Color.parseColor("#FF8484"))
-                    } else if (adapterPosition == 1) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[1])
-                        color.setColorFilter(Color.parseColor("#FCBC71"))
-                    } else if (adapterPosition == 2) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[2])
-                        color.setColorFilter(Color.parseColor("#FCDC71"))
-                    } else if (adapterPosition == 3) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[3])
-                        color.setColorFilter(Color.parseColor("#C6EF84"))
-                    } else if (adapterPosition == 4) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[4])
-                        color.setColorFilter(Color.parseColor("#7ED391"))
-                    } else if (adapterPosition == 5) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[5])
-                        color.setColorFilter(Color.parseColor("#93EAD9"))
-                    } else if (adapterPosition == 6) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[6])
-                        color.setColorFilter(Color.parseColor("#7CC3FF"))
-                    } else if (adapterPosition == 7) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[7])
-                        color.setColorFilter(Color.parseColor("#6D92F7"))
-                    } else if (adapterPosition == 8) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[8])
-                        color.setColorFilter(Color.parseColor("#AB93FA"))
-                    } else if (adapterPosition == 9) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[9])
-                        color.setColorFilter(Color.parseColor("#FFA2BE"))
-                    }
+//                    for (i in 0 until size) {
+//
+//                        if (adapterPosition == 0 || adapterPosition == 1) {
+//                            Log.d("TAG", "색 풀리는거")
+//                            color.setColorFilter(Color.parseColor("#00000000"))
+//                        }
+//                    }
+
+                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(colorID[adapterPosition])
 
                     Log.d("TAG", "onClick: 다시돌아옴?")
-
-//                    when(color[i]){
-//                            "#FF8484" -> {
-//                            }
-//                            "#FCBC71" -> {
-//                                this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(2)
-//                                break
-//                            }
-//                            "#FCDC71" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(3)
-//                            "#C6EF84" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(4)
-//                            "#7ED391" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(5)
-//                            "#93EAD9" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(6)
-//                            "#7CC3FF" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(7)
-//                            "#6D92F7" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(8)
-//                            "#AB93FA" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(9)
-//                            "#FFA2BE" -> this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(10)
-//                        }
-
-//                    val a = "aa"
-//                    var num = 0
-//                    if (a == "aa"){
-//                        num = 5
-//                    }
-//
-//
-//                    when(adapterPosition){
-//                        0 -> num
-//                    }
                 }
             }
         }

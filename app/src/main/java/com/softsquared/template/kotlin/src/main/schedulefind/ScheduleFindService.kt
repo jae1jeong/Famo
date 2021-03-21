@@ -3,6 +3,10 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.mypage.MyPageRetrofitInterface
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
+import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -10,6 +14,7 @@ import retrofit2.Response
 
 class ScheduleFindService(val view : ScheduleFindView) {
 
+    //전체일정
     fun tryGetWholeScheduleInquiry(offset : Int, limit : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(ScheduleFindRetrofitInterface::class.java)
 
@@ -28,15 +33,16 @@ class ScheduleFindService(val view : ScheduleFindView) {
         })
     }
 
-    fun tryPostBookmark(scheduleID : Int){
+    //즐겨찾기
+    fun tryPostBookmark(bookmarkRequest: BookmarkRequest){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(ScheduleFindRetrofitInterface::class.java)
 
-        homeRetrofitInterface.postBoorkmark(scheduleID).enqueue(object :
+        homeRetrofitInterface.postBookmark(bookmarkRequest).enqueue(object :
             Callback<BaseResponse> {
-            override fun onResponse(call: Call<BaseResponse>, responseUser: Response<BaseResponse>) {
-                Log.d("값 확인", "tryPostBookmark body:  ${responseUser.body()}")
-                Log.d("값 확인", "tryPostBookmark code:  ${responseUser.code()}")
-                view.onPostBookmarkSuccess(responseUser.body() as BaseResponse)
+            override fun onResponse(call: Call<BaseResponse>, responser: Response<BaseResponse>) {
+                Log.d("값 확인", "tryPostBookmark body:  ${responser.body()}")
+                Log.d("값 확인", "tryPostBookmark code:  ${responser.code()}")
+                view.onPostBookmarkSuccess(responser.body() as BaseResponse)
             }
 
             override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
@@ -46,5 +52,20 @@ class ScheduleFindService(val view : ScheduleFindView) {
         })
     }
 
+
+    //전체일정수
+    fun tryGetWholeScheduleCount(){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(ScheduleFindRetrofitInterface::class.java)
+        homeRetrofitInterface.getWholeScheduleCount().enqueue(object:Callback<WholeScheduleCountResponse>{
+            override fun onResponse(call: Call<WholeScheduleCountResponse>, response: Response<WholeScheduleCountResponse>) {
+                view.onGetWholeScheduleCountSuccess(response.body() as WholeScheduleCountResponse)
+            }
+
+            override fun onFailure(call: Call<WholeScheduleCountResponse>, t: Throwable) {
+                view.onGetWholeScheduleCountFailure(t.message ?: "남은 일정수 조회 관련 통신 오류")
+            }
+
+        })
+    }
 
 }

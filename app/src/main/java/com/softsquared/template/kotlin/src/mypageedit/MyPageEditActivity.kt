@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage.edit
+package com.softsquared.template.kotlin.src.mypageedit
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -8,15 +8,15 @@ import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.DatePicker.OnDateChangedListener
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
@@ -24,11 +24,17 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.config.BaseFragment
+import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.databinding.FragmentMypageEditBinding
+import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
+import com.softsquared.template.kotlin.databinding.ActivityMyPageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
+import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
+import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
+import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
+import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditService
+import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditView
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
@@ -39,12 +45,8 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-
-class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
-    BaseFragment<FragmentMypageEditBinding>(
-        FragmentMypageEditBinding::bind,
-        R.layout.fragment_mypage_edit
-    ), MyPageEditView {
+class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
+    (ActivityMyPageEditBinding::inflate), MyPageEditView {
 
     //카메라 변수
     private val GET_GALLERY_IMAGE = 200
@@ -61,30 +63,10 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
     // 날짜를 선택유무에 대한 변수
     var dateCnt = 0
 
-    //번들 변수
-//    var token : String? = null
-//    var name : String? = null
-//    var img : String?= null
-
-    @SuppressLint("SimpleDateFormat", "WeekBasedYear")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         MyPageEditService(this).tryGetMyPage()
-
-        super.onViewCreated(view, savedInstanceState)
-
-//        var extra = this.arguments
-//        if (extra != null) {
-//            extra = arguments
-//            token = extra?.getString("token")
-//            name = extra?.getString("name")
-//            img = extra?.getString("img").toString()
-//            Log.d("MyPageEditFragment 잘들어 왔나 token", "값: $token")
-//            Log.d("MyPageEditFragment 잘들어 왔나 name", "값: $name")
-//            Log.d("MyPageEditFragment 잘들어 왔나 img", "값: $img")
-////            Glide.with(this).load(img)
-////                .centerCrop().into(binding.myPageEditImg)
-//        }
 
         //이미지 클릭 시
         binding.myPageEditImg.setOnClickListener {
@@ -92,7 +74,7 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
             settingPermission()
 
             // 갤러리/카메라 알림창
-            val builder = AlertDialog.Builder(activity!!)
+            val builder = AlertDialog.Builder(this)
             builder.setTitle("사진 찍기")
                 .setMessage("사진을 새로 찍으시거나 사진\n라이브러리에서 선택하세요.")
                 .setPositiveButton("카메라",
@@ -176,21 +158,21 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
         }
 
         //날짜 변화에 대한
-        val listener = OnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
+        val listener = DatePicker.OnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
 
-            if (monthOfYear+1 < 10 && dayOfMonth < 10){
+            if (monthOfYear + 1 < 10 && dayOfMonth < 10) {
                 strDate = year.toString() + "-" + "0" + (monthOfYear + 1) + "-" + "0" + dayOfMonth
-            }else if (monthOfYear+1 >= 10 && dayOfMonth < 10){
+            } else if (monthOfYear + 1 >= 10 && dayOfMonth < 10) {
                 strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + "0" + dayOfMonth
-            }else if(monthOfYear+1 < 10 && dayOfMonth >= 10){
+            } else if (monthOfYear + 1 < 10 && dayOfMonth >= 10) {
                 strDate = year.toString() + "-" + "0" + (monthOfYear + 1) + "-" + dayOfMonth
-            }else{
+            } else {
                 strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
             }
 
-            Toast.makeText(activity, strDate, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show()
             dateCnt++
-            }
+        }
 
         val month: Int = binding.dataPicker.month
         val year = binding.dataPicker.year
@@ -233,16 +215,21 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
 
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
-
-//            myPageActivityView.moveLogoutDialog()
-
+            logoutDialog()
         }
 
         //X버튼 클릭 시 내정보로 이동
-        binding.myPageEditBtnX.setOnClickListener {
-//            myPageActivityView.moveMyPage()
+        binding.myPageEditBack.setOnClickListener {
+            finish()
         }
 
+
+    }
+
+    //로그아웃 알림창
+    fun logoutDialog() {
+        val dialog = LogoutDialog(this)
+        dialog.show()
     }
 
     //권한 설정
@@ -255,11 +242,11 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
 
             override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                 showCustomToast("권한 거부")
-                activity?.let { ActivityCompat.finishAffinity(it) } // 권한 거부시 앱 종료
+                ActivityCompat.finishAffinity(this@MyPageEditActivity) // 권한 거부시 앱 종료
             }
         }
 
-        TedPermission.with(context)
+        TedPermission.with(this)
             .setPermissionListener(permis)
             .setRationaleMessage("카메라 사진 권한 필요")
             .setDeniedMessage("카메라 권한 요청 거부")
@@ -275,7 +262,7 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
     @SuppressLint("QueryPermissionsNeeded")
     fun startCapture() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
+            takePictureIntent.resolveActivity(this!!.packageManager)?.also {
                 val photoFile: File? = try {
                     createImageFile()
                 } catch (ex: IOException) {
@@ -283,7 +270,7 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
                 }
                 photoFile?.also {
                     val photoURI: Uri = FileProvider.getUriForFile(
-                        activity!!,
+                        this!!,
                         "com.softsquared.template.kotlin.fileprovider",
                         it
                     )
@@ -301,7 +288,7 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
     fun createImageFile(): File {
         //사진이 생성되면 이름이 겹치지 않게 고유해야하므로 날짜로 만든다
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir: File? = this!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_",
             ".jpg",
@@ -327,11 +314,11 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
             val file = File(currentPhotoPath)
             if (Build.VERSION.SDK_INT < 28) {
                 val bitmap = MediaStore.Images.Media
-                    .getBitmap(activity!!.contentResolver, Uri.fromFile(file))
+                    .getBitmap(this.contentResolver, Uri.fromFile(file))
                 binding.myPageEditImg.setImageBitmap(bitmap)
             } else {
                 val decode = ImageDecoder.createSource(
-                    activity!!.contentResolver,
+                    this.contentResolver,
                     Uri.fromFile(file)
                 )
                 val bitmap = ImageDecoder.decodeBitmap(decode)
@@ -339,7 +326,6 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
             }
         }
     }
-
 
     override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
     }
@@ -395,12 +381,12 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
                 showCustomToast("${response.message.toString()}}")
             }
         }
+
     }
 
     override fun onGetMyPageFail(message: String) {
     }
 
-    @SuppressLint("SimpleDateFormat")
     override fun onPutMyPageUpdateSuccess(response: BaseResponse) {
 
         when(response.code){
@@ -427,7 +413,7 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
                 edit.putString(Constants.DDAY_SETTING, dDaySettingCnt.toString())
                 edit.apply()
 
-                val intent = Intent(activity, MyPageActivity::class.java)
+//                val intent = Intent(activity, MyPageActivity::class.java)
                 intent.putExtra("day", day)
                 intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
                 startActivity(intent)
@@ -449,7 +435,5 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
     }
 
     override fun onPutMyPageUpdateFail(message: String) {
-
     }
-
 }

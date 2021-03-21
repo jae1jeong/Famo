@@ -18,6 +18,8 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
     FragmentScheduleFindLatelyBinding::bind, R.layout.fragment_schedule_find_lately),
     WholeScheduleView{
 
+    var check = false
+
     companion object {
         fun newInstance(): ScheduleFindLatelyFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
             return ScheduleFindLatelyFragment()
@@ -27,9 +29,24 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        WholeScheduleService(this).tryGetLatelyScheduleInquiry(10,10)
+        var extra = this.arguments
+        if (extra != null) {
+            extra = arguments
+            check = extra!!.getBoolean("boolean")
+            Log.d("ScheduleFindBookmarkFragment", "check: $check")
+        }
+
+//        WholeScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
 
 //        createLatelyRecyclerview()
+    }
+
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+
+        //최근일정
+        WholeScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
+
     }
 
     private fun createLatelyRecyclerview() {

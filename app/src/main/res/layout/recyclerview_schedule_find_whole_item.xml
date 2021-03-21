@@ -2,22 +2,29 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="30dp"
+    android:id="@+id/cardview"
+    android:layout_width="154dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="15dp"
     android:layout_marginRight="10dp"
+    android:layout_marginBottom="30dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="5dp"
-    android:id="@+id/cardview">
+    app:cardElevation="5dp">
+
+    <ImageView
+        android:id="@+id/wholoe_schedule_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/schedule_border" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        >
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,14 +35,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2021.02.10"
-                android:textSize="16dp"/>
+                android:textSize="16dp" />
 
             <ImageView
                 android:id="@+id/recycler_whole_isboolean"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/schedule_find_inbookmark"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:background="@drawable/schedule_find_inbookmark" />
 
         </RelativeLayout>
 
@@ -43,19 +50,20 @@
             android:id="@+id/recycler_whole_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
             android:text="제목"
-            android:textSize="21dp"
             android:textColor="@color/black"
-            android:layout_marginTop="35dp"/>
+            android:textSize="21dp" />
 
         <TextView
             android:id="@+id/recycler_whole_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="내용"
-            android:textSize="18dp"
-            android:layout_marginTop="10dp"/>
+            android:textSize="18dp" />
 
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

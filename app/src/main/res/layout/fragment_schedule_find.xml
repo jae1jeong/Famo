@@ -62,11 +62,11 @@
                 android:background="@drawable/category_edit_plus" />
 
             <Button
-                android:id="@+id/recyclerview_category_text"
+                android:id="@+id/schedule_find_no_category"
                 android:layout_width="60dp"
                 android:layout_height="35dp"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/background_schedule_find_tag_btn"
+                android:background="@drawable/category_basic_squre"
                 android:text="미선택"
                 android:textSize="18dp" />
 
@@ -340,12 +340,13 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview_whole"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"></androidx.recyclerview.widget.RecyclerView>
-
-                <Button
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <com.lakue.pagingbutton.LakuePagingButton
+                    android:id="@+id/schedule_find_paging"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
 
             </LinearLayout>
 

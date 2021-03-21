@@ -1,12 +1,17 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.content.ContentValues
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
@@ -91,7 +96,8 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
         holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
-
+//        holder.border.setBackgroundColor(Color.parseColor(wholeList[position].color))
+        holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
 
     }
 
@@ -105,11 +111,13 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
         val date = itemView.findViewById<TextView>(R.id.recycler_whole_times)
         val name = itemView.findViewById<TextView>(R.id.recycler_whole_title)
         val memo = itemView.findViewById<TextView>(R.id.recycler_whole_content)
+        val border = itemView.findViewById<ImageView>(R.id.wholoe_schedule_border)
 //        private lateinit var mCategoryRecyclerView: ICategoryRecyclerView
 
         init {
             //리스너연결
             pick.setOnClickListener(this)
+//            shape.setOnClickListener(this)
 //            mCategoryRecyclerView = categoryRecyclerView
         }
 
@@ -131,6 +139,17 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
                     }
                     ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                 }
+
+//                shape -> {
+//                    val shape : LayerDrawable =  ContextCompat.getDrawable(get,
+//                        R.drawable.left_stroke) as LayerDrawable
+//
+//                    val gradientDrawable = shape
+//                        .findDrawableByLayerId(R.id.iv_shape) as GradientDrawable
+//
+//                    gradientDrawable.setColor(Color.BLUE) // change color
+//                }
+
             }
         }
 

@@ -9,79 +9,54 @@ import android.os.*
 import android.provider.MediaStore
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
 import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialogInterface
 import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
+import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity
+import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
 import java.util.*
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
-    MyPageActivityView{
-
-    private val GET_GALLERY_IMAGE = 200
-    val REQUEST_IMAGE_CAPTURE = 1
-    lateinit var currentPhotoPath: String
-
-    var myPageEditFragment = MyPageEditFragment(this)
-    var myPageFragment = MyPageFragment(this)
+    MyPageView{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val day = intent.getStringExtra("day")
         val goalTitle = intent.getStringExtra("goalTitle")
-//        val token = intent.getStringExtra("token")
-//        val name = intent.getStringExtra("name")
-//        val img = intent.getStringExtra("img")
 
-        myPageFragment = MyPageFragment(this)
-        myPageEditFragment = MyPageEditFragment(this)
-        val bundle = Bundle()
-//        bundle.putString("token", token)
-        bundle.putString("day", day)
-        bundle.putString("goalTitle", goalTitle)
-        myPageFragment.arguments = bundle
-        myPageEditFragment.arguments = bundle
+        MyPageService(this).tryGetRestScheduleCount("today")
+        MyPageService(this).tryGetDoneScheduleCount()
+        MyPageService(this).tryGetMyPage()
 
-        supportFragmentManager.beginTransaction().add(R.id.main_my_page_fragment, myPageFragment)
-            .commitAllowingStateLoss()
-    }
+        //이미지 앞으로 내보내기
+        binding.myPageSetting.bringToFront()
 
-    //MyPage 이동
-    override fun moveMyPage() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, myPageFragment)
-                .commit()
-    }
-    //편집으로 이동
-    override fun moveMyPageEdit() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_my_page_fragment, myPageEditFragment)
-                .commit()
-    }
+        //프로필 편집으로 이동
+        binding.myPageImg.setOnClickListener {
+            val intent = Intent(this,MyPageEditActivity::class.java)
+            startActivity(intent)
+        }
 
-    //일정찾기로 이동
-    override fun moveScheduleFind() {
-//        val intent = Intent(this,MainActivity::class.java)
-//        val main = MainActivity()
-//        main.moveScheduleFindFragment()
-        finish()
-//        startActivity(intent)
-//        MainActivity.replaceFragment(ScheduleFindFragment.newInstance());
+        //뒤로가기
+        binding.myPageBack.setOnClickListener {
+            goBack()
+        }
 
-    }
 
-    //로그아웃 알림창
-    override fun moveLogoutDialog() {
-        val dialog = LogoutDialog(this)
-        dialog.show()
     }
 
     // 뒤로가기
@@ -89,88 +64,107 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         finish()
     }
 
+    override fun onGetMyPageSuccess(response: MyPageResponse) {
 
-//    override fun settingPermission() {
-//        val permis = object : PermissionListener {
-//            //            어떠한 형식을 상속받는 익명 클래스의 객체를 생성하기 위해 다음과 같이 작성
-//            override fun onPermissionGranted() {
-//                showCustomToast("권한 허가")
-//            }
-//
-//            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-//                showCustomToast("권한 거부")
-//                ActivityCompat.finishAffinity(this@MyPageActivity) // 권한 거부시 앱 종료
-//            }
-//        }
-//
-//        TedPermission.with(this)
-//            .setPermissionListener(permis)
-//            .setRationaleMessage("카메라 사진 권한 필요")
-//            .setDeniedMessage("카메라 권한 요청 거부")
-//            .setPermissions(
-//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-//                android.Manifest.permission.CAMERA)
-//            .check()
-//    }
-//
-//    @SuppressLint("QueryPermissionsNeeded")
-//    override fun startCapture() {
-////        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-////            takePictureIntent.resolveActivity(packageManager)?.also {
-////                val photoFile: File? = try {
-////                    createImageFile()
-////                } catch (ex: IOException) {
-////                    null
-////                }
-////                photoFile?.also {
-////                    val photoURI: Uri = FileProvider.getUriForFile(
-////                        this,
-////                        "com.softsquared.template.kotlin.fileprovider",
-////                        it
-////                    )
-////                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-////                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-////                }
-////            }
-////        }
-//    }
-//
-//    //이미지 생성
-//    @SuppressLint("SimpleDateFormat")
-//    @Throws(IOException::class)
-//    override fun createImageFile() {
-////        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-////        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-////        return File.createTempFile(
-////            "JPEG_${timeStamp}_",
-////            ".jpg",
-////            storageDir
-////        ).apply {
-////            currentPhotoPath = absolutePath
-////        }
-//    }
-//
-//    //카메라/갤러리
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.data != null) {
-//            val selectedImageUri: Uri? = data.data
-////            binding.profileUpdateImg.setImageURI(selectedImageUri)
-//        }
-//
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-//            val file = File(currentPhotoPath)
-//            if (Build.VERSION.SDK_INT < 28) {
-//                val bitmap = MediaStore.Images.Media
-//                    .getBitmap(contentResolver, Uri.fromFile(file))
-////                binding.profileUpdateImg.setImageBitmap(bitmap)
-//            } else {
-//                val decode = ImageDecoder.createSource(this.contentResolver,
-//                    Uri.fromFile(file))
-//                val bitmap = ImageDecoder.decodeBitmap(decode)
-////                binding.profileUpdateImg.setImageBitmap(bitmap)
-//            }
-//        }
-//    }
+        when(response.code){
+            100 -> {
+                Log.d("TAG", "onGetMyPageSuccess: MyPage조회성공")
+                showCustomToast("MyPage조회성공")
+
+                val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
+                    Constants.KAKAO_THUMBNAILIMAGEURL,
+                    null
+                )
+                val day = ApplicationClass.sSharedPreferences.getString(Constants.DAY, null)
+                val name =
+                    ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
+                val goalTitle =
+                    ApplicationClass.sSharedPreferences.getString(Constants.GOALTITLE, null)
+                val dDayCheck =
+                    ApplicationClass.sSharedPreferences.getString(Constants.DDAY_SETTING, null)
+                val comments =
+                    ApplicationClass.sSharedPreferences.getString(Constants.COMMENTS, null)
+//                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
+//                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
+
+                if (comments != null){
+                    binding.test.text = comments
+                }
+
+                if (day != null ){
+                    binding.myPageTextDoneScheduleCount.text = day
+                }
+
+                //카카오로그인일경우
+                if (response.loginMethod == "K") {
+                    //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
+                    if (kakaoImg != null) {
+                        Glide.with(this).load(kakaoImg)
+                            .centerCrop().into(binding.myPageImg)
+                    } else {
+                        Glide.with(this).load(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageImg)
+                    }
+                    //페모로그인일경우 처음에는 기본이미지로
+                } else {
+                    Glide.with(this).load(R.drawable.my_page_img2)
+                        .centerCrop().into(binding.myPageImg)
+                }
+
+                //이름 적용
+                binding.myPageTvName.text = name
+
+                //디데이가 설정되어있지 않거나, 값이 없으면 기본 문구가 나오게 설정
+                if (dDayCheck != "1" || (goalTitle == null && day == null)) {
+                    binding.myPageTvComments.text = "오늘 하루도\n힘내세요!"
+                } else {
+                    binding.myPageTvComments.text = goalTitle + "까지 D-" + day + "일\n남았어요!"
+                }
+
+            }
+            else -> {
+                Log.d("TAG", "onGetMyPageSuccess: ${response.message.toString()}")
+                showCustomToast("${response.message.toString()}}")
+            }
+        }
+
+    }
+
+    override fun onGetMyPageFail(message: String) {
+    }
+
+    override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
+
+        showCustomToast(response.message.toString())
+        if(response.isSuccess && response.code == 100){
+            binding.myPageTextRestScheduleCount.text =  response.remainScheduleCount.toString()
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+
+    }
+
+    override fun onGetRestScheduleCountFailure(message: String) {
+    }
+
+    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
+        if (response.isSuccess && response.code == 100){
+            val totalDataJsonArray = response.totaldata.asJsonArray
+            totalDataJsonArray.forEach {
+                val totalData = it.asJsonObject.get("totalScheduleCount").asString
+                binding.myPageTextAllScheduleCount.text = totalData
+            }
+            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
+            DoneScheduleDataJsonArray.forEach {
+                val doneData = it.asJsonObject.get("doneScheduleCount").asString
+                binding.myPageTextDoneScheduleCount.text = doneData
+            }
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+    }
+
+    override fun onGetDoneScheduleCountFailure(message: String) {
+    }
+
 }

@@ -27,4 +27,6 @@ interface ScheduleFindRetrofitInterface {
     @GET("schedules/counts")
     fun getWholeScheduleCount():Call<WholeScheduleCountResponse>
 
+
+
 }

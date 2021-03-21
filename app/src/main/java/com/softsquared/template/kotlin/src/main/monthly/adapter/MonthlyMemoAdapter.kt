@@ -27,7 +27,7 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
     override fun onBindViewHolder(holder: MonthlyMemoViewHolder, position: Int) {
         holder.binding.monthlyMemo = memoList[position]
         val memo = memoList[position]
-        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.itemMonthlyCategoryColor)
+//        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.itemMonthlyCategoryColor)
         holder.binding.monthlyItemBtnMemoOther.setOnClickListener {
             val popUp = PopupMenu(context,holder.binding.monthlyItemBtnMemoOther)
             popUp.inflate(R.menu.monthly_other_btn)

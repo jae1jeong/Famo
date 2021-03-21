@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
@@ -13,6 +14,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBook
 class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBinding>(
     FragmentScheduleFindBookmarkBinding::bind, R.layout.fragment_schedule_find_bookmark) {
 
+    var check = false
+
     companion object {
         fun newInstance(): ScheduleFindBookmarkFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
             return ScheduleFindBookmarkFragment()
@@ -21,6 +24,15 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var extra = this.arguments
+        if (extra != null) {
+            extra = arguments
+            check = extra!!.getBoolean("boolean")
+            Log.d("ScheduleFindBookmarkFragment", "ㅁㅁㅁㅁㅁㅁㅁㅁ")
+            Log.d("ScheduleFindBookmarkFragment", "check: $check")
+        }
+
 
         createBookmarkRecyclerview()
     }

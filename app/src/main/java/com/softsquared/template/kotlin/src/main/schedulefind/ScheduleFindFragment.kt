@@ -94,6 +94,17 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
             .commit()
 
+        // 처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
+        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
+        binding.scheduleFindLatelyView.visibility = View.GONE
+
+
+        binding.scheduleFindNoCategory.setOnClickListener {
+
+            onItemMoveBtnClicked(0)
+        }
+
+
         // +버튼 클릭 시 카테고리 편집으로 이동
         binding.scheduleFindBtnCategory.setOnClickListener {
             val intent = Intent(activity, CategoryEditActivity::class.java)
@@ -106,9 +117,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 //            binding.scheduleFindLinear.visibility = View.GONE
         }
 
-//        처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
-        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
-        binding.scheduleFindLatelyView.visibility = View.GONE
 
         // 즐겨찾기 리사이클러뷰
 //        createBookmarkRecyclerview()
@@ -173,27 +181,22 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
             if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
 
                 binding.scheduleFindLinear.visibility = View.GONE
-                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
+//                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
 //                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
                 val intent = Intent(activity, WholeScheduleActivity::class.java)
+                Log.d("TAG", "즐겨찾기 선택 유무")
+                intent.putExtra("boolean", true)
                 startActivity(intent)
             }
 
             //최근이 선택되어 있는 경우
             if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
                 binding.scheduleFindLinear.visibility = View.GONE
-//                val boolean = true
-//                bundle.putBoolean("boolean", boolean)
-//                scheduleFindDetailFragment.arguments = bundle
-                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", false).apply()
-                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
+                val intent = Intent(activity, WholeScheduleActivity::class.java)
+                Log.d("TAG", "최근 선택 유무")
+                intent.putExtra("boolean", false)
+                startActivity(intent)
             }
-
-//            binding.scheduleFindIvSearch.setOnClickListener {
-//                Log.d("TAG", "일정찾기 이미지클릭 확인 ")
-//                binding.scheduleFindMainFragment.visibility = View.GONE
-//                binding.scheduleFindMainLinear.visibility = View.VISIBLE
-//            }
 
             binding.scheduleFindIvSearch.setOnTouchListener { _, event ->
                 when (event.action) {
@@ -229,8 +232,11 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
 
                 for (i in 1 until 4) {
 
-                    if (now_page == i){
-                        ScheduleFindService(this@ScheduleFindFragment).tryGetWholeScheduleInquiry(((i-1)*10) , 10)
+                    if (now_page == i) {
+                        ScheduleFindService(this@ScheduleFindFragment).tryGetWholeScheduleInquiry(
+                            ((i - 1) * 10),
+                            10
+                        )
                     }
                 }
 
@@ -256,42 +262,6 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
 
     }
-//    @SuppressLint("SimpleDateFormat")
-//    fun createWholeScheduleRecyclerview() {
-//        //전체일정 테스트데이터
-//        val onlyDate: LocalDate = LocalDate.now()
-//
-////                binding.myPageEditEtComments.setText(onlyDate.toString())
-//            val str = onlyDate.toString()
-//            val format = SimpleDateFormat("YYYY-MM-DD")
-//            val nowDate : Date? = format.parse(str)
-//
-//        val wholeList = arrayListOf(
-//            ScheduleWholeData(
-//                72, nowDate!!, "내용",
-//                "내용",R.drawable.schedule_find_bookmark,1,"1"
-//            ),
-//            ScheduleWholeData(
-//                1, nowDate!!, "내용",
-//                "내용",R.drawable.schedule_find_bookmark,1,"1"
-//            ),ScheduleWholeData(
-//                1, nowDate!!, "내용",
-//                "내용",R.drawable.schedule_find_bookmark,1,"1"
-//            ),ScheduleWholeData(
-//                1, nowDate!!, "내용",
-//                "내용",R.drawable.schedule_find_bookmark,1,"1"
-//            )
-//        )
-//
-//        //전체일정 리사이큘러뷰 연결
-//        binding.recyclerviewWhole.layoutManager =
-//            GridLayoutManager(
-//                context, 2, GridLayoutManager.VERTICAL,
-//                false
-//            )
-//        binding.recyclerviewWhole.setHasFixedSize(true)
-//        binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeList)
-//    }
 
     //즐겨찾기 일정 테스트
     private fun createBookmarkRecyclerview() {
@@ -368,8 +338,10 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
                             "#00000000"
+
                         )
                     )
+//                    #00000000
 
                     name += responseUser.data[i].categoryName + ":"
                     color += responseUser.data[i].colorInfo + ":"
@@ -456,8 +428,22 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                 if (response.data.size > 0) {
 
                     for (i in 0 until response.data.size) {
-                        //즐겨찾기 X
-                        if (response.data[i].schedulePick == -1) {
+                        //즐겨찾기 X and 카테고리 O인경우
+                        if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                            wholeScheduleList.add(
+                                ScheduleWholeData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].scheduleStatus,
+                                    "#CED5D9"
+                                )
+                            )
+//                            "#CED5D9"
+                            //즐겨찾기X and 카테고리O
+                        } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
                             wholeScheduleList.add(
                                 ScheduleWholeData(
                                     response.data[i].scheduleID,
@@ -469,8 +455,23 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                                     response.data[i].colorInfo
                                 )
                             )
-                            //즐겨찾기 O
-                        } else {
+                        }
+                        //즐겨찾기O and 카테고리 X
+                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                            wholeScheduleList.add(
+                                ScheduleWholeData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_bookmark,
+                                    response.data[i].scheduleStatus,
+                                    "#CED5D9"
+                                )
+                            )
+                        }
+                        //즐겨찾기 O and 카테고리 O
+                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
                             wholeScheduleList.add(
                                 ScheduleWholeData(
                                     response.data[i].scheduleID,
@@ -483,8 +484,9 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
                                 )
                             )
                         }
-
                     }
+
+
                 }
 
 
@@ -536,13 +538,13 @@ class ScheduleFindFragment : BaseFragment<FragmentScheduleFindBinding>
         when (response.code) {
             100 -> {
                 showCustomToast("전체일정수 조회 성공")
-                val cnt : Int = response.totaldata[0].totalScheduleCount
-                val cnt2 : Int = response.totaldonedata[0].totalScheduleCount
+                val cnt: Int = response.totaldata[0].totalScheduleCount
+                val cnt2: Int = response.totaldonedata[0].totalScheduleCount
                 Log.d("TAG", "onGetWholeScheduleCountSuccess - 전체일정수 - $cnt")
                 Log.d("TAG", "onGetWholeScheduleCountSuccess - 전체 해낸일정수 - $cnt2")
 
                 //페이징수 세팅
-                wholePagingCnt = (cnt/10) +1
+                wholePagingCnt = (cnt / 10) + 1
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1);
             }
             else -> {

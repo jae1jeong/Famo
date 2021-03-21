@@ -49,7 +49,7 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
 //            val intent = Intent(activity,MyPageActivity::class.java)
 //            startActivity(intent)
 
-            myPageActivityView.moveMyPageEdit()
+//            myPageActivityView.moveMyPageEdit()
         }
 
         //뒤로가기

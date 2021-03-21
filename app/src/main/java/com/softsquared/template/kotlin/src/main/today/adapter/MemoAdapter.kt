@@ -45,7 +45,7 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
                 checkListener(memo)
             }
         }
-        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
+//        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
 
     }
 

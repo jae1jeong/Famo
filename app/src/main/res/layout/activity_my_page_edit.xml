@@ -24,7 +24,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/whole_schedule_x_btn"
+                    android:id="@+id/my_page_edit_back"
                     android:layout_width="19dp"
                     android:layout_height="19dp"
                     android:layout_marginRight="17dp"

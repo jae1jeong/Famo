@@ -39,7 +39,8 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             categoryID = extra?.getInt("categoryID", 10).toString()
             Log.d("ScheduleFindCategoryFragment categoryID", "값: $categoryID")
         }
-        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 1, 1)
+
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 0, 10)
 //        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 //        createRecyclerview()
 
@@ -54,9 +55,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         // 카테고리
-        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 1, 1)
-
-
+        CategoryInquiryService(this).tryGetCategoryInquiry(Integer.parseInt(categoryID), 0, 10)
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -76,7 +75,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                 //테스트 데이터
                 var categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
                 for (i in 0 until categoryInquiryResponse.data.size) {
-                    categoryList = arrayListOf(
+                    categoryList.add(
                         CategoryScheduleInquiryData(
                             categoryInquiryResponse.data[i].scheduleID,
                             categoryInquiryResponse.data[i].scheduleDate,

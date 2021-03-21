@@ -234,13 +234,13 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
 
-            myPageActivityView.moveLogoutDialog()
+//            myPageActivityView.moveLogoutDialog()
 
         }
 
         //X버튼 클릭 시 내정보로 이동
         binding.myPageEditBtnX.setOnClickListener {
-            myPageActivityView.moveMyPage()
+//            myPageActivityView.moveMyPage()
         }
 
     }

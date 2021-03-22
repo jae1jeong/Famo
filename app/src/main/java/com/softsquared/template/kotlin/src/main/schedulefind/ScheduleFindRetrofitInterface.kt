@@ -2,9 +2,8 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.*
+import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,6 +26,19 @@ interface ScheduleFindRetrofitInterface {
     @GET("schedules/counts")
     fun getWholeScheduleCount():Call<WholeScheduleCountResponse>
 
+    //최근 일정 조회
+    @GET("schedules/recents")
+    fun getLatelyScheduleInquiry(@Query("offset") offset : Int,
+                                      @Query("limit") limit : Int ) :
+            Call<LatelyScheduleInquiryResponse>
+
+    // 남은 일정수 조회(전채/오늘)
+    @GET("schedules/left-over")
+    fun getRestScheduleCount(@Query("filter") date:String):Call<TodayRestScheduleResponse>
+
+    // 일정검색
+    @GET("schedules/search")
+    fun getScheduleSearch(@Body scheduleSearchRequest : ScheduleSearchRequest):Call<ScheduleSearchResponse>
 
 
 }

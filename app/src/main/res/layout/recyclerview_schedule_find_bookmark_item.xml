@@ -7,7 +7,7 @@
     android:layout_marginTop="20dp">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/recycler_part_color"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="20dp"
@@ -24,7 +24,7 @@
         android:text="TextView"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/recycler_part_color"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

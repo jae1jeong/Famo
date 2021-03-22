@@ -1,33 +1,19 @@
 package com.softsquared.template.kotlin.src.main.mypage
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.*
-import android.provider.MediaStore
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
-import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
-import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialogInterface
-import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity
 import com.softsquared.template.kotlin.util.Constants
-import java.io.File
-import java.io.IOException
-import java.util.*
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
     MyPageView{
@@ -38,8 +24,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         val day = intent.getStringExtra("day")
         val goalTitle = intent.getStringExtra("goalTitle")
 
-        MyPageService(this).tryGetRestScheduleCount("today")
-        MyPageService(this).tryGetDoneScheduleCount()
+//        MyPageService(this).tryGetRestScheduleCount("today")
+        MyPageService(this).tryGetTotalScheduleCount()
         MyPageService(this).tryGetMyPage()
 
         //이미지 앞으로 내보내기
@@ -137,7 +123,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         showCustomToast(response.message.toString())
         if(response.isSuccess && response.code == 100){
+            //남은일정
             binding.myPageTextRestScheduleCount.text =  response.remainScheduleCount.toString()
+            //전체일정
+            binding.myPageTextAllScheduleCount.text = response.remainScheduleCount.toString()
         }else{
             Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
@@ -147,24 +136,22 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     override fun onGetRestScheduleCountFailure(message: String) {
     }
 
-    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
+
+
+    override fun onGetTotalScheduleCountSuccess(response: TotalScheduleCountResponse) {
         if (response.isSuccess && response.code == 100){
-            val totalDataJsonArray = response.totaldata.asJsonArray
-            totalDataJsonArray.forEach {
-                val totalData = it.asJsonObject.get("totalScheduleCount").asString
-                binding.myPageTextAllScheduleCount.text = totalData
-            }
-            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
-            DoneScheduleDataJsonArray.forEach {
-                val doneData = it.asJsonObject.get("doneScheduleCount").asString
-                binding.myPageTextDoneScheduleCount.text = doneData
-            }
+            Log.d("MyPageFragment", "전체 일정/해낸수 조회성공")
+                binding.myPageTextAllScheduleCount.text = response.totaldata[0].totalScheduleCount.toString()
+                binding.myPageTextDoneScheduleCount.text = response.totaldonedata[0].doneScheduleCount.toString()
+
+                binding.myPageTextRestScheduleCount.text = (response.totaldata[0].totalScheduleCount -
+                        response.totaldonedata[0].doneScheduleCount).toString()
         }else{
-            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+            Log.d("MyPageFragment", "onGetTotalScheduleCountSuccess: ${response.message}")
         }
     }
 
-    override fun onGetDoneScheduleCountFailure(message: String) {
+    override fun onGetTotalScheduleCountFailure(message: String) {
     }
 
 }

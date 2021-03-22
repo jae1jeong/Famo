@@ -2,4 +2,10 @@ package com.softsquared.template.kotlin.src.main.schedulefind.models
 
 import java.util.*
 
-data class ScheduleLatelyData(val title : String, val times : String)
+data class ScheduleLatelyData(val scheduleID : Int,
+                              val scheduleDate : Date,
+                              val scheduleName : String,
+                              val scheduleMemo : String,
+                              val schedulePick : Int,
+                              val categoryID : Int,
+                              val colorInfo : String)

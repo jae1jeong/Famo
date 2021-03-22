@@ -24,6 +24,9 @@ class ScheduleCategoryAdapter(
 
     var mPreviousIndex = -1
 
+    var boolean = false
+    var cnt = 1
+
     init {
         Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
         this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
@@ -37,25 +40,46 @@ class ScheduleCategoryAdapter(
         }
         return ScheduleCategoryHolder(view, iScheduleCategoryRecyclerView!!).apply {
             itemView.setOnClickListener {
+
+                val curPos: Int = adapterPosition
+                val profile: ScheduleCategoryData = categoryList[curPos]
+                profile.color
+
+
             }
         }
     }
 
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
-//        holder.text.text = categoryList[position].text
         holder.text.text = categoryList[position].text
         holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
-//        holder.color.setImageResource(categoryList[position])
-//        holder.color.setImageResource(categoryList[position].color)
-//        holder.color.setColorFilter(Color.parseColor(response.data[0].colorInfo))
-//        img.setColorFilter(Color.parseColor("#FF0000"))
+
+//        holder.text.setOnClickListener {
+//            Log.d("TAG", "onBindViewHolder: 클릭확인")
+//            var test = 0
+//
+//            test = position
+//            notifyDataSetChanged()
+//
+//            if (test == position){
+//                holder.color.setColorFilter(Color.parseColor("#0054FF"))
+//                Log.d("TAG", "파란색")
+//                boolean = true
+//                cnt++
+//            }
+//
+//            if (boolean) {
+//                if(cnt % 2 != 0){
+//
+//                    holder.color.setColorFilter(Color.parseColor("#FF0000"))
+//                    Log.d("TAG", "빨간색")
+//                    boolean = false
+//                }
+//            }
+
     }
 
     override fun getItemCount(): Int = categoryList.size
-
-    fun moveFragment() {
-
-    }
 
     fun addItem(scheduleCategoryData: ScheduleCategoryData) {
         categoryList.add(scheduleCategoryData)
@@ -82,8 +106,9 @@ class ScheduleCategoryAdapter(
         }
 
         override fun onClick(view: View?) {
+
             when (view) {
-                color, text -> {
+                text -> {
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
                     var size = 0
@@ -144,18 +169,21 @@ class ScheduleCategoryAdapter(
                         }
 
                     }
+
                     Log.d("TAG", "categoryID: $colorStrList")
 
 //                    for (i in 0 until size) {
-//
-//                        if (adapterPosition == 0 || adapterPosition == 1) {
-//                            Log.d("TAG", "색 풀리는거")
-//                            color.setColorFilter(Color.parseColor("#00000000"))
-//                        }
+//                        Log.d("TAG", "색 원래대로 되돌리기")
+//                        color.setColorFilter(Color.parseColor("#FF0000"))
 //                    }
 
                     color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(colorID[adapterPosition])
+//                    color.setColorFilter(Color.parseColor("#00000000"))
+
+                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
+                        colorID[adapterPosition],
+                        categoryList[adapterPosition].id
+                    )
 
                     Log.d("TAG", "onClick: 다시돌아옴?")
                 }
@@ -165,6 +193,7 @@ class ScheduleCategoryAdapter(
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+
     }
 
     override fun onGetUserCategoryInquiryFail(message: String) {

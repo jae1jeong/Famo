@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 
 
-class LogoutDialog(context:Context) : Dialog(context) {
+class LogoutDialog(context:Context) : Dialog(context),MyPageEditView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,24 @@ class LogoutDialog(context:Context) : Dialog(context) {
             Log.d("TAG", "onPositiveClicked: 취소버튼 눌림")
         }
 
+    }
+
+    override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
+    }
+
+    override fun onGetMyPageCommentsFail(message: String) {
+    }
+
+    override fun onGetMyPageSuccess(response: MyPageResponse) {
+    }
+
+    override fun onGetMyPageFail(message: String) {
+    }
+
+    override fun onPutMyPageUpdateSuccess(response: BaseResponse) {
+    }
+
+    override fun onPutMyPageUpdateFail(message: String) {
     }
 
 }

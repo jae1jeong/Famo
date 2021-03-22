@@ -102,8 +102,8 @@
     <!--Find Schedule -->
     <string name="schedule_find_et_search_hint">검색어를 입력해주세요.</string>
     <string name="schedule_find_tag1">학교</string>
-    <string name="schedule_find_tv_today">오늘의 일정이</string>
-    <string name="schedule_find_tv_today2">개 남았어요!</string>
+    <string name="schedule_find_tv_today">오늘의 </string>
+    <string name="schedule_find_tv_today2"> 남았어요!</string>
     <string name="schedule_find_tv_bookmark">즐겨찾기</string>
     <string name="schedule_find_tv_lately">최근</string>
     <string name="schedule_find_tv_detail_see">자세히 보러가기</string>

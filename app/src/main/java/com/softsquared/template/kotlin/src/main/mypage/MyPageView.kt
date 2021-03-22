@@ -3,6 +3,7 @@ package com.softsquared.template.kotlin.src.main.mypage
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
 
 interface MyPageView {
 
@@ -18,7 +19,7 @@ interface MyPageView {
     fun onGetRestScheduleCountSuccess(response:RestScheduleCountResponse)
     fun onGetRestScheduleCountFailure(message:String)
 
-    // 해낸 일정수 조회
-    fun onGetDoneScheduleCountSuccess(response:DoneScheduleCountResponse)
-    fun onGetDoneScheduleCountFailure(message: String)
+    // 전체 일정/해낸 일정수 조회
+    fun onGetTotalScheduleCountSuccess(response:TotalScheduleCountResponse)
+    fun onGetTotalScheduleCountFailure(message: String)
 }

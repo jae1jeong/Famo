@@ -2,8 +2,12 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleSearchResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.TodayRestScheduleResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
+import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 
 interface ScheduleFindView {
 
@@ -18,5 +22,17 @@ interface ScheduleFindView {
     // 전체 일정수 조회
     fun onGetWholeScheduleCountSuccess(response: WholeScheduleCountResponse)
     fun onGetWholeScheduleCountFailure(message:String)
+
+    //최근
+    fun onGetLatelyScheduleFindInquirySuccess(response: LatelyScheduleInquiryResponse)
+    fun onGetLatelySchedulefindInquiryFail(message: String)
+
+    //최근
+    fun onGetTodayRestScheduleSuccess(response: TodayRestScheduleResponse)
+    fun onGetTodayRestScheduleFail(message: String)
+
+    //일정검색
+    fun onGetScheduleSearchSuccess(response: ScheduleSearchResponse)
+    fun onGetScheduleSearchFail(message: String)
 
 }

@@ -39,17 +39,17 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
 
     private fun createBookmarkRecyclerview() {
         //테스트 데이터
-        val bookmarkList = arrayListOf(
-            ScheduleBookmarkData("제목", "시간"),
-            ScheduleBookmarkData("제목", "시간")
-        )
-
-        // 즐겨찾기/최근 일정 리사이클러뷰 연결
-        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL, false
-        )
-        binding.recyclerViewBookmark.setHasFixedSize(true)
-        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
+//        val bookmarkList = arrayListOf(
+//            ScheduleBookmarkData("제목", "시간"),
+//            ScheduleBookmarkData("제목", "시간")
+//        )
+//
+//        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+//        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
+//            context,
+//            LinearLayoutManager.VERTICAL, false
+//        )
+//        binding.recyclerViewBookmark.setHasFixedSize(true)
+//        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
     }
 }

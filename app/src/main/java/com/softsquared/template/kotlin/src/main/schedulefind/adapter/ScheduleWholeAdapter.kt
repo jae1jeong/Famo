@@ -19,10 +19,8 @@ import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
-import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.*
+import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 
 class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
 ) :
@@ -91,12 +89,10 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
 //        }
 //        holder.cardView.setBackgroundResource(R.drawable.left_stroke);
 
-        holder.date.text = wholeList[position].date.toString()
-        //임시
+        holder.date.text = wholeList[position].date
         holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
-//        holder.border.setBackgroundColor(Color.parseColor(wholeList[position].color))
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
 
     }
@@ -130,12 +126,12 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
             when(v){
                 pick -> {
                     //즐겨찾기 안되있으면 별표시
-                    if (wholeList[adapterPosition].pick == 2131165416) {
+                    if (wholeList[adapterPosition].pick == 2131165412) {
                         pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        wholeList[adapterPosition].pick = 2131165412
+                        wholeList[adapterPosition].pick = 2131165416
                     } else {
                         pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        wholeList[adapterPosition].pick = 2131165416
+                        wholeList[adapterPosition].pick = 2131165412
                     }
                     ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                 }
@@ -182,6 +178,24 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
     }
 
     override fun onGetWholeScheduleCountFailure(message: String) {
+    }
+
+    override fun onGetLatelyScheduleFindInquirySuccess(response: LatelyScheduleInquiryResponse) {
+    }
+
+    override fun onGetLatelySchedulefindInquiryFail(message: String) {
+    }
+
+    override fun onGetTodayRestScheduleSuccess(response: TodayRestScheduleResponse) {
+    }
+
+    override fun onGetTodayRestScheduleFail(message: String) {
+    }
+
+    override fun onGetScheduleSearchSuccess(response: ScheduleSearchResponse) {
+    }
+
+    override fun onGetScheduleSearchFail(message: String) {
     }
 
 //    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

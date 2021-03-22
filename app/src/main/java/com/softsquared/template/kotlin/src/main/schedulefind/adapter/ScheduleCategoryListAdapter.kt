@@ -126,28 +126,28 @@ class ScheduleCategoryListAdapter(
                     }
                     Log.d("TAG", "categoryID: $categoryID")
 
-                    if (adapterPosition == 0) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[0])
-
-                    } else if (adapterPosition == 1) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[1])
-                    } else if (adapterPosition == 2) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[2])
-                    } else if (adapterPosition == 3) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[3])
-                    } else if (adapterPosition == 4) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[4])
-                    } else if (adapterPosition == 5) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[5])
-                    } else if (adapterPosition == 6) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[6])
-                    } else if (adapterPosition == 7) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[7])
-                    } else if (adapterPosition == 8) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[8])
-                    } else if (adapterPosition == 9) {
-                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[9])
-                    }
+//                    if (adapterPosition == 0) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[0])
+//
+//                    } else if (adapterPosition == 1) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[1])
+//                    } else if (adapterPosition == 2) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[2])
+//                    } else if (adapterPosition == 3) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[3])
+//                    } else if (adapterPosition == 4) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[4])
+//                    } else if (adapterPosition == 5) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[5])
+//                    } else if (adapterPosition == 6) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[6])
+//                    } else if (adapterPosition == 7) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[7])
+//                    } else if (adapterPosition == 8) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[8])
+//                    } else if (adapterPosition == 9) {
+//                        this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(categoryID[9])
+//                    }
 
                     Log.d("TAG", "onClick: 다시돌아옴?")
                 }

@@ -12,6 +12,7 @@ import retrofit2.Response
 
 class MyPageEditService(val editView : MyPageEditView) {
 
+    //상단멘트
     fun tryGetMyPageComments(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
         homeRetrofitInterface.getMyPageComments().enqueue(object :
@@ -29,6 +30,7 @@ class MyPageEditService(val editView : MyPageEditView) {
         })
     }
 
+    //내정보 조회
     fun tryGetMyPage(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
         homeRetrofitInterface.getMyPage().enqueue(object :
@@ -46,6 +48,7 @@ class MyPageEditService(val editView : MyPageEditView) {
         })
     }
 
+    //수정
     fun tryPutMyPageUpdate(myPageUpdateRequest: PutMyPageUpdateRequest){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
         homeRetrofitInterface.putMyPageUpdate(myPageUpdateRequest).enqueue(object :
@@ -62,5 +65,6 @@ class MyPageEditService(val editView : MyPageEditView) {
             }
         })
     }
+
 
 }

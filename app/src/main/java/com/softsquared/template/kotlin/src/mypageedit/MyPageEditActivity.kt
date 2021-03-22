@@ -26,18 +26,14 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
 import com.softsquared.template.kotlin.databinding.ActivityMyPageEditBinding
-import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageActivityView
-import com.softsquared.template.kotlin.src.main.mypage.MyPageFragment
-import com.softsquared.template.kotlin.src.main.mypage.edit.LogoutDialog
-import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditFragment
-import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditService
-import com.softsquared.template.kotlin.src.main.mypage.edit.MyPageEditView
+import com.softsquared.template.kotlin.src.main.mypage.edit.*
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
+import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
+import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrwalView
+import com.softsquared.template.kotlin.src.mypageedit.models.AccountWithdrawalResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
@@ -218,6 +214,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             logoutDialog()
         }
 
+        binding.myPageEditAccount.setOnClickListener {
+            accountWithdrawal()
+        }
+
         //X버튼 클릭 시 내정보로 이동
         binding.myPageEditBack.setOnClickListener {
             finish()
@@ -229,6 +229,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     //로그아웃 알림창
     fun logoutDialog() {
         val dialog = LogoutDialog(this)
+        dialog.show()
+    }
+
+    //회원탈퇴 알림창
+    fun accountWithdrawal() {
+        val dialog = AccountWithdrawalDialog(this)
         dialog.show()
     }
 
@@ -436,4 +442,5 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onPutMyPageUpdateFail(message: String) {
     }
+
 }

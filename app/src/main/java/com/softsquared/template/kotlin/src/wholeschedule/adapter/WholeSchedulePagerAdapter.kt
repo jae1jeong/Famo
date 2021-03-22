@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class WholeScheduleAdapter(fm:FragmentManager):FragmentPagerAdapter(fm) {
+class WholeSchedulePagerAdapter(fm:FragmentManager):FragmentPagerAdapter(fm) {
     val fragmentList:MutableList<Fragment> = arrayListOf()
     val titleList:MutableList<String> = arrayListOf()
 

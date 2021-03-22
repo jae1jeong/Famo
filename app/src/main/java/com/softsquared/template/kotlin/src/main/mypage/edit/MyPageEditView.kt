@@ -18,4 +18,6 @@ interface MyPageEditView {
     fun onPutMyPageUpdateSuccess(response: BaseResponse)
     fun onPutMyPageUpdateFail(message: String)
 
+
+
 }

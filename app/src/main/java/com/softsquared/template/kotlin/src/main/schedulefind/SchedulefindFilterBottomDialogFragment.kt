@@ -1,15 +1,38 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.provider.SyncStateContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.CategoryFilterAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterResponse
+import com.softsquared.template.kotlin.util.Constants
+import kotlinx.android.synthetic.main.fragment_schedule_find.*
+import kotlinx.android.synthetic.main.fragment_schedule_find_category.*
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
 
 
-class SchedulefindFilterBottomDialogFragment : BottomSheetDialogFragment() {
+class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSheetDialogFragment(),
+    CategoryFilterView {
+
+    private var iCategoryFilterInterface: CategoryFilterInterface? = null
+
+//    init {
+//        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
+//        this.iCategoryFilterInterface = categoryFilterInterface
+//    }
 
     //클릭에 따른 체크표시 활성화를 위한 변수
     var remainCnt = 1
@@ -17,69 +40,184 @@ class SchedulefindFilterBottomDialogFragment : BottomSheetDialogFragment() {
     var recentsCnt = 1
     var bookmarkCnt = 1
 
+    private var id: Int? = null
+
+    // 전체 일정 어댑터
+    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
+
+
+    init {
+        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
+        this.id = scheduleCategoryID
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog, container, false)
+    ): View = inflater.inflate(
+        R.layout.fragment_schedule_find_filter_bottom_dialog,
+        container,
+        false
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         //남은 일정 클릭 시
         filter_btn_remain.setOnClickListener {
 
-            if (remainCnt % 2 != 0){
+            if (remainCnt % 2 != 0) {
                 filter_btn_remain_squre.visibility = View.VISIBLE
                 filter_btn_remain_check.visibility = View.VISIBLE
-            }else{
+            } else {
                 filter_btn_remain_squre.visibility = View.GONE
                 filter_btn_remain_check.visibility = View.GONE
             }
             remainCnt++
 
+            Log.d("TAG", "SchedulefindFilterBottomDialogFragment: $id")
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.putString(Constants.NUM, "1")
+
+            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "left", 0, 100)
         }
 
         //완료 일정 클릭 시
         filter_btn_completion.setOnClickListener {
 
-            if (completionCnt % 2 != 0){
+            if (completionCnt % 2 != 0) {
                 filter_btn_completion_squre.visibility = View.VISIBLE
                 filter_btn_completion_check.visibility = View.VISIBLE
-            }else{
+            } else {
                 filter_btn_completion_squre.visibility = View.GONE
                 filter_btn_completion_check.visibility = View.GONE
             }
             completionCnt++
+
+
+            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "done", 0, 100)
 
         }
 
         //최신 클릭 시
         filter_btn_recents.setOnClickListener {
 
-            if (recentsCnt % 2 != 0){
+            if (recentsCnt % 2 != 0) {
                 filter_btn_recents_squre.visibility = View.VISIBLE
                 filter_btn_recents_check.visibility = View.VISIBLE
-            }else{
+            } else {
                 filter_btn_recents_squre.visibility = View.GONE
                 filter_btn_recents_check.visibility = View.GONE
             }
             recentsCnt++
+
+            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "recent", 0, 100)
+
 
         }
 
         //즐겨찾기 클릭 시
         filter_btn_bookmark.setOnClickListener {
 
-            if (bookmarkCnt % 2 != 0){
+            if (bookmarkCnt % 2 != 0) {
                 filter_btn_bookmark_squre.visibility = View.VISIBLE
                 filter_btn_bookmark_check.visibility = View.VISIBLE
-            }else{
+            } else {
                 filter_btn_bookmark_squre.visibility = View.GONE
                 filter_btn_bookmark_check.visibility = View.GONE
             }
             bookmarkCnt++
+
+            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "pick", 0, 100)
         }
 
+    }
+
+    @SuppressLint("InflateParams", "CommitPrefEdits")
+    override fun onGetCategoryFilterInquirySuccess(response: CategoryFilterResponse) {
+
+        when (response.code) {
+            100 -> {
+                Log.d("TAG", "onGetCategoryFilterInquirySuccess: 필터조회성공")
+
+                val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+
+                if (response.data.size > 0) {
+
+                    for (i in 0 until response.data.size) {
+
+                        //즐겨찾기가 아닌경우
+                        if (response.data[i].schedulePick == -1) {
+                            categoryFilterList.add(
+                                CategoryFilterData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].colorInfo
+                                )
+                            )
+                            // 즐겨찾기 인 경우
+                        } else {
+                            categoryFilterList.add(
+                                CategoryFilterData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_bookmark,
+                                    response.data[i].colorInfo
+                                )
+                            )
+                        }
+
+                    }
+                }
+
+                val layoutInflater: LayoutInflater = activity!!.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE
+                ) as LayoutInflater
+
+                val view: View =
+                    layoutInflater.inflate(R.layout.fragment_schedule_find_category, null);
+
+                val abc: RecyclerView = view.findViewById(R.id.recyclerview_schedule_find_category)
+
+                val test: TextView = view.findViewById(R.id.aaa)
+
+                test.textSize = 50F
+
+                abc.layoutManager =
+                    GridLayoutManager(
+                        context, 2, GridLayoutManager.VERTICAL,
+                        false
+                    )
+                abc.setHasFixedSize(true)
+                abc.adapter = CategoryFilterAdapter(categoryFilterList)
+
+
+
+                //                val edit = ApplicationClass.sSharedPreferences.edit()
+//                edit.putString(Constants.NUM, "num")
+//                edit.apply()
+
+
+
+
+            }
+            else -> {
+                Log.d(
+                    "TAG",
+                    "onGetCategoryFilterInquirySuccess: 남은일정조회성공 ${response.message.toString()}"
+                )
+            }
+        }
+
+    }
+
+    override fun onGetCategoryFilterInquiryFail(message: String) {
     }
 
 

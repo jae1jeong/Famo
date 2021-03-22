@@ -21,4 +21,6 @@ object Constants {
     val KAKAO_USER_ID = "KAKAO_USER_ID"
     val KAKAO_THUMBNAILIMAGEURL = "KAKAO_THUMBNAILIMAGEURL"
     val KAKAO_JWT = "JWT"
+
+    val NUM = "NUM"
 }

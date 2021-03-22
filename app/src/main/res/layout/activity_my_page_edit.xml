@@ -330,7 +330,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <EditText
                     android:layout_width="match_parent"
@@ -361,7 +361,8 @@
                     android:background="@color/view_color" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/my_page_edit_account"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="@string/my_page_edit_tv_account_delete"

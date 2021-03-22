@@ -5,6 +5,7 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,15 +62,16 @@ class MyPageService(val pageView : MyPageView) {
         })
     }
 
-    fun tryGetDoneScheduleCount(){
+    //전체 일정/해낸 수
+    fun tryGetTotalScheduleCount(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
-        homeRetrofitInterface.getDoneScheduleCount().enqueue(object:Callback<DoneScheduleCountResponse>{
-            override fun onResponse(call: Call<DoneScheduleCountResponse>, response: Response<DoneScheduleCountResponse>) {
-                pageView.onGetDoneScheduleCountSuccess(response.body() as DoneScheduleCountResponse)
+        homeRetrofitInterface.getTotalScheduleCount().enqueue(object:Callback<TotalScheduleCountResponse>{
+            override fun onResponse(call: Call<TotalScheduleCountResponse>, response: Response<TotalScheduleCountResponse>) {
+                pageView.onGetTotalScheduleCountSuccess(response.body() as TotalScheduleCountResponse)
             }
 
-            override fun onFailure(call: Call<DoneScheduleCountResponse>, t: Throwable) {
-                pageView.onGetDoneScheduleCountFailure(t.message ?: "해낸 일정수 조회 관련 통신 오류")
+            override fun onFailure(call: Call<TotalScheduleCountResponse>, t: Throwable) {
+                pageView.onGetTotalScheduleCountFailure(t.message ?: "해낸 일정수 조회 관련 통신 오류")
             }
 
         })

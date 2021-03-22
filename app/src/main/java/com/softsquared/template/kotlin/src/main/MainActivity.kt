@@ -3,6 +3,7 @@ package com.softsquared.template.kotlin.src.main
 import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -24,6 +25,7 @@ import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryFilterInterface
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
@@ -37,7 +39,7 @@ import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsRespon
 import com.softsquared.template.kotlin.util.Constants
 
 
-class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView,CategoryInquiryView {
+class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView,CategoryInquiryView,CategoryFilterInterface {
     private var clicked = false // FAB 버튼 변수
     private lateinit var bottomSheetBehavior:BottomSheetBehavior<FrameLayout>
     // FAB 버튼 애니메이션
@@ -221,8 +223,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     //일정찾기 - 필터 바텀다이얼로그로 이동
-    fun onMoveFilterFragment() {
-        val scheduleFindFilterBottomDialogBinding = SchedulefindFilterBottomDialogFragment()
+    fun onMoveFilterFragment(scheduleCategoryID : Int) {
+        val scheduleFindFilterBottomDialogBinding = SchedulefindFilterBottomDialogFragment(scheduleCategoryID)
         scheduleFindFilterBottomDialogBinding.show(
             supportFragmentManager, scheduleFindFilterBottomDialogBinding.tag
         )
@@ -427,6 +429,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onGetCategoryInquiryFail(message: String) {
+    }
+
+    override fun onFliter() {
+        Log.d("TAG", "onFliter: 메인")
     }
 
 }

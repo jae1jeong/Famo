@@ -6,8 +6,9 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
@@ -18,24 +19,18 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageService
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.schedulesearch.ScheduleSearchActivity
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleView
+import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleView
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
+import com.softsquared.template.kotlin.util.Constants
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find),
     IScheduleCategoryRecyclerView, CategoryInquiryView, ScheduleFindView,
-    ScheduleBookmarkView,WholeScheduleView {
+    ScheduleBookmarkView {
 
     //카테고리 편집으로 보내줄 변수
     var name = ""
@@ -59,6 +54,15 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // viewPager
+//        val adapter = ScheduleFindPagerAdapter(childFragmentManager)
+//        adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
+//        adapter.addFragment(ScheduleFindLatelyFragment(), "최근")
+//        Log.d("TAG", "onViewCreated: 뷰페이저")
+//        binding.scheduleFindViewPager.adapter = adapter
+//        binding.scheduleFindTabLayout.setupWithViewPager(binding.scheduleFindViewPager)
+//        binding.scheduleFindViewPager.currentItem = 0
+
 //        ScheduleFindService(this).tryGetWholeScheduleCount()
 
         // 카테고리
@@ -69,6 +73,9 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //        createWholeScheduleRecyclerview()
 //        ScheduleFindService(this).tryGetWholeScheduleInquiry(0,10)
 
+        val searchWord = ""
+
+        //앞으로 내보내기
         binding.scheduleFindTvTotaySchedule.bringToFront()
 
         val token =
@@ -128,17 +135,55 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //        (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
 
 
-        //검색창 클릭 시
-        binding.scheduleFindBtn.setOnClickListener {
-            val word = "1"
+        binding.scheduleFindBtn.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
 
-            val scheduleSearchRequest = ScheduleSearchRequest(
-                searchWord = word
-            )
+            val searchWord = binding.scheduleFindBtn.text.toString()
+
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.putString(Constants.SEARCHWROD,searchWord)
+            edit.apply()
+
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    showCustomToast("aaaaaa")
+                    Log.d("TAG", "ScheduleFindFragment:검색조회 ")
+
+                    binding.scheduleFindMainLinear.visibility = View.GONE
+                    binding.scheduleFindMainFragment.visibility = View.VISIBLE
+                    val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
+                    val bundle = Bundle()
+                    bundle.putString("searchWord", searchWord)
+                    scheduleFindCategoryFragment.arguments = bundle
+                    childFragmentManager.beginTransaction()
+                        .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
+                        .commit()
+
+//                    ScheduleFindService(this).tryGetScheduleSearch(scheduleSearchRequest)
+                }
+            }
+
+            false
+        })
+        //검색창 클릭 시
+        binding.scheduleFindIvSearch.setOnClickListener {
+//            val searchWord = binding.scheduleFindBtn.text.toString()
+//
+//            val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
+//            val bundle = Bundle()
+//            bundle.putString("searchWord", searchWord)
+//            scheduleFindCategoryFragment.arguments = bundle
+//            childFragmentManager.beginTransaction()
+//                .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
+//                .commit()
+//            val word = 1
+//
+//            val scheduleSearchRequest = ScheduleSearchRequest(
+//                searchWord = word.toString()
+//            )
             //검색
-            ScheduleFindService(this).tryGetScheduleSearch(scheduleSearchRequest)
-//            val intent = Intent(activity, ScheduleSearchActivity::class.java)
-//            startActivity(intent)
+//            ScheduleFindService(this).tryGetScheduleSearch(scheduleSearchRequest)
+            val intent = Intent(activity, ScheduleSearchActivity(newInstance())::class.java)
+            startActivity(intent)
         }
 
 
@@ -154,10 +199,10 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             binding.scheduleFindLatelyView.setBackgroundColor(Color.parseColor("#E1DDDD"))
             binding.scheduleFindLatelyView.layoutParams.height = 2
 
-//            childFragmentManager.beginTransaction().replace(
-//                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()
-//            ).commit()
-//            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
+            childFragmentManager.beginTransaction().replace(
+                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()
+            ).commit()
+////            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
         }
 
         //최근 탭
@@ -173,11 +218,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             binding.scheduleFindBookmarkView.layoutParams.height = 2
 
 //            ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0,2)
-//            childFragmentManager.beginTransaction().replace(
-//                R.id.schedule_find_fragment,
-//                ScheduleFindLatelyFragment()
-//            )
-//                .commit()
+            childFragmentManager.beginTransaction().replace(
+                R.id.schedule_find_fragment, ScheduleFindLatelyFragment()).commit()
 //            (activity as MainActivity).replaceFragment(ScheduleFindLatelyFragment.newInstance());
         }
 
@@ -187,36 +229,36 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             val scheduleFindDetailFragment = ScheduleFindDetailFragment()
 
             // 즐겨찾기가 선택되어 있는 경우
-            if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
-
-                binding.scheduleFindLinear.visibility = View.GONE
-//                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
-//                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
-                val intent = Intent(activity, WholeScheduleActivity::class.java)
-                Log.d("TAG", "즐겨찾기 선택 유무")
-                intent.putExtra("boolean", true)
-                startActivity(intent)
-            }
+//            if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
+//
+//                binding.scheduleFindLinear.visibility = View.GONE
+////                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
+////                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
+//                val intent = Intent(activity, WholeScheduleActivity::class.java)
+//                Log.d("TAG", "즐겨찾기 선택 유무")
+//                intent.putExtra("boolean", true)
+//                startActivity(intent)
+//            }
 
             //최근이 선택되어 있는 경우
-            if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
-                binding.scheduleFindLinear.visibility = View.GONE
-                val intent = Intent(activity, WholeScheduleActivity::class.java)
-                Log.d("TAG", "최근 선택 유무")
-                intent.putExtra("boolean", false)
-                startActivity(intent)
-            }
+//            if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
+//                binding.scheduleFindLinear.visibility = View.GONE
+//                val intent = Intent(activity, WholeScheduleActivity::class.java)
+//                Log.d("TAG", "최근 선택 유무")
+//                intent.putExtra("boolean", false)
+//                startActivity(intent)
+//            }
 
-            binding.scheduleFindIvSearch.setOnTouchListener { _, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        Log.d("TAG", "일정찾기 이미지클릭 확인 ")
-                        binding.scheduleFindMainFragment.visibility = View.GONE
-                        binding.scheduleFindMainLinear.visibility = View.VISIBLE
-                    }
-                }
-                false
-            }
+//            binding.scheduleFindIvSearch.setOnTouchListener { _, event ->
+//                when (event.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        Log.d("TAG", "일정찾기 이미지클릭 확인 ")
+//                        binding.scheduleFindMainFragment.visibility = View.GONE
+//                        binding.scheduleFindMainLinear.visibility = View.VISIBLE
+//                    }
+//                }
+//                false
+//            }
 
         }
 
@@ -264,7 +306,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
             }
         })
-
 
     }
 
@@ -633,11 +674,11 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                 showCustomToast("즐겨찾기 일정조회성공")
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
 
-                val boomarkList: ArrayList<ScheduleBookmarkData> = arrayListOf()
+                val boomarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
                 for (i in 0 until response.data.size) {
                     boomarkList.add(
-                        ScheduleBookmarkData(
+                        WholeScheduleBookmarkData(
                             response.data[i].scheduleID,
                             response.data[i].scheduleDate,
                             response.data[i].scheduleName,
@@ -649,11 +690,11 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                     )
                 }
 
-                binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-                    context, LinearLayoutManager.VERTICAL, false
-                )
-                binding.recyclerViewBookmark.setHasFixedSize(true)
-                binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(boomarkList)
+//                binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
+//                    context, LinearLayoutManager.VERTICAL, false
+//                )
+//                binding.recyclerViewBookmark.setHasFixedSize(true)
+//                binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(boomarkList)
 //                scheduleCategoryAdapter.notifyDataSetChanged()
 
 
@@ -672,9 +713,9 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onGetScheduleBookmarkFail(message: String) {
     }
 
-    override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
-    }
-
-    override fun onGetLatelyScheduleInquiryFail(message: String) {
-    }
+//    override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
+//    }
+//
+//    override fun onGetLatelyScheduleInquiryFail(message: String) {
+//    }
 }

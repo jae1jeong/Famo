@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage.edit
+package com.softsquared.template.kotlin.src.mypageedit.logout
 
 import android.app.Dialog
 import android.content.Context
@@ -7,11 +7,12 @@ import android.util.Log
 import android.widget.Button
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.MyPageEditView
 
 
-class LogoutDialog(context:Context) : Dialog(context),MyPageEditView {
+class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

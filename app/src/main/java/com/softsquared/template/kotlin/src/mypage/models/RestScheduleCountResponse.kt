@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage.models
+package com.softsquared.template.kotlin.src.mypage.models
 
 import com.softsquared.template.kotlin.config.BaseResponse
 

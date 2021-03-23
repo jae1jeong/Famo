@@ -1,8 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleSearchResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.TodayRestScheduleResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse

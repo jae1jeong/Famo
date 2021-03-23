@@ -28,12 +28,11 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMyPageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.edit.*
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
-import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrwalView
-import com.softsquared.template.kotlin.src.mypageedit.models.AccountWithdrawalResponse
+import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException

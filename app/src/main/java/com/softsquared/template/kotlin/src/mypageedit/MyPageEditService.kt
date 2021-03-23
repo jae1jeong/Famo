@@ -1,11 +1,11 @@
-package com.softsquared.template.kotlin.src.main.mypage.edit
+package com.softsquared.template.kotlin.src.mypageedit
 
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.PutMyPageUpdateRequest
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

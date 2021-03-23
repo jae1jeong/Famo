@@ -9,7 +9,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
@@ -18,13 +17,11 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
-import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
-import com.softsquared.template.kotlin.src.main.category.CategoryEditBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
-import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryFilterInterface
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
@@ -58,28 +55,27 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         adapter.addFragment(ScheduleFindFragment(), "일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-        binding.mainViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                    }
-                    1 -> {
-
-                    }
-                    2 -> {
-                    }
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-        })
-
+//        binding.mainViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+//            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+//
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//                when (position) {
+//                    0 -> {
+//                    }
+//                    1 -> {
+//
+//                    }
+//                    2 -> {
+//                    }
+//                }
+//            }
+//
+//            override fun onPageScrollStateChanged(state: Int) {
+//            }
+//
+//        })
 
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
@@ -195,6 +191,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
+    fun onMoveScheduleFind(searchWord : String){
+        Log.d("TAG", "함수호출확인 ")
+        val adapter = MainPagerAdapter(supportFragmentManager)
+        binding.mainViewPager.adapter = adapter
+        binding.mainViewPager.currentItem = 2
+    }
 
 
     fun replaceFragment(fragment: Fragment) {

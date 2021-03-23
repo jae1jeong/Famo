@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage
+package com.softsquared.template.kotlin.src.mypage
 
 import android.content.Intent
 import android.os.*
@@ -8,15 +8,15 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityMyPageBinding
-import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.MonthsAchievementsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity
 import com.softsquared.template.kotlin.util.Constants
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
-    MyPageView{
+    MyPageView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +27,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //        MyPageService(this).tryGetRestScheduleCount("today")
         MyPageService(this).tryGetTotalScheduleCount()
         MyPageService(this).tryGetMyPage()
+        MyPageService(this).tryGetMonthsAchievement()
 
         //이미지 앞으로 내보내기
         binding.myPageSetting.bringToFront()
@@ -152,6 +153,23 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     override fun onGetTotalScheduleCountFailure(message: String) {
+    }
+
+    override fun onGetMonthsAchievmentsSuccess(response: MonthsAchievementsResponse) {
+
+        when(response.code){
+            100 -> {
+                showCustomToast("월별달성률조회성공")
+                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${response.data}")
+                binding.myPageAchievement.text = response.data.toString()
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    override fun onGetMonthsAchievmentsFailure(message: String) {
     }
 
 }

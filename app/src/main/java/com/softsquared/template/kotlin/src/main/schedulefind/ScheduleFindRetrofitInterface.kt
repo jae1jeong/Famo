@@ -1,7 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
@@ -18,7 +17,7 @@ interface ScheduleFindRetrofitInterface {
                                 @Query("limit") limit : Int ) :
             Call<WholeScheduleInquiryResponse>
 
-    //일정찾기 - 카테고리 즐겨찾기
+    //일정찾기 - 카테고리 즐겨찾기on/off
     @POST("schedules/picks")
     fun postBookmark(@Body bookmarkRequest: BookmarkRequest) : Call<BaseResponse>
 
@@ -38,7 +37,7 @@ interface ScheduleFindRetrofitInterface {
 
     // 일정검색
     @GET("schedules/search")
-    fun getScheduleSearch(@Body scheduleSearchRequest : ScheduleSearchRequest):Call<ScheduleSearchResponse>
+    fun getScheduleSearch(@Query("searchWord") searchWord : String):Call<ScheduleSearchResponse>
 
 
 }

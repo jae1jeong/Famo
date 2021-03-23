@@ -1,11 +1,12 @@
-package com.softsquared.template.kotlin.src.main.mypage.edit
+package com.softsquared.template.kotlin.src.mypageedit
 
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.*
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.PATCH
 import retrofit2.http.PUT
 
 interface MyPageEditRetrofitInterface {

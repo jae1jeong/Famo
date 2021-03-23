@@ -1,11 +1,11 @@
-package com.softsquared.template.kotlin.src.main.mypage
+package com.softsquared.template.kotlin.src.mypage
 
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.MonthsAchievementsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,6 +75,20 @@ class MyPageService(val pageView : MyPageView) {
             }
 
         })
+    }
 
+    //월별 달성률
+    fun tryGetMonthsAchievement(){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
+        homeRetrofitInterface.getMonthsAchievements().enqueue(object:Callback<MonthsAchievementsResponse>{
+            override fun onResponse(call: Call<MonthsAchievementsResponse>, response: Response<MonthsAchievementsResponse>) {
+                pageView.onGetMonthsAchievmentsSuccess(response.body() as MonthsAchievementsResponse)
+            }
+
+            override fun onFailure(call: Call<MonthsAchievementsResponse>, t: Throwable) {
+                pageView.onGetMonthsAchievmentsFailure(t.message ?: "해낸 일정수 조회 관련 통신 오류")
+            }
+
+        })
     }
 }

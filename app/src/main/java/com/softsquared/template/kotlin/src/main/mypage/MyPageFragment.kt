@@ -9,15 +9,19 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentMypageBinding
-import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.mypage.MyPageActivityView
+import com.softsquared.template.kotlin.src.mypage.MyPageService
+import com.softsquared.template.kotlin.src.mypage.MyPageView
+import com.softsquared.template.kotlin.src.mypage.models.MonthsAchievementsResponse
 import com.softsquared.template.kotlin.util.Constants
 
 class MyPageFragment(val myPageActivityView: MyPageActivityView):
     BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::bind, R.layout.fragment_mypage),
-    MyPageView{
+    MyPageView {
 
 //    변들로 받을 변수
 //    var token : String? = null
@@ -154,6 +158,12 @@ class MyPageFragment(val myPageActivityView: MyPageActivityView):
     }
 
     override fun onGetTotalScheduleCountFailure(message: String) {
+    }
+
+    override fun onGetMonthsAchievmentsSuccess(response: MonthsAchievementsResponse) {
+    }
+
+    override fun onGetMonthsAchievmentsFailure(message: String) {
     }
 
 //    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {

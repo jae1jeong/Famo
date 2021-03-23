@@ -2,26 +2,15 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindDetailBinding
-import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
-import java.util.ArrayList
 
 class ScheduleFindDetailFragment : BaseFragment<FragmentScheduleFindDetailBinding>(
     FragmentScheduleFindDetailBinding::bind, R.layout.fragment_schedule_find_detail

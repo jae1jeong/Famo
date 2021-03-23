@@ -238,13 +238,27 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/my_page_tv_schedule_achievement_rat"
-                android:textSize="18dp"
-                android:textColor="#7C7A7A"
-                android:textStyle="bold"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_tv_schedule_achievement_rat"
+                    android:textSize="18dp"
+                    android:textColor="#7C7A7A"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/my_page_achievement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textColor="#7C7A7A"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"

@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
 
-open class ScheduleBookmarkAdapter(var bookmarkList: ArrayList<ScheduleBookmarkData>) :
+open class ScheduleBookmarkAdapter(var bookmarkListWhole: ArrayList<WholeScheduleBookmarkData>) :
     RecyclerView.Adapter<ScheduleBookmarkAdapter.ScheduleBookmarkHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBookmarkHolder {
@@ -23,12 +23,12 @@ open class ScheduleBookmarkAdapter(var bookmarkList: ArrayList<ScheduleBookmarkD
         return ScheduleBookmarkHolder(view)
     }
 
-    override fun getItemCount(): Int = bookmarkList.size
+    override fun getItemCount(): Int = bookmarkListWhole.size
 
     override fun onBindViewHolder(holder: ScheduleBookmarkHolder, position: Int) {
-        holder.scheduleName.text = bookmarkList[position].scheduleName
-        holder.scheduleDate.text = bookmarkList[position].scheduleDate
-        holder.color.setColorFilter(Color.parseColor(bookmarkList[position].colorInfo))
+        holder.scheduleName.text = bookmarkListWhole[position].scheduleName
+        holder.scheduleDate.text = bookmarkListWhole[position].scheduleDate
+        holder.color.setColorFilter(Color.parseColor(bookmarkListWhole[position].colorInfo))
     }
 
     class ScheduleBookmarkHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

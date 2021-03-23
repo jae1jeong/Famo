@@ -1,8 +1,8 @@
-package com.softsquared.template.kotlin.src.main.mypage.edit
+package com.softsquared.template.kotlin.src.mypageedit
 
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageCommentsResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 
 interface MyPageEditView {
 

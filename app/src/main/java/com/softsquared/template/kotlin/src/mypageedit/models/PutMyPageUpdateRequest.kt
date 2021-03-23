@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage.models
+package com.softsquared.template.kotlin.src.mypageedit.models
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

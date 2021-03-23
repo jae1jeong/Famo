@@ -42,7 +42,8 @@
                     android:drawableRight="@drawable/schedule_find_search_mike_img"
                     android:ems="10"
                     android:hint="@string/schedule_find_et_search_hint"
-                    android:inputType="textPersonName"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
                     android:paddingRight="15dp"
                     android:textSize="20dp" />
 
@@ -273,31 +274,30 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap">
-
                         </FrameLayout>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerView_bookmark"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="20dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap"></androidx.recyclerview.widget.RecyclerView>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/recyclerView_bookmark"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="20dp"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            android:layout_marginEnd="20dp"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap" />-->
 
-                        <!--                                            <androidx.recyclerview.widget.RecyclerView-->
-                        <!--                                                android:id="@+id/recyclerView_lately"-->
-                        <!--                                                android:layout_width="match_parent"-->
-                        <!--                                                android:layout_height="wrap_content"-->
-                        <!--                                                android:layout_marginStart="20dp"-->
-                        <!--                                                android:layout_marginEnd="20dp"-->
-                        <!--                                                android:layout_marginTop="10dp"-->
-                        <!--                                                app:layout_constraintEnd_toEndOf="parent"-->
-                        <!--                                                app:layout_constraintStart_toStartOf="parent"-->
-                        <!--                                                app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap">-->
-                        <!--                                            </androidx.recyclerview.widget.RecyclerView>-->
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/recyclerView_lately"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="20dp"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            android:layout_marginEnd="20dp"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_tap"-->
+<!--                            android:visibility="gone"/>-->
 
                         <View
                             android:id="@+id/view2"
@@ -343,6 +343,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
+
 
                 <TextView
                     android:layout_width="wrap_content"

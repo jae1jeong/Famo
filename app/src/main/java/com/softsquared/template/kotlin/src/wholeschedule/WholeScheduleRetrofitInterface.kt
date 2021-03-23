@@ -8,9 +8,4 @@ import retrofit2.http.Query
 
 interface WholeScheduleRetrofitInterface {
 
-    //최근 일정 조회
-    @GET("schedules/recents")
-    fun getLatelyWholeScheduleInquiry(@Query("offset") offset : Int,
-                                @Query("limit") limit : Int ) :
-            Call<LatelyScheduleInquiryResponse>
 }

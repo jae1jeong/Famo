@@ -20,12 +20,16 @@
             android:background="@drawable/schedule_search_back" />
 
         <EditText
+            android:id="@+id/schedule_search_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17.5dp"
             android:layout_toRightOf="@+id/search_back"
             android:background="@null"
-            android:hint="검색어를 입력 해주세요." />
+            android:hint="검색어를 입력 해주세요."
+            android:maxLines="1"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
 
     </RelativeLayout>
 

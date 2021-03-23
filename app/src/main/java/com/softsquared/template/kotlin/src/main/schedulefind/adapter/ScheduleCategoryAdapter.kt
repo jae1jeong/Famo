@@ -99,7 +99,6 @@ class ScheduleCategoryAdapter(
 
         init {
             //리스너연결
-//            category.setOnClickListener(this)
             text.setOnClickListener(this)
             color.setOnClickListener(this)
             this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
@@ -108,7 +107,8 @@ class ScheduleCategoryAdapter(
         override fun onClick(view: View?) {
 
             when (view) {
-                text -> {
+                text,color -> {
+
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
                     var size = 0
@@ -178,7 +178,6 @@ class ScheduleCategoryAdapter(
 //                    }
 
                     color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-//                    color.setColorFilter(Color.parseColor("#00000000"))
 
                     this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
                         colorID[adapterPosition],

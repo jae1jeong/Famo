@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.src.main.mypage
+package com.softsquared.template.kotlin.src.mypage
 
 interface MyPageActivityView {
 

@@ -1,19 +1,29 @@
 package com.softsquared.template.kotlin.src.schedulesearch
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
+import android.util.Log
+import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
+import android.widget.TextView.OnEditorActionListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityScheduleSearchBinding
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.schedulesearch.adapter.ScheduleSearchListAdapter
 import com.softsquared.template.kotlin.src.schedulesearch.models.SearchListData
 
-class ScheduleSearchActivity : BaseActivity<ActivityScheduleSearchBinding>
+
+class ScheduleSearchActivity(myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) : BaseActivity<ActivityScheduleSearchBinding>
     (ActivityScheduleSearchBinding::inflate) {
+
+    private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
+
+
+    init {
+        Log.d("TAG", "1a2a3a: init() called ")
+        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +31,28 @@ class ScheduleSearchActivity : BaseActivity<ActivityScheduleSearchBinding>
         //임시 검색기록 리사이클러뷰
         createSearchList()
 
+        binding.scheduleSearchEt.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+
+            val searchWord = binding.scheduleSearchEt.text.toString()
+
+            when(actionId){
+                IME_ACTION_SEARCH -> {
+                    showCustomToast("aaaaaa")
+                    Log.d("TAG", "ScheduleSearchActivity: ")
+
+//                    MainActivity().onMoveScheduleFind(searchWord)
+//                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(1,1)
+
+                }
+            }
+
+            false
+        })
+
+
         //뒤로가기
         binding.searchBack.setOnClickListener {
-
+            finish()
         }
 
     }

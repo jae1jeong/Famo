@@ -3,10 +3,7 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.mypage.MyPageRetrofitInterface
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleRetrofitInterface
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -102,10 +99,12 @@ class ScheduleFindService(val view : ScheduleFindView) {
         })
     }
 
-    fun tryGetScheduleSearch(scheduleSearchRequest: ScheduleSearchRequest){
+    fun tryGetScheduleSearch(searchWord: String){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(ScheduleFindRetrofitInterface::class.java)
-        homeRetrofitInterface.getScheduleSearch(scheduleSearchRequest).enqueue(object:Callback<ScheduleSearchResponse>{
+        homeRetrofitInterface.getScheduleSearch(searchWord).enqueue(object:Callback<ScheduleSearchResponse>{
             override fun onResponse(call: Call<ScheduleSearchResponse>, response: Response<ScheduleSearchResponse>) {
+                Log.d("값 확인", "tryGetScheduleSearch body:  ${response.body()}")
+                Log.d("값 확인", "tryGetScheduleSearch body:  ${response.body()}")
                 view.onGetScheduleSearchSuccess(response.body() as ScheduleSearchResponse)
             }
 

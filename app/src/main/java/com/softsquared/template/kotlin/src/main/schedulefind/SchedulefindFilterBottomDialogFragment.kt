@@ -65,23 +65,23 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
 
 
         //남은 일정 클릭 시
-        filter_btn_remain.setOnClickListener {
-
-            if (remainCnt % 2 != 0) {
-                filter_btn_remain_squre.visibility = View.VISIBLE
-                filter_btn_remain_check.visibility = View.VISIBLE
-            } else {
-                filter_btn_remain_squre.visibility = View.GONE
-                filter_btn_remain_check.visibility = View.GONE
-            }
-            remainCnt++
-
-            Log.d("TAG", "SchedulefindFilterBottomDialogFragment: $id")
-            val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.NUM, "1")
-
-            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "left", 0, 100)
-        }
+//        filter_btn_remain.setOnClickListener {
+//
+//            if (remainCnt % 2 != 0) {
+//                filter_btn_remain_squre.visibility = View.VISIBLE
+//                filter_btn_remain_check.visibility = View.VISIBLE
+//            } else {
+//                filter_btn_remain_squre.visibility = View.GONE
+//                filter_btn_remain_check.visibility = View.GONE
+//            }
+//            remainCnt++
+//
+//            Log.d("TAG", "SchedulefindFilterBottomDialogFragment: $id")
+//            val edit = ApplicationClass.sSharedPreferences.edit()
+//            edit.putString(Constants.NUM, "1")
+//
+//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "left", 0, 100)
+//        }
 
         //완료 일정 클릭 시
         filter_btn_completion.setOnClickListener {
@@ -185,10 +185,6 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
 
                 val abc: RecyclerView = view.findViewById(R.id.recyclerview_schedule_find_category)
 
-                val test: TextView = view.findViewById(R.id.aaa)
-
-                test.textSize = 50F
-
                 abc.layoutManager =
                     GridLayoutManager(
                         context, 2, GridLayoutManager.VERTICAL,
@@ -196,15 +192,6 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
                     )
                 abc.setHasFixedSize(true)
                 abc.adapter = CategoryFilterAdapter(categoryFilterList)
-
-
-
-                //                val edit = ApplicationClass.sSharedPreferences.edit()
-//                edit.putString(Constants.NUM, "num")
-//                edit.apply()
-
-
-
 
             }
             else -> {

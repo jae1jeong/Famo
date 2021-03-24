@@ -3,8 +3,10 @@ package com.softsquared.template.kotlin.src.main.today
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.today.models.ChangePositionItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
+import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,6 +54,33 @@ class TodayService(val view:TodayView){
             }
 
         })
+    }
 
+    fun onGetTopComment(){
+        val todayRetrofitInterface = ApplicationClass.sRetrofit.create(TodayRetrofitInterface::class.java)
+        todayRetrofitInterface.getTopComment().enqueue(object:Callback<TopCommentResponse>{
+            override fun onResponse(call: Call<TopCommentResponse>, response: Response<TopCommentResponse>) {
+                view.onGetUserTopCommentSuccess(response.body() as TopCommentResponse)
+            }
+
+            override fun onFailure(call: Call<TopCommentResponse>, t: Throwable) {
+                view.onGetUserTopCommentFailure(t.message ?: "상단 멘트 관련 통신 오류")
+            }
+
+        })
+    }
+
+    fun onPostChangeItemPosition(changePositionItemRequest: ChangePositionItemRequest){
+        val todayRetrofitInterface = ApplicationClass.sRetrofit.create(TodayRetrofitInterface::class.java)
+        todayRetrofitInterface.postChangeItemPosition(changePositionItemRequest).enqueue(object:Callback<BaseResponse>{
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                view.onPostSchedulePositionSuccess(response.body() as BaseResponse)
+            }
+
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                view.onPostSchedulePositionFailure(t.message ?: "일정 순서 변경 관련 통신 오류")
+            }
+
+        })
     }
 }

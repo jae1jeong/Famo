@@ -45,7 +45,7 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
                 checkListener(memo)
             }
         }
-//        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
+        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
 
     }
 
@@ -87,10 +87,6 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
     }
 
     override fun getItemCount(): Int {
-        Log.d("adapter size", "getItemCount: ${memoList.size}")
-        if(memoList.size == 0){
-            noItemListener()
-        }
         return memoList.size
     }
 

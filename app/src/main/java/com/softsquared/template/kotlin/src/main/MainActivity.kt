@@ -3,11 +3,14 @@ package com.softsquared.template.kotlin.src.main
 import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonElement
@@ -16,38 +19,49 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMainBinding
+import com.softsquared.template.kotlin.src.main.adapter.MainCategoryAdapter
 import com.softsquared.template.kotlin.src.main.adapter.MainPagerAdapter
 import com.softsquared.template.kotlin.src.main.addmemo.AddMemoFragment
+import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
+import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.main.mypage.MyPageService
+import com.softsquared.template.kotlin.src.main.mypage.MyPageView
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.CategoryScheduleInquiryAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
+import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.util.Constants
 
 
-class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView,CategoryInquiryView {
-    private var clicked = false // FAB 버튼 변수
+class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),AddMemoView,TodayView,CategoryInquiryView, IScheduleCategoryRecyclerView {
     private lateinit var bottomSheetBehavior:BottomSheetBehavior<FrameLayout>
-    // FAB 버튼 애니메이션
-    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
-    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
-
+    private val categoryList : ArrayList<MainScheduleCategory> = arrayListOf()
+    lateinit var categoryScheduleAdapter: MainCategoryAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
@@ -56,27 +70,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         adapter.addFragment(ScheduleFindFragment(), "일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-        binding.mainViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                    }
-                    1 -> {
-
-                    }
-                    2 -> {
-                    }
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-        })
 
 
         //유저 이미지 클릭 시 마이페이지로 이동
@@ -106,7 +100,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mainFrameBottomSheet)
 
             bottomSheetBehavior.apply {
-            peekHeight = 400
+            peekHeight = 800
                 isHideable = true
             this.state = BottomSheetBehavior.STATE_HIDDEN
         }.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -114,7 +108,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     when (newState) {
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             if (Constants.IS_EDIT) {
-                                showCustomToast("수정모드")
                                 val editScheduleID = ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID, -1)
                                 if (editScheduleID != -1) {
                                     AddMemoService(this@MainActivity).tryGetDetailMemo(editScheduleID)
@@ -122,6 +115,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                             }
                         }
                         BottomSheetBehavior.STATE_COLLAPSED -> {
+                            if(Constants.IS_EDIT){
+                                Constants.IS_EDIT = false
+                            }
                         }
                     }
                 }
@@ -143,6 +139,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
             })
 
+        // 바텀 시트 다이얼로그 카테고리 추가 버튼
+        binding.addMemoBtnCategoryAdd.setOnClickListener {
+            startActivity(Intent(this,CategoryEditActivity::class.java))
+        }
+
+
+        // FAB 버튼
         binding.mainFloatingBtn.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
@@ -407,17 +410,38 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onPostItemCheckFailure(message: String) {
     }
 
-    override fun onGetUserTopCommentSuccess() {
+    override fun onGetUserTopCommentSuccess(response: TopCommentResponse) {
     }
 
     override fun onGetUserTopCommentFailure(message: String) {
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onPostSchedulePositionSuccess(response: BaseResponse) {
+    }
+
+    override fun onPostSchedulePositionFailure(message: String) {
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+        if(responseUser.isSuccess && responseUser.code == 100){
+            for (i in 0 until responseUser.data.size) {
+                categoryList.add(
+                        MainScheduleCategory(
+                                responseUser.data[i].categoryID,
+                                responseUser.data[i].categoryName,
+                                responseUser.data[i].colorInfo
+                        )
+                )
+            }
+            Log.d("TAG", "onGetUserCategoryInquirySuccess: $categoryList")
+
+            categoryScheduleAdapter = MainCategoryAdapter(categoryList,this,{})
+            binding.addMemoCategoryRecyclerview.apply {
+                layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL,false)
+                setHasFixedSize(true)
+                adapter = categoryScheduleAdapter
+            }
+        }
     }
 
     override fun onGetUserCategoryInquiryFail(message: String) {
@@ -427,6 +451,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onGetCategoryInquiryFail(message: String) {
+    }
+
+    override fun onItemMoveBtnClicked(position: Int) {
+    }
+
+    override fun onColor(): String {
+        return "test"
     }
 
 }

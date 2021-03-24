@@ -17,9 +17,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         super.onCreate(savedInstanceState)
 
         val jwt:String? = ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN,null)
-        jwt?.let{
-            Log.d("jwt token", "$jwt")
-        }
         Handler(Looper.getMainLooper()).postDelayed({
             if (jwt == null){
                 startActivity(Intent(this, InformationActivity::class.java))

@@ -63,6 +63,7 @@ abstract class BaseFragment<B : ViewBinding>(
         }
     }
 
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser && isResumed){

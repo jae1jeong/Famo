@@ -47,6 +47,7 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
             })
             popUp.show()
         }
+        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.itemMonthlyCategoryColor)
 
     }
 

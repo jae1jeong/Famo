@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TextView
+        android:textStyle="bold"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:gravity="center"
+        android:background="@drawable/background_main_category"
+        android:id="@+id/main_category_text"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:text="학교"
+        android:textSize="14sp"
+    />

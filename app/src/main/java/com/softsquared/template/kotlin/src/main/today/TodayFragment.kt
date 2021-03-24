@@ -16,19 +16,20 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageService
-import com.softsquared.template.kotlin.src.main.mypage.MyPageView
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.models.*
+import com.softsquared.template.kotlin.src.mypage.MyPageService
+import com.softsquared.template.kotlin.src.mypage.MyPageView
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
     ,TodayView,MyPageView{
+
 
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -118,7 +119,7 @@ class TodayFragment() :
         TodayService(this).onGetScheduleItems()
         // 상단멘트
         TodayService(this).onGetTopComment()
-        MyPageService(this).tryGetDoneScheduleCount()
+        MyPageService(this).tryGetTotalScheduleCount()
         MyPageService(this).tryGetRestScheduleCount("today")
 
     }

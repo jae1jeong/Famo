@@ -57,7 +57,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // viewPager
 //        val adapter = ScheduleFindPagerAdapter(childFragmentManager)
 //        adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
 //        adapter.addFragment(ScheduleFindLatelyFragment(), "최근")

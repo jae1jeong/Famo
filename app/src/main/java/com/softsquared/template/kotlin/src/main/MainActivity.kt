@@ -57,40 +57,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         adapter.addFragment(ScheduleFindFragment(), "일정 찾기")
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-        binding.mainViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
 
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                    }
-                    1 -> {
-
-                    }
-                    2 -> {
-                    }
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-        })
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
-
-//            binding.mainFrameLayout.visibility = View.VISIBLE
-//            val token = intent.getStringExtra("token")
-//            val name = intent.getStringExtra("name")
-//            val img = intent.getStringExtra("img")
-//            intent.putExtra("token",token)
-//            binding.mainFrameLayout.visibility = View.VISIBLE
             val intent = Intent(this, MyPageActivity::class.java)
             startActivity(intent)
         }
@@ -502,14 +471,5 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onGetCategoryInquiryFail(message: String) {
     }
-
-    override fun onFliter() {
-    }
-
-}
-
-
-
-
 
 }

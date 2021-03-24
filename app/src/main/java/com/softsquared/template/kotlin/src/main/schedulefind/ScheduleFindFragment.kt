@@ -22,6 +22,7 @@ import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.schedulesearch.ScheduleSearchActivity
+import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleView
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
@@ -42,6 +43,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     var wholePagingCnt = 0
 
     var pagingCnt = 1
+
+    var word : String? = null
 
     private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
 
@@ -65,13 +68,14 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
 //        ScheduleFindService(this).tryGetWholeScheduleCount()
 
-        // 카테고리
-//        CategoryInquiryService(this).tryGetUserCategoryInquiry()
-        // createCategoryRecyclerview()
 
-        //전체일정
-//        createWholeScheduleRecyclerview()
-//        ScheduleFindService(this).tryGetWholeScheduleInquiry(0,10)
+
+//         검색
+//        if (word != null){
+//            word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)!!
+////            ScheduleFindService(this).tryGetScheduleSearch(searchWord)
+//        }
+
 
         val searchWord = ""
 
@@ -161,7 +165,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //                    ScheduleFindService(this).tryGetScheduleSearch(scheduleSearchRequest)
                 }
             }
-
+//
             false
         })
         //검색창 클릭 시
@@ -182,7 +186,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //            )
             //검색
 //            ScheduleFindService(this).tryGetScheduleSearch(scheduleSearchRequest)
-            val intent = Intent(activity, ScheduleSearchActivity(newInstance())::class.java)
+            val intent = Intent(activity, ScheduleSearchActivity::class.java)
             startActivity(intent)
         }
 
@@ -234,10 +238,10 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //                binding.scheduleFindLinear.visibility = View.GONE
 ////                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
 ////                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
-//                val intent = Intent(activity, WholeScheduleActivity::class.java)
+                val intent = Intent(activity, WholeScheduleActivity::class.java)
 //                Log.d("TAG", "즐겨찾기 선택 유무")
 //                intent.putExtra("boolean", true)
-//                startActivity(intent)
+                startActivity(intent)
 //            }
 
             //최근이 선택되어 있는 경우
@@ -711,6 +715,26 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     }
 
     override fun onGetScheduleBookmarkFail(message: String) {
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("TAG", "onResume: ㅇㅇㅇㅇ $word")
+
+        if (word != null){
+            word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)!!
+            if (word!!.length > 0){
+                binding.scheduleFindMainLinear.visibility = View.GONE
+                binding.scheduleFindMainFragment.visibility = View.VISIBLE
+                val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
+                    .commit()
+
+                // 이제넘어갔으니 서비스단 짜면될듯
+            }
+        }
+
     }
 
 //    override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {

@@ -80,12 +80,17 @@ class MyPageService(val pageView : MyPageView) {
     //월별 달성률
     fun tryGetMonthsAchievement(){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageRetrofitInterface::class.java)
-        homeRetrofitInterface.getMonthsAchievements().enqueue(object:Callback<MonthsAchievementsResponse>{
-            override fun onResponse(call: Call<MonthsAchievementsResponse>, response: Response<MonthsAchievementsResponse>) {
+        homeRetrofitInterface.getMonthsAchievements().enqueue(object :
+            Callback<MonthsAchievementsResponse> {
+            override fun onResponse(
+                call: Call<MonthsAchievementsResponse>,
+                response: Response<MonthsAchievementsResponse>
+            ) {
                 pageView.onGetMonthsAchievmentsSuccess(response.body() as MonthsAchievementsResponse)
             }
 
             override fun onFailure(call: Call<MonthsAchievementsResponse>, t: Throwable) {
+                Log.d("TAG", "onFailure: 월별달성률 실패 ${t.message}")
                 pageView.onGetMonthsAchievmentsFailure(t.message ?: "해낸 일정수 조회 관련 통신 오류")
             }
 

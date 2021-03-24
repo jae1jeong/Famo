@@ -5,25 +5,25 @@ import android.util.Log
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.TextView.OnEditorActionListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityScheduleSearchBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.schedulesearch.adapter.ScheduleSearchListAdapter
 import com.softsquared.template.kotlin.src.schedulesearch.models.SearchListData
+import com.softsquared.template.kotlin.util.Constants
 
 
-class ScheduleSearchActivity(myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) : BaseActivity<ActivityScheduleSearchBinding>
+class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
     (ActivityScheduleSearchBinding::inflate) {
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
-
-    init {
-        Log.d("TAG", "1a2a3a: init() called ")
-        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
-    }
-
-
+//    init {
+//        Log.d("TAG", "1a2a3a: init() called ")
+//        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +39,17 @@ class ScheduleSearchActivity(myScheduleCategoryRecyclerView: IScheduleCategoryRe
                 IME_ACTION_SEARCH -> {
                     showCustomToast("aaaaaa")
                     Log.d("TAG", "ScheduleSearchActivity: ")
+//                    finish()
+
+                    val searchWord = binding.scheduleSearchEt.text.toString()
+
+                    val edit = ApplicationClass.sSharedPreferences.edit()
+                    edit.putString(Constants.SEARCHWROD,searchWord)
+                    edit.apply()
+                    finish()
 
 //                    MainActivity().onMoveScheduleFind(searchWord)
 //                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(1,1)
-
                 }
             }
 

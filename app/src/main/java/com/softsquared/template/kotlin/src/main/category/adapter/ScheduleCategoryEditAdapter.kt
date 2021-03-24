@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.*
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
@@ -26,6 +28,8 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
     private var iCategoryRecyclerView: ICategoryRecyclerView? = null
 
     val categoryID = 0
+
+    var dataSize = 0
 
     init {
         Log.d(TAG, "ScheduleCategoryEditAdapter - init() called")
@@ -109,10 +113,21 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 //                    Log.d(TAG, "onClick: ")
                     val categoryID = categoryEditList[adapterPosition].id.toString()
 
-                    CategoryEditService(this@ScheduleCategoryEditAdapter)
-                        .tryDeleteCategoryEditDelete(categoryID)
-                    removeItem(adapterPosition)
-                    notifyDataSetChanged()
+                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry(
+                        categoryEditList[adapterPosition].id,
+                        0,
+                        10
+                    )
+
+                    //데이터가 있으면 일정 삭제 안되게
+                    if (dataSize == 0) {
+                        CategoryEditService(this@ScheduleCategoryEditAdapter)
+                            .tryDeleteCategoryEditDelete(categoryID)
+                        removeItem(adapterPosition)
+                        notifyDataSetChanged()
+                    } else {
+                        Log.d(TAG, "onClick: 일정 ")
+                    }
                 }
                 color, text -> {
                     Log.d("로그", "색상변경 버튼 클릭")
@@ -186,13 +201,16 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
             }
         }
 
-
     }
 
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+
+        dataSize = categoryInquiryResponse.data.size
+
+
     }
 
     override fun onGetCategoryInquiryFail(message: String) {

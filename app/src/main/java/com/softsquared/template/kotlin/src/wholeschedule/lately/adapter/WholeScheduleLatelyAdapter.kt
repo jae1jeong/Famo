@@ -24,7 +24,7 @@ class WholeScheduleLatelyAdapter(var latelyListWhole:ArrayList<WholeScheduleLate
 
     override fun onBindViewHolder(holder: ScheduleLatelyHolder, position: Int) {
         holder.scheduleName.text = latelyListWhole[position].scheduleName
-        holder.scheduleDate.text = latelyListWhole[position].scheduleDate.toString()
+        holder.scheduleDate.text = latelyListWhole[position].scheduleDate
         holder.schedulePick.setImageResource(latelyListWhole[position].schedulePick)
         holder.scheduleMemo.text = latelyListWhole[position].scheduleMemo
         holder.color.setColorFilter(Color.parseColor(latelyListWhole[position].colorInfo))

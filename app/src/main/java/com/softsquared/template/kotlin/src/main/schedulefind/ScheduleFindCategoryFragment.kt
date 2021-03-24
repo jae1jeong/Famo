@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lakue.pagingbutton.OnPageSelectListener
@@ -24,18 +25,22 @@ import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleService
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
+import com.softsquared.template.kotlin.util.Constants
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
 
 
 class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
     FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
-), CategoryInquiryView, CategoryFilterInterface, CategoryFilterView, ScheduleFindView {
+), CategoryInquiryView, CategoryFilterInterface, CategoryFilterView, ScheduleFindView,
+    View.OnClickListener, SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener{
 
     companion object {
         fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
             return ScheduleFindCategoryFragment()
         }
     }
+
+    private var schedulefindFilterBottomDialogFragment: SchedulefindFilterBottomDialogFragment? = null
 
     var categorySchedulePagingCnt = 0
 
@@ -62,10 +67,16 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             Log.d("ScheduleFindCategoryFragment searchWord", "값: $searchWord")
         }
 
+        binding.categoryFilter.setOnClickListener(this)
+
+        val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)
+
 //         검색
-//        if (searchWord != null){
+//        if (word != null){
 //            ScheduleFindService(this).tryGetScheduleSearch(searchWord)
 //        }
+
+
         val layoutInflater: LayoutInflater = activity!!.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -79,36 +90,37 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
 
 
-        CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 1)
+        CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 2)
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.catogorySchedulePaging.setPageItemCount(4);
+
+        binding.catogorySchedulePaging.addBottomPageButton(4, 1)
 
         //페이지 리스너를 클릭했을 때의 이벤트
         binding.catogorySchedulePaging.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.catogorySchedulePaging.addBottomPageButton(10, now_page)
+                binding.catogorySchedulePaging.addBottomPageButton(4, now_page)
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1)), 1)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1)*1), 2)
 
             }
 
             override fun onPageCenter(now_page: Int) {
 
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1)), 1)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 1), 2)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.catogorySchedulePaging.addBottomPageButton(10, now_page)
-
+                binding.catogorySchedulePaging.addBottomPageButton(4, now_page)
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1)), 1)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 1), 2)
             }
         })
 
@@ -126,11 +138,11 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         }
     }
 
-    override fun viewPagerApiRequest() {
-        super.viewPagerApiRequest()
-        // 카테고리
-        CategoryInquiryService(this).tryGetCategoryInquiry(categoryID, 0, 10)
-    }
+//    override fun viewPagerApiRequest() {
+//        super.viewPagerApiRequest()
+//        // 카테고리
+//        CategoryInquiryService(this).tryGetCategoryInquiry(categoryID, 0, 10)
+//    }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
@@ -143,8 +155,8 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         Log.d("TAG", "onGetCategoryInquirySuccess: $categoryInquiryResponse")
         Log.d("TAG", "1111111111")
 
-        categorySchedulePagingCnt = (categoryInquiryResponse.data.size / 10) + 1
-        binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+//        categorySchedulePagingCnt = (categoryInquiryResponse.data.size / 10) + 1
+//        binding.catogorySchedulePaging.addBottomPageButton(4, 1)
 
         when (categoryInquiryResponse.code) {
             100 -> {
@@ -365,5 +377,29 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
     }
 
     override fun onGetScheduleSearchFail(message: String) {
+    }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.category_filter -> {
+                schedulefindFilterBottomDialogFragment = SchedulefindFilterBottomDialogFragment(categoryID)
+                schedulefindFilterBottomDialogFragment!!.setOnDialogButtonClickListener(this)
+                schedulefindFilterBottomDialogFragment!!.setCancelable(false)
+                schedulefindFilterBottomDialogFragment!!.show(childFragmentManager,schedulefindFilterBottomDialogFragment!!.tag)
+//                (activity as MainActivity).onMoveFilterFragment(scheduleCategoryID)
+            }
+        }
+    }
+
+    override fun onDialogButtonClick(view: View?) {
+        when (view!!.id) {
+//            R.id.btn_cancel -> mEndDialog!!.dismiss()
+            R.id.filter_btn_remain -> {
+                Toast.makeText(activity, "확인", Toast.LENGTH_SHORT).show()
+                Log.d("TAG", "onDialogButtonClick: 클릭확인")
+                binding.test.text = "aaaaaaaaa"
+
+            }
+        }
     }
 }

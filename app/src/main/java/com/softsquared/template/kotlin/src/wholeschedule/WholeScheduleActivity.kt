@@ -6,6 +6,7 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityWholeScheduleBinding
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindBookmarkFragment
 import com.softsquared.template.kotlin.src.wholeschedule.adapter.WholeSchedulePagerAdapter
+import com.softsquared.template.kotlin.src.wholeschedule.bookmark.WholeScheduleBookmarkFragment
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleFragment
 
 class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
@@ -17,7 +18,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         val check = intent.getBooleanExtra("boolean",true)
         Log.d("TAG", "WholeScheduleActivity : $check")
 
-        val scheduleFindBookmarkFragment = ScheduleFindBookmarkFragment()
+        val scheduleFindBookmarkFragment = WholeScheduleBookmarkFragment()
         val scheduleFindLatelyFragment = WholeLatelyScheduleFragment()
         val bundle = Bundle()
         bundle.getBoolean("boolean",check)

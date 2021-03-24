@@ -8,14 +8,18 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CategoryInquiryService(val view : CategoryInquiryView) {
+class CategoryInquiryService(val view: CategoryInquiryView) {
 
-    fun tryGetUserCategoryInquiry(){
-        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
+    fun tryGetUserCategoryInquiry() {
+        val homeRetrofitInterface =
+            ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
 
         homeRetrofitInterface.getUserCategoryInquiry().enqueue(object :
             Callback<UserCategoryInquiryResponse> {
-            override fun onResponse(call: Call<UserCategoryInquiryResponse>, responseUser: Response<UserCategoryInquiryResponse>) {
+            override fun onResponse(
+                call: Call<UserCategoryInquiryResponse>,
+                responseUser: Response<UserCategoryInquiryResponse>
+            ) {
                 Log.d("값 확인", "tryGetUserCategoryInquiry body:  ${responseUser.body()}")
                 Log.d("값 확인", "tryGetUserCategoryInquiry code:  ${responseUser.code()}")
                 view.onGetUserCategoryInquirySuccess(responseUser.body() as UserCategoryInquiryResponse)
@@ -28,10 +32,11 @@ class CategoryInquiryService(val view : CategoryInquiryView) {
         })
     }
 
-    fun tryGetCategoryInquiry(scheduleCategoryID : Int, offset : Int, limit : Int){
-        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
+    fun tryGetCategoryInquiry(scheduleCategoryID: Int, offset: Int, limit: Int) {
+        val homeRetrofitInterface =
+            ApplicationClass.sRetrofit.create(CategoryInquiryRetrofitInterface::class.java)
 
-        homeRetrofitInterface.getCategoryInquiry(scheduleCategoryID,offset,limit).enqueue(object :
+        homeRetrofitInterface.getCategoryInquiry(scheduleCategoryID, offset, limit).enqueue(object :
             Callback<CategoryInquiryResponse> {
             override fun onResponse(call: Call<CategoryInquiryResponse>,
                                     response: Response<CategoryInquiryResponse>) {
@@ -39,7 +44,9 @@ class CategoryInquiryService(val view : CategoryInquiryView) {
                 Log.d("값 확인", "tryGetCategoryInquiry code:  ${response.code()}")
                 view.onGetCategoryInquirySuccess(response.body() as CategoryInquiryResponse)
             }
+
             override fun onFailure(call: Call<CategoryInquiryResponse>, t: Throwable) {
+                Log.d("TAG", "onFailure: ${t.message}")
                 view.onGetCategoryInquiryFail(t.message ?: "통신 오류")
             }
         })

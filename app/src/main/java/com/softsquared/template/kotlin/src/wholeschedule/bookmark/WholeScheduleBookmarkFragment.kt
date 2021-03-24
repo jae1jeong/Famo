@@ -3,6 +3,7 @@ package com.softsquared.template.kotlin.src.wholeschedule.bookmark
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
@@ -31,17 +32,18 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 //            Log.d("ScheduleFindBookmarkFragment", "check: $check")
 //        }
 
-        WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,2)
+        WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,1)
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeBookmarkSchedulePaging.setPageItemCount(4);
+        binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, 1)
 
         //페이지 리스너를 클릭했을 때의 이벤트
         binding.wholeBookmarkSchedulePaging.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(10, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, now_page)
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
                     .tryGetScheduleBookmark(((now_page - 1)), 1)
 
@@ -49,16 +51,16 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
             override fun onPageCenter(now_page: Int) {
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)), 1)
+                    .tryGetScheduleBookmark(((now_page - 1)*1), 1)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(10, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, now_page)
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)), 1)
+                    .tryGetScheduleBookmark(((now_page - 1)*1), 1)
 
             }
         })
@@ -74,7 +76,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
                 bookmarkSchedulePagingCnt = (response.data.size / 10) + 1
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, 1)
+//                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, 1)
 
                 val bookmarkListWhole: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
@@ -109,9 +111,10 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                 }
 
                 // 즐겨찾기/최근 일정 리사이클러뷰 연결
-                binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
-                    context, LinearLayoutManager.VERTICAL, false
+                binding.recyclerViewBookmark.layoutManager = GridLayoutManager(
+                    context,2, GridLayoutManager.VERTICAL, false
                 )
+
                 binding.recyclerViewBookmark.setHasFixedSize(true)
                 binding.recyclerViewBookmark.adapter = WholeScheduleBookmarkAdapter(bookmarkListWhole)
 

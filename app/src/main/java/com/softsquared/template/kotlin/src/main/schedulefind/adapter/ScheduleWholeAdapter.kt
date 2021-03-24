@@ -115,6 +115,7 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
             val bookmarkRequest = BookmarkRequest(
                 scheduleID = wholeList[adapterPosition].id
             )
+            Log.d("TAG", "onClick: ${wholeList[0].id}")
 
             when(v){
                 pick -> {

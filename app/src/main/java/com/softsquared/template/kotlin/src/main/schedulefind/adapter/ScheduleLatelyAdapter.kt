@@ -24,7 +24,7 @@ class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>):
 
     override fun onBindViewHolder(holder: ScheduleLatelyHolder, position: Int) {
         holder.scheduleName.text = latelyList[position].scheduleName
-        holder.scheduleDate.text = latelyList[position].scheduleDate.toString()
+        holder.scheduleDate.text = latelyList[position].scheduleDate
         holder.color.setColorFilter(Color.parseColor(latelyList[position].colorInfo))
     }
 

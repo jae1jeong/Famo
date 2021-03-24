@@ -15,13 +15,17 @@ class WholeLatelyScheduleService(val viewLately : WholeLatelyScheduleView) {
 
         homeRetrofitInterface.getLatelyWholeScheduleInquiry(offset, limit).enqueue(object :
             Callback<LatelyScheduleInquiryResponse> {
-            override fun onResponse(call: Call<LatelyScheduleInquiryResponse>, response: Response<LatelyScheduleInquiryResponse>) {
+            override fun onResponse(
+                call: Call<LatelyScheduleInquiryResponse>,
+                response: Response<LatelyScheduleInquiryResponse>
+            ) {
                 Log.d("값 확인", "tryGetLatelyScheduleInquiry body:  ${response.body()}")
                 Log.d("값 확인", "tryGetLatelyScheduleInquiry code:  ${response.code()}")
                 viewLately.onGetLatelyScheduleInquirySuccess(response.body() as LatelyScheduleInquiryResponse)
             }
 
             override fun onFailure(call: Call<LatelyScheduleInquiryResponse>, t: Throwable) {
+                Log.d("TAG", "onFailure: 전체최근일정조회오류확인 ${t.message}")
                 viewLately.onGetLatelyScheduleInquiryFail(t.message ?: "통신 오류")
 //                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }

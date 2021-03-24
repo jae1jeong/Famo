@@ -62,14 +62,14 @@
                     android:layout_height="37dp"
                     android:background="@drawable/category_edit_plus" />
 
-                <!--            <Button-->
-                <!--                android:id="@+id/schedule_find_no_category"-->
-                <!--                android:layout_width="60dp"-->
-                <!--                android:layout_height="35dp"-->
-                <!--                android:layout_marginLeft="5dp"-->
-                <!--                android:background="@drawable/category_basic_squre"-->
-                <!--                android:text="미선택"-->
-                <!--                android:textSize="18dp" />-->
+<!--                            <Button-->
+<!--                                android:id="@+id/schedule_find_no_category"-->
+<!--                                android:layout_width="60dp"-->
+<!--                                android:layout_height="35dp"-->
+<!--                                android:layout_marginLeft="5dp"-->
+<!--                                android:background="@drawable/category_basic_squre"-->
+<!--                                android:text="미선택"-->
+<!--                                android:textSize="18dp" />-->
 
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="250dp"

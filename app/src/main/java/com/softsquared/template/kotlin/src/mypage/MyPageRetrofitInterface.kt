@@ -18,7 +18,7 @@ interface MyPageRetrofitInterface {
     @GET("profiles")
     fun getMyPage() : Call<MyPageResponse>
 
-    // 남은 일정수 조회(전채/오늘)
+    // 남은 일정수 조회(전체/오늘)
     @GET("schedules/left-over")
     fun getRestScheduleCount(@Query("filter") date:String):Call<RestScheduleCountResponse>
 

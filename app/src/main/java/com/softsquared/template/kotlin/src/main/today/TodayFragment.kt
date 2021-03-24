@@ -16,19 +16,21 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.mypage.MyPageService
-import com.softsquared.template.kotlin.src.main.mypage.MyPageView
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.models.*
+import com.softsquared.template.kotlin.src.mypage.MyPageService
+import com.softsquared.template.kotlin.src.mypage.MyPageView
+import com.softsquared.template.kotlin.src.mypage.models.MonthsAchievementsResponse
+import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
+import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
-    ,TodayView,MyPageView{
+    ,TodayView, MyPageView {
 
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -72,12 +74,12 @@ class TodayFragment() :
             (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
         }
 
-        fun changeSchedulePosition(targetPos:Int,fromPos:Int){
+        fun changeSchedulePosition(fromPos:Int,targetPos:Int){
             TodayService(this).onPostChangeItemPosition(ChangePositionItemRequest(memoList[fromPos].id,targetPos))
         }
         // 리사이클러뷰 아이템 스와이프,드래그
         val swipe = object: MemoSwipeHelper(todayMemoAdapter!!,context!!,binding.todayRecyclerView,200,{
-          pos1,pos2->   changeSchedulePosition(pos1,pos2)
+          fromPos,targetPos ->   changeSchedulePosition(fromPos,targetPos)
         })
         {
             override fun instantiateMyButton(
@@ -118,7 +120,7 @@ class TodayFragment() :
         TodayService(this).onGetScheduleItems()
         // 상단멘트
         TodayService(this).onGetTopComment()
-        MyPageService(this).tryGetDoneScheduleCount()
+//        MyPageService(this).tryGet
         MyPageService(this).tryGetRestScheduleCount("today")
 
     }
@@ -313,23 +315,36 @@ class TodayFragment() :
     override fun onGetRestScheduleCountFailure(message: String) {
     }
 
-    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
-        if (response.isSuccess && response.code == 100){
-            val totalDataJsonArray = response.totaldata.asJsonArray
-            totalDataJsonArray.forEach {
-                val totalData = it.asJsonObject.get("totalScheduleCount").asString
-            }
-            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
-            DoneScheduleDataJsonArray.forEach {
-                val doneData = it.asJsonObject.get("doneScheduleCount").asString
-                binding.todayTextDoneSchedule.text = "해낸일정 ${doneData}개"
-            }
-        }else{
-            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
-        }
+    override fun onGetTotalScheduleCountSuccess(response: TotalScheduleCountResponse) {
+
     }
 
-    override fun onGetDoneScheduleCountFailure(message: String) {
+    override fun onGetTotalScheduleCountFailure(message: String) {
     }
+
+    override fun onGetMonthsAchievmentsSuccess(response: MonthsAchievementsResponse) {
+    }
+
+    override fun onGetMonthsAchievmentsFailure(message: String) {
+    }
+//
+//    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
+//        if (response.isSuccess && response.code == 100){
+//            val totalDataJsonArray = response.totaldata.asJsonArray
+//            totalDataJsonArray.forEach {
+//                val totalData = it.asJsonObject.get("totalScheduleCount").asString
+//            }
+//            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
+//            DoneScheduleDataJsonArray.forEach {
+//                val doneData = it.asJsonObject.get("doneScheduleCount").asString
+//                binding.todayTextDoneSchedule.text = "해낸일정 ${doneData}개"
+//            }
+//        }else{
+//            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+//        }
+//    }
+//
+//    override fun onGetDoneScheduleCountFailure(message: String) {
+//    }
 
 }

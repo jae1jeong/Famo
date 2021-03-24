@@ -19,11 +19,11 @@ object CategoryColorPicker {
     }
     // 카테고리 색상과 둥글게 변형
     fun setCategoryColorRadius(colorInfo:String?,view: View){
-//        val categoryColor = setCategoryColor(colorInfo)
-//        val shape = GradientDrawable()
-//        shape.setColor(Color.parseColor(categoryColor))
-//        shape.cornerRadius = 180F
-//        view.background = shape
+        val categoryColor = setCategoryColor(colorInfo)
+        val shape = GradientDrawable()
+        shape.setColor(Color.parseColor(categoryColor))
+        shape.cornerRadius = 180F
+        view.background = shape
     }
 
 

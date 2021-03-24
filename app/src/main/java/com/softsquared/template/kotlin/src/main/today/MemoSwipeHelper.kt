@@ -15,7 +15,7 @@ import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
-abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private val recyclerView:RecyclerView, internal var buttonWidth:Int)
+abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private val recyclerView:RecyclerView, internal var buttonWidth:Int,private val dragListener:(Int,Int)->Unit)
     :ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),ItemTouchHelper.LEFT) {
     val dragAdapter = adapter
     private var buttonList:MutableList<SwipeButton> ?= null
@@ -113,6 +113,7 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
         target: RecyclerView.ViewHolder
     ): Boolean {
         dragAdapter.swapItems(viewHolder.adapterPosition,target.adapterPosition)
+        dragListener(viewHolder.adapterPosition,target.adapterPosition)
         return true
     }
 

@@ -1,8 +1,10 @@
 package com.softsquared.template.kotlin.src.main.today
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcel
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,19 +15,20 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
-import com.softsquared.template.kotlin.src.main.AddMemoService
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.mypage.MyPageService
+import com.softsquared.template.kotlin.src.main.mypage.MyPageView
+import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.MyPageResponse
+import com.softsquared.template.kotlin.src.main.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
-import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
-import com.softsquared.template.kotlin.src.main.today.models.MemoItem
-import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
+import com.softsquared.template.kotlin.src.main.today.models.*
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
-class TodayFragment :
+class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
-    ,TodayView
-{
+    ,TodayView,MyPageView{
 
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -69,8 +72,13 @@ class TodayFragment :
             (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
         }
 
+        fun changeSchedulePosition(targetPos:Int,fromPos:Int){
+            TodayService(this).onPostChangeItemPosition(ChangePositionItemRequest(memoList[fromPos].id,targetPos))
+        }
         // 리사이클러뷰 아이템 스와이프,드래그
-        val swipe = object: MemoSwipeHelper(todayMemoAdapter!!,context!!,binding.todayRecyclerView,200)
+        val swipe = object: MemoSwipeHelper(todayMemoAdapter!!,context!!,binding.todayRecyclerView,200,{
+          pos1,pos2->   changeSchedulePosition(pos1,pos2)
+        })
         {
             override fun instantiateMyButton(
                 viewHolder: RecyclerView.ViewHolder,
@@ -106,7 +114,12 @@ class TodayFragment :
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         showLoadingDialog(context!!)
+        // 오늘 일정 조회
         TodayService(this).onGetScheduleItems()
+        // 상단멘트
+        TodayService(this).onGetTopComment()
+        MyPageService(this).tryGetDoneScheduleCount()
+        MyPageService(this).tryGetRestScheduleCount("today")
 
     }
 
@@ -123,7 +136,6 @@ class TodayFragment :
 
 
     override fun onResume() {
-        showCustomToast("today fragment onResume")
         super.onResume()
     }
 
@@ -242,10 +254,82 @@ class TodayFragment :
         showCustomToast(message)
     }
 
-    override fun onGetUserTopCommentSuccess() {
+    override fun onGetUserTopCommentSuccess(response: TopCommentResponse) {
+        if(response.isSuccess && response.code == 100){
+            when(response.goalStatus){
+                // 디데이 설정 o
+                1 -> {
+                    val goalTitle = response.goalTitle
+                    val goalDday = response.Dday
+                    binding.todayTextGoalTitle.text = "${goalTitle}까지"
+                    binding.todayTextGoalSubTitle.text = "D-${goalDday}일 남았어요!"
+                }
+                // 디데이 설정 x
+                -1 ->{
+                    val nickName = response.nickname
+                    val titleComment = response.titleComment
+                    binding.todayTextGoalTitle.text = "${nickName}님"
+                    binding.todayTextGoalSubTitle.text = titleComment
+
+                }
+            }
+        }else{
+            showCustomToast(response.message.toString())
+        }
     }
 
     override fun onGetUserTopCommentFailure(message: String) {
+    }
+
+    override fun onPostSchedulePositionSuccess(response: BaseResponse) {
+        if(response.isSuccess && response.code == 100){
+            Log.d("MainActivity", "onPostSchedulePositionSuccess: ${response.message}")
+        }else{
+            showCustomToast(response.message.toString())
+        }
+        dismissLoadingDialog()
+    }
+
+    override fun onPostSchedulePositionFailure(message: String) {
+        showCustomToast(message)
+    }
+
+    override fun onGetMyPageSuccess(response: MyPageResponse) {
+
+    }
+
+    override fun onGetMyPageFail(message: String) {
+    }
+
+    override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
+        showCustomToast(response.message.toString())
+        if(response.isSuccess && response.code == 100){
+            binding.todayTextRestSchedule.text=  "남은일정 ${response.remainScheduleCount}개"
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+    }
+
+    override fun onGetRestScheduleCountFailure(message: String) {
+    }
+
+    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
+        if (response.isSuccess && response.code == 100){
+            val totalDataJsonArray = response.totaldata.asJsonArray
+            totalDataJsonArray.forEach {
+                val totalData = it.asJsonObject.get("totalScheduleCount").asString
+            }
+            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
+            DoneScheduleDataJsonArray.forEach {
+                val doneData = it.asJsonObject.get("doneScheduleCount").asString
+                binding.todayTextDoneSchedule.text = "해낸일정 ${doneData}개"
+            }
+        }else{
+            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+        }
+    }
+
+    override fun onGetDoneScheduleCountFailure(message: String) {
     }
 
 }

@@ -29,7 +29,11 @@ import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
+import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -56,7 +60,8 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
     private var currentMonth:YearMonth = YearMonth.now()
 
-    private val simpleDateFormat:SimpleDateFormat = SimpleDateFormat("MMM")
+    //test
+    private var cnt=  0
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,11 +75,12 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
             // 달력 일자 클릭 리스너
             init {
+                Log.d("TAG", "onViewCreated: CalendarViewContainer init")
                 selectedDate = LocalDate.now()
+//                showCustomToast("$targetYear $targetMonth")
                 view.setOnClickListener {
                     if(day.owner == DayOwner.THIS_MONTH){
                         val currentSelection = selectedDate
-                        showCustomToast("$selectedDate, $day.date")
                         if(selectedDate == day.date){
                             if (currentSelection != null) {
                                 binding.calendarView.notifyDateChanged(currentSelection)
@@ -98,31 +104,31 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             }
         }
 
-            // 달력 일자
-            binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
-                override fun bind(container: CalendarViewContainer, day: CalendarDay) {
-                    container.textView.text = day.date.dayOfMonth.toString()
-                    if(day.owner == DayOwner.THIS_MONTH){
-                        container.textView.setTextColor(Color.BLACK)
-                        userCheckedDateList.forEach {
-                            // 메모가 있는 날짜들 백그라운드 변경
-                            if(it == day.date){
-                                if(todayDate != day.date){
-                                    container.textView.setBackgroundResource(R.drawable.background_item_calendar_has_memo)
-                                }
+        binding.calendarView.dayBinder = object:DayBinder<com.softsquared.template.kotlin.src.main.monthly.CalendarViewContainer>{
+            override fun bind(container: com.softsquared.template.kotlin.src.main.monthly.CalendarViewContainer, day: CalendarDay) {
+                container.textView.text = day.date.dayOfMonth.toString()
+                if(day.owner == DayOwner.THIS_MONTH){
+                    container.textView.setTextColor(Color.BLACK)
+                    userCheckedDateList.forEach {
+                        // 메모가 있는 날짜들 백그라운드 변경
+                        if(it == day.date){
+                            if(todayDate != day.date){
+                                container.textView.setBackgroundResource(R.drawable.background_item_calendar_has_memo)
                             }
                         }
-                        // 오늘 날짜
-                        if(todayDate == day.date){
-                            container.textView.setBackgroundResource(R.drawable.background_item_calendar_today)
-                        }
-                    }else{
-                        container.textView.setTextColor(Color.GRAY)
                     }
-                    container.day = day
+                    // 오늘 날짜
+                    if(todayDate == day.date){
+                        container.textView.setBackgroundResource(R.drawable.background_item_calendar_today)
+                    }
+                }else{
+                    container.textView.setTextColor(Color.GRAY)
                 }
-                override fun create(view: View): CalendarViewContainer = CalendarViewContainer(view)
+                container.day = day
             }
+            override fun create(view: View): com.softsquared.template.kotlin.src.main.monthly.CalendarViewContainer = com.softsquared.template.kotlin.src.main.monthly.CalendarViewContainer(view)
+        }
+
 
         val firstMonth = currentMonth.minusMonths(0)
         val lastMonth = currentMonth.plusMonths(0)
@@ -139,9 +145,9 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
 
         // 달력 헤더
-            binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
+        binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
                 override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
-                    container.headerMonthTextTitle.text = "${month.yearMonth.month.name.capitalize()}"
+                    container.headerMonthTextTitle.text = "${month.yearMonth.month.name}"
 
                     container.headerBtnMonthPlus.setOnClickListener {
                         currentMonth = currentMonth.plusMonths(1)
@@ -191,9 +197,22 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         todayDate = LocalDate.now()
+        targetYear = todayDate?.year
+        targetMonth = todayDate?.monthValue
 
-        showLoadingDialog(context!!)
-        MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
+        GlobalScope.launch(Dispatchers.IO) {
+            val job1 = launch {
+                MonthlyService(this@MonthlyFragment).onGetUserDateList(targetMonth!!,targetYear!!)
+                Log.d("TAG", "viewPagerApiRequest: 1 called")
+            }
+            val job2 = launch {
+                MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
+                Log.d("TAG", "viewPagerApiRequest: 2 called")
+            }
+
+        }
+
+
     }
 
     override fun onGetMonthlyMemoItemSuccess(response: MonthlyMemoItemResponse) {
@@ -229,9 +248,9 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 }
             }
             monthlyMemoAdapter.setNewMemoList(memoList)
-            dismissLoadingDialog()
+//            dismissLoadingDialog()
         }else{
-            dismissLoadingDialog()
+//            dismissLoadingDialog()
             showCustomToast(response.message.toString())
         }
     }
@@ -267,15 +286,18 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     override fun onGetUserDateListSuccess(response: MonthlyUserDateListResponse) {
         if(response.isSuccess && response.code == 100){
             val dateResultArray = response.result.asJsonArray
+            dateResultArray.forEach {
+                val isScheduleDay = it.asJsonObject.get("date").asString
+                userCheckedDateList.add(LocalDate.parse(isScheduleDay))
+            }
 
         }else{
             showCustomToast(response.message.toString())
         }
-        dismissLoadingDialog()
+//        dismissLoadingDialog()
     }
 
     override fun onGetUserDateListFailure(message: String) {
-        dismissLoadingDialog()
         showCustomToast(message)
     }
 
@@ -317,9 +339,15 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     override fun onPostItemCheckFailure(message: String) {
     }
 
-    override fun onGetUserTopCommentSuccess() {
+    override fun onGetUserTopCommentSuccess(response: TopCommentResponse) {
     }
 
     override fun onGetUserTopCommentFailure(message: String) {
+    }
+
+    override fun onPostSchedulePositionSuccess(response: BaseResponse) {
+    }
+
+    override fun onPostSchedulePositionFailure(message: String) {
     }
 }

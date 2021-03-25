@@ -23,6 +23,6 @@ object Constants {
     val KAKAO_JWT = "JWT"
 
     //임시
-    val NUM = "NUM"
     val SEARCHWROD = "SEARCHWROD"
+    val SEARCH_CNT = "SEARCH_CNT"
 }

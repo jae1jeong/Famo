@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityWholeScheduleBinding
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindBookmarkFragment
 import com.softsquared.template.kotlin.src.wholeschedule.adapter.WholeSchedulePagerAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.bookmark.WholeScheduleBookmarkFragment
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleFragment

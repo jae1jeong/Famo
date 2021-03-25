@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ class ScheduleCategoryAdapter(
 
     var mPreviousIndex = -1
 
+    private var selectedView : TextView ?= null
     var boolean = false
     var cnt = 1
 
@@ -107,7 +109,7 @@ class ScheduleCategoryAdapter(
         override fun onClick(view: View?) {
 
             when (view) {
-                text,color -> {
+                text, color -> {
 
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
@@ -169,6 +171,7 @@ class ScheduleCategoryAdapter(
                         }
 
                     }
+                    val newCategory = categoryList[adapterPosition]
 
                     Log.d("TAG", "categoryID: $colorStrList")
 
@@ -177,7 +180,35 @@ class ScheduleCategoryAdapter(
 //                        color.setColorFilter(Color.parseColor("#FF0000"))
 //                    }
 
+//                    categoryList.forEach {
+//                        if (it.isChecked) {
+//                            it.isChecked = false
+//                            selectedView?.let {
+////                                text!!.setBackgroundColor(Color.WHITE)
+//                            }
+//                        }
+//                    }
+
+//                    categoryList.forEach {
+//                        if (categoryList[adapterPosition].id == newCategory.id) {
+//                            categoryList[adapterPosition].isChecked = true
+////                            Log.d("TAG", "onClick: $selectedView")
+//
+////                            color.setColorFilter(Color.parseColor("#FF0000"))
+//                            Log.d(TAG, "ㅇㅇㅇㅇㅇㅇ")
+//                            text!!.setBackgroundColor(Color.RED)
+//                            color.setColorFilter(Color.parseColor("#FF0000"))
+//
+//                        } else {
+//                            Log.d(TAG, "else부분")
+//                            text!!.setBackgroundColor(Color.RED)
+//                            color.setColorFilter(Color.parseColor("#FF0000"))
+//                        }
+//                    }
+
                     color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+
+
 
                     this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
                         colorID[adapterPosition],

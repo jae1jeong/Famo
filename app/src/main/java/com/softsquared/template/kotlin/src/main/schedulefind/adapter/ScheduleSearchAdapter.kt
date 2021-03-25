@@ -23,6 +23,8 @@ import com.softsquared.template.kotlin.util.Constants
 class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
     RecyclerView.Adapter<ScheduleSearchAdapter.ScheduleSearchHolder>() {
 
+    var cnt = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleSearchHolder {
 
         val view = LayoutInflater.from(parent.context)
@@ -40,16 +42,17 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
         holder.schedulePick.setImageResource(searchList[position].schedulePick)
         holder.colorInfo.setColorFilter(Color.parseColor(searchList[position].colorInfo))
 
-        val searchWord = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)
-
+        val searchWord = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
+        val searchCnt = ApplicationClass.sSharedPreferences.getString(Constants.SEARCH_CNT, null)!!
+        Log.d("TAG", "onBindViewHolder: $searchWord")
         //검색단어 색 변경
         val name = holder.scheduleName.text
         val changeNameColor = SpannableStringBuilder(name)
 
         //검색제목 색 변경
-        for (i in name.indices){
+        for (i in name.indices) {
 
-            if (searchWord.equals(name.substring(i,searchWord!!.length+i))){
+            if (searchWord.equals(name.substring(i, searchWord!!.length + i))) {
                 changeNameColor.setSpan(
                     ForegroundColorSpan(Color.parseColor("#ffae2a")),
                     0, searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -61,9 +64,9 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
         val memo = holder.scheduleMemo.text
         val changeMemoColor = SpannableStringBuilder(memo)
         //검색 내용 색 변경
-        for (i in memo.indices){
+        for (i in memo.indices) {
 
-            if (searchWord.equals(memo.substring(i,searchWord!!.length+i))){
+            if (searchWord.equals(memo.substring(i, searchWord!!.length + i))) {
                 changeMemoColor.setSpan(
                     ForegroundColorSpan(Color.parseColor("#ffae2a")),
                     0, searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -71,6 +74,15 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
                 holder.scheduleMemo.text = changeMemoColor
             }
 
+        }
+
+        cnt++
+        if (cnt == Integer.parseInt(searchCnt)) {
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.remove(Constants.SEARCHWROD)
+            edit.remove(Constants.SEARCH_CNT)
+            edit.apply()
+            Log.d("TAG", "onBindViewHolder: 어댑터확인")
         }
 
     }

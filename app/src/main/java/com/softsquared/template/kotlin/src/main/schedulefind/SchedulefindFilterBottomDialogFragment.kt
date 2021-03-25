@@ -23,19 +23,22 @@ import com.softsquared.template.kotlin.util.Constants
 import kotlinx.android.synthetic.main.fragment_schedule_find.*
 import kotlinx.android.synthetic.main.fragment_schedule_find_category.*
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
-
+import java.lang.ClassCastException
 
 class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSheetDialogFragment(),
-    CategoryFilterView, View.OnClickListener {
+    CategoryFilterView,View.OnClickListener {
 
     private var iCategoryFilterInterface: CategoryFilterInterface? = null
 
-    private var mContext: Context? = null
+//    constructor(context: Context) : super(context){
+//        mContext = context
+//    }
 
-    private var mOnDialogButtonClickListener: OnDialogButtonClickListener? = null
+
+     lateinit var mOnDialogButtonClickListener: OnDialogButtonClickListener
 
     interface OnDialogButtonClickListener {
-        fun onDialogButtonClick(view: View?)
+        fun onDialogButtonClick(view: View)
     }
 
     fun setOnDialogButtonClickListener(mListener: OnDialogButtonClickListener) {
@@ -67,36 +70,46 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
     }
 
 
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
+//            View = inflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog, container, false)
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        inflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog,
-            container, false)
-        return view!!
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
+            View {
+        val view = inflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog, container, false)
+        return view
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        filter_btn_remain!!.setOnClickListener(this)
+        filter_btn_completion!!.setOnClickListener(this)
+        filter_btn_recents!!.setOnClickListener(this)
+        filter_btn_bookmark!!.setOnClickListener(this)
+
+//        btn_ok!!.setOnClickListener(this)
 
         //남은 일정 클릭 시
-        filter_btn_remain.setOnClickListener {
-
-            if (remainCnt % 2 != 0) {
-                filter_btn_remain_squre.visibility = View.VISIBLE
-                filter_btn_remain_check.visibility = View.VISIBLE
-            } else {
-                filter_btn_remain_squre.visibility = View.GONE
-                filter_btn_remain_check.visibility = View.GONE
-            }
-            remainCnt++
-
-            Log.d("TAG", "SchedulefindFilterBottomDialogFragment: $id")
-            val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.NUM, "1")
-
-            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "left", 0, 100)
-        }
+//        filter_btn_remain.setOnClickListener {
+//
+//            if (remainCnt % 2 != 0) {
+//                filter_btn_remain_squre.visibility = View.VISIBLE
+//                filter_btn_remain_check.visibility = View.VISIBLE
+//            } else {
+//                filter_btn_remain_squre.visibility = View.GONE
+//                filter_btn_remain_check.visibility = View.GONE
+//            }
+//            remainCnt++
+//
+////            Log.d("TAG", "SchedulefindFilterBottomDialogFragment: $id")
+////            val edit = ApplicationClass.sSharedPreferences.edit()
+////            edit.putString(Constants.NUM, "1")
+////
+////            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "left", 0, 100)
+//        }
 
         //완료 일정 클릭 시
         filter_btn_completion.setOnClickListener {
@@ -111,7 +124,7 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
             completionCnt++
 
 
-            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "done", 0, 100)
+//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "done", 0, 100)
         }
 
         //최신 클릭 시
@@ -126,25 +139,25 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
             }
             recentsCnt++
 
-            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "recent", 0, 100)
+//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "recent", 0, 100)
 
 
         }
 
         //즐겨찾기 클릭 시
-        filter_btn_bookmark.setOnClickListener {
+//        filter_btn_bookmark.setOnClickListener {
+//
+//            if (bookmarkCnt % 2 != 0) {
+//                filter_btn_bookmark_squre.visibility = View.VISIBLE
+//                filter_btn_bookmark_check.visibility = View.VISIBLE
+//            } else {
+//                filter_btn_bookmark_squre.visibility = View.GONE
+//                filter_btn_bookmark_check.visibility = View.GONE
+//            }
+//            bookmarkCnt++
 
-            if (bookmarkCnt % 2 != 0) {
-                filter_btn_bookmark_squre.visibility = View.VISIBLE
-                filter_btn_bookmark_check.visibility = View.VISIBLE
-            } else {
-                filter_btn_bookmark_squre.visibility = View.GONE
-                filter_btn_bookmark_check.visibility = View.GONE
-            }
-            bookmarkCnt++
-
-            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "pick", 0, 100)
-        }
+//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "pick", 0, 100)
+//        }
 
     }
 
@@ -217,16 +230,35 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
 
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-    }
+//    override fun onAttach(activity: Activity) {
+//        super.onAttach(activity)
+//
+//        try {
+//            mOnDialogButtonClickListener = activity as OnDialogButtonClickListener
+//        }catch (e: ClassCastException){
+//            Log.d("TAG", "onAttach: 에러")
+//
+//        }
+//    }
+
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//
+//        filter_btn_remain.setOnClickListener {
+//            mOnDialogButtonClickListener.onDialogButtonClick("첫번째")
+//            dismiss()
+//        }
+//    }
 
     override fun onGetCategoryFilterInquiryFail(message: String) {
     }
 
     override fun onClick(v: View?) {
-        mOnDialogButtonClickListener!!.onDialogButtonClick(v)
+        mOnDialogButtonClickListener.onDialogButtonClick(v!!)
     }
 
 
+
+
 }
+

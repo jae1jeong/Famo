@@ -8,7 +8,7 @@ interface IScheduleCategoryRecyclerView {
     fun onItemMoveBtnClicked(position: Int, scheduleCategoryID : Int)
 
     //칼라값 가져오기
-    fun onColor() : String
+    fun onColor() : ArrayList<String>
 
     fun onMoveFilterFragment(scheduleCategoryID : Int)
 }

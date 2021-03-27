@@ -37,6 +37,7 @@ class ScheduleCategoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleCategoryHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recyclerview_schedule_find_category_item, parent, false)
+
         view.setOnClickListener {
 
         }
@@ -53,31 +54,25 @@ class ScheduleCategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
+
         holder.text.text = categoryList[position].text
         holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
 
+
+        val colorStrList = iScheduleCategoryRecyclerView!!.onColor()
+        Log.d(TAG, "onBindViewHolder: $colorStrList")
+
+
+        if (mPreviousIndex == position){
+            holder.color.setColorFilter(Color.parseColor(colorStrList[position].toString()))
+        }else{
+            holder.color.setColorFilter(Color.parseColor("#00000000"))
+        }
+
+
         holder.text.setOnClickListener {
-            Log.d("TAG", "onBindViewHolder: 클릭확인")
-            var test = 0
-
-            test = position
-//            notifyDataSetChanged()
-
-            if (test == position) {
-                holder.color.setColorFilter(Color.parseColor("#0054FF"))
-                Log.d("TAG", "파란색")
-                boolean = true
-                cnt++
-            }
-
-            if (boolean) {
-                if (cnt % 2 != 0) {
-
-                    holder.color.setColorFilter(Color.parseColor("#00000000"))
-                    Log.d("TAG", "빨간색")
-                    boolean = false
-                }
-            }
+            mPreviousIndex = position
+            notifyDataSetChanged()
         }
     }
 
@@ -90,9 +85,9 @@ class ScheduleCategoryAdapter(
     inner class ScheduleCategoryHolder(
         itemView: View,
         myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    ) : RecyclerView.ViewHolder(itemView) {
 
-        private var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
+//        private var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
 
         val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
         val color = itemView.findViewById<ImageView>(R.id.recyclerview_category_color)
@@ -101,127 +96,119 @@ class ScheduleCategoryAdapter(
 
         init {
             //리스너연결
-            text.setOnClickListener(this)
-            color.setOnClickListener(this)
-            this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
+//            text.setOnClickListener(this)
+//            color.setOnClickListener(this)
+//            this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
         }
 
-        override fun onClick(view: View?) {
-
-            when (view) {
-                text, color -> {
-
-                    Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
-                    val wholeColor = iSearchRecyclerViewInterface.onColor()
-                    var size = 0
-                    var colorList: List<String>? = null
-                    val colorStrList = ArrayList<String>()
-                    val colorID = ArrayList<Int>()
-                    Log.d("로그", "칼라값 받아오기 테스트: $color")
-                    colorList = wholeColor.split(":")
-
-                    for (i in wholeColor.indices) {
-                        if (wholeColor.substring(i, i + 1) == ":") {
-                            size++
-                        }
-                    }
-                    Log.d("로그", "사이즈 : $size")
-
-                    for (i in 0 until size) {
-
-                        if (colorList[i] == "#FF8484") {
-                            colorStrList!!.add("#FF8484")
-                            colorID.add(1)
-                        }
-                        if (colorList[i] == "#FCBC71") {
-                            colorStrList!!.add("#FCBC71")
-                            colorID.add(2)
-                        }
-                        if (colorList[i] == "#FCDC71") {
-                            colorStrList!!.add("#FCDC71")
-                            colorID.add(3)
-                        }
-                        if (colorList[i] == "#C6EF84") {
-                            colorStrList!!.add("#C6EF84")
-                            colorID.add(4)
-                        }
-                        if (colorList[i] == "#7ED391") {
-                            colorStrList!!.add("#7ED391")
-                            colorID.add(5)
-                        }
-                        if (colorList[i] == "#93EAD9") {
-                            colorStrList!!.add("#93EAD9")
-                            colorID.add(6)
-                        }
-                        if (colorList[i] == "#7CC3FF") {
-                            colorStrList!!.add("#7CC3FF")
-                            colorID.add(7)
-                        }
-                        if (colorList[i] == "#6D92F7") {
-                            colorStrList!!.add("#6D92F7")
-                            colorID.add(8)
-                        }
-                        if (colorList[i] == "#AB93FA") {
-                            colorStrList!!.add("#AB93FA")
-                            colorID.add(9)
-                        }
-                        if (colorList[i] == "#FFA2BE") {
-                            colorStrList!!.add("#FFA2BE")
-                            colorID.add(10)
-                        }
-
-                    }
-
-
-                    Log.d("TAG", "categoryID: $colorStrList")
-
+//        override fun onClick(view: View?) {
+//
+//            when (view) {
+//                text, color -> {
+//
+//                    Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
+//                    val wholeColor = iSearchRecyclerViewInterface.onColor()
+//                    var size = 0
+//                    var colorList: List<String>? = null
+//                    colorStrList = ArrayList<String>()
+//                    val colorID = ArrayList<Int>()
+//                    Log.d("로그", "칼라값 받아오기 테스트: $color")
+//                    colorList = wholeColor.split(":")
+//
+//                    for (i in wholeColor.indices) {
+//                        if (wholeColor.substring(i, i + 1) == ":") {
+//                            size++
+//                        }
+//                    }
+//                    Log.d("로그", "사이즈 : $size")
+//
 //                    for (i in 0 until size) {
-//                        Log.d("TAG", "색 원래대로 되돌리기")
-//                        color.setColorFilter(Color.parseColor("#FF0000"))
-//                    }
-
-                    //선택된놈
-                    val newCategory = categoryList[adapterPosition]
-
-//                    categoryList.forEach {
-//                        if (categoryList[adapterPosition].id == newCategory.id) {
-//                            categoryList[adapterPosition].isChecked = true
-////                            Log.d("TAG", "onClick: $selectedView")
 //
-////                            color.setColorFilter(Color.parseColor("#FF0000"))
-////                            Log.d(TAG, "ㅇㅇㅇㅇㅇㅇ")
-////                            text!!.setBackgroundColor(Color.RED)
-////                            color.setColorFilter(Color.parseColor("#FF0000"))
+//                        if (colorList[i] == "#FF8484") {
+//                            colorStrList!!.add("#FF8484")
+//                            colorID.add(1)
 //                        }
-//                    }
-//
-//
-//
-//                    categoryList.forEach {
-//                        if (it.isChecked) {
-//                            Log.d("TAG", "11111111")
-//                            it.isChecked = false
-////                            color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-//                            color.setColorFilter(Color.parseColor("#00000000"))
-//
-//                        } else {
-//                            Log.d(TAG, "2222222222")
-//                            color.setColorFilter(Color.parseColor("#00000000"))
+//                        if (colorList[i] == "#FCBC71") {
+//                            colorStrList!!.add("#FCBC71")
+//                            colorID.add(2)
 //                        }
+//                        if (colorList[i] == "#FCDC71") {
+//                            colorStrList!!.add("#FCDC71")
+//                            colorID.add(3)
+//                        }
+//                        if (colorList[i] == "#C6EF84") {
+//                            colorStrList!!.add("#C6EF84")
+//                            colorID.add(4)
+//                        }
+//                        if (colorList[i] == "#7ED391") {
+//                            colorStrList!!.add("#7ED391")
+//                            colorID.add(5)
+//                        }
+//                        if (colorList[i] == "#93EAD9") {
+//                            colorStrList!!.add("#93EAD9")
+//                            colorID.add(6)
+//                        }
+//                        if (colorList[i] == "#7CC3FF") {
+//                            colorStrList!!.add("#7CC3FF")
+//                            colorID.add(7)
+//                        }
+//                        if (colorList[i] == "#6D92F7") {
+//                            colorStrList!!.add("#6D92F7")
+//                            colorID.add(8)
+//                        }
+//                        if (colorList[i] == "#AB93FA") {
+//                            colorStrList!!.add("#AB93FA")
+//                            colorID.add(9)
+//                        }
+//                        if (colorList[i] == "#FFA2BE") {
+//                            colorStrList!!.add("#FFA2BE")
+//                            colorID.add(10)
+//                        }
+//
 //                    }
 //
-//                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-
-
-//                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
-//                        colorID[adapterPosition],
-//                        categoryList[adapterPosition].id
-//                    )
-
-                    Log.d("TAG", "onClick: 다시돌아옴?")
-                }
-            }
-        }
+//
+//                    val newCategory = categoryList[adapterPosition]
+//
+////                    categoryList.forEach {
+////                        if (categoryList[adapterPosition].id == newCategory.id) {
+////                            categoryList[adapterPosition].isChecked = true
+//////                            Log.d("TAG", "onClick: $selectedView")
+////
+//////                            color.setColorFilter(Color.parseColor("#FF0000"))
+//////                            Log.d(TAG, "ㅇㅇㅇㅇㅇㅇ")
+//////                            text!!.setBackgroundColor(Color.RED)
+//////                            color.setColorFilter(Color.parseColor("#FF0000"))
+////                        }
+////                    }
+////
+////
+////
+////                    categoryList.forEach {
+////                        if (it.isChecked) {
+////                            Log.d("TAG", "11111111")
+////                            it.isChecked = false
+//////                            color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+////                            color.setColorFilter(Color.parseColor("#00000000"))
+////
+////                        } else {
+////                            Log.d(TAG, "2222222222")
+////                            color.setColorFilter(Color.parseColor("#00000000"))
+////                        }
+////                    }
+////
+////                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+//
+//
+////                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
+////                        colorID[adapterPosition],
+////                        categoryList[adapterPosition].id
+////                    )
+//
+//                    Log.d("TAG", "onClick: 다시돌아옴?")
+//                }
+//            }
+//        }
 
     }
 

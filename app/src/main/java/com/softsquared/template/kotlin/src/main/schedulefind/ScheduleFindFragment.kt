@@ -23,6 +23,7 @@ import com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivit
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     (FragmentScheduleFindBinding::bind, R.layout.fragment_schedule_find),
@@ -51,9 +52,15 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        val adapter = ScheduleFindPagerAdapter(childFragmentManager!!)
+        adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
+        adapter.addFragment(ScheduleFindLatelyFragment(), "최근")
+        Log.d("TAG", "onViewCreated: 뷰페이저")
+        binding.scheduleFindViewPager.adapter = adapter
+        binding.scheduleFindTabLayout.setupWithViewPager(binding.scheduleFindViewPager)
+
 //        ScheduleFindService(this).tryGetWholeScheduleCount()
-
-
 
 //         검색
 //        if (word != null){
@@ -129,7 +136,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             val searchWord = binding.scheduleFindBtn.text.toString()
 
             val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.SEARCHWROD,searchWord)
+            edit.putString(Constants.SEARCHWROD, searchWord)
             edit.apply()
 
             when (actionId) {
@@ -214,10 +221,10 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
         //자세히 보기 클릭 시
 //        binding.scheduleFindBtnDetail.setOnClickListener {
-            val bundle = Bundle()
-            val scheduleFindDetailFragment = ScheduleFindDetailFragment()
+        val bundle = Bundle()
+        val scheduleFindDetailFragment = ScheduleFindDetailFragment()
 
-            // 즐겨찾기가 선택되어 있는 경우
+        // 즐겨찾기가 선택되어 있는 경우
 //            if (binding.scheduleFindBookmarkView.layoutParams.height == 4) {
 //
 //                binding.scheduleFindLinear.visibility = View.GONE
@@ -229,7 +236,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //                startActivity(intent)
 //            }
 
-            //최근이 선택되어 있는 경우
+        //최근이 선택되어 있는 경우
 //            if (binding.scheduleFindLatelyView.layoutParams.height == 4) {
 //                binding.scheduleFindLinear.visibility = View.GONE
 //                val intent = Intent(activity, WholeScheduleActivity::class.java)
@@ -322,7 +329,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     }
 
     //카테고리 클릭 시 카테고리별 일정으로 이동
-    override fun onItemMoveBtnClicked(position: Int, scheduleCategoryID : Int) {
+    override fun onItemMoveBtnClicked(position: Int, scheduleCategoryID: Int) {
         binding.scheduleFindMainLinear.visibility = View.GONE
         binding.scheduleFindMainFragment.visibility = View.VISIBLE
         Log.d("TAG", "onItemMoveBtnClicked: $position")
@@ -337,17 +344,77 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             .commit()
     }
 
-    override fun onMoveFilterFragment(scheduleCategoryID : Int) {
-        val scheduleFindFilterBottomDialogBinding = SchedulefindFilterBottomDialogFragment(scheduleCategoryID)
+    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
+        val scheduleFindFilterBottomDialogBinding =
+            SchedulefindFilterBottomDialogFragment(scheduleCategoryID)
         scheduleFindFilterBottomDialogBinding.show(
             fragmentManager!!, scheduleFindFilterBottomDialogBinding.tag
         )
     }
 
+    //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수
-    override fun onColor(): String {
+    override fun onColor(): ArrayList<String> {
 
-        return color
+        var size = 0
+        var colorList: List<String>? = null
+        val colorStrList = ArrayList<String>()
+        val colorID = ArrayList<Int>()
+        colorList = color.split(":")
+
+        for (i in color.indices) {
+            if (color.substring(i, i + 1) == ":") {
+                size++
+            }
+        }
+        Log.d("로그", "사이즈 : $size")
+
+        for (i in 0 until size) {
+
+            if (colorList[i] == "#FF8484") {
+                colorStrList!!.add("#FF8484")
+                colorID.add(1)
+            }
+            if (colorList[i] == "#FCBC71") {
+                colorStrList!!.add("#FCBC71")
+                colorID.add(2)
+            }
+            if (colorList[i] == "#FCDC71") {
+                colorStrList!!.add("#FCDC71")
+                colorID.add(3)
+            }
+            if (colorList[i] == "#C6EF84") {
+                colorStrList!!.add("#C6EF84")
+                colorID.add(4)
+            }
+            if (colorList[i] == "#7ED391") {
+                colorStrList!!.add("#7ED391")
+                colorID.add(5)
+            }
+            if (colorList[i] == "#93EAD9") {
+                colorStrList!!.add("#93EAD9")
+                colorID.add(6)
+            }
+            if (colorList[i] == "#7CC3FF") {
+                colorStrList!!.add("#7CC3FF")
+                colorID.add(7)
+            }
+            if (colorList[i] == "#6D92F7") {
+                colorStrList!!.add("#6D92F7")
+                colorID.add(8)
+            }
+            if (colorList[i] == "#AB93FA") {
+                colorStrList!!.add("#AB93FA")
+                colorID.add(9)
+            }
+            if (colorList[i] == "#FFA2BE") {
+                colorStrList!!.add("#FFA2BE")
+                colorID.add(10)
+            }
+
+        }
+
+        return colorStrList
     }
 
     //유저별 카테고리조회 성공
@@ -362,9 +429,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                         ScheduleCategoryData(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            "#00000000",
-                            false
-
+                            "#00000000"
                         )
                     )
 //                    #00000000
@@ -716,13 +781,14 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onResume() {
         super.onResume()
 
-        val word : String? = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)
+        val word: String? =
+            ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
         Log.d("TAG", "onResume: ㅇㅇㅇㅇ $word")
 
-        if (word != null){
+        if (word != null) {
             Log.d("TAG", "onResume: 안 $word")
 
-            if (word!!.length > 0){
+            if (word!!.length > 0) {
                 binding.scheduleFindMainLinear.visibility = View.GONE
                 binding.scheduleFindMainFragment.visibility = View.VISIBLE
                 val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()

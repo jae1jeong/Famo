@@ -1,9 +1,14 @@
 package com.softsquared.template.kotlin.src.main.category
 
+import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityCategoryEditBinding
@@ -11,32 +16,38 @@ import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
+import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 
 class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
-    (ActivityCategoryEditBinding::inflate), ICategoryRecyclerView, CategoryEditView {
+    (ActivityCategoryEditBinding::inflate), ICategoryRecyclerView, CategoryEditView,
+    CategoryInquiryView,DeleteDialog.deleteButtonClickListener, View.OnClickListener {
 
-    //    private var categoryEditList = ArrayList<ScheduleCategoryData>()
-    val categoryEditList: ArrayList<ScheduleCategoryData> = arrayListOf()
-    private lateinit var categoryEditAdapter: ScheduleCategoryEditAdapter
+    private var deleteDialog: DeleteDialog? = null
 
     var wholeName: String? = null
     var wholeColor: String? = null
 
     var color: List<String>? = null
     var name: List<String>? = null
-    var tempCategoryID : List<String>? = null
-
+    var tempCategoryID: List<String>? = null
 
     var size: Int? = null
     var getCategoryID: String? = null
 
     val intCategoryID = ArrayList<Int>()
 
-//    var tempCategoryID : List<String>? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         wholeName = intent.getStringExtra("name")
         wholeColor = intent.getStringExtra("color")
@@ -47,40 +58,18 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         Log.d("TAG", "CategoryEditActivity : size : $size")
         Log.d("TAG", "CategoryEditActivity : categoryID : $getCategoryID")
 
-//        val a = "생성된 카테고리번호 : 20"
-//        val b = a.split(":".toRegex()).toTypedArray()
-//        println(b[0])
-//        println(b[1])
-//        val c = b[1].substring(1, b[1].length)
-//        println(c)
-
-        if (wholeName != null && wholeColor != null && getCategoryID != null){
+        if (wholeName != null && wholeColor != null && getCategoryID != null) {
             name = wholeName!!.split(":")
             color = wholeColor!!.split(":")
             tempCategoryID = getCategoryID!!.split(":")
-
-
         }
 
-        if (tempCategoryID != null){
-
-            for (i in 0 until size!!){
+        if (tempCategoryID != null) {
+            for (i in 0 until size!!) {
                 intCategoryID.add(tempCategoryID?.get(i)!!.toInt())
                 Log.d("TAG", "intCategoryID: $intCategoryID")
             }
         }
-
-        //            카테고리 리사이클러뷰
-        createCategoryRecyclerview()
-
-
-
-//        val categoryID : List<String> = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
-//        if (getCategoryID != null){
-//            tempCategoryID = getCategoryID!!.split(":".toRegex()).toTypedArray()
-//            Log.d("TAG", "getCategoryID: $getCategoryID")
-//        }
-//        val categoryID : List<String> = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
 
         //카테고리 추가
         binding.categoryEditBtnPlus.setOnClickListener {
@@ -96,97 +85,65 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                 categoryAddBottomDialogFragment.tag
             )
 
-
-//            val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjUsIm1ldGhvZCI6IkYiLCJpYXQiOjE2MTUzODYyMTEsImV4cCI6MTY0NjkyMjIxMSwic3ViIjoidXNlckluZm8ifQ.laZCThzA823-i5-ZTVyfvqq8PMIgHUdAnP97woIHufQ"
-
-//            val categoryInsertRequest = CategoryInsertRequest(
-//                categoryName = "",
-//                categoryColor = 1
-//            )
-//            CategoryEditService(this).tryPostCategoryEditInsert(token,categoryInsertRequest)
-//            val scheduleCategoryData =  ScheduleCategoryData("")
-//            categoryEditAdapter.addItem(scheduleCategoryData)
-//            categoryEditAdapter.notifyDataSetChanged()
         }
 
         //X 버튼
         binding.categoryEditXBtn.setOnClickListener {
-//            (activity as MainActivity).replaceFragment(ScheduleFindFragment.newInstance());
-//            (activity as MainActivity).onBackPressed()
-
-//            CategoryEditService(this).tryPatchCategoryEditUpdate("")
-//            val categoryInsertRequest = CategoryInsertRequest(
-//                categoryName = categoryEditAdapter.onBindViewHolder()
-//                categoryColor = categoryID
-//            )
-//            CategoryEditService(this).tryPostCategoryEditInsert(categoryInsertRequest)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
     }
 
+    //삭제다이얼로그
+    fun deleteDialog() {
+        val dialog = DeleteDialog(this)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
 
-    fun createCategoryRecyclerview() {
-
-        for (i in 0 until size!!) {
-
-            categoryEditList.add(
-                ScheduleCategoryData(intCategoryID[i],name!![i], color!![i],false)
-            )
-        }
-
-        categoryEditAdapter = ScheduleCategoryEditAdapter(categoryEditList,this)
-
-//        this.photoGridRecyeclerViewAdapter = PhotoGridRecyclerViewAdapter()
-//        this.photoGridRecyeclerViewAdapter.submitList(photoList)
-//        //                                                                                                              데이터값을 처음부터/끝부분부터 방향
-//        my_photo_recycler_view.layoutManager = GridLayoutManager(this,2,
-//            GridLayoutManager.VERTICAL,false)
-//        my_photo_recycler_view.adapter = this.photoGridRecyeclerViewAdapter
-
-        binding.recyclerviewEditCategory.layoutManager = LinearLayoutManager(
-            this, LinearLayoutManager.VERTICAL, false
-        )
-        binding.recyclerviewEditCategory.setHasFixedSize(true)
-        binding.recyclerviewEditCategory.adapter = categoryEditAdapter
+    fun deleteImpossibleDialog() {
+        val dialog = DeleteImpossibleDialog(this)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 
     //삭제버튼 클릭
-    override fun onItemDeleteBtnClicked(categoryID: Int) {
-        Log.d("aa", "onSearchItemDeleteBtnClicked: ")
-
-        //해당 번쨰를 삭제 및 저장
-        categoryEditList.removeAt(categoryID)
-        //데이터 덮어쓰기
-//        SharedPrefManager.storeSearchHisotryList(this.searchHistoryList)
-        //데이터 변경알림
-        this.categoryEditAdapter.notifyDataSetChanged()
-
-//        CategoryEditService(this).tryDeleteCategoryEditDelete()
+    override fun onItemDeleteBtnClicked() {
+//        deleteDialog()
+        deleteDialog =
+            DeleteDialog(this)
+        deleteDialog!!.setOnDialogButtonClickListener(this)
+        deleteDialog!!.setCancelable(false)
+        deleteDialog!!.show()
     }
 
-    override fun onCategoryID(categoryID: Int) : Int{
+    //삭제불가
+    override fun onDeleteImpossible() {
+        deleteImpossibleDialog()
+    }
+
+    override fun onCategoryID(categoryID: Int): Int {
 //        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
 //        val categoryID = tempCategoryID
 //        Log.d("TAG", "onCategoryID함수: $categoryID")
         return categoryID
     }
 
-    override fun onCategoryID2() : Int{
+    override fun onCategoryID2(): Int {
 //        val categoryID = tempCategoryID?.get(1)!!.substring(1, tempCategoryID!![1].length)
 //        val categoryID = tempCategoryID
 //        Log.d("TAG", "onCategoryID함수: $categoryID")
         return Integer.parseInt(tempCategoryID!![0])
     }
 
-    override fun onMoveFragment(categoryID : Int, text : String) {
+    override fun onMoveFragment(categoryID: Int, text: String) {
         val categoryEditBottomDialogFragment = CategoryEditBottomDialogFragment()
         val bunble = Bundle()
         bunble.putString("color", wholeColor)
         bunble.putString("name", text)
         bunble.putInt("size", size!!)
-        bunble.putInt("categoryID",categoryID)
+        bunble.putInt("categoryID", categoryID)
         categoryEditBottomDialogFragment.arguments = bunble
         categoryEditBottomDialogFragment.show(
             supportFragmentManager, categoryEditBottomDialogFragment.tag
@@ -198,7 +155,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     override fun onMoveDeleteUpdate() {
-        val intent = Intent(this,CategoryEditActivity::class.java)
+        val intent = Intent(this, CategoryEditActivity::class.java)
         intent.putExtra("color", wholeColor)
         intent.putExtra("name", wholeName)
         intent.putExtra("size", size)
@@ -241,9 +198,68 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     override fun onPatchCategoryUpdateSuccess(response: BaseResponse) {
+
     }
 
     override fun onPatchCategoryUpdateFail(message: String) {
     }
+
+    //유저별 카테고리 조회
+    override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
+
+        when (responseUser.code) {
+            100 -> {
+                Log.d("TAG", "onGetCategoryInquirySuccess: 유저카테고리조회성공")
+                val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
+
+                for (i in 0 until responseUser.data.size) {
+                    categoryList.add(
+                        ScheduleCategoryData(
+                            responseUser.data[i].categoryID,
+                            responseUser.data[i].categoryName,
+                            responseUser.data[i].colorInfo
+                        )
+                    )
+                }
+
+                binding.recyclerviewEditCategory.layoutManager = LinearLayoutManager(
+                    this, LinearLayoutManager.VERTICAL, false
+                )
+                binding.recyclerviewEditCategory.setHasFixedSize(true)
+                binding.recyclerviewEditCategory.adapter = ScheduleCategoryEditAdapter(categoryList,this)
+//                scheduleCategoryAdapter.notifyDataSetChanged()
+
+            }
+            else -> {
+                showCustomToast("실패 메시지 : ${responseUser.message}")
+            }
+        }
+
+    }
+
+    override fun onGetUserCategoryInquiryFail(message: String) {
+    }
+
+    override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+    }
+
+    override fun onGetCategoryInquiryFail(message: String) {
+    }
+
+    override fun onDialogButtonClick(view: View?) {
+        when (view!!.id) {
+            R.id.delete_check -> {
+                Log.d(ContentValues.TAG, "onDialogButtonClick: delete확인")
+//                CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
+
+            }
+
+        }
+    }
+
+    override fun onClick(v: View?) {
+        onItemDeleteBtnClicked()
+    }
+
 
 }

@@ -2,7 +2,9 @@ package com.softsquared.template.kotlin.src.main.category
 
 interface ICategoryRecyclerView {
 
-    fun onItemDeleteBtnClicked(position: Int)
+    fun onItemDeleteBtnClicked()
+
+    fun onDeleteImpossible()
 
     fun onCategoryID(categoryID: Int) : Int
 
@@ -13,4 +15,6 @@ interface ICategoryRecyclerView {
     fun getColor(color : String)
 
     fun onMoveDeleteUpdate()
+
+
 }

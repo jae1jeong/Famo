@@ -469,10 +469,10 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                 val categoryID = b[1].substring(1, b[1].length)
 
                 val addList = arrayListOf(
-                    ScheduleCategoryData(categoryID.toInt(), text, inputColor,false)
+                    ScheduleCategoryData(categoryID.toInt(), text, inputColor)
                 )
                 val scheduleCategoryData =
-                    ScheduleCategoryData(categoryID.toInt(), text, inputColor,false)
+                    ScheduleCategoryData(categoryID.toInt(), text, inputColor)
 
                 val categoryEditAdapter =
                     ScheduleCategoryEditAdapter(addList, activity as CategoryEditActivity)

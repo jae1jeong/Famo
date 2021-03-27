@@ -1,7 +1,10 @@
 package com.softsquared.template.kotlin.src.main.category.adapter
 
+import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,20 +17,25 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.*
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.CategoryFilterService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
+import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
+import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 
 class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCategoryData>,
     categoryRecyclerView: ICategoryRecyclerView) :
     RecyclerView.Adapter<ScheduleCategoryEditAdapter.ScheduleCategoryEditHolder>(),
-    CategoryEditView, CategoryInquiryView {
+    CategoryEditView, CategoryInquiryView, DeleteDialog.deleteButtonClickListener{
+
+    private var deleteDialog: DeleteDialog? = null
 
     private var iCategoryRecyclerView: ICategoryRecyclerView? = null
 
-    val categoryID = 0
+    var categoryID = 0
 
     var dataSize = 0
 
@@ -111,7 +119,17 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 //                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
 
 //                    Log.d(TAG, "onClick: ")
-                    val categoryID = categoryEditList[adapterPosition].id.toString()
+
+
+                    iCategoryRecyclerView!!.onItemDeleteBtnClicked()
+
+//                    val deleteDialog = DeleteDialog(this@ScheduleCategoryEditAdapter)
+//                    deleteDialog!!.setOnDialogButtonClickListener(this)
+//                    deleteDialog!!.setCancelable(false)
+//                    deleteDialog!!.show()
+
+
+                    categoryID = categoryEditList[adapterPosition].id
 
                     CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry(
                         categoryEditList[adapterPosition].id,
@@ -120,14 +138,14 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
                     )
 
                     //데이터가 있으면 일정 삭제 안되게
-                    if (dataSize == 0) {
-                        CategoryEditService(this@ScheduleCategoryEditAdapter)
-                            .tryDeleteCategoryEditDelete(categoryID)
-                        removeItem(adapterPosition)
-                        notifyDataSetChanged()
-                    } else {
-                        Log.d(TAG, "onClick: 일정 ")
-                    }
+//                    if (dataSize == 0) {
+//                        CategoryEditService(this@ScheduleCategoryEditAdapter)
+//                            .tryDeleteCategoryEditDelete(categoryID)
+//                        removeItem(adapterPosition)
+//                        notifyDataSetChanged()
+//                    } else {
+//                        Log.d(TAG, "onClick: 일정 ")
+//                    }
                 }
                 color, text -> {
                     Log.d("로그", "색상변경 버튼 클릭")
@@ -215,6 +233,20 @@ class ScheduleCategoryEditAdapter(var categoryEditList: ArrayList<ScheduleCatego
 
     override fun onGetCategoryInquiryFail(message: String) {
     }
+
+    override fun onDialogButtonClick(view: View?) {
+
+        when (view!!.id) {
+            R.id.delete_check -> {
+                Log.d(TAG, "onDialogButtonClick: delete확인")
+                iCategoryRecyclerView!!.onDeleteImpossible()
+//                CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
+
+            }
+
+        }
+    }
+
 
 
 //    override fun onClick(view: View?) {

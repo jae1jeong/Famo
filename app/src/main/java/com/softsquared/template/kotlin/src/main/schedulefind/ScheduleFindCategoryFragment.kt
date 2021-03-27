@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialo
 class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
     FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
 ), CategoryInquiryView, CategoryFilterInterface, CategoryFilterView, ScheduleFindView,
-    View.OnClickListener, SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener {
+    View.OnClickListener, SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener{
 
     companion object {
         fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...

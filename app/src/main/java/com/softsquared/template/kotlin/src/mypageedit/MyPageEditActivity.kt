@@ -2,17 +2,20 @@ package com.softsquared.template.kotlin.src.mypageedit
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.DatePicker
@@ -21,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -43,8 +47,6 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
-import android.util.Base64
-import androidx.core.net.toUri
 
 class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     (ActivityMyPageEditBinding::inflate), MyPageEditView {
@@ -71,10 +73,14 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
 
+    var context: Context? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        intentCnt = intent.getIntExtra("check",100)
+        context = this
+
+        intentCnt = intent.getIntExtra("check", 100)
 
         MyPageEditService(this).tryGetMyPage()
 
@@ -243,6 +249,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     //로그아웃 알림창
     fun logoutDialog() {
         val dialog = LogoutDialog(this)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
 
@@ -424,14 +431,14 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                     if (kakaoImg!!.isEmpty()) {
                         Glide.with(this).load(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageEditImg)
-                    }else if(kakaoImg!!.isNotEmpty()){
+                    } else if (kakaoImg!!.isNotEmpty()) {
                         Glide.with(this).load(kakaoImg)
                             .centerCrop().into(binding.myPageEditImg)
                     }
 
-                    if(intentCnt == 1){
+                    if (intentCnt == 1) {
                         binding.myPageEditImg.setImageURI(galleryUrl)
-                    }else if(intentCnt == 2){
+                    } else if (intentCnt == 2) {
                         binding.myPageEditImg.setImageBitmap(cameraImg)
                     }
                 }
@@ -439,12 +446,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 //페모로그인일경우
                 if (response.loginMethod == "F") {
                     //처음에는 기본 이미지
-                    if (gallery == null && camera == null){
+                    if (gallery == null && camera == null) {
                         Glide.with(this).load(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageEditImg)
-                    }else if(intentCnt == 1){
+                    } else if (intentCnt == 1) {
                         binding.myPageEditImg.setImageURI(galleryUrl)
-                    }else if(intentCnt == 2){
+                    } else if (intentCnt == 2) {
                         binding.myPageEditImg.setImageBitmap(cameraImg)
                     }
 
@@ -512,7 +519,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val intent = Intent(this, MyPageActivity::class.java)
                 intent.putExtra("day", day)
                 intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
-                intent.putExtra("check",imgCnt)
+                intent.putExtra("check", imgCnt)
                 startActivity(intent)
 //                myPageActivityView.moveMyPage()
 //                nickname = binding.myPageEditEtName.text.toString(),

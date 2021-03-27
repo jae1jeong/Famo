@@ -230,9 +230,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onItemMoveBtnClicked(position: Int, scheduleCategoryID: Int) {
     }
 
-    override fun onColor(): String {
+    override fun onColor(): ArrayList<String> {
 
-        return ""
+        val aa = ArrayList<String>()
+        return aa
     }
 
     //일정찾기 - 필터 바텀다이얼로그로 이동

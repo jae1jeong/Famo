@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="로그아웃"
+            android:text="카테고리 삭제"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView18"
-            android:text="로그아웃 하시겠습니까?" />
+            android:text="이 카테고리를 삭제하시겠습니까?" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:gravity="fill_vertical">
 
             <Button
-                android:id="@+id/logout_cancel"
+                android:id="@+id/delete_cancel"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:background="@color/view_color"
@@ -72,12 +72,12 @@
                 style="@style/Widget.AppCompat.Button.Borderless"/>
 
             <Button
-                android:id="@+id/logout_check"
+                android:id="@+id/delete_check"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="#ffae2a"
-                android:text="로그아웃"
+                android:text="삭제"
                 android:textSize="15sp"
                 android:textColor="@color/white"
                 android:textStyle="normal"

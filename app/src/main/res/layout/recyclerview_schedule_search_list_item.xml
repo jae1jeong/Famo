@@ -31,6 +31,7 @@
             android:layout_marginLeft="13.5dp"/>
         
         <ImageView
+            android:id="@+id/search_history_delete"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:background="@drawable/schedule_search_list_x_btn"

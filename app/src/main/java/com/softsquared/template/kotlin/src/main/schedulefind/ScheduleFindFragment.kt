@@ -2,8 +2,6 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,9 +19,7 @@ import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
-import com.softsquared.template.kotlin.src.schedulesearch.ScheduleSearchActivity
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
-import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleView
+import com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.util.*
@@ -44,8 +40,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
     var pagingCnt = 1
 
-    var word : String? = null
-
     private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
 
     // 전체 일정 어댑터
@@ -56,15 +50,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // viewPager
-//        val adapter = ScheduleFindPagerAdapter(childFragmentManager)
-//        adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
-//        adapter.addFragment(ScheduleFindLatelyFragment(), "최근")
-//        Log.d("TAG", "onViewCreated: 뷰페이저")
-//        binding.scheduleFindViewPager.adapter = adapter
-//        binding.scheduleFindTabLayout.setupWithViewPager(binding.scheduleFindViewPager)
-//        binding.scheduleFindViewPager.currentItem = 0
 
 //        ScheduleFindService(this).tryGetWholeScheduleCount()
 
@@ -91,8 +76,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         //프래그먼트 이동간 gone/visibility설정
         (activity as MainActivity).fragmentSetting()
 
-        binding.scheduleFindMainLinear.visibility = View.VISIBLE
-        binding.scheduleFindMainFragment.visibility = View.GONE
+//        binding.scheduleFindMainLinear.visibility = View.VISIBLE
+//        binding.scheduleFindMainFragment.visibility = View.GONE
 
 //        레이아웃 마진 설정
 //        val layout1 = binding.scheduleFindLinear
@@ -102,16 +87,16 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //        binding.scheduleFindLinear.marginTop.plus(30)
 
         // 즐겨찾기탭의 height 초기 값을 4로 지정
-        binding.scheduleFindBookmarkView.layoutParams.height = 4
+//        binding.scheduleFindBookmarkView.layoutParams.height = 4
 
         // 일정찾기 탭 default설정 - 처음에는 즐겨찾기탭이 보이게, 카테고리 설정
-        childFragmentManager.beginTransaction()
-            .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
-            .commit()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.schedule_find_fragment, ScheduleFindBookmarkFragment())
+//            .commit()
 
         // 처음 시작은 즐겨찾기/최근 중 즐겨찾기로 선택되게끔
-        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
-        binding.scheduleFindLatelyView.visibility = View.GONE
+//        binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
+//        binding.scheduleFindLatelyView.visibility = View.GONE
 
 
 //        binding.scheduleFindNoCategory.setOnClickListener {
@@ -192,43 +177,43 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
 
         //즐겨찾기 탭
-        binding.scheduleFindTvBookmark.setOnClickListener {
-            binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
-            binding.scheduleFindTvBookmark.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindBookmarkView.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindBookmarkView.layoutParams.height = 4
-
-            binding.scheduleFindTvLately.setTextColor(Color.GRAY)
-            binding.scheduleFindTvLately.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindLatelyView.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindLatelyView.layoutParams.height = 2
-
-            childFragmentManager.beginTransaction().replace(
-                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()
-            ).commit()
-////            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
-        }
+//        binding.scheduleFindTvBookmark.setOnClickListener {
+//            binding.scheduleFindTvBookmark.setTextColor(Color.BLACK)
+//            binding.scheduleFindTvBookmark.setTypeface(null, Typeface.BOLD)
+//            binding.scheduleFindBookmarkView.setBackgroundColor(Color.BLACK)
+//            binding.scheduleFindBookmarkView.layoutParams.height = 4
+//
+//            binding.scheduleFindTvLately.setTextColor(Color.GRAY)
+//            binding.scheduleFindTvLately.setTypeface(null, Typeface.NORMAL)
+//            binding.scheduleFindLatelyView.setBackgroundColor(Color.parseColor("#E1DDDD"))
+//            binding.scheduleFindLatelyView.layoutParams.height = 2
+//
+//            childFragmentManager.beginTransaction().replace(
+//                R.id.schedule_find_fragment, ScheduleFindBookmarkFragment()
+//            ).commit()
+//////            (activity as MainActivity).replaceFragment(ScheduleFindBookmarkFragment.newInstance());
+//        }
 
         //최근 탭
-        binding.scheduleFindTvLately.setOnClickListener {
-            binding.scheduleFindTvLately.setTextColor(Color.BLACK)
-            binding.scheduleFindTvLately.setTypeface(null, Typeface.BOLD)
-            binding.scheduleFindLatelyView.setBackgroundColor(Color.BLACK)
-            binding.scheduleFindLatelyView.layoutParams.height = 4
-
-            binding.scheduleFindTvBookmark.setTextColor(Color.GRAY)
-            binding.scheduleFindTvBookmark.setTypeface(null, Typeface.NORMAL)
-            binding.scheduleFindBookmarkView.setBackgroundColor(Color.parseColor("#E1DDDD"))
-            binding.scheduleFindBookmarkView.layoutParams.height = 2
-
-//            ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0,2)
-            childFragmentManager.beginTransaction().replace(
-                R.id.schedule_find_fragment, ScheduleFindLatelyFragment()).commit()
-//            (activity as MainActivity).replaceFragment(ScheduleFindLatelyFragment.newInstance());
-        }
+//        binding.scheduleFindTvLately.setOnClickListener {
+//            binding.scheduleFindTvLately.setTextColor(Color.BLACK)
+//            binding.scheduleFindTvLately.setTypeface(null, Typeface.BOLD)
+//            binding.scheduleFindLatelyView.setBackgroundColor(Color.BLACK)
+//            binding.scheduleFindLatelyView.layoutParams.height = 4
+//
+//            binding.scheduleFindTvBookmark.setTextColor(Color.GRAY)
+//            binding.scheduleFindTvBookmark.setTypeface(null, Typeface.NORMAL)
+//            binding.scheduleFindBookmarkView.setBackgroundColor(Color.parseColor("#E1DDDD"))
+//            binding.scheduleFindBookmarkView.layoutParams.height = 2
+//
+////            ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0,2)
+//            childFragmentManager.beginTransaction().replace(
+//                R.id.schedule_find_fragment, ScheduleFindLatelyFragment()).commit()
+////            (activity as MainActivity).replaceFragment(ScheduleFindLatelyFragment.newInstance());
+//        }
 
         //자세히 보기 클릭 시
-        binding.scheduleFindBtnDetail.setOnClickListener {
+//        binding.scheduleFindBtnDetail.setOnClickListener {
             val bundle = Bundle()
             val scheduleFindDetailFragment = ScheduleFindDetailFragment()
 
@@ -238,10 +223,10 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //                binding.scheduleFindLinear.visibility = View.GONE
 ////                ApplicationClass.sSharedPreferences.edit().putBoolean("boolean", true).apply()
 ////                (activity as MainActivity).replaceFragment(ScheduleFindDetailFragment.newInstance());
-                val intent = Intent(activity, WholeScheduleActivity::class.java)
+//                val intent = Intent(activity, WholeScheduleActivity::class.java)
 //                Log.d("TAG", "즐겨찾기 선택 유무")
 //                intent.putExtra("boolean", true)
-                startActivity(intent)
+//                startActivity(intent)
 //            }
 
             //최근이 선택되어 있는 경우
@@ -264,7 +249,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 //                false
 //            }
 
-        }
+//        }
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.scheduleFindPaging.setPageItemCount(4);
@@ -377,7 +362,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                         ScheduleCategoryData(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            "#00000000"
+                            "#00000000",
+                            false
 
                         )
                     )
@@ -717,12 +703,25 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onGetScheduleBookmarkFail(message: String) {
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.d("TAG", "onPause: 확인")
+        binding.scheduleFindMainLinear.visibility = View.VISIBLE
+        binding.scheduleFindMainFragment.visibility = View.GONE
+
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+    }
+
+
     override fun onResume() {
         super.onResume()
+
+        val word : String? = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)
         Log.d("TAG", "onResume: ㅇㅇㅇㅇ $word")
 
         if (word != null){
-            word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)!!
+            Log.d("TAG", "onResume: 안 $word")
+
             if (word!!.length > 0){
                 binding.scheduleFindMainLinear.visibility = View.GONE
                 binding.scheduleFindMainFragment.visibility = View.VISIBLE
@@ -730,8 +729,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                 childFragmentManager.beginTransaction()
                     .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
                     .commit()
-
-                // 이제넘어갔으니 서비스단 짜면될듯
             }
         }
 

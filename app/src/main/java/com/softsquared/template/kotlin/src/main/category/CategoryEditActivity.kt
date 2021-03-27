@@ -132,7 +132,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         for (i in 0 until size!!) {
 
             categoryEditList.add(
-                ScheduleCategoryData(intCategoryID[i],name!![i], color!![i])
+                ScheduleCategoryData(intCategoryID[i],name!![i], color!![i],false)
             )
         }
 

@@ -83,9 +83,8 @@ class MyPageService(val pageView : MyPageView) {
         homeRetrofitInterface.getMonthsAchievements().enqueue(object :
             Callback<MonthsAchievementsResponse> {
             override fun onResponse(
-                call: Call<MonthsAchievementsResponse>,
-                response: Response<MonthsAchievementsResponse>
-            ) {
+                call: Call<MonthsAchievementsResponse>, response: Response<MonthsAchievementsResponse>) {
+                Log.d("TAG", "tryGetMonthsAchievement: ${response.body()}")
                 pageView.onGetMonthsAchievmentsSuccess(response.body() as MonthsAchievementsResponse)
             }
 

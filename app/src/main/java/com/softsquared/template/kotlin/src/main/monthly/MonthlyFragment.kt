@@ -262,7 +262,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     override fun onGetMonthlyMemoItemFailure(message: String) {
-        dismissLoadingDialog()
         showCustomToast(message)
     }
 

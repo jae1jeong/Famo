@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ class ScheduleCategoryAdapter(
 
     var mPreviousIndex = -1
 
+    private var selectedView: TextView? = null
     var boolean = false
     var cnt = 1
 
@@ -54,29 +56,29 @@ class ScheduleCategoryAdapter(
         holder.text.text = categoryList[position].text
         holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
 
-//        holder.text.setOnClickListener {
-//            Log.d("TAG", "onBindViewHolder: 클릭확인")
-//            var test = 0
-//
-//            test = position
-//            notifyDataSetChanged()
-//
-//            if (test == position){
-//                holder.color.setColorFilter(Color.parseColor("#0054FF"))
-//                Log.d("TAG", "파란색")
-//                boolean = true
-//                cnt++
-//            }
-//
-//            if (boolean) {
-//                if(cnt % 2 != 0){
-//
-//                    holder.color.setColorFilter(Color.parseColor("#FF0000"))
-//                    Log.d("TAG", "빨간색")
-//                    boolean = false
-//                }
-//            }
+        holder.text.setOnClickListener {
+            Log.d("TAG", "onBindViewHolder: 클릭확인")
+            var test = 0
 
+            test = position
+//            notifyDataSetChanged()
+
+            if (test == position) {
+                holder.color.setColorFilter(Color.parseColor("#0054FF"))
+                Log.d("TAG", "파란색")
+                boolean = true
+                cnt++
+            }
+
+            if (boolean) {
+                if (cnt % 2 != 0) {
+
+                    holder.color.setColorFilter(Color.parseColor("#00000000"))
+                    Log.d("TAG", "빨간색")
+                    boolean = false
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int = categoryList.size
@@ -107,7 +109,7 @@ class ScheduleCategoryAdapter(
         override fun onClick(view: View?) {
 
             when (view) {
-                text,color -> {
+                text, color -> {
 
                     Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
                     val wholeColor = iSearchRecyclerViewInterface.onColor()
@@ -170,6 +172,7 @@ class ScheduleCategoryAdapter(
 
                     }
 
+
                     Log.d("TAG", "categoryID: $colorStrList")
 
 //                    for (i in 0 until size) {
@@ -177,12 +180,43 @@ class ScheduleCategoryAdapter(
 //                        color.setColorFilter(Color.parseColor("#FF0000"))
 //                    }
 
-                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+                    //선택된놈
+                    val newCategory = categoryList[adapterPosition]
 
-                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
-                        colorID[adapterPosition],
-                        categoryList[adapterPosition].id
-                    )
+//                    categoryList.forEach {
+//                        if (categoryList[adapterPosition].id == newCategory.id) {
+//                            categoryList[adapterPosition].isChecked = true
+////                            Log.d("TAG", "onClick: $selectedView")
+//
+////                            color.setColorFilter(Color.parseColor("#FF0000"))
+////                            Log.d(TAG, "ㅇㅇㅇㅇㅇㅇ")
+////                            text!!.setBackgroundColor(Color.RED)
+////                            color.setColorFilter(Color.parseColor("#FF0000"))
+//                        }
+//                    }
+//
+//
+//
+//                    categoryList.forEach {
+//                        if (it.isChecked) {
+//                            Log.d("TAG", "11111111")
+//                            it.isChecked = false
+////                            color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+//                            color.setColorFilter(Color.parseColor("#00000000"))
+//
+//                        } else {
+//                            Log.d(TAG, "2222222222")
+//                            color.setColorFilter(Color.parseColor("#00000000"))
+//                        }
+//                    }
+//
+//                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
+
+
+//                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
+//                        colorID[adapterPosition],
+//                        categoryList[adapterPosition].id
+//                    )
 
                     Log.d("TAG", "onClick: 다시돌아옴?")
                 }

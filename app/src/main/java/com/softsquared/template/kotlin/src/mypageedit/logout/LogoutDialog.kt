@@ -2,15 +2,21 @@ package com.softsquared.template.kotlin.src.mypageedit.logout
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.core.content.ContextCompat.startActivity
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.auth.login.LoginActivity
+import com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditView
 import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
+import com.softsquared.template.kotlin.util.Constants
 
 
 class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
@@ -22,11 +28,18 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
         val logout : Button = findViewById(R.id.logout_check)
         val cancel : Button = findViewById(R.id.logout_cancel)
 
-        cancel.setOnClickListener {
+        logout.setOnClickListener {
             Log.d("TAG", "onPositiveClicked: 로그아웃버튼 눌림")
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.remove(ApplicationClass.X_ACCESS_TOKEN)
+            edit.apply()
+
+            val intent = Intent(context,LoginInformation::class.java)
+            context.startActivity(intent)
+
         }
 
-        logout.setOnClickListener {
+        cancel.setOnClickListener {
             Log.d("TAG", "onPositiveClicked: 취소버튼 눌림")
         }
 

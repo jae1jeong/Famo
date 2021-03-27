@@ -34,6 +34,7 @@ class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
     ,TodayView, MyPageView {
 
+
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
         var todayMemoAdapter:MemoAdapter ?= null

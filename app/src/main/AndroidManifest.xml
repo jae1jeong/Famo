@@ -29,7 +29,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 일정검색 -->
         <activity
-            android:name=".src.schedulesearch.ScheduleSearchActivity"
+            android:name=".src.searchhistories.ScheduleSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".src.wholeschedule.WholeScheduleActivity"

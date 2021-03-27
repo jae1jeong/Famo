@@ -22,7 +22,9 @@ object Constants {
     val KAKAO_THUMBNAILIMAGEURL = "KAKAO_THUMBNAILIMAGEURL"
     val KAKAO_JWT = "JWT"
 
-    //임시
-    val NUM = "NUM"
+
     val SEARCHWROD = "SEARCHWROD"
+    val SEARCH_CNT = "SEARCH_CNT"
+    val PROFILE_KAMERA = "PROFILE_KAMERA"
+    val PROFILE_GALLERY = "PROFILE_GALLERY"
 }

@@ -1,8 +1,16 @@
 package com.softsquared.template.kotlin.src.mypage
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.*
+import android.util.Base64
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
@@ -18,11 +26,16 @@ import com.softsquared.template.kotlin.util.Constants
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
     MyPageView {
 
+    var check = 100
+    var galleryUrl: Uri? = null
+    var cameraImg: Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val day = intent.getStringExtra("day")
         val goalTitle = intent.getStringExtra("goalTitle")
+        check = intent.getIntExtra("check", 100)
 
 //        MyPageService(this).tryGetRestScheduleCount("today")
         MyPageService(this).tryGetTotalScheduleCount()
@@ -34,7 +47,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         //프로필 편집으로 이동
         binding.myPageImg.setOnClickListener {
-            val intent = Intent(this,MyPageEditActivity::class.java)
+            val intent = Intent(this, MyPageEditActivity::class.java)
+            intent.putExtra("check", check)
             startActivity(intent)
         }
 
@@ -47,13 +61,24 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     // 뒤로가기
-    fun goBack(){
+    fun goBack() {
         finish()
     }
 
+    fun stringToBitmap(encodedString: String): Bitmap? {
+        return try {
+            val encodeByte: ByteArray = Base64.decode(encodedString, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
+        } catch (e: Exception) {
+            e.message
+            null
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onGetMyPageSuccess(response: MyPageResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetMyPageSuccess: MyPage조회성공")
                 showCustomToast("MyPage조회성공")
@@ -62,40 +87,83 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     Constants.KAKAO_THUMBNAILIMAGEURL,
                     null
                 )
-                val day = ApplicationClass.sSharedPreferences.getString(Constants.DAY, null)
-                val name =
-                    ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
-                val goalTitle =
-                    ApplicationClass.sSharedPreferences.getString(Constants.GOALTITLE, null)
-                val dDayCheck =
-                    ApplicationClass.sSharedPreferences.getString(Constants.DDAY_SETTING, null)
-                val comments =
-                    ApplicationClass.sSharedPreferences.getString(Constants.COMMENTS, null)
+                val day = ApplicationClass.sSharedPreferences.getString(
+                    Constants.DAY,
+                    null
+                )
+                val name = ApplicationClass.sSharedPreferences.getString(
+                    Constants.USER_NICKNAME,
+                    null
+                )
+                val goalTitle = ApplicationClass.sSharedPreferences.getString(
+                    Constants.GOALTITLE,
+                    null
+                )
+                val dDayCheck = ApplicationClass.sSharedPreferences
+                    .getString(Constants.DDAY_SETTING, null)
+                val comments = ApplicationClass.sSharedPreferences.getString(
+                    Constants.COMMENTS,
+                    null
+                )
+                val gallery =
+                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
+
+                val camera =
+                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_KAMERA, null)
+
+                if (gallery != null) {
+                    galleryUrl = gallery.toUri()
+                }
+
+                if (camera != null) {
+                    cameraImg = stringToBitmap(camera)
+                }
+
+
 //                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
 //                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
 
-                if (comments != null){
+
+                if (comments != null) {
                     binding.test.text = comments
                 }
 
-                if (day != null ){
+                if (day != null) {
                     binding.myPageTextDoneScheduleCount.text = day
                 }
 
                 //카카오로그인일경우
+                //카톡프사가 없으면 기본 이미지, 있으면 적용
+
                 if (response.loginMethod == "K") {
                     //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
-                    if (kakaoImg != null) {
-                        Glide.with(this).load(kakaoImg)
-                            .centerCrop().into(binding.myPageImg)
-                    } else {
+                    if (kakaoImg!!.isEmpty()) {
                         Glide.with(this).load(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageImg)
+                    } else if (kakaoImg!!.isNotEmpty()) {
+                        Glide.with(this).load(kakaoImg)
+                            .centerCrop().into(binding.myPageImg)
                     }
-                    //페모로그인일경우 처음에는 기본이미지로
-                } else {
-                    Glide.with(this).load(R.drawable.my_page_img2)
-                        .centerCrop().into(binding.myPageImg)
+
+                    if (check == 1) {
+                        binding.myPageImg.setImageURI(galleryUrl)
+                    } else if (check == 2) {
+                        binding.myPageImg.setImageBitmap(cameraImg)
+                    }
+                }
+
+                //페모로그인일경우
+                if (response.loginMethod == "F") {
+                    //처음에는 기본 이미지
+                    if (gallery == null && camera == null) {
+                        Glide.with(this).load(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageImg)
+                    } else if (check == 1) {
+                        binding.myPageImg.setImageURI(galleryUrl)
+                    } else {
+                        binding.myPageImg.setImageBitmap(cameraImg)
+                    }
+
                 }
 
                 //이름 적용
@@ -123,12 +191,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
 
         showCustomToast(response.message.toString())
-        if(response.isSuccess && response.code == 100){
+        if (response.isSuccess && response.code == 100) {
             //남은일정
-            binding.myPageTextRestScheduleCount.text =  response.remainScheduleCount.toString()
+            binding.myPageTextRestScheduleCount.text = response.remainScheduleCount.toString()
             //전체일정
             binding.myPageTextAllScheduleCount.text = response.remainScheduleCount.toString()
-        }else{
+        } else {
             Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
 
@@ -138,16 +206,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
 
-
     override fun onGetTotalScheduleCountSuccess(response: TotalScheduleCountResponse) {
-        if (response.isSuccess && response.code == 100){
+        if (response.isSuccess && response.code == 100) {
             Log.d("MyPageFragment", "전체 일정/해낸수 조회성공")
-                binding.myPageTextAllScheduleCount.text = response.totaldata[0].totalScheduleCount.toString()
-                binding.myPageTextDoneScheduleCount.text = response.totaldonedata[0].doneScheduleCount.toString()
+            binding.myPageTextAllScheduleCount.text =
+                response.totaldata[0].totalScheduleCount.toString()
+            binding.myPageTextDoneScheduleCount.text =
+                response.totaldonedata[0].doneScheduleCount.toString()
 
-                binding.myPageTextRestScheduleCount.text = (response.totaldata[0].totalScheduleCount -
-                        response.totaldonedata[0].doneScheduleCount).toString()
-        }else{
+            binding.myPageTextRestScheduleCount.text = (response.totaldata[0].totalScheduleCount -
+                    response.totaldonedata[0].doneScheduleCount).toString()
+        } else {
             Log.d("MyPageFragment", "onGetTotalScheduleCountSuccess: ${response.message}")
         }
     }
@@ -157,7 +226,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     override fun onGetMonthsAchievmentsSuccess(response: MonthsAchievementsResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 showCustomToast("월별달성률조회성공")
                 Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${response.data}")

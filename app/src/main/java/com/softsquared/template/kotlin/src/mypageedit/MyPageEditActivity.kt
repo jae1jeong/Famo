@@ -5,11 +5,12 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.FileUtils
@@ -19,6 +20,7 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
@@ -31,22 +33,25 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMyPageEditBinding
 import com.softsquared.template.kotlin.src.main.mypage.edit.*
-import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
-import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
 import com.softsquared.template.kotlin.util.Constants
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
+import android.util.Base64
+import androidx.core.net.toUri
 
 class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     (ActivityMyPageEditBinding::inflate), MyPageEditView {
@@ -67,8 +72,17 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     // 날짜를 선택유무에 대한 변수
     var dateCnt = 0
 
+    //카메라/갤러리 확인변수
+    var imgCnt : Int? = null
+    var intentCnt : Int? = null
+
+    var galleryUrl: Uri? = null
+    var cameraImg: Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        intentCnt = intent.getIntExtra("check",100)
 
         MyPageEditService(this).tryGetMyPage()
 
@@ -336,6 +350,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
             binding.myPageEditImg.setImageURI(selectedImageUri)
 
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.putString(Constants.PROFILE_GALLERY, selectedImageUri.toString())
+            edit.apply()
+            imgCnt = 1
         }
 
         //카메라
@@ -351,15 +369,44 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                     .getBitmap(this.contentResolver, Uri.fromFile(file))
                 binding.myPageEditImg.setImageBitmap(bitmap)
             } else {
+
                 val decode = ImageDecoder.createSource(
                     this.contentResolver,
                     Uri.fromFile(file)
                 )
-                val bitmap = ImageDecoder.decodeBitmap(decode)
+                val bitmap : Bitmap = ImageDecoder.decodeBitmap(decode)
                 binding.myPageEditImg.setImageBitmap(bitmap)
+                Log.d("TAG", "onActivityResult: 보내는bitmap $bitmap")
+
+                val test = bitmapToString(bitmap)
+                val edit = ApplicationClass.sSharedPreferences.edit()
+                edit.putString(Constants.PROFILE_KAMERA, test)
+                edit.apply()
             }
+            imgCnt = 2
+        }
+
+    }
+
+    fun bitmapToString(bitmap: Bitmap) : String{
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
+
+    }
+
+    fun stringToBitmap(encodedString: String): Bitmap? {
+        return try {
+            val encodeByte: ByteArray = Base64.decode(encodedString, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
+        } catch (e: Exception) {
+            e.message
+            null
         }
     }
+
+
 
     override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
     }
@@ -374,14 +421,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 Log.d("TAG", "onGetMyPageSuccess: MyPage수정 조회성공")
                 showCustomToast("MyPage수정 조회성공")
 
-//                val kakaoName: String? = ApplicationClass.sSharedPreferences.getString(
-//                    Constants.KAKAO_USER_NICKNAME,
-//                    null
-//                )
-//                val famoName = ApplicationClass.sSharedPreferences.getString(
-//                    Constants.USER_NICKNAME,
-//                    null
-//                )
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_THUMBNAILIMAGEURL,
                     null
@@ -389,22 +428,71 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val name =
                     ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
 
-                Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
-                if (response.loginMethod == "K") {
 
-                    if (kakaoImg!!.isNotEmpty()) {
-                        Log.d("TAG", "onGetMyPageSuccess: 카로확인")
-                        Glide.with(this).load(kakaoImg)
-                            .centerCrop().into(binding.myPageEditImg)
-                    } else {
-                        Log.d("TAG", "onGetMyPageSuccess: 카로확인2")
+                Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
+
+                val gallery =
+                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
+
+                val camera =
+                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_KAMERA, null)
+
+                if (gallery != null) {
+                    galleryUrl = gallery.toUri()
+                }
+
+                if (camera != null) {
+                    cameraImg = stringToBitmap(camera)
+                }
+
+                Log.d("TAG", "onGetMyPageSuccess: imgCnt :$imgCnt")
+                if (response.loginMethod == "K") {
+                    //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
+                    if (kakaoImg!!.isEmpty()) {
                         Glide.with(this).load(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageEditImg)
+                    }else if(kakaoImg!!.isNotEmpty()){
+                        Glide.with(this).load(kakaoImg)
+                            .centerCrop().into(binding.myPageEditImg)
                     }
-                } else {
-                    Glide.with(this).load(R.drawable.my_page_img2)
-                        .centerCrop().into(binding.myPageEditImg)
+
+                    if(intentCnt == 1){
+                        binding.myPageEditImg.setImageURI(galleryUrl)
+                    }else if(intentCnt == 2){
+                        binding.myPageEditImg.setImageBitmap(cameraImg)
+                    }
                 }
+
+//페모로그인일경우
+                if (response.loginMethod == "F") {
+                    //처음에는 기본 이미지
+                    if (gallery == null && camera == null){
+                        Glide.with(this).load(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageEditImg)
+                    }else if(intentCnt == 1){
+                        binding.myPageEditImg.setImageURI(galleryUrl)
+                    }else if(intentCnt == 2){
+                        binding.myPageEditImg.setImageBitmap(cameraImg)
+                    }
+
+                }
+
+
+//                if (response.loginMethod == "K") {
+//
+//                    if (kakaoImg!!.isNotEmpty()) {
+//                        Log.d("TAG", "onGetMyPageSuccess: 카로확인")
+//                        Glide.with(this).load(kakaoImg)
+//                            .centerCrop().into(binding.myPageEditImg)
+//                    } else {
+//                        Log.d("TAG", "onGetMyPageSuccess: 카로확인2")
+//                        Glide.with(this).load(R.drawable.my_page_img2)
+//                            .centerCrop().into(binding.myPageEditImg)
+//                    }
+//                } else {
+//                    Glide.with(this).load(R.drawable.my_page_img2)
+//                        .centerCrop().into(binding.myPageEditImg)
+//                }
 
                 //이름 적용
                 binding.myPageEditEtName.setText(name)
@@ -447,9 +535,11 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 edit.putString(Constants.DDAY_SETTING, dDaySettingCnt.toString())
                 edit.apply()
 
-//                val intent = Intent(activity, MyPageActivity::class.java)
+
+                val intent = Intent(this, MyPageActivity::class.java)
                 intent.putExtra("day", day)
                 intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
+                intent.putExtra("check",imgCnt)
                 startActivity(intent)
 //                myPageActivityView.moveMyPage()
 //                nickname = binding.myPageEditEtName.text.toString(),

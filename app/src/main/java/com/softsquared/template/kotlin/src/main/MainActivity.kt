@@ -40,7 +40,7 @@ import java.time.LocalDate
 
 
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
-    AddMemoView, TodayView, CategoryInquiryView, IScheduleCategoryRecyclerView {
+    AddMemoView, TodayView, CategoryInquiryView, IScheduleCategoryRecyclerView{
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
     private val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
     lateinit var categoryScheduleAdapter: MainCategoryAdapter
@@ -515,5 +515,11 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onGetCategoryInquiryFail(message: String) {
     }
+
+//    override fun onDialogButtonClick(text: String) {
+//        Log.d("TAG", "onDialogButtonClick: jj")
+//        binding.mainViewPager.currentItem = 2
+//    }
+
 
 }

@@ -60,7 +60,7 @@
                     android:id="@+id/my_page_img"
                     android:layout_width="93dp"
                     android:layout_height="93dp"
-                    android:background="@drawable/my_page_img2"
+                    android:src="@drawable/my_page_img2"
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_imt_circle"
                     app:layout_constraintEnd_toEndOf="@+id/my_page_imt_circle"
                     app:layout_constraintStart_toStartOf="@+id/my_page_imt_circle"

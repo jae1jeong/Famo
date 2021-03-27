@@ -6,9 +6,13 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
+import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.http.Multipart
+import java.io.File
 
 class MyPageEditService(val editView : MyPageEditView) {
 
@@ -25,7 +29,6 @@ class MyPageEditService(val editView : MyPageEditView) {
 
             override fun onFailure(call: Call<MyPageCommentsResponse>, t: Throwable) {
                 editView.onGetMyPageCommentsFail(t.message ?: "통신 오류")
-//                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }
         })
     }
@@ -43,7 +46,6 @@ class MyPageEditService(val editView : MyPageEditView) {
 
             override fun onFailure(call: Call<MyPageResponse>, t: Throwable) {
                 editView.onGetMyPageFail(t.message ?: "통신 오류")
-//                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }
         })
     }
@@ -61,10 +63,24 @@ class MyPageEditService(val editView : MyPageEditView) {
 
             override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                 editView.onPutMyPageUpdateFail(t.message ?: "통신 오류")
-//                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }
         })
     }
 
+
+    // 프로필 사진 설정
+    fun tryPostMyProfileImage(file:MultipartBody.Part){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
+        homeRetrofitInterface.postMyProfileImage(file).enqueue(object:Callback<SetProfileImageResponse>{
+            override fun onResponse(call: Call<SetProfileImageResponse>, response: Response<SetProfileImageResponse>) {
+                editView.onPostProfileImageSuccess(response.body() as SetProfileImageResponse)
+            }
+
+            override fun onFailure(call: Call<SetProfileImageResponse>, t: Throwable) {
+                editView.onPostProfileImageFailure(t.message ?: "프로필 사진 설정 관련 통신 오류")
+            }
+
+        })
+    }
 
 }

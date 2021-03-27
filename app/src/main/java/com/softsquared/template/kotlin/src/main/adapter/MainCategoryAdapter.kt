@@ -12,9 +12,10 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
+import org.w3c.dom.Text
 
 class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:(MainScheduleCategory)->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
-    private var selectedCategoryView:View? = null
+    private var selectedCategoryView:TextView? = null
 
 
     class MainCategoryViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
@@ -24,7 +25,6 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainCategoryViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_main_category,parent,false)
-
         val viewHolder = MainCategoryViewHolder(view)
         return viewHolder
     }
@@ -45,12 +45,14 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
             }else{
                 // 이전에 선택한 다른 값이 있을때
                 selectedCategoryView!!.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
+                selectedCategoryView!!.setTextColor(Color.parseColor("#aeb7c4"))
                 val shape = GradientDrawable()
                 shape.cornerRadius = 180F
                 shape.setColor(Color.parseColor(categoryList[position].color))
+                (holder.itemView as TextView).setTextColor(Color.WHITE)
                 holder.itemView.background = shape
             }
-            selectedCategoryView = holder.itemView
+            selectedCategoryView = holder.itemView as TextView
 
         }
     }

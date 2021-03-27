@@ -16,19 +16,70 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
     FragmentScheduleFindBookmarkBinding::bind, R.layout.fragment_schedule_find_bookmark),
     ScheduleBookmarkView{
 
+<<<<<<< HEAD
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         ScheduleBookmarkService(this).tryGetScheduleBookmark(0,2)
+=======
+    var check = false
+
+//    companion object {
+//        fun newInstance(): ScheduleFindBookmarkFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
+//            return ScheduleFindBookmarkFragment()
+//        }
+//    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+//        var extra = this.arguments
+//        if (extra != null) {
+//            extra = arguments
+//            check = extra!!.getBoolean("boolean")
+//            Log.d("ScheduleFindBookmarkFragment", "ㅁㅁㅁㅁㅁㅁㅁㅁ")
+//            Log.d("ScheduleFindBookmarkFragment", "check: $check")
+//        }
+
+//        ScheduleBookmarkService(this).tryGetScheduleBookmark(0,2)
+
+
+
+
+//        createBookmarkRecyclerview()
+    }
+
+    private fun createBookmarkRecyclerview() {
+        //테스트 데이터
+//        val bookmarkList = arrayListOf(
+//            ScheduleBookmarkData("제목", "시간"),
+//            ScheduleBookmarkData("제목", "시간")
+//        )
+//
+//        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+//        binding.recyclerViewBookmark.layoutManager = LinearLayoutManager(
+//            context,
+//            LinearLayoutManager.VERTICAL, false
+//        )
+//        binding.recyclerViewBookmark.setHasFixedSize(true)
+//        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
+    }
+
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+>>>>>>> main
     }
 
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 
         when (response.code) {
             100 -> {
+<<<<<<< HEAD
                 showCustomToast("즐겨찾기 일정조회성공")
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
 
+=======
+>>>>>>> main
                 val boomarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
                 for (i in 0 until response.data.size) {

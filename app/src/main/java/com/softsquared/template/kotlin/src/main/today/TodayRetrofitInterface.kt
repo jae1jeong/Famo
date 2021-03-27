@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.today
 
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.today.models.ChangePositionItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
@@ -23,6 +24,9 @@ interface TodayRetrofitInterface {
 
     @POST("schedules/orderchanges")
     fun postChangeItemPosition(@Body changePositionItemRequest: ChangePositionItemRequest):Call<BaseResponse>
+
+    @GET("/schedules/{scheduleID}/details")
+    fun getDetailMemo(@Path("scheduleID")scheduleID: Int):Call<DetailMemoResponse>
 
 
 }

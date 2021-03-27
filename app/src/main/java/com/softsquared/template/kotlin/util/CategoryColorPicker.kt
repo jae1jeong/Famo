@@ -21,6 +21,7 @@ object CategoryColorPicker {
     fun setCategoryColorRadius(colorInfo:String?,view: View){
         val categoryColor = setCategoryColor(colorInfo)
         val shape = GradientDrawable()
+        Log.d("TAG", "setCategoryColorRadius: $colorInfo")
         shape.setColor(Color.parseColor(categoryColor))
         shape.cornerRadius = 180F
         view.background = shape

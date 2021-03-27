@@ -3,6 +3,8 @@ package com.softsquared.template.kotlin.src.main.today
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.AddMemoRetrofitInterface
+import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.today.models.ChangePositionItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
@@ -82,5 +84,20 @@ class TodayService(val view:TodayView){
             }
 
         })
+    }
+
+    fun tryGetDetailMemo(scheduleID: Int){
+        val todayRetrofitInterface = ApplicationClass.sRetrofit.create(TodayRetrofitInterface::class.java)
+        todayRetrofitInterface.getDetailMemo(scheduleID).enqueue(object:Callback<DetailMemoResponse>{
+            override fun onResponse(call: Call<DetailMemoResponse>, response: Response<DetailMemoResponse>) {
+                view.onGetDetailMemoSuccess(response.body() as DetailMemoResponse)
+            }
+
+            override fun onFailure(call: Call<DetailMemoResponse>, t: Throwable) {
+                view.onGetDetailMemoFailure(t.message ?: "일정 상세 조회 관련 통신 오류")
+            }
+
+        })
+
     }
 }

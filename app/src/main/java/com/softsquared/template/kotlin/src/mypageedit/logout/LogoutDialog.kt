@@ -15,6 +15,7 @@ import com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformatio
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditView
+import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
 import com.softsquared.template.kotlin.util.Constants
 
 
@@ -60,6 +61,12 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
     }
 
     override fun onPutMyPageUpdateFail(message: String) {
+    }
+
+    override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
+    }
+
+    override fun onPostProfileImageFailure(message: String) {
     }
 
 }

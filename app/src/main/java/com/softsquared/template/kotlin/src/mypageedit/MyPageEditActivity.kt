@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -14,6 +15,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.FileUtils
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
@@ -24,7 +26,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+<<<<<<< HEAD
 import androidx.core.net.toUri
+=======
+import androidx.core.net.toFile
+>>>>>>> main
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -38,9 +44,13 @@ import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
+import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
+import com.softsquared.template.kotlin.util.Constants
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
-import com.softsquared.template.kotlin.util.Constants
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -51,6 +61,7 @@ import java.util.*
 class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     (ActivityMyPageEditBinding::inflate), MyPageEditView {
 
+    private var selectedImageUri:Uri ?= null
     //카메라 변수
     private val GET_GALLERY_IMAGE = 200
     val REQUEST_IMAGE_CAPTURE = 1
@@ -243,7 +254,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             finish()
         }
 
+        // 프로필 설정 버튼
+        binding.myPageEditBtnSave.setOnClickListener {
 
+        }
     }
 
     //로그아웃 알림창
@@ -264,11 +278,9 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         val permis = object : PermissionListener {
             //            어떠한 형식을 상속받는 익명 클래스의 객체를 생성하기 위해 다음과 같이 작성
             override fun onPermissionGranted() {
-                showCustomToast("권한 허가")
             }
 
             override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                showCustomToast("권한 거부")
                 ActivityCompat.finishAffinity(this@MyPageEditActivity) // 권한 거부시 앱 종료
             }
         }
@@ -330,8 +342,22 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         super.onActivityResult(requestCode, resultCode, data)
         //갤러리
         if (requestCode == GET_GALLERY_IMAGE && resultCode == AppCompatActivity.RESULT_OK && data != null && data.data != null) {
-            showCustomToast("갤러리")
             val selectedImageUri: Uri? = data.data
+            Log.d("TAG", "onActivityResult:dd  ${data.data!!.path}")
+
+//            currentPhotoPath = getExternalFilesDir(selectedImageUri.toString())
+//
+//            Log.d("TAG", "onActivityResult:dd  ${getExternalFilesDir(selectedImageUri.toString())}")
+            val file = File(data.data!!.path!!.toString())
+            val requestFile = file?.let { RequestBody.create("multipart/form-data".toMediaTypeOrNull(), it) }
+            val requestImage = requestFile?.let { MultipartBody.Part.createFormData("profileImage",file.name, it) }
+            if (requestImage != null) {
+                showLoadingDialog(this)
+                MyPageEditService(this).tryPostMyProfileImage(requestImage)
+            }
+
+
+
             binding.myPageEditImg.setImageURI(selectedImageUri)
 
             val edit = ApplicationClass.sSharedPreferences.edit()
@@ -342,8 +368,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         //카메라
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            showCustomToast("카메라")
             val file = File(currentPhotoPath)
+            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
+            val requestImage = MultipartBody.Part.createFormData("profileImage",file.name,requestFile)
+            showLoadingDialog(this)
+            MyPageEditService(this).tryPostMyProfileImage(requestImage)
+
             if (Build.VERSION.SDK_INT < 28) {
                 val bitmap = MediaStore.Images.Media
                     .getBitmap(this.contentResolver, Uri.fromFile(file))
@@ -540,5 +570,31 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onPutMyPageUpdateFail(message: String) {
     }
+
+    override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
+        if(response.isSuccess && response.code == 100){
+            showCustomToast(response.message.toString())
+        }else{
+            showCustomToast(response.message.toString())
+            Log.d("TAG", "onPostProfileImageSuccess: ${response.message}")
+
+        }
+        dismissLoadingDialog()
+    }
+
+    override fun onPostProfileImageFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+        Log.d("TAG", "onPostProfileImageFailure: $message")
+    }
+
+//    fun getRealPathFromURI(contentUri:Uri):String{
+//        var cursor:Cursor? = null
+//        try{
+//            val proj = {MediaStore.Images.Media.DATA}
+//            cursot = contentResolver.query(contentUri,proj,null,null,null)
+//
+//        }
+//    }
 
 }

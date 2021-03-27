@@ -45,6 +45,12 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
                 checkListener(memo)
             }
         }
+        // 본문 내용이 없을시
+        if(memo.description == null){
+            val params = holder.itemView.layoutParams
+            params.height = 90
+            holder.itemView.layoutParams = params
+        }
         CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)
 
     }

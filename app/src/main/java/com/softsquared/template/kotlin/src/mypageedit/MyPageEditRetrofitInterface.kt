@@ -4,10 +4,11 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
+import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PUT
+import retrofit2.http.*
+import java.io.File
 
 interface MyPageEditRetrofitInterface {
 
@@ -24,4 +25,7 @@ interface MyPageEditRetrofitInterface {
     fun putMyPageUpdate(@Body putMyPageUpdateRequest : PutMyPageUpdateRequest)
         : Call<BaseResponse>
 
+    @Multipart
+    @POST("profiles/image")
+    fun postMyProfileImage(@Part image:MultipartBody.Part):Call<SetProfileImageResponse>
 }

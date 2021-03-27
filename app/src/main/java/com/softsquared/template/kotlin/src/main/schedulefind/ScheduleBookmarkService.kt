@@ -15,14 +15,11 @@ class ScheduleBookmarkService(val view : ScheduleBookmarkView) {
         homeRetrofitInterface.getScheduleBookmark(offset, limit).enqueue(object :
             Callback<ScheduleBookmarkResponse> {
             override fun onResponse(call: Call<ScheduleBookmarkResponse>, response: Response<ScheduleBookmarkResponse>) {
-//                Log.d("값 확인", "tryGetWholeScheduleInquiry body:  ${response.body()}")
-//                Log.d("값 확인", "tryGetWholeScheduleInquiry code:  ${response.code()}")
                 view.onGetScheduleBookmarkSuccess(response.body() as ScheduleBookmarkResponse)
             }
 
             override fun onFailure(call: Call<ScheduleBookmarkResponse>, t: Throwable) {
                 view.onGetScheduleBookmarkFail(t.message ?: "통신 오류")
-//                Log.d("인증실패했니", "onGetProfileInqueryFail:  ")
             }
         })
     }

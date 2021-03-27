@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
@@ -36,6 +35,8 @@ import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsRespon
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.CalendarConverter
+import java.time.LocalDate
 
 
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
@@ -43,6 +44,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
     private val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
     lateinit var categoryScheduleAdapter: MainCategoryAdapter
+    private var selectedCategoryId:Int?= null
+    
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +55,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // viewPager
         val adapter = MainPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MonthlyFragment(), "월간")
-        adapter.addFragment(TodayFragment(), "오늘")
-        adapter.addFragment(ScheduleFindFragment(), "일정 찾기")
+        adapter.addFragment(MonthlyFragment(), resources.getString(R.string.monthly))
+        adapter.addFragment(TodayFragment(), resources.getString(R.string.today))
+        adapter.addFragment(ScheduleFindFragment(), resources.getString(R.string.find_schedule))
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
+        binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
 
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
@@ -100,6 +104,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         if (Constants.IS_EDIT) {
                             Constants.IS_EDIT = false
+                        }else{
+                            val nowDate = LocalDate.now()
+                            val dayName = nowDate.dayOfWeek.name
+                            binding.addMemoTextDateInfo.text = "$nowDate (${CalendarConverter.dayToKoreanShortDayName(dayName)})"
                         }
                     }
                 }
@@ -121,6 +129,26 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             }
 
         })
+
+        // 바텀시트 다이얼로그 확인 버튼
+        binding.addMemoDialogBtnOk.setOnClickListener {
+            if (Constants.IS_EDIT) {
+                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(
+                    Constants.EDIT_SCHEDULE_ID,
+                    -1
+                )
+
+            }else{
+                showLoadingDialog(this)
+                AddMemoService(this).tryPostAddMemo(
+                    PostTodayRequestAddMemo(
+                        binding.addMemoEditTitle.text.toString(),
+                        binding.addMemoEditContent.text.toString(),
+                        selectedCategoryId
+                    )
+                )
+            }
+        }
 
         // 바텀 시트 다이얼로그 카테고리 추가 버튼
         binding.addMemoBtnCategoryAdd.setOnClickListener {
@@ -152,7 +180,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         PatchMemo(
                             binding.addMemoEditTitle.text.toString(),
                             null,
-                            null,
+                            selectedCategoryId,
                             binding.addMemoEditContent.text.toString()
                         )
                     )
@@ -166,10 +194,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     PostTodayRequestAddMemo(
                         binding.addMemoEditTitle.text.toString(),
                         binding.addMemoEditContent.text.toString(),
-                        1
+                        selectedCategoryId
                     )
                 )
             }
+        }
+
+        // 바텀시트 다이얼로그 취소 버튼
+        binding.addMemoBtnDialogCancel.setOnClickListener {
+            stateChangeBottomSheet(Constants.HIDE_SHEET)
         }
 
 
@@ -183,12 +216,11 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             Constants.COLLASPE -> {
-                bottomSheetBehavior.peekHeight = 350
+//                bottomSheetBehavior.peekHeight = 350
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
             Constants.HIDE_SHEET -> {
-                bottomSheetBehavior.peekHeight = 200
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
     }
@@ -251,9 +283,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     showCustomToast("일정이 작성 되었습니다!")
                     stateChangeBottomSheet(Constants.COLLASPE)
                     TodayService(this).onGetScheduleItems()
+
+                    selectedCategoryId = null
+                    // 안됨
+//                    val todayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
+//                    todayFragment.checkIsMemoListEmpty()
                     // 초기화
                     binding.addMemoEditTitle.setText("")
                     binding.addMemoEditContent.setText("")
+                    stateChangeBottomSheet(Constants.HIDE_SHEET)
                 }
                 else -> {
                     showCustomToast(response.message.toString())
@@ -264,7 +302,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             dismissLoadingDialog()
             showCustomToast(response.message.toString())
         }
-
     }
 
     override fun onPostAddMemoFailure(message: String) {
@@ -281,6 +318,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     showCustomToast(response.message.toString())
                     showLoadingDialog(this)
                     TodayService(this).onGetScheduleItems()
+                    selectedCategoryId = null
                 }
                 else -> {
                     dismissLoadingDialog()
@@ -316,20 +354,24 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
-                        binding.addMemoEditTitle.setText(memoTitle)
-                        binding.addMemoEditContent.setText(memoContent)
-                        binding.addMemoTextDateInfo.text = memoDate
+                        setFormBottomSheetDialog(memoTitle,memoContent,memoDate)
                     }
-                    showCustomToast(response.message.toString())
                 }
                 else -> {
                     showCustomToast(response.message.toString())
                 }
             }
-        } else {
-            dismissLoadingDialog()
+        }
+        else {
             showCustomToast(response.message.toString())
         }
+    }
+
+    fun setFormBottomSheetDialog(memoTitle:String,memoContent:String,memoDate:String){
+        binding.addMemoTextDateInfo.text = memoDate
+        binding.addMemoEditTitle.setText(memoTitle)
+        binding.addMemoEditContent.setText(memoContent)
+
     }
 
     override fun onGetDetailMemoFailure(message: String) {
@@ -450,7 +492,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             }
             Log.d("TAG", "onGetUserCategoryInquirySuccess: $categoryList")
 
-            categoryScheduleAdapter = MainCategoryAdapter(categoryList, this, {})
+            categoryScheduleAdapter = MainCategoryAdapter(categoryList, this, {
+                selectedCategoryId = it.id
+            })
             binding.addMemoCategoryRecyclerview.apply {
                 layoutManager = LinearLayoutManager(
                     this@MainActivity,

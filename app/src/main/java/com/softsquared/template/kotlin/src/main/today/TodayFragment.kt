@@ -16,6 +16,7 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.models.*
@@ -25,6 +26,7 @@ import com.softsquared.template.kotlin.src.mypage.models.MonthsAchievementsRespo
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountResponse
 import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
+import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
@@ -37,6 +39,9 @@ class TodayFragment() :
         var todayMemoAdapter:MemoAdapter ?= null
     }
 
+    private var doneScheduleCount = 0
+    private var restScheduleCount = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,6 +51,7 @@ class TodayFragment() :
         todayMemoAdapter = MemoAdapter(memoList, context!!, {
             // 디테일 다이얼로그
             val scheduleDetailDialog = ScheduleDetailDialog(context!!)
+//            scheduleDetailDialog.setDialogTitle()
             // 디테일 다이얼로그 수정하기 버튼
             scheduleDetailDialog.setOnModifyBtnClickedListener {
                 // 스케쥴 ID 보내기
@@ -57,6 +63,7 @@ class TodayFragment() :
                 //바텀 시트 다이얼로그 확장
                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
             }
+            // 날짜 form 만들어야함
             scheduleDetailDialog.start(it)
         }, {
             // 일정완료 버튼
@@ -94,8 +101,15 @@ class TodayFragment() :
                     Color.parseColor("#32363C"),
                     object: SwipeButtonClickListener {
                         override fun onClick(pos: Int) {
-                            showLoadingDialog(context!!)
-                            TodayService(this@TodayFragment).onPutDeleteMemo(memoList[pos].id)
+                            AskDialog(context!!)
+                                .setTitle("일정삭제")
+                                .setMessage("일정을 삭제하시겠습니까?")
+                                .setPositiveButton("삭제"){
+                                    showLoadingDialog(context!!)
+                                    TodayService(this@TodayFragment).onPutDeleteMemo(memoList[pos].id)
+                                }
+                                .setNegativeButton("취소"){
+                                }.show()
                         }
                     }
                     ))
@@ -120,7 +134,7 @@ class TodayFragment() :
         TodayService(this).onGetScheduleItems()
         // 상단멘트
         TodayService(this).onGetTopComment()
-//        MyPageService(this).tryGet
+        MyPageService(this).tryGetTotalScheduleCount()
         MyPageService(this).tryGetRestScheduleCount("today")
 
     }
@@ -152,7 +166,7 @@ class TodayFragment() :
                         val memoDate = memoJsonObject.get("scheduleDate").asString
                         val memoTitle = memoJsonObject.get("scheduleName").asString
                         val memoContentJsonElement: JsonElement? = memoJsonObject.get("scheduleMemo")
-                        val memoPick = memoJsonObject.get("schedulePick").asInt
+                        val memoStatus = memoJsonObject.get("scheduleStatus").asInt
                         val memoId = memoJsonObject.get("scheduleID").asInt
                         val memoCreatedAt = memoDate.split(" ")
                         val memoColorInfoJsonElement:JsonElement? = memoJsonObject.get("colorInfo")
@@ -179,8 +193,7 @@ class TodayFragment() :
 
                         // 메모 체크되어있는지
                         var memoIsChecked :Boolean? = null
-                        memoIsChecked = memoPick >= 0
-
+                        memoIsChecked = memoStatus == 1
 
                         memoList.add(
                             MemoItem(
@@ -219,7 +232,6 @@ class TodayFragment() :
         if(response.isSuccess){
             when(response.code){
                 100->{
-                    showCustomToast(response.message.toString())
                     memoList.removeIf {
                         showCustomToast(scheduleID.toString())
                         it.id == scheduleID
@@ -296,6 +308,12 @@ class TodayFragment() :
         showCustomToast(message)
     }
 
+    override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
+    }
+
+    override fun onGetDetailMemoFailure(message: String) {
+    }
+
     override fun onGetMyPageSuccess(response: MyPageResponse) {
 
     }
@@ -304,11 +322,11 @@ class TodayFragment() :
     }
 
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
-        showCustomToast(response.message.toString())
         if(response.isSuccess && response.code == 100){
-            binding.todayTextRestSchedule.text=  "남은일정 ${response.remainScheduleCount}개"
+            restScheduleCount = response.remainScheduleCount
+            binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
         }else{
-            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
+            Log.d("TodayFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
     }
 
@@ -316,10 +334,18 @@ class TodayFragment() :
     }
 
     override fun onGetTotalScheduleCountSuccess(response: TotalScheduleCountResponse) {
+        if(response.isSuccess && response.code == 100){
+            doneScheduleCount = response.totaldonedata[0].doneScheduleCount.toString().toInt()
+            binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount.toString()}개"
+
+        }else{
+            showCustomToast(response.message.toString())
+        }
 
     }
 
     override fun onGetTotalScheduleCountFailure(message: String) {
+        Log.d("TodayFragment", "onGetTotalScheduleCountFailure:$message ")
     }
 
     override fun onGetMonthsAchievmentsSuccess(response: MonthsAchievementsResponse) {
@@ -327,24 +353,9 @@ class TodayFragment() :
 
     override fun onGetMonthsAchievmentsFailure(message: String) {
     }
-//
-//    override fun onGetDoneScheduleCountSuccess(response: DoneScheduleCountResponse) {
-//        if (response.isSuccess && response.code == 100){
-//            val totalDataJsonArray = response.totaldata.asJsonArray
-//            totalDataJsonArray.forEach {
-//                val totalData = it.asJsonObject.get("totalScheduleCount").asString
-//            }
-//            val DoneScheduleDataJsonArray = response.totaldonedata.asJsonArray
-//            DoneScheduleDataJsonArray.forEach {
-//                val doneData = it.asJsonObject.get("doneScheduleCount").asString
-//                binding.todayTextDoneSchedule.text = "해낸일정 ${doneData}개"
-//            }
-//        }else{
-//            Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
-//        }
-//    }
-//
-//    override fun onGetDoneScheduleCountFailure(message: String) {
-//    }
 
+
+    fun changeCount(){
+
+    }
 }

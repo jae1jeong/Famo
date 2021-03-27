@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/calendar_header_text_month_title"
-        app:layout_constraintStart_toStartOf="@id/calendar_header_text_month_title"
+        app:layout_constraintStart_toEndOf="@id/calendar_header_text_month_title"
         >
     <TextView
         android:id="@+id/calendar_header_text_year"

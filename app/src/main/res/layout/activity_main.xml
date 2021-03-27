@@ -110,7 +110,7 @@
             <LinearLayout
                 android:weightSum="10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp">
                 <EditText
                     android:id="@+id/add_memo_edit_title"
                     android:paddingLeft="10dp"
@@ -241,7 +241,7 @@
                     android:layout_weight="1"
                     android:layout_marginVertical="10dp"
                     android:textColor="@color/black"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/add_memo_time"
                     android:textSize="16sp"
@@ -315,6 +315,7 @@
                 android:layout_height="wrap_content">
 
                 <Button
+                    android:id="@+id/add_memo_btn_dialog_cancel"
                     android:text="@string/cancel"
                     android:background="@drawable/background_btn_passive"
                     android:layout_marginEnd="10dp"
@@ -338,8 +339,4 @@
         </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
-
-
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

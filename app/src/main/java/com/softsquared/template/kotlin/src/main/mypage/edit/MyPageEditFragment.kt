@@ -34,6 +34,7 @@ import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditView
+import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
 import com.softsquared.template.kotlin.util.Constants
 import java.io.File
 import java.io.IOException
@@ -452,6 +453,12 @@ class MyPageEditFragment(val myPageActivityView: MyPageActivityView) :
 
     override fun onPutMyPageUpdateFail(message: String) {
 
+    }
+
+    override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
+    }
+
+    override fun onPostProfileImageFailure(message: String) {
     }
 
 }

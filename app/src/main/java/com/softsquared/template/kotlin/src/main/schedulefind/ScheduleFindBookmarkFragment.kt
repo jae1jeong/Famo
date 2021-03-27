@@ -35,7 +35,7 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
 //            Log.d("ScheduleFindBookmarkFragment", "check: $check")
 //        }
 
-        ScheduleBookmarkService(this).tryGetScheduleBookmark(0,2)
+//        ScheduleBookmarkService(this).tryGetScheduleBookmark(0,2)
 
 
 
@@ -59,13 +59,14 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
 //        binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(bookmarkList)
     }
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+    }
+
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 
         when (response.code) {
             100 -> {
-                showCustomToast("즐겨찾기 일정조회성공")
-                Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
-
                 val boomarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
                 for (i in 0 until response.data.size) {

@@ -15,6 +15,7 @@ class ScheduleDetailDialog(context: Context) {
     private lateinit var dialogContent:TextView
     private lateinit var dialogTitle:TextView
     private lateinit var modifyBtn: Button
+    private lateinit var dialogDialogTopTitle:TextView
     private lateinit var closeBtn: ImageView
     private lateinit var listener: scheduleDetailDialogClickListener
 
@@ -27,6 +28,7 @@ class ScheduleDetailDialog(context: Context) {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         dlg.setContentView(R.layout.dialog_detail_schedule)
+        dlg.window?.setBackgroundDrawableResource(R.drawable.background_ask_dialog)
 
         // 다이얼로그 제목
         dialogTitle = dlg.findViewById(R.id.dialog_detail_text_title)
@@ -55,6 +57,13 @@ class ScheduleDetailDialog(context: Context) {
 
     }
 
+    fun setDialogTitle(text:String?){
+        if(text == null){
+            dialogDialogTopTitle.text = "일정추가하기"
+        }else{
+            dialogDialogTopTitle.text = text
+        }
+    }
     fun setOnModifyBtnClickedListener(listener:()->Unit){
         this.listener = object:scheduleDetailDialogClickListener{
             override fun modifyBtnClicked() {

@@ -26,6 +26,7 @@ import com.softsquared.template.kotlin.util.Constants
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
     MyPageView {
 
+    //갤러리/카메라 판별변수
     var check = 100
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
@@ -144,7 +145,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         Glide.with(this).load(kakaoImg)
                             .centerCrop().into(binding.myPageImg)
                     }
-
+                    //check = 1 > 갤러리
+                    //check = 2 > 카메라
                     if (check == 1) {
                         binding.myPageImg.setImageURI(galleryUrl)
                     } else if (check == 2) {
@@ -229,8 +231,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 showCustomToast("월별달성률조회성공")
-                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${response.data}")
-                binding.myPageAchievement.text = response.data.toString()
             }
             else -> {
 

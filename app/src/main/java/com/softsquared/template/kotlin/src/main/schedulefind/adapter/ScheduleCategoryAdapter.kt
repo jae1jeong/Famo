@@ -15,10 +15,8 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInqu
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 
-class ScheduleCategoryAdapter(
-    var categoryList: ArrayList<ScheduleCategoryData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-) :
+class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
     RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>(), CategoryInquiryView {
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
@@ -58,22 +56,22 @@ class ScheduleCategoryAdapter(
         holder.text.text = categoryList[position].text
         holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
 
-
         val colorStrList = iScheduleCategoryRecyclerView!!.onColor()
         Log.d(TAG, "onBindViewHolder: $colorStrList")
 
 
         if (mPreviousIndex == position){
-            holder.color.setColorFilter(Color.parseColor(colorStrList[position].toString()))
+            holder.color.setColorFilter(Color.parseColor(colorStrList[position]))
         }else{
             holder.color.setColorFilter(Color.parseColor("#00000000"))
         }
 
-
         holder.text.setOnClickListener {
             mPreviousIndex = position
             notifyDataSetChanged()
+            iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
         }
+
     }
 
     override fun getItemCount(): Int = categoryList.size
@@ -85,9 +83,9 @@ class ScheduleCategoryAdapter(
     inner class ScheduleCategoryHolder(
         itemView: View,
         myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(itemView),View.OnClickListener {
 
-//        private var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
+        private var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
 
         val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
         val color = itemView.findViewById<ImageView>(R.id.recyclerview_category_color)
@@ -95,22 +93,22 @@ class ScheduleCategoryAdapter(
 //        val category = itemView.findViewById<RelativeLayout>(R.id.item_category_list)
 
         init {
-            //리스너연결
-//            text.setOnClickListener(this)
-//            color.setOnClickListener(this)
-//            this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
+//            리스너연결
+            text.setOnClickListener(this)
+            color.setOnClickListener(this)
+            this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
         }
 
-//        override fun onClick(view: View?) {
-//
+        override fun onClick(view: View?) {
+
 //            when (view) {
 //                text, color -> {
-//
+
 //                    Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
 //                    val wholeColor = iSearchRecyclerViewInterface.onColor()
 //                    var size = 0
 //                    var colorList: List<String>? = null
-//                    colorStrList = ArrayList<String>()
+//                    val colorStrList = ArrayList<String>()
 //                    val colorID = ArrayList<Int>()
 //                    Log.d("로그", "칼라값 받아오기 테스트: $color")
 //                    colorList = wholeColor.split(":")
@@ -166,49 +164,19 @@ class ScheduleCategoryAdapter(
 //                        }
 //
 //                    }
-//
-//
-//                    val newCategory = categoryList[adapterPosition]
-//
-////                    categoryList.forEach {
-////                        if (categoryList[adapterPosition].id == newCategory.id) {
-////                            categoryList[adapterPosition].isChecked = true
-//////                            Log.d("TAG", "onClick: $selectedView")
-////
-//////                            color.setColorFilter(Color.parseColor("#FF0000"))
-//////                            Log.d(TAG, "ㅇㅇㅇㅇㅇㅇ")
-//////                            text!!.setBackgroundColor(Color.RED)
-//////                            color.setColorFilter(Color.parseColor("#FF0000"))
-////                        }
-////                    }
-////
-////
-////
-////                    categoryList.forEach {
-////                        if (it.isChecked) {
-////                            Log.d("TAG", "11111111")
-////                            it.isChecked = false
-//////                            color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-////                            color.setColorFilter(Color.parseColor("#00000000"))
-////
-////                        } else {
-////                            Log.d(TAG, "2222222222")
-////                            color.setColorFilter(Color.parseColor("#00000000"))
-////                        }
-////                    }
-////
-////                    color.setColorFilter(Color.parseColor(colorStrList[adapterPosition]))
-//
-//
-////                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
-////                        colorID[adapterPosition],
-////                        categoryList[adapterPosition].id
-////                    )
-//
+
+
+
+
+//                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
+//                        colorID[adapterPosition],
+//                        categoryList[adapterPosition].id
+//                    )
+
 //                    Log.d("TAG", "onClick: 다시돌아옴?")
 //                }
 //            }
-//        }
+        }
 
     }
 

@@ -26,11 +26,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-<<<<<<< HEAD
 import androidx.core.net.toUri
-=======
 import androidx.core.net.toFile
->>>>>>> main
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -547,8 +544,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
 
                 val intent = Intent(this, MyPageActivity::class.java)
-                intent.putExtra("day", day)
-                intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
+//                intent.putExtra("day", day)
+//                intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
                 intent.putExtra("check", imgCnt)
                 startActivity(intent)
 //                myPageActivityView.moveMyPage()

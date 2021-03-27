@@ -3,14 +3,11 @@ package com.softsquared.template.kotlin.src.wholeschedule.lately
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.GridLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBinding
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 import com.softsquared.template.kotlin.src.wholeschedule.lately.adapter.WholeScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
@@ -19,7 +16,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
     FragmentScheduleFindLatelyBinding::bind, R.layout.fragment_schedule_find_lately),
     WholeLatelyScheduleView {
 
-    var LatelySchedulePagingCnt = 0
+    var latelySchedulePagingCnt = 0
 
     companion object {
         fun newInstance(): WholeLatelyScheduleFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
@@ -30,20 +27,20 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,1)
+        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
-        binding.wholeLatelySchedulePaging.addBottomPageButton(10, 1)
+//        binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
 
         //페이지 리스너를 클릭했을 때의 이벤트
         binding.wholeLatelySchedulePaging.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeLatelySchedulePaging.addBottomPageButton(10, now_page)
+                binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, now_page)
                 WholeLatelyScheduleService(this@WholeLatelyScheduleFragment)
-                    .tryGetLatelyScheduleInquiry(((now_page - 1)), 1)
+                    .tryGetLatelyScheduleInquiry(((now_page - 1)), 10)
 
             }
             override fun onPageCenter(now_page: Int) {
@@ -57,38 +54,22 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 //                    }
 //                }
                 WholeLatelyScheduleService(this@WholeLatelyScheduleFragment)
-                    .tryGetLatelyScheduleInquiry(((now_page - 1)*1), 1)
+                    .tryGetLatelyScheduleInquiry(((now_page - 1)*10), 10)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeLatelySchedulePaging.addBottomPageButton(10, now_page)
+                binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, now_page)
                 WholeLatelyScheduleService(this@WholeLatelyScheduleFragment)
-                    .tryGetLatelyScheduleInquiry(((now_page - 1)*1), 1)
+                    .tryGetLatelyScheduleInquiry(((now_page - 1)*10), 10)
 
             }
         })
 
 
 
-    }
-
-
-    private fun createLatelyRecyclerview() {
-        //테스트 데이터
-//        val latelyList = arrayListOf(
-//            ScheduleBookmarkData("최근제목", "최근시간"),
-//            ScheduleBookmarkData("최근제목", "최근시간")
-//        )
-//
-//        // 즐겨찾기/최근 일정 리사이클러뷰 연결
-//        binding.recyclerViewLately.layoutManager = LinearLayoutManager(
-//            context, LinearLayoutManager.VERTICAL, false
-//        )
-//        binding.recyclerViewLately.setHasFixedSize(true)
-//        binding.recyclerViewLately.adapter = ScheduleBookmarkAdapter(latelyList)
     }
 
     override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
@@ -98,7 +79,15 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 showCustomToast("즐겨찾기 성공")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
-                LatelySchedulePagingCnt = (response.data.size / 10) + 1
+                val cnt = response.data.size
+                //페이징수 세팅
+                if (cnt % 10 == 0) {
+                    latelySchedulePagingCnt = cnt / 10
+                } else {
+                    latelySchedulePagingCnt = (cnt / 10) + 1
+                }
+                binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
+
 //                binding.wholeLatelySchedulePaging.addBottomPageButton(LatelySchedulePagingCnt, 1)
 
                 val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()

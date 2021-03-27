@@ -2,7 +2,7 @@ package com.softsquared.template.kotlin.src.main.category
 
 interface ICategoryRecyclerView {
 
-    fun onItemDeleteBtnClicked()
+    fun onItemDeleteBtnClicked(categoryID: Int)
 
     fun onDeleteImpossible()
 

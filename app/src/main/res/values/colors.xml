@@ -40,6 +40,7 @@
     <color name="add_btn">#FFAE2A</color>
 
     <color name="item_today_month_text">#505C6C</color>
-    
+
+    <color name="schedule_find_text">#aeb7c4</color>
 
 </resources>

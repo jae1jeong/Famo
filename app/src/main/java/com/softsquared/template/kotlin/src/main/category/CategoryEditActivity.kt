@@ -24,11 +24,14 @@ import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCat
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.today.TodayFragment
+import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
+import com.softsquared.template.kotlin.util.AskDialog
 
 class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     (ActivityCategoryEditBinding::inflate), ICategoryRecyclerView, CategoryEditView,
-    CategoryInquiryView,DeleteDialog.deleteButtonClickListener, View.OnClickListener {
+    CategoryInquiryView{
 
     private var deleteDialog: DeleteDialog? = null
 
@@ -43,6 +46,8 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     var getCategoryID: String? = null
 
     val intCategoryID = ArrayList<Int>()
+
+    var dataSize = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +94,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
         //X 버튼
         binding.categoryEditXBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
     }
@@ -109,13 +113,36 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     //삭제버튼 클릭
-    override fun onItemDeleteBtnClicked() {
-//        deleteDialog()
-        deleteDialog =
-            DeleteDialog(this)
-        deleteDialog!!.setOnDialogButtonClickListener(this)
-        deleteDialog!!.setCancelable(false)
-        deleteDialog!!.show()
+    override fun onItemDeleteBtnClicked(categoryID: Int) {
+//        deleteDialog =
+//            DeleteDialog(this)
+//        deleteDialog!!.setOnDialogButtonClickListener(this)
+//        deleteDialog!!.setCancelable(false)
+//        deleteDialog!!.show()
+
+        CategoryInquiryService(this).tryGetCategoryInquiry(
+            categoryID, 0, 10
+        )
+
+        AskDialog(this)
+            .setTitle("일정삭제")
+            .setMessage("일정을 삭제하시겠습니까?")
+            .setPositiveButton("삭제"){
+                showLoadingDialog(this)
+                if (dataSize == 0) {
+                    Log.d("TAG", "onItemDeleteBtnClicked: 삭제성공")
+                    CategoryEditService(this)
+                            .tryDeleteCategoryEditDelete(categoryID.toString())
+                    dismissLoadingDialog()
+                }else{
+                    deleteImpossibleDialog()
+                    dismissLoadingDialog()
+                }
+
+            }
+            .setNegativeButton("취소"){
+            }.show()
+
     }
 
     //삭제불가
@@ -241,25 +268,14 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     override fun onGetCategoryInquirySuccess(categoryInquiryResponse: CategoryInquiryResponse) {
+
+        dataSize = categoryInquiryResponse.data.size
     }
 
     override fun onGetCategoryInquiryFail(message: String) {
     }
 
-    override fun onDialogButtonClick(view: View?) {
-        when (view!!.id) {
-            R.id.delete_check -> {
-                Log.d(ContentValues.TAG, "onDialogButtonClick: delete확인")
-//                CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
 
-            }
-
-        }
-    }
-
-    override fun onClick(v: View?) {
-        onItemDeleteBtnClicked()
-    }
 
 
 }

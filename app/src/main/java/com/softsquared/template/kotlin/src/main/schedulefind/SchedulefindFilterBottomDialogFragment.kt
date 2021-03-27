@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_schedule_find_category.*
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
 import java.lang.ClassCastException
 
-class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSheetDialogFragment(),
+class SchedulefindFilterBottomDialogFragment() : BottomSheetDialogFragment(),
     CategoryFilterView,View.OnClickListener {
 
     private var iCategoryFilterInterface: CategoryFilterInterface? = null
@@ -66,7 +66,7 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
 
     init {
         Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
-        this.id = scheduleCategoryID
+//        this.id = scheduleCategoryID
     }
 
 
@@ -112,37 +112,37 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
 //        }
 
         //완료 일정 클릭 시
-        filter_btn_completion.setOnClickListener {
-
-            if (completionCnt % 2 != 0) {
-                filter_btn_completion_squre.visibility = View.VISIBLE
-                filter_btn_completion_check.visibility = View.VISIBLE
-            } else {
-                filter_btn_completion_squre.visibility = View.GONE
-                filter_btn_completion_check.visibility = View.GONE
-            }
-            completionCnt++
-
-
-//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "done", 0, 100)
-        }
+//        filter_btn_completion.setOnClickListener {
+//
+//            if (completionCnt % 2 != 0) {
+//                filter_btn_completion_squre.visibility = View.VISIBLE
+//                filter_btn_completion_check.visibility = View.VISIBLE
+//            } else {
+//                filter_btn_completion_squre.visibility = View.GONE
+//                filter_btn_completion_check.visibility = View.GONE
+//            }
+//            completionCnt++
+//
+//
+////            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "done", 0, 100)
+//        }
 
         //최신 클릭 시
-        filter_btn_recents.setOnClickListener {
-
-            if (recentsCnt % 2 != 0) {
-                filter_btn_recents_squre.visibility = View.VISIBLE
-                filter_btn_recents_check.visibility = View.VISIBLE
-            } else {
-                filter_btn_recents_squre.visibility = View.GONE
-                filter_btn_recents_check.visibility = View.GONE
-            }
-            recentsCnt++
-
-//            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "recent", 0, 100)
-
-
-        }
+//        filter_btn_recents.setOnClickListener {
+//
+//            if (recentsCnt % 2 != 0) {
+//                filter_btn_recents_squre.visibility = View.VISIBLE
+//                filter_btn_recents_check.visibility = View.VISIBLE
+//            } else {
+//                filter_btn_recents_squre.visibility = View.GONE
+//                filter_btn_recents_check.visibility = View.GONE
+//            }
+//            recentsCnt++
+//
+////            CategoryFilterService(this).tryGetUserCategoryInquiry(id!!, "recent", 0, 100)
+//
+//
+//        }
 
         //즐겨찾기 클릭 시
 //        filter_btn_bookmark.setOnClickListener {
@@ -164,69 +164,6 @@ class SchedulefindFilterBottomDialogFragment(scheduleCategoryID: Int) : BottomSh
     @SuppressLint("InflateParams", "CommitPrefEdits")
     override fun onGetCategoryFilterInquirySuccess(response: CategoryFilterResponse) {
 
-        when (response.code) {
-            100 -> {
-                Log.d("TAG", "onGetCategoryFilterInquirySuccess: 필터조회성공")
-
-                val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
-
-                if (response.data.size > 0) {
-
-                    for (i in 0 until response.data.size) {
-
-                        //즐겨찾기가 아닌경우
-                        if (response.data[i].schedulePick == -1) {
-                            categoryFilterList.add(
-                                CategoryFilterData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
-                                    response.data[i].colorInfo
-                                )
-                            )
-                            // 즐겨찾기 인 경우
-                        } else {
-                            categoryFilterList.add(
-                                CategoryFilterData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    response.data[i].colorInfo
-                                )
-                            )
-                        }
-
-                    }
-                }
-
-                val layoutInflater: LayoutInflater = activity!!.getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-                val view: View =
-                    layoutInflater.inflate(R.layout.fragment_schedule_find_category, null);
-
-                val abc: RecyclerView = view.findViewById(R.id.recyclerview_schedule_find_category)
-
-                abc.layoutManager =
-                    GridLayoutManager(
-                        context, 2, GridLayoutManager.VERTICAL,
-                        false
-                    )
-                abc.setHasFixedSize(true)
-                abc.adapter = CategoryFilterAdapter(categoryFilterList)
-
-            }
-            else -> {
-                Log.d(
-                    "TAG",
-                    "onGetCategoryFilterInquirySuccess: 남은일정조회성공 ${response.message.toString()}"
-                )
-            }
-        }
 
     }
 

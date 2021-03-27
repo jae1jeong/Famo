@@ -5,7 +5,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterB
 interface IScheduleCategoryRecyclerView {
 
     //카테고리별일정으로 이동
-    fun onItemMoveBtnClicked(position: Int, scheduleCategoryID : Int)
+    fun onItemMoveBtnClicked(scheduleCategoryID : Int)
 
     //칼라값 가져오기
     fun onColor() : ArrayList<String>

@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +68,7 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
         holder.pick.setImageResource(categoryList[position].pick)
         holder.name.text = categoryList[position].name
         holder.memo.text = categoryList[position].memo
+        holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
 
     }
 
@@ -80,6 +82,7 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
         val date = itemView.findViewById<TextView>(R.id.recycler_whole_times)
         val name = itemView.findViewById<TextView>(R.id.recycler_whole_title)
         val memo = itemView.findViewById<TextView>(R.id.recycler_whole_content)
+        val color = itemView.findViewById<ImageView>(R.id.wholoe_schedule_border)
 
         init {
             //리스너연결

@@ -32,35 +32,34 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 //            Log.d("ScheduleFindBookmarkFragment", "check: $check")
 //        }
 
-        WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,1)
+        WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,10)
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeBookmarkSchedulePaging.setPageItemCount(4);
-        binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, 1)
 
         //페이지 리스너를 클릭했을 때의 이벤트
         binding.wholeBookmarkSchedulePaging.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, now_page)
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)), 1)
+                    .tryGetScheduleBookmark(((now_page - 1)), 10)
 
             }
 
             override fun onPageCenter(now_page: Int) {
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)*1), 1)
+                    .tryGetScheduleBookmark(((now_page - 1)*10), 10)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, now_page)
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)*1), 1)
+                    .tryGetScheduleBookmark(((now_page - 1)*10), 10)
 
             }
         })
@@ -73,10 +72,18 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
         when(response.code){
             100 -> {
                 showCustomToast("즐겨찾기 성공")
-                Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
+                Log.d("TAG", "onGetScheduleBookmarkSuccess: 전체즐겨찾기조회성공")
 
-                bookmarkSchedulePagingCnt = (response.data.size / 10) + 1
-//                binding.wholeBookmarkSchedulePaging.addBottomPageButton(4, 1)
+                val cnt = response.data.size
+                //페이징수 세팅
+                if (cnt % 10 == 0) {
+                    bookmarkSchedulePagingCnt = cnt / 10
+                } else {
+                    bookmarkSchedulePagingCnt = (cnt / 10) + 1
+                }
+
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, 1)
+
 
                 val bookmarkListWhole: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 

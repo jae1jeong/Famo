@@ -259,7 +259,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainImageProfile.visibility = View.VISIBLE
     }
 
-    override fun onItemMoveBtnClicked(position: Int, scheduleCategoryID: Int) {
+    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
     }
 
     override fun onColor(): ArrayList<String> {
@@ -271,7 +271,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     //일정찾기 - 필터 바텀다이얼로그로 이동
     override fun onMoveFilterFragment(scheduleCategoryID: Int) {
         val scheduleFindFilterBottomDialogBinding =
-            SchedulefindFilterBottomDialogFragment(scheduleCategoryID)
+            SchedulefindFilterBottomDialogFragment()
         scheduleFindFilterBottomDialogBinding.show(
             supportFragmentManager, scheduleFindFilterBottomDialogBinding.tag
         )

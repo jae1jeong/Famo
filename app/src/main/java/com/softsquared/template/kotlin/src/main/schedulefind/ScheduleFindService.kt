@@ -18,8 +18,8 @@ class ScheduleFindService(val view : ScheduleFindView) {
         homeRetrofitInterface.getWholeScheduleInquiry(offset, limit).enqueue(object :
             Callback<WholeScheduleInquiryResponse> {
             override fun onResponse(call: Call<WholeScheduleInquiryResponse>, response: Response<WholeScheduleInquiryResponse>) {
-//                Log.d("값 확인", "tryGetWholeScheduleInquiry body:  ${response.body()}")
-//                Log.d("값 확인", "tryGetWholeScheduleInquiry code:  ${response.code()}")
+                Log.d("값 확인", "tryGetWholeScheduleInquiry body:  ${response.body()}")
+                Log.d("값 확인", "tryGetWholeScheduleInquiry code:  ${response.code()}")
                 view.onGetWholeScheduleInquirySuccess(response.body() as WholeScheduleInquiryResponse)
             }
 

@@ -18,8 +18,8 @@
 
                 <ImageView
                     android:id="@+id/whole_schedule_x_btn"
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:background="@drawable/category_edit_x_btn"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="17dp"/>
@@ -103,7 +103,9 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/whole_schedule_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"/>
 
 
 

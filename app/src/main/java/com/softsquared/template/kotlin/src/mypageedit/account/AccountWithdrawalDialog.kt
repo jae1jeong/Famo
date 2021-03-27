@@ -2,11 +2,13 @@ package com.softsquared.template.kotlin.src.mypageedit.account
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation
 import com.softsquared.template.kotlin.src.mypageedit.models.AccountWithdrawalResponse
 
 class AccountWithdrawalDialog(context:Context) : Dialog(context)
@@ -31,8 +33,6 @@ class AccountWithdrawalDialog(context:Context) : Dialog(context)
             Log.d("TAG", "아니오 눌림 ")
         }
 
-
-
     }
 
     override fun onPatchAccountWithdrawalSuccess(response: AccountWithdrawalResponse) {
@@ -40,6 +40,8 @@ class AccountWithdrawalDialog(context:Context) : Dialog(context)
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onPatchAccountWithdrawalSuccess: 회원탈퇴 성공")
+                val intent = Intent(context, LoginInformation::class.java)
+                context.startActivity(intent)
             }
             else -> {
                 Log.d("TAG", "onPatchAccountWithdrawalSuccess: 회원탈퇴 실패 ${response.message.toString()}")

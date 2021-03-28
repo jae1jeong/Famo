@@ -25,6 +25,7 @@ import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.*
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
@@ -34,8 +35,8 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
-import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.CalendarConverter
+import com.softsquared.template.kotlin.util.Constants
 import java.time.LocalDate
 
 
@@ -104,10 +105,14 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         if (Constants.IS_EDIT) {
                             Constants.IS_EDIT = false
-                        }else{
+                        } else {
                             val nowDate = LocalDate.now()
                             val dayName = nowDate.dayOfWeek.name
-                            binding.addMemoTextDateInfo.text = "$nowDate (${CalendarConverter.dayToKoreanShortDayName(dayName)})"
+                            binding.addMemoTextDateInfo.text = "$nowDate (${
+                                CalendarConverter.dayToKoreanShortDayName(
+                                    dayName
+                                )
+                            })"
                         }
                     }
                 }
@@ -277,6 +282,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         )
     }
 
+    override fun onScheduleDetail() {
+    }
+
     override fun onPostAddMemoSuccess(response: BaseResponse) {
         if (response.isSuccess) {
             when (response.code) {
@@ -355,7 +363,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
-                        setFormBottomSheetDialog(memoTitle,memoContent,memoDate)
+                        setFormBottomSheetDialog(memoTitle, memoContent, memoDate)
                     }
                 }
                 else -> {
@@ -368,7 +376,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
     }
 
-    fun setFormBottomSheetDialog(memoTitle:String,memoContent:String,memoDate:String){
+    fun setFormBottomSheetDialog(memoTitle: String, memoContent: String, memoDate: String){
         binding.addMemoTextDateInfo.text = memoDate
         binding.addMemoEditTitle.setText(memoTitle)
         binding.addMemoEditContent.setText(memoContent)

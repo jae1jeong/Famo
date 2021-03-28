@@ -10,13 +10,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/category_edit_btn_delete"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginStart="0dp"
             android:background="@drawable/category_edit_delete"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -26,15 +26,19 @@
         <TextView
             android:id="@+id/recyclerview_category_edit_tv_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:background="@drawable/background_category_edit"
             android:ems="10"
-            android:padding="10dp"
             android:text="Name"
-            android:textSize="22dp"
+            android:textStyle="normal"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:paddingLeft="15dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/category_edit_btn_color"
             app:layout_constraintStart_toEndOf="@+id/category_edit_btn_delete"
@@ -42,8 +46,8 @@
 
         <ImageView
             android:id="@+id/category_edit_btn_color"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="0dp"
             android:src="@drawable/category_img_orange"
@@ -55,8 +59,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
         android:background="@color/view_color" />
 
 </LinearLayout>

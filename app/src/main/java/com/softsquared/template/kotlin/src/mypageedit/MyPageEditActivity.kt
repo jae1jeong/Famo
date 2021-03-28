@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -15,10 +14,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.FileUtils
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
@@ -27,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import androidx.core.net.toFile
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -41,13 +39,14 @@ import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
+import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.onMyTextChanged
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
-import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -83,6 +82,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     var context: Context? = null
 
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -130,19 +130,41 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             alertDialog.show()
         }
 
-        //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게
+        //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게 및 화살표 방향설정
         binding.myPageEditBtnTopMent.setOnClickListener {
             if (topMentCnt % 2 != 0){
                 binding.myPageEditLinearTopMent.visibility = View.VISIBLE
+                binding.myPageEditTopMentView.visibility = View.GONE
+
+                binding.myPageEditMentBottomArrow.visibility = View.GONE
+                binding.myPageEditMentTopArrow.visibility = View.VISIBLE
+
                 binding.myPageEditTopMentView.visibility = View.GONE
             }
 
             if (topMentCnt % 2 == 0){
                 binding.myPageEditLinearTopMent.visibility = View.GONE
                 binding.myPageEditTopMentView.visibility = View.VISIBLE
+
+                binding.myPageEditMentBottomArrow.visibility = View.VISIBLE
+                binding.myPageEditMentTopArrow.visibility = View.GONE
+
+                binding.myPageEditTopMentView.visibility = View.VISIBLE
             }
             topMentCnt++
 //            binding.myPageEditLinearTopMent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        }
+
+
+        //이름,멘트 글자수
+        binding.myPageEditEtName.onMyTextChanged {
+            val input: String = binding.myPageEditEtName.text.toString()
+            binding.myPageEditNameLength.text = input.length.toString() + "/6"
+        }
+
+        binding.myPageEditEtComments.onMyTextChanged {
+            val input: String = binding.myPageEditEtComments.text.toString()
+            binding.myPageEditMentLength.text = input.length.toString() + "/10"
         }
 
         //디데이 설정 버튼 클릭 시
@@ -171,11 +193,21 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             if (accountSettingCnt % 2 != 0){
                 binding.myPageEditBtnAccountSettingView.visibility = View.GONE
                 binding.myPageEditLinearAccountSetting.visibility = View.VISIBLE
+
+                binding.myPageEditAccountTopArrow.visibility = View.VISIBLE
+                binding.myPageEditAccountBottomArrow.visibility = View.GONE
+
+                binding.myPageEditBtnAccountSettingView.visibility = View.GONE
             }
 
             if (accountSettingCnt % 2 == 0){
                 binding.myPageEditBtnAccountSettingView.visibility = View.VISIBLE
                 binding.myPageEditLinearAccountSetting.visibility = View.GONE
+
+                binding.myPageEditAccountTopArrow.visibility = View.GONE
+                binding.myPageEditAccountBottomArrow.visibility = View.VISIBLE
+
+                binding.myPageEditBtnAccountSettingView.visibility = View.VISIBLE
             }
 
             accountSettingCnt++
@@ -203,39 +235,47 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         val day = binding.dataPicker.dayOfMonth
         binding.dataPicker.init(year, month, day, listener)
 
-
-        //체크표시
-        binding.myPageEditBtnSave.setOnClickListener {
-            val onlyDate: LocalDate = LocalDate.now()
-
-            if (dateCnt == 0){
+        binding.myPageEditBtnSave.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val onlyDate: LocalDate = LocalDate.now()
+                    if (dateCnt == 0){
 //                binding.myPageEditEtComments.setText(onlyDate.toString())
-                val str = onlyDate.toString()
-                val format = SimpleDateFormat("YYYY-MM-DD")
-                val nowDate : Date? = format.parse(str)
-                strDate = str
-            }else{
+                        val str = onlyDate.toString()
+                        val format = SimpleDateFormat("YYYY-MM-DD")
+                        val nowDate : Date? = format.parse(str)
+                        strDate = str
+                    }else{
 //                binding.myPageEditEtComments.setText(strDate)
 
+                    }
+
+                    if (dDaySettingCnt % 2 != 0){
+                        dDaySettingCnt = 1
+                    }else{
+                        dDaySettingCnt = -1
+                    }
+
+                    Log.d("TAG", "상단멘트사전확인: ${binding.myPageEditEtComments.text}")
+                    val myPageUpdateRequest = PutMyPageUpdateRequest(
+                        nickname = binding.myPageEditEtName.text.toString(),
+                        titleComment = binding.myPageEditEtComments.text.toString(),
+                        goalStatus = dDaySettingCnt,
+                        goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
+                        goalDate = strDate
+                    )
+
+                    MyPageEditService(this).tryPutMyPageUpdate(myPageUpdateRequest)
+                }
             }
-
-            if (dDaySettingCnt % 2 != 0){
-                dDaySettingCnt = 1
-            }else{
-                dDaySettingCnt = -1
-            }
-
-            Log.d("TAG", "상단멘트사전확인: ${binding.myPageEditEtComments.text}")
-            val myPageUpdateRequest = PutMyPageUpdateRequest(
-                nickname = binding.myPageEditEtName.text.toString(),
-                titleComment = binding.myPageEditEtComments.text.toString(),
-                goalStatus = dDaySettingCnt,
-                goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
-                goalDate = strDate
-            )
-
-            MyPageEditService(this).tryPutMyPageUpdate(myPageUpdateRequest)
+            false
         }
+
+
+        //체크표시
+//        binding.myPageEditBtnSave.setOnClickListener {
+//
+//        }
 
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
@@ -346,8 +386,15 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 //
 //            Log.d("TAG", "onActivityResult:dd  ${getExternalFilesDir(selectedImageUri.toString())}")
             val file = File(data.data!!.path!!.toString())
-            val requestFile = file?.let { RequestBody.create("multipart/form-data".toMediaTypeOrNull(), it) }
-            val requestImage = requestFile?.let { MultipartBody.Part.createFormData("profileImage",file.name, it) }
+            val requestFile = file?.let { RequestBody.create(
+                "multipart/form-data".toMediaTypeOrNull(),
+                it
+            ) }
+            val requestImage = requestFile?.let { MultipartBody.Part.createFormData(
+                "profileImage",
+                file.name,
+                it
+            ) }
             if (requestImage != null) {
                 showLoadingDialog(this)
                 MyPageEditService(this).tryPostMyProfileImage(requestImage)
@@ -366,8 +413,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         //카메라
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val file = File(currentPhotoPath)
-            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
-            val requestImage = MultipartBody.Part.createFormData("profileImage",file.name,requestFile)
+            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+            val requestImage = MultipartBody.Part.createFormData(
+                "profileImage",
+                file.name,
+                requestFile
+            )
             showLoadingDialog(this)
             MyPageEditService(this).tryPostMyProfileImage(requestImage)
 
@@ -425,8 +476,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         when(response.code){
             100 -> {
-                Log.d("TAG", "onGetMyPageSuccess: MyPage수정 조회성공")
-                showCustomToast("MyPage수정 조회성공")
+                Log.d("TAG", "onGetMyPageSuccess: MyPage수정페이지 조회성공")
+                showCustomToast("MyPage수정페이지 조회성공")
 
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_THUMBNAILIMAGEURL,
@@ -435,8 +486,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val name =
                     ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
 
+                val dday =
+                    ApplicationClass.sSharedPreferences.getString(Constants.DAY,null)
+
 
                 Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
+                Log.d("TAG", "onGetMyPageSuccess: dday :$dday")
 
                 val gallery =
                     ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
@@ -503,6 +558,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 //이름 적용
                 binding.myPageEditEtName.setText(name)
+                //멘트
+                binding.myPageEditEtComments.setText(response.titleComment)
+
+                binding.myPageEditEtGoaltitle.setText(response.goalTitle)
+
+                binding.myPageEditDay.setText(dday.toString())
 
             }
             else -> {
@@ -529,6 +590,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val today = Calendar.getInstance()
                 val day = ((date.time - today.time.time) / (60 * 60 * 24 * 1000)) + 1
 
+                Log.d("TAG", "dday값확인: $day")
                 binding.myPageEditDay.setText(day.toString())
                 val name = binding.myPageEditEtName.text.toString()
                 val comments = binding.myPageEditEtComments.text.toString()

@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp"
     android:src="@drawable/background_bottom_sheet_dialog_add_memo">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="21dp">
 
         <ImageView
             android:id="@+id/category_edit_x_btn"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:background="@drawable/category_edit_x_btn" />
@@ -23,96 +24,101 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="카테고리 편집"
-            android:textColor="@color/black"
-            android:textSize="22dp"
-            android:textStyle="bold" />
+            android:text="@string/category_edit_tv_title"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
     </RelativeLayout>
 
     <EditText
         android:id="@+id/category_edit_et"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="카테고리명을 입력해주세요."
+        android:layout_height="50dp"
+        android:hint="@string/category_edit_et_add"
         android:text=""
-        android:textSize="20dp"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:textColor="#a7adb5"
+        android:maxLines="1"
         android:background="@drawable/background_category_edit"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:paddingLeft="15dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"/>
+        android:paddingBottom="13dp"
+        android:paddingTop="13dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="색상"
-        android:textSize="18dp"
-        android:layout_marginTop="40dp"/>
+        android:text="@string/category_edit_tv_color"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:textColor="#6e7a8b"
+        android:layout_marginTop="36dp" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="17dp"
         android:gravity="center">
 
         <TableRow>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_1"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_1" />
 
                 <ImageView
                     android:id="@+id/category_edit_color1_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_2"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_2" />
 
                 <ImageView
                     android:id="@+id/category_edit_color2_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_3"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_3" />
 
                 <ImageView
                     android:id="@+id/category_edit_color3_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -120,20 +126,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_4"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_4" />
 
                 <ImageView
                     android:id="@+id/category_edit_color4_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -141,23 +147,23 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_5"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_5" />
 
                 <ImageView
                     android:id="@+id/category_edit_color5_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -166,40 +172,40 @@
         <TableRow android:layout_marginTop="20dp">
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_6"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_6" />
 
                 <ImageView
                     android:id="@+id/category_edit_color6_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_7"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_7" />
 
                 <ImageView
                     android:id="@+id/category_edit_color7_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -207,20 +213,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_8"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_8" />
 
                 <ImageView
                     android:id="@+id/category_edit_color8_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -228,20 +234,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_9"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_9" />
 
                 <ImageView
                     android:id="@+id/category_edit_color9_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -249,20 +255,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="15dp">
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="22dp">
 
                 <ImageView
                     android:id="@+id/category_edit_color_10"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/category_color_10" />
 
                 <ImageView
                     android:id="@+id/category_edit_color10_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/category_color_check"
                     android:visibility="gone" />
@@ -276,17 +282,27 @@
     <android.widget.Button
         android:id="@+id/category_edit_no_save"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="완료"
-        android:layout_marginTop="40dp"/>
+        android:layout_height="50dp"
+        android:text="@string/category_edit_tv_complete"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#909192"
+        android:lineSpacingExtra="8sp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/background_in_btn"
+        android:visibility="visible"/>
 
     <android.widget.Button
         android:id="@+id/category_edit_save"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="완료"
-        android:layout_marginTop="40dp"
-        android:background="@color/add_btn"
+        android:layout_height="50dp"
+        android:text="category_edit_tv_complete"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:lineSpacingExtra="8sp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/background_btn"
         android:visibility="gone"/>
 
 </LinearLayout>

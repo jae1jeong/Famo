@@ -7,15 +7,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBookmarkBinding
+import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
+import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBinding>(
     FragmentScheduleFindBookmarkBinding::bind, R.layout.fragment_schedule_find_bookmark
-),
-    ScheduleBookmarkView {
+), ScheduleBookmarkView, ScheduleBookmarkAdapter.OnItemClick, IScheduleCategoryRecyclerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,8 +53,11 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
                     context, LinearLayoutManager.VERTICAL, false
                 )
                 binding.recyclerViewBookmark.setHasFixedSize(true)
-                binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(boomarkList)
+                binding.recyclerViewBookmark.adapter = ScheduleBookmarkAdapter(boomarkList,this)
 //                scheduleCategoryAdapter.notifyDataSetChanged()
+
+                val recycleAdapter = ScheduleBookmarkAdapter(boomarkList,this)
+                binding.recyclerViewBookmark.adapter = recycleAdapter
 
 
             }
@@ -66,5 +72,24 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
     }
 
     override fun onGetScheduleBookmarkFail(message: String) {
+    }
+
+    override fun onClick(value: String?) {
+    }
+
+    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
+    }
+
+    override fun onColor(): ArrayList<String> {
+
+        val aa = ArrayList<String>()
+        return aa
+    }
+
+    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
+    }
+
+    override fun onScheduleDetail() {
+        Log.d("TAG", "onScheduleDetail: 확인")
     }
 }

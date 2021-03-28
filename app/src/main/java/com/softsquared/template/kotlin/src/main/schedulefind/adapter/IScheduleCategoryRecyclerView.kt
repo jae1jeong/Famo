@@ -11,4 +11,6 @@ interface IScheduleCategoryRecyclerView {
     fun onColor() : ArrayList<String>
 
     fun onMoveFilterFragment(scheduleCategoryID : Int)
+
+    fun onScheduleDetail()
 }

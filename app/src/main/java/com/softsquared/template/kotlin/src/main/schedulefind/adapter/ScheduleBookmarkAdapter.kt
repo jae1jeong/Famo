@@ -1,6 +1,8 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +17,31 @@ import com.softsquared.template.kotlin.src.main.AddMemoView
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
 
-open class ScheduleBookmarkAdapter(var bookmarkListWhole: ArrayList<WholeScheduleBookmarkData>) :
-    RecyclerView.Adapter<ScheduleBookmarkAdapter.ScheduleBookmarkHolder>(),
-    AddMemoView{
+
+open class ScheduleBookmarkAdapter(var bookmarkListWhole: ArrayList<WholeScheduleBookmarkData>,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
+    RecyclerView.Adapter<ScheduleBookmarkAdapter.ScheduleBookmarkHolder>(), AddMemoView {
+
+    private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
+
+    private var mCallback: OnItemClick? = null
+
+    private var context: Context? = null
+
+    interface OnItemClick {
+        fun onClick(value: String?)
+    }
+
+    open fun RecycleAdapter(context: Context, listener: OnItemClick) {
+        this.context = context
+        this.mCallback = listener
+    }
+
+    init {
+        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
+        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBookmarkHolder {
 
@@ -61,34 +85,36 @@ open class ScheduleBookmarkAdapter(var bookmarkListWhole: ArrayList<WholeSchedul
     }
 
     override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
-        if (response.isSuccess) {
             when (response.code) {
                 100 -> {
-                    val responseJsonArray = response.data.asJsonArray
-                    responseJsonArray.forEach {
-                        val memoJsonObject = it.asJsonObject
-                        val memoTitle = memoJsonObject.get("scheduleName").asString
-                        val memoDate = memoJsonObject.get("scheduleDate").asString
-                        val memoContentJsonElement: JsonElement? =
-                            memoJsonObject.get("scheduleMemo")
-                        var memoContent = ""
-                        if (!memoContentJsonElement!!.isJsonNull) {
-                            memoContent = memoContentJsonElement.asString
-                        }
+                iScheduleCategoryRecyclerView!!.onScheduleDetail()
+                }
 
-//                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
+//                var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
+
+
+//                100 -> {
+//                    val responseJsonArray = response.data.asJsonArray
+//                    responseJsonArray.forEach {
+//                        val memoJsonObject = it.asJsonObject
+//                        val memoTitle = memoJsonObject.get("scheduleName").asString
+//                        val memoDate = memoJsonObject.get("scheduleDate").asString
+//                        val memoContentJsonElement: JsonElement? =
+//                            memoJsonObject.get("scheduleMemo")
+//                        var memoContent = ""
+//                        if (!memoContentJsonElement!!.isJsonNull) {
+//                            memoContent = memoContentJsonElement.asString
+//                        }
+//
+//                        val scheduleTime: String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
-                        setFormBottomSheetDialog(memoTitle,memoContent,memoDate)
-                    }
-                }
-                else -> {
-                    showCustomToast(response.message.toString())
-                }
+//                        setFormBottomSheetDialog(memoTitle, memoContent, memoDate)
+//                    }
+//                }
+//                else -> {
+////                    showCustomToast(response.message.toString())
+//                }
             }
-        }
-        else {
-            showCustomToast(response.message.toString())
-        }
     }
 
     override fun onGetDetailMemoFailure(message: String) {

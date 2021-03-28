@@ -7,6 +7,45 @@
     android:orientation="vertical"
     tools:context=".src.mypageedit.MyPageEditActivity">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/login_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/my_page_edit_back"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/category_edit_x_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="프로필 편집"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/my_page_edit_btn_save"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/my_page_edit_check" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,128 +53,97 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.Toolbar
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/my_page_edit_back"
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_marginRight="17dp"
-                    android:background="@drawable/schedule_search_back" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="프로필 편집"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/my_page_edit_btn_save"
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:background="@drawable/my_page_edit_check"
-                    android:layout_gravity="right"/>
-
-            </androidx.appcompat.widget.Toolbar>
-
-            <!--            <RelativeLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="40dp">-->
-
-            <!--                <ImageView-->
-            <!--                    android:id="@+id/my_page_edit_btn_x"-->
-            <!--                    android:layout_width="21dp"-->
-            <!--                    android:layout_height="21dp"-->
-            <!--                    android:layout_centerVertical="true"-->
-            <!--                    android:background="@drawable/category_edit_x_btn" />-->
-
-            <!--                <TextView-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_centerHorizontal="true"-->
-            <!--                    android:layout_centerVertical="true"-->
-            <!--                    android:text="@string/my_page_edit_tv_title"-->
-            <!--                    android:textColor="@color/black"-->
-            <!--                    android:textSize="22dp"-->
-            <!--                    android:textStyle="bold" />-->
-
-            <!--                <ImageView-->
-            <!--                    android:id="@+id/my_page_edit_btn_save"-->
-            <!--                    android:layout_width="19dp"-->
-            <!--                    android:layout_height="19dp"-->
-            <!--                    android:layout_alignParentRight="true"-->
-            <!--                    android:layout_centerVertical="true"-->
-            <!--                    android:background="@drawable/my_page_edit_check" />-->
-
-            <!--            </RelativeLayout>-->
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="28dp">
 
                 <ImageView
                     android:id="@+id/my_page_imt_circle"
-                    android:layout_width="154dp"
-                    android:layout_height="154dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/my_page_img" />
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/my_page_img"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/my_page_edit_img"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/my_page_img2" />
+                    android:layout_width="108dp"
+                    android:layout_height="108dp"
+                    android:src="@drawable/my_page_img2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/my_page_imt_circle"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="50dp"
-                    android:text="@string/my_page_edit_tv_phote_update"
-                    android:textColor="@color/orange"
-                    android:textSize="20dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/my_page_edit_img"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
+                android:text="@string/my_page_edit_tv_phote_update"
+                android:textColor="@color/orange"
+                android:textSize="16sp"
+                android:textStyle="normal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="@string/my_page_edit_tv_name" />
+                android:text="@string/my_page_edit_tv_name"
+                android:textColor="#79879a"
+                android:textSize="13sp"
+                android:textStyle="normal" />
 
-            <EditText
-                android:id="@+id/my_page_edit_et_name"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@null"
-                android:text="현주"
-                android:textColor="@color/black"
-                android:textSize="19dp" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/my_page_edit_et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:background="@null"
+                    android:maxLength="6"
+                    android:maxLines="1"
+                    android:text="현주"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/my_page_edit_name_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="글자수"
+                    android:textColor="#ced5d9"
+                    android:textSize="13sp"
+                    android:textStyle="normal" />
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
                 android:background="@color/view_color" />
 
             <RelativeLayout
                 android:id="@+id/my_page_edit_btn_top_ment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -143,21 +151,32 @@
                     android:layout_centerVertical="true"
                     android:text="@string/my_page_edit_tv_top_ment"
                     android:textColor="@color/black"
-                    android:textSize="21dp" />
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/my_page_edit_ment_bottom_arrow"
+                    android:layout_width="11dp"
+                    android:layout_height="5dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/my_page_edit_bottom_arrow" />
+
+                <ImageView
+                    android:id="@+id/my_page_edit_ment_top_arrow"
+                    android:layout_width="11dp"
+                    android:layout_height="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/my_page_edit_top_arrow"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
             <View
                 android:id="@+id/my_page_edit_top_ment_view"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/view_color"
                 android:visibility="visible" />
@@ -167,21 +186,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_marginTop="20dp"
+                android:visibility="visible">
 
-                <EditText
-                    android:id="@+id/my_page_edit_et_comments"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:background="@drawable/background_et_my_page_edit"
-                    android:hint="@string/my_page_edit_et_top_ment_hint"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
-                    android:textSize="21dp" />
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp">
+
+                    <EditText
+                        android:id="@+id/my_page_edit_et_comments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:hint="@string/my_page_edit_et_top_ment_hint"
+                        android:maxLength="10"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/my_page_edit_ment_length"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="글자수"
+                        android:textColor="#ced5d9"
+                        android:textSize="13sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -192,22 +239,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="7dp"
                         android:layout_toLeftOf="@+id/my_page_edit_btn_dday"
                         android:text="@string/my_page_edit_tv_dday_setting"
-                        android:textSize="18sp" />
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
 
                     <ImageView
                         android:id="@+id/my_page_edit_btn_dday"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/my_page_edit_dday_incheck" />
 
                     <ImageView
                         android:id="@+id/my_page_edit_btn_dday_check2"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/my_page_edit_dday_setting_check2"
@@ -215,12 +265,12 @@
 
                     <ImageView
                         android:id="@+id/my_page_edit_btn_dday_check"
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="9dp"
+                        android:layout_height="5dp"
+                        android:layout_marginRight="3dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="1dp"
-                        android:src="@drawable/my_page_edit_dday_setting_check"
+                        android:background="@drawable/my_page_edit_dday_setting_check"
                         android:visibility="gone" />
 
                 </RelativeLayout>
@@ -232,8 +282,8 @@
                     android:background="@drawable/background_et_my_page_edit"
                     android:orientation="horizontal"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <EditText
                         android:id="@+id/my_page_edit_et_goaltitle"
@@ -241,31 +291,34 @@
                         android:layout_height="wrap_content"
                         android:hint="내용 작성"
                         android:textColor="@color/black"
-                        android:textSize="22dp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_page_edit_tv_dday"
                         android:textColor="@color/black"
-                        android:textSize="21dp" />
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
 
                     <EditText
                         android:id="@+id/my_page_edit_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="22dp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_page_edit_tv_dday2"
                         android:textColor="@color/black"
-                        android:textSize="21dp" />
+                        android:textSize="16sp"
+                        android:textStyle="normal" />
 
                 </LinearLayout>
 
@@ -283,12 +336,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:calendarTextColor="@color/black"
                     android:calendarViewShown="false"
                     android:datePickerMode="spinner" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/view_color" />
             </LinearLayout>
 
@@ -297,29 +351,40 @@
                 android:id="@+id/my_page_edit_btn_account_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/my_page_edit_tv_account_setting"
-                    android:textColor="@color/black"
-                    android:textSize="19dp" />
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="@color/black" />
 
                 <ImageView
+                    android:id="@+id/my_page_edit_account_bottom_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/my_page_edit_bottom_arrow" />
 
+                <ImageView
+                    android:id="@+id/my_page_edit_account_top_arrow"
+                    android:layout_width="11dp"
+                    android:layout_height="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/my_page_edit_top_arrow"
+                    android:visibility="gone" />
+
             </RelativeLayout>
 
             <View
                 android:id="@+id/my_page_edit_btn_account_setting_view"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/view_color"
@@ -330,33 +395,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_marginTop="15dp"
+                android:visibility="gone">
 
                 <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/background_et_my_page_edit"
                     android:hint="gusdl0106@naver.com"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="@color/black"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:textColorHint="@color/black"
-                    android:textSize="21dp" />
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:enabled="false"/>
 
                 <TextView
                     android:id="@+id/mypage_edit_btn_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:text="@string/my_page_edit_tv_logout"
-                    android:textColor="@color/black"
-                    android:textSize="19dp" />
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="@color/black" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="15dp"
                     android:background="@color/view_color" />
 
@@ -364,22 +432,24 @@
                     android:id="@+id/my_page_edit_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:text="@string/my_page_edit_tv_account_delete"
-                    android:textColor="@color/black"
-                    android:textSize="19dp" />
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="#000000"/>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="15dp"
                     android:background="@color/view_color" />
 
             </LinearLayout>
 
-
         </LinearLayout>
 
+
     </ScrollView>
+
 
 </LinearLayout>

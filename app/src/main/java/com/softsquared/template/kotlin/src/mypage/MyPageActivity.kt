@@ -124,11 +124,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
 //                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
 
-
-                if (comments != null) {
-                    binding.test.text = comments
-                }
-
                 if (day != null) {
                     binding.myPageTextDoneScheduleCount.text = day
                 }
@@ -173,7 +168,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 //디데이가 설정되어있지 않거나, 값이 없으면 기본 문구가 나오게 설정
                 if (dDayCheck != "1" || (goalTitle == null && day == null)) {
-                    binding.myPageTvComments.text = "오늘 하루도\n힘내세요!"
+                    binding.myPageTvComments.text = "오늘 하루도 힘내세요!"
                 } else {
                     binding.myPageTvComments.text = goalTitle + "까지 D-" + day + "일\n남았어요!"
                 }

@@ -10,56 +10,61 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/login_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/my_page_back"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginRight="17dp"
-                android:background="@drawable/schedule_search_back" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="내 정보"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                app:layout_constraintTop_toTopOf="parent">
 
-        </androidx.appcompat.widget.Toolbar>
+                <ImageView
+                    android:id="@+id/my_page_back"
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/schedule_search_back" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="내 정보"
+                    android:textStyle="normal"
+                    android:textSize="18sp"
+                    android:textColor="@color/black" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="28dp"
             android:orientation="vertical">
-
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp">
+                >
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/my_page_imt_circle"
-                    android:layout_width="95dp"
-                    android:layout_height="95dp"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     android:layout_marginEnd="261dp"
                     android:background="@drawable/my_page_img"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/my_page_img"
-                    android:layout_width="93dp"
-                    android:layout_height="93dp"
+                    android:layout_width="108dp"
+                    android:layout_height="108dp"
                     android:src="@drawable/my_page_img2"
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_imt_circle"
                     app:layout_constraintEnd_toEndOf="@+id/my_page_imt_circle"
@@ -68,8 +73,8 @@
 
                 <ImageView
                     android:id="@+id/my_page_setting"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:background="@drawable/my_info_img_setting2"
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_img_btn"
                     app:layout_constraintEnd_toEndOf="@+id/my_page_img_btn"
@@ -78,24 +83,25 @@
 
                 <ImageView
                     android:id="@+id/my_page_img_btn"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginEnd="257dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="74dp"
+                    android:layout_marginTop="86dp"
                     android:background="@drawable/my_info_img_setting"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/my_page_imt_circle" />
 
                 <TextView
                     android:id="@+id/my_page_tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginTop="20dp"
                     android:text="블루"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:textStyle="bold"
+                    android:textStyle="normal"
+                    android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@+id/my_page_imt_circle"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,11 +109,11 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/my_page_tv_name"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:textStyle="bold"
+                    android:textStyle="normal"
+                    android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@+id/my_page_tv_name"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,8 +121,12 @@
                     android:id="@+id/my_page_tv_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:text="@string/my_page_tv_schedule"
+                    android:textStyle="normal"
+                    android:textSize="13sp"
+                    android:textColor="#79879a"
+                    android:lineSpacingExtra="1sp"
                     app:layout_constraintStart_toStartOf="@+id/my_page_tv_name"
                     app:layout_constraintTop_toBottomOf="@+id/my_page_tv_name" />
 
@@ -126,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="40dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,20 +146,21 @@
                     android:gravity="center">
 
                     <TextView
-                        android:id="@+id/test"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_page_tv_complete_schedule"
-                        android:textSize="17dp"/>
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:textColor="#79879a"/>
 
                     <TextView
                         android:id="@+id/my_page_text_done_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="120"
-                        android:textSize="22dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white_orange"
+                        android:textStyle="normal"
+                        android:textSize="18sp"
+                        android:textColor="@color/orange"
                         android:gravity="center"
                         android:layout_marginTop="5dp"/>
 
@@ -158,7 +169,7 @@
 
                 <View
                     android:layout_width="1dp"
-                    android:layout_height="25dp"
+                    android:layout_height="30dp"
                     android:background="@color/view_color"
                     android:layout_gravity="center_vertical"/>
 
@@ -173,16 +184,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_page_tv_remain_schedule"
-                        android:textSize="17dp"/>
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:textColor="#79879a" />
 
                     <TextView
                         android:id="@+id/my_page_text_rest_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="6"
-                        android:textSize="22dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white_orange"
+                        android:textStyle="normal"
+                        android:textSize="18sp"
+                        android:textColor="@color/orange"
                         android:gravity="center"
                         android:layout_marginTop="5dp"/>
 
@@ -190,7 +203,7 @@
 
                 <View
                     android:layout_width="1dp"
-                    android:layout_height="25dp"
+                    android:layout_height="30dp"
                     android:background="@color/view_color"
                     android:layout_gravity="center_vertical"/>
 
@@ -205,16 +218,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_page_tv_all_schedule"
-                        android:textSize="17dp"/>
+                        android:textStyle="normal"
+                        android:textSize="12sp"
+                        android:textColor="#79879a"/>
 
                     <TextView
                         android:id="@+id/my_page_text_all_schedule_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="163"
-                        android:textSize="22dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white_orange"
+                        android:textStyle="normal"
+                        android:textSize="18sp"
+                        android:textColor="@color/orange"
                         android:gravity="center"
                         android:layout_marginTop="5dp"/>
 
@@ -226,17 +241,17 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="6dp"
             android:background="@color/view_color"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="18dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -247,9 +262,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tv_schedule_achievement_rat"
-                    android:textSize="18dp"
-                    android:textColor="#7C7A7A"
-                    android:textStyle="bold"/>
+                    android:textStyle="normal"
+                    android:textSize="14sp"
+                    android:textColor="#79879a"/>
 
                 <TextView
                     android:id="@+id/my_page_achievement"
@@ -262,8 +277,9 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/my_page_temporary_graph" />
+                android:layout_height="181dp"
+                android:background="@drawable/my_page_temporary_graph"
+                android:layout_marginTop="16dp"/>
 
         </LinearLayout>
 
@@ -271,44 +287,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="35dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:paddingBottom="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/my_page_tv_info_setting"
-                android:textSize="18dp"
-                android:textColor="#7C7A7A"
-                android:textStyle="bold"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/my_page_tv_frined_add"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/my_info_setting_arrow"
-                    android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/view_color"
-                android:layout_marginTop="20dp"/>
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#79879a"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -319,74 +309,74 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tv_help"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="5dp"
+                    android:layout_height="11dp"
                     android:background="@drawable/my_info_setting_arrow"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/view_color"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="15dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tv_notice"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="#000000"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="5dp"
+                    android:layout_height="11dp"
                     android:background="@drawable/my_info_setting_arrow"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/view_color"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="15dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tv_terms_of_service"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:textColor="#000000"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="5dp"
+                    android:layout_height="11dp"
                     android:background="@drawable/my_info_setting_arrow"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/view_color"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="15dp"/>
 
         </LinearLayout>
 

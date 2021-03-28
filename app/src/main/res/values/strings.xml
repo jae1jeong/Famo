@@ -96,11 +96,15 @@
     <string name="my_page_edit_tv_logout">로그아웃</string>
     <string name="my_page_edit_tv_account_delete">탈퇴 및 계정 삭제</string>
     <string name="my_page_edit_tv_dday_setting">디데이 설정</string>
-    <string name="my_page_edit_et_top_ment_hint">상단 멘트 작성</string>
+    <string name="my_page_edit_et_top_ment_hint">오늘 하루도 홧팅!</string>
     <string name="my_page_edit_tv_dday">까지</string>
     <string name="my_page_edit_tv_dday2">일 남았어요!</string>
 
     <string name="category_edit_tv_title">카테고리 편집</string>
+    <string name="category_edit_et_add">카테고리명을 입력해주세요.</string>
+    <string name="category_edit_tv_color">색상</string>
+    <string name="category_edit_tv_complete">완료</string>
+    <string name="category_edit_tv_add">카테고리 추가</string>
 
     <!--Find Schedule -->
     <string name="schedule_find_et_search_hint">검색어를 입력해주세요.</string>
@@ -111,7 +115,6 @@
     <string name="schedule_find_tv_lately">최근</string>
     <string name="schedule_find_tv_detail_see">자세히 보러가기</string>
     <string name="schedule_find_tv_whole_schedule">전체일정</string>
-
 
     <!--Find User-->
     <string name="find_user_text_toolbar">아이디/비밀번호 찾기</string>

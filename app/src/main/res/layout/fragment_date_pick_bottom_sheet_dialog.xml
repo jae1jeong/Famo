@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="바텀 시트"
-        />
+
     <DatePicker
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/monthly_dataPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_gravity="center_horizontal"
+        android:calendarTextColor="@color/black"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_dataPicker">
+
+        <Button
+            android:id="@+id/monthly_btn_cancel"
+            android:layout_marginStart="16dp"
+            android:textColor="#6e6e6e"
+            android:layout_marginEnd="10dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:background="@drawable/background_btn_passive"
+            android:text="@string/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/monthly_btn_finish"
+            android:layout_marginEnd="16dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@drawable/background_btn"
+            android:text="@string/category_edit_tv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

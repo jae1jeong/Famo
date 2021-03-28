@@ -213,6 +213,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     }
 
+    fun moveViewPagerFragment(idx:Int){
+        binding.mainViewPager.currentItem = idx
+    }
 
     // 바텀시트 다이얼로그 상태 관리
     fun stateChangeBottomSheet(state: String) {
@@ -499,7 +502,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     )
                 )
             }
-            Log.d("TAG", "onGetUserCategoryInquirySuccess: $categoryList")
 
             categoryScheduleAdapter = MainCategoryAdapter(categoryList, this, {
                 selectedCategoryId = it.id

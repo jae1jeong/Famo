@@ -27,8 +27,6 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
-
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
 //        binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
@@ -68,7 +66,11 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
             }
         })
 
+    }
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
 
     }
 

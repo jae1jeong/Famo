@@ -3,11 +3,9 @@ package com.softsquared.template.kotlin.src.main.monthly
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonElement
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -31,6 +29,8 @@ import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
+import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.CalendarConverter
 import kotlinx.coroutines.Dispatchers
@@ -53,135 +53,28 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     private var selectedDate:LocalDate ?= null
     private val userMemos:ArrayList<String> = arrayListOf()
 
+    private var selectedView:TextView ?= null
+
     private var targetMonth:Int? = null
     private var targetYear:Int? = null
+
 
     private var currentMonth:YearMonth = YearMonth.now()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        class CalendarViewContainer(view: View): ViewContainer(view) {
-            val textView = view.findViewById<TextView>(R.id.calendar_day_text)
-            lateinit var day:CalendarDay
-
-            // 달력 일자 클릭 리스너
-            init {
-                Log.d("TAG", "onViewCreated: CalendarViewContainer init")
-                selectedDate = LocalDate.now()
-//                showCustomToast("$targetYear $targetMonth")
-                view.setOnClickListener {
-                    if(day.owner == DayOwner.THIS_MONTH){
-                        val currentSelection = selectedDate
-                        if(selectedDate == day.date){
-                            if (currentSelection != null) {
-                                binding.calendarView.notifyDateChanged(currentSelection)
-                            }
-                            showLoadingDialog(context!!)
-                            MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
-                        }else{
-                            selectedDate = day.date
-                            showLoadingDialog(context!!)
-                            MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
-                            textView.setBackgroundResource(R.drawable.background_item_calendar_today)
-                            binding.calendarView.notifyDateChanged(day.date)
-                            if(currentSelection != null){
-                                binding.calendarView.notifyDateChanged(currentSelection)
-                            }
-                        }
-                     }
-                }
-            }
+        val bundle = arguments
+        if(bundle != null){
+            val strDate = bundle.getString("selectedDate")
+            showCustomToast("bundle 들어옴")
+        }else{
+            showCustomToast("bundle Null")
         }
-
-        binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
-            override fun bind(container: CalendarViewContainer, day: CalendarDay) {
-                container.textView.text = day.date.dayOfMonth.toString()
-                if(day.owner == DayOwner.THIS_MONTH){
-                    container.textView.setTextColor(Color.BLACK)
-                    userCheckedDateList.forEach {
-                        // 메모가 있는 날짜들 백그라운드 변경
-                        if(it == day.date){
-                            if(todayDate != day.date){
-                                container.textView.setBackgroundResource(R.drawable.background_item_calendar_has_memo)
-                            }
-                        }
-                    }
-                    // 오늘 날짜
-                    if(todayDate == day.date){
-                        container.textView.setBackgroundResource(R.drawable.background_item_calendar_today)
-                    }
-                }else{
-                    container.textView.setTextColor(Color.GRAY)
-                }
-                container.day = day
-            }
-            override fun create(view: View): CalendarViewContainer = CalendarViewContainer(view)
-        }
-
-
-        val firstMonth = currentMonth.minusMonths(0)
-        val lastMonth = currentMonth.plusMonths(0)
-        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-        val daysOfWeek = arrayOf(
-                DayOfWeek.SUNDAY,
-                DayOfWeek.MONDAY,
-                DayOfWeek.WEDNESDAY,
-                DayOfWeek.THURSDAY,
-                DayOfWeek.FRIDAY,
-                DayOfWeek.SATURDAY
-        )
-        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
-
-
-        // 달력 헤더
-        binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
-                override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
-                    container.headerMonthTextTitle.text = "${CalendarConverter.monthToShortMonthName(month.yearMonth.month.name)}"
-                    container.headerLayoutYear.setOnClickListener {
-                        val datePickBottomSheetDialog = DatePickBottomSheetDialog()
-                        datePickBottomSheetDialog.show(
-                            childFragmentManager,
-                            datePickBottomSheetDialog.tag
-                        )
-                    }
-                    container.headerBtnYearDatePicker.text = "${month.year}"
-                    container.headerBtnMonthPlus.setOnClickListener {
-                        currentMonth = currentMonth.plusMonths(1)
-                        month.yearMonth.plusMonths(1)
-                        container.headerMonthTextTitle.text = "${month.yearMonth.month}"
-
-                        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
-                        Log.d("TAG", "bind: $currentMonth $month")
-                        binding.calendarView.scrollToMonth(currentMonth)
-
-
-                    }
-                    container.headerBtnYearDatePicker.setOnClickListener {
-                        month.yearMonth.minusMonths(1)
-                        currentMonth = currentMonth.minusMonths(1)
-                        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
-                        Log.d("TAG", "bind: $currentMonth")
-                        binding.calendarView.scrollToMonth(currentMonth)
-
-
-                    }
-                }
-
-
-                override fun create(view: View): CalendarViewHeader  = CalendarViewHeader(view)
-
-            }
-
-
-            binding.calendarView.scrollToMonth(currentMonth)
 
 
             // 어댑터
             monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!,{
                                                                         memo->
-
 
             },{
                 // 일정삭제
@@ -203,8 +96,120 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter
             }
+
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+    fun setUpCalendar(){
+
+        class CalendarViewContainer(view: View): ViewContainer(view) {
+            val textView = view.findViewById<TextView>(R.id.calendar_day_text)
+            lateinit var day:CalendarDay
+
+            // 달력 일자 클릭 리스너
+            init {
+                selectedDate = LocalDate.now()
+
+                view.setOnClickListener {
+                    if(day.owner == DayOwner.THIS_MONTH){
+                        setPassivePreviousDayView()
+                        val currentSelection = selectedDate
+                        showCustomToast(selectedDate.toString())
+                        selectedView = textView
+                        if(selectedDate == day.date){
+                            if (currentSelection != null) {
+                                binding.calendarView.notifyDateChanged(currentSelection)
+                            }
+                            MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
+                        }else{
+                            selectedDate = day.date
+                            MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
+                            textView.setBackgroundResource(R.drawable.background_item_calendar_today)
+                            textView.elevation = 5f
+                            binding.calendarView.notifyDateChanged(day.date)
+
+                            if(currentSelection != null){
+                                binding.calendarView.notifyDateChanged(currentSelection)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
+        binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
+            override fun bind(container: CalendarViewContainer, day: CalendarDay) {
+                container.textView.text = day.date.dayOfMonth.toString()
+                if(day.owner == DayOwner.THIS_MONTH){
+                    container.textView.setTextColor(Color.BLACK)
+                    userCheckedDateList.forEach {
+                        // 메모가 있는 날짜들 백그라운드 변경
+                        if(it == day.date){
+                            if(todayDate != day.date){
+                                container.textView.setBackgroundResource(R.drawable.background_item_calendar_has_memo)
+                                container.textView.elevation = 0f
+                            }
+                        }
+                    }
+                    // 오늘 날짜
+                    if(todayDate == day.date){
+                        container.textView.setBackgroundResource(R.drawable.background_item_calendar_today)
+                        container.textView.elevation = 5f
+                        selectedView = container.textView
+                    }
+                }else{
+                    container.textView.setTextColor(Color.GRAY)
+                }
+                container.day = day
+            }
+            override fun create(view: View): CalendarViewContainer = CalendarViewContainer(view)
+        }
+
+
+        val firstMonth = currentMonth.minusMonths(0)
+        val lastMonth = currentMonth.plusMonths(0)
+        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+        val daysOfWeek = arrayOf(
+            DayOfWeek.SUNDAY,
+            DayOfWeek.MONDAY,
+            DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY,
+            DayOfWeek.SATURDAY
+        )
+        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
+
+
+        // 달력 헤더
+        binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
+            override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
+                container.headerMonthTextTitle.text = "${CalendarConverter.monthToShortMonthName(month.yearMonth.month.name)}"
+                container.headerLayoutYear.setOnClickListener {
+                    val datePickBottomSheetDialog = DatePickBottomSheetDialog()
+                    datePickBottomSheetDialog.show(
+                        childFragmentManager,
+                        datePickBottomSheetDialog.tag
+                    )
+                }
+                container.headerBtnYearDatePicker.text = "${month.year}"
+                container.headerBtnMonthPlus.setOnClickListener {
+                    showCustomToast("${currentMonth.plusMonths(1)}")
+                }
+                container.headerBtnYearDatePicker.setOnClickListener {
+                    showCustomToast("${currentMonth.minusMonths(1)}")
+                }
+            }
+
+
+            override fun create(view: View): CalendarViewHeader  = CalendarViewHeader(view)
+
+        }
+
+    }
 
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
@@ -224,6 +229,13 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
 
     }
+
+    fun setPassivePreviousDayView(){
+        if(selectedView != null){
+            selectedView!!.background = null
+        }
+    }
+
 
     override fun onGetMonthlyMemoItemSuccess(response: MonthlyMemoItemResponse) {
         if(response.isSuccess && response.code == 100){
@@ -295,6 +307,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 val isScheduleDay = it.asJsonObject.get("date").asString
                 userCheckedDateList.add(LocalDate.parse(isScheduleDay))
             }
+            setUpCalendar()
 
         }else{
             showCustomToast(response.message.toString())

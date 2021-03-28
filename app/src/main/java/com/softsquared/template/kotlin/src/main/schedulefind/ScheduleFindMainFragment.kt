@@ -63,10 +63,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         binding.scheduleFindViewPager.adapter = adapter
         binding.scheduleFindTabLayout.setupWithViewPager(binding.scheduleFindViewPager)
 
-        ScheduleFindService(this).tryGetWholeScheduleCount()
-        //전체일정
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
-
         //앞으로 내보내기
         binding.scheduleFindTvTotaySchedule.bringToFront()
 
@@ -130,6 +126,11 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
         //남은일정
         ScheduleFindService(this).tryGetRestScheduleCount("today")
+
+        ScheduleFindService(this).tryGetWholeScheduleCount()
+        //전체일정
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
+
 
     }
 
@@ -368,6 +369,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                     wholePagingCnt = (cnt / 10) + 1
                 }
 
+                Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt", )
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1)
             }
             else -> {

@@ -22,11 +22,19 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
         super.onViewCreated(view, savedInstanceState)
 
 
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
 
 //        createLatelyRecyclerview()
     }
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
 
     override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
 

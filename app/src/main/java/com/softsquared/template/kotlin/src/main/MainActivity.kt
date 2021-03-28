@@ -285,7 +285,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         )
     }
 
-    override fun onScheduleDetail() {
+    override fun onScheduleDetail(memoTitle: String, memoContent: String, memoDate: String) {
     }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {

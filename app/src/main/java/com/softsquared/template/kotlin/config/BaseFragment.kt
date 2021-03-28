@@ -88,4 +88,5 @@ abstract class BaseFragment<B : ViewBinding>(
 
     open fun viewPagerApiRequest(){
     }
+
 }

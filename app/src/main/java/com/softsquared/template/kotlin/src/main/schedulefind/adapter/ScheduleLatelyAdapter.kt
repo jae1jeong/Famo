@@ -25,7 +25,12 @@ class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>):
     override fun onBindViewHolder(holder: ScheduleLatelyHolder, position: Int) {
         holder.scheduleName.text = latelyList[position].scheduleName
         holder.scheduleDate.text = latelyList[position].scheduleDate
-        holder.color.setColorFilter(Color.parseColor(latelyList[position].colorInfo))
+
+        if (latelyList[position].categoryID != null){
+            holder.color.setColorFilter(Color.parseColor(latelyList[position].colorInfo))
+        }else{
+            holder.color.setColorFilter(Color.parseColor("#ced5d9"))
+        }
     }
 
     override fun getItemCount(): Int = latelyList.size

@@ -89,7 +89,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
                 for (i in 0 until response.data.size) {
 
-                    if (response.data[i].schedulePick == -1) {
+                    if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
                         bookmarkListWhole.add(
                             WholeScheduleBookmarkData(
                                 response.data[i].scheduleID,
@@ -101,8 +101,32 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                                 ,response.data[i].colorInfo
                             )
                         )
-                        // 즐겨찾기 인 경우
-                    } else {
+
+                    } else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null){
+                        bookmarkListWhole.add(
+                            WholeScheduleBookmarkData(
+                                response.data[i].scheduleID,
+                                response.data[i].scheduleDate,
+                                response.data[i].scheduleName,
+                                response.data[i].scheduleMemo,
+                                R.drawable.schedule_find_inbookmark,
+                                response.data[i].categoryID,
+                                "#CED5D9"
+                            )
+                        )
+                    }else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
+                        bookmarkListWhole.add(
+                            WholeScheduleBookmarkData(
+                                response.data[i].scheduleID,
+                                response.data[i].scheduleDate,
+                                response.data[i].scheduleName,
+                                response.data[i].scheduleMemo,
+                                R.drawable.schedule_find_bookmark,
+                                response.data[i].categoryID,
+                                "#CED5D9"
+                            )
+                        )
+                    }else{
                         bookmarkListWhole.add(
                             WholeScheduleBookmarkData(
                                 response.data[i].scheduleID,

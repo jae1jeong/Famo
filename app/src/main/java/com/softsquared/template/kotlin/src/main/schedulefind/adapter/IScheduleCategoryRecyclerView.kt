@@ -12,5 +12,5 @@ interface IScheduleCategoryRecyclerView {
 
     fun onMoveFilterFragment(scheduleCategoryID : Int)
 
-    fun onScheduleDetail()
+    fun onScheduleDetail(memoTitle : String, memoContent: String, memoDate: String)
 }

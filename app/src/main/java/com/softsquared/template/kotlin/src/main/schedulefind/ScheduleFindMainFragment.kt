@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
@@ -55,6 +56,12 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //전체일정수
+        ScheduleFindService(this).tryGetWholeScheduleCount()
+        //전체일정조회
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
+        //남은일정
+        ScheduleFindService(this).tryGetRestScheduleCount("today")
 
         val adapter = ScheduleFindPagerAdapter(childFragmentManager)
         adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
@@ -62,10 +69,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         Log.d("TAG", "onViewCreated: 뷰페이저")
         binding.scheduleFindViewPager.adapter = adapter
         binding.scheduleFindTabLayout.setupWithViewPager(binding.scheduleFindViewPager)
-
-        ScheduleFindService(this).tryGetWholeScheduleCount()
-        //전체일정
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
 
         //앞으로 내보내기
         binding.scheduleFindTvTotaySchedule.bringToFront()
@@ -121,15 +124,12 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
 
     }
 
-
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         //최근일정
         ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0, 2)
         //즐겨찾기
         ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
-        //남은일정
-        ScheduleFindService(this).tryGetRestScheduleCount("today")
 
     }
 
@@ -155,7 +155,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         )
     }
 
-    override fun onScheduleDetail() {
+    override fun onScheduleDetail(memoTitle: String, memoContent: String, memoDate: String) {
     }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
@@ -243,6 +243,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
+                Toast.makeText(activity,"전체일정조회",Toast.LENGTH_SHORT).show()
 
                 val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
 
@@ -369,6 +370,8 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                 }
 
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1)
+
+
             }
             else -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기 실패 ${response.message.toString()}")
@@ -499,5 +502,9 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
     override fun onGetScheduleBookmarkFail(message: String) {
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
 
 }

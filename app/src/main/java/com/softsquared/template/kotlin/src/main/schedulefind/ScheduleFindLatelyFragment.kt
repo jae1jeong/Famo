@@ -20,13 +20,12 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
-
-//        createLatelyRecyclerview()
     }
 
+    override fun viewPagerApiRequest() {
+        super.viewPagerApiRequest()
+        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
+    }
 
     override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
 
@@ -38,16 +37,34 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
                 val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
 
                 for (i in 0 until response.data.size) {
-                    latelyListWhole.add(
-                        WholeScheduleLatelyData(
-                            response.data[i].scheduleID,
-                            response.data[i].scheduleDate,
-                            response.data[i].scheduleName,
-                            response.data[i].scheduleMemo,
-                            R.drawable.schedule_find_inbookmark,
-                            response.data[i].categoryID, response.data[i].colorInfo
+
+                    if (response.data[i].colorInfo != null){
+                        latelyListWhole.add(
+                            WholeScheduleLatelyData(
+                                response.data[i].scheduleID,
+                                response.data[i].scheduleDate,
+                                response.data[i].scheduleName,
+                                response.data[i].scheduleMemo,
+                                R.drawable.schedule_find_inbookmark,
+                                response.data[i].categoryID,
+                                response.data[i].colorInfo
+                            )
                         )
-                    )
+                    }else{
+                        latelyListWhole.add(
+                            WholeScheduleLatelyData(
+                                response.data[i].scheduleID,
+                                response.data[i].scheduleDate,
+                                response.data[i].scheduleName,
+                                response.data[i].scheduleMemo,
+                                R.drawable.schedule_find_inbookmark,
+                                response.data[i].categoryID,
+                                "#ced5d9"
+                            )
+                        )
+
+                    }
+
                 }
 
                 // 즐겨찾기/최근 일정 리사이클러뷰 연결

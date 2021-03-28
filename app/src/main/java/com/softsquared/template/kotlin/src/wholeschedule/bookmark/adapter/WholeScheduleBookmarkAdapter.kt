@@ -27,7 +27,14 @@ class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeSchedule
         holder.scheduleDate.text = bookmarkListWhole[position].scheduleDate
         holder.schedulePick.setImageResource(bookmarkListWhole[position].schedulePick)
         holder.scheduleMemo.text = bookmarkListWhole[position].scheduleMemo
-        holder.color.setColorFilter(Color.parseColor(bookmarkListWhole[position].colorInfo))
+
+        if (bookmarkListWhole[position].colorInfo != null){
+            holder.color.setColorFilter(Color.parseColor(bookmarkListWhole[position].colorInfo))
+        }else{
+            holder.color.setColorFilter(Color.parseColor("#ced5d9"))
+        }
+
+
     }
 
     override fun getItemCount(): Int = bookmarkListWhole.size

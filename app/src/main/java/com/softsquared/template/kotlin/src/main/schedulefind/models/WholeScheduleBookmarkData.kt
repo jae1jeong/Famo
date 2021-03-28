@@ -9,4 +9,4 @@ data class WholeScheduleBookmarkData(val scheduleID : Int,
                                      val scheduleMemo : String,
                                      val schedulePick : Int,
                                      val categoryID : Int,
-                                     val colorInfo : String)
+                                     val colorInfo : String?)

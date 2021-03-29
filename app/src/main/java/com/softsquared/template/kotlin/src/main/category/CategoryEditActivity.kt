@@ -170,10 +170,11 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         return Integer.parseInt(tempCategoryID!![0])
     }
 
-    override fun onMoveFragment(categoryID: Int, text: String) {
+    override fun onMoveFragment(categoryID: Int, text: String, color : String) {
         val categoryEditBottomDialogFragment = CategoryEditBottomDialogFragment()
         val bunble = Bundle()
         bunble.putString("color", wholeColor)
+        bunble.putString("selectColor", color)
         bunble.putString("name", text)
         bunble.putInt("size", size!!)
         bunble.putInt("categoryID", categoryID)

@@ -31,6 +31,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
     var bundleName: String? = null
     var size: Int? = null
     var categoryID: Int? = null
+    var bundleSelectColor : String? = null
 
     //bundle로 받은 값을 나누기 위한 변수
     var bundleCheckColor: List<String>? = null
@@ -47,6 +48,8 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
     //이미선택되있는 색상을 구분하기위한 변수
     val num = ArrayList<Int>()
 
+    val checkNum = ArrayList<Int>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_category_color_bottom_dialog, container, false)
@@ -59,12 +62,14 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
             extra = arguments
             size = extra!!.getInt("size", 0)
             categoryID = extra.getInt("categoryID", 0)
+            bundleSelectColor = extra.getString("selectColor")
             bundleColor = extra.getString("color")
             bundleName = extra.getString("name")
             Log.d("CategoryEditBottomDialogFragment", "size: $size")
             Log.d("CategoryEditBottomDialogFragment", "categoryID값: $categoryID")
             Log.d("CategoryEditBottomDialogFragment", "bundleColor값: $bundleColor")
             Log.d("CategoryEditBottomDialogFragment", "bundleName값: $bundleName")
+            Log.d("CategoryEditBottomDialogFragment", "bundleSelectColor: $bundleSelectColor")
         }
 
         //text값 가져오기
@@ -91,7 +96,11 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
             for (j in 0 until categoryColor.size) {
 
                 if (bundleCheckColor!![i].contains(categoryColor[j])) {
-                    num.add(j + 1)
+                    if (bundleCheckColor!![i] != bundleSelectColor){
+                        num.add(j + 1)
+                    }else{
+                        checkNum.add(j+1)
+                    }
                 }
             }
         }
@@ -141,6 +150,53 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
                 }
             }
         }
+
+        for (i in 0 until checkNum.size) {
+            when (checkNum[i]) {
+                1 -> {
+                    category_edit_color1_check.visibility = View.VISIBLE
+                    selectColor = 1
+                }
+                2 -> {
+                    category_edit_color2_check.visibility = View.VISIBLE
+                    selectColor = 2
+                }
+                3 -> {
+                    category_edit_color3_check.visibility = View.VISIBLE
+                    selectColor = 3
+                }
+                4 -> {
+                    category_edit_color4_check.visibility = View.VISIBLE
+                    selectColor = 4
+                }
+                5 -> {
+                    category_edit_color5_check.visibility = View.VISIBLE
+                    selectColor = 5
+                }
+                6 -> {
+                    category_edit_color6_check.visibility = View.VISIBLE
+                    selectColor = 6
+                }
+                7 -> {
+                    category_edit_color7_check.visibility = View.VISIBLE
+                    selectColor = 7
+                }
+                8 -> {
+                    category_edit_color8_check.visibility = View.VISIBLE
+                    selectColor = 8
+                }
+                9 -> {
+                    category_edit_color9_check.visibility = View.VISIBLE
+                    selectColor = 9
+                }
+                10 -> {
+                    category_edit_color10_check.visibility = View.VISIBLE
+                    selectColor = 10
+                }
+            }
+        }
+
+
 
         //색상 클릭 시 check표시를 위한 변수
         var color1 = 1

@@ -148,7 +148,8 @@ class ScheduleCategoryEditAdapter(
 
                     iCategoryRecyclerView!!.onMoveFragment(
                         categoryEditList[adapterPosition].id,
-                        categoryEditList[adapterPosition].text
+                        categoryEditList[adapterPosition].text,
+                        categoryEditList[adapterPosition].color
                     )
                     Log.d(TAG, "클릭:${categoryEditList[adapterPosition].id} ")
                     Log.d(TAG, "클릭:${categoryEditList[adapterPosition].text} ")

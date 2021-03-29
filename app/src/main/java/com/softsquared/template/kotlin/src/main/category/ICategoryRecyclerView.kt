@@ -10,7 +10,7 @@ interface ICategoryRecyclerView {
 
     fun onCategoryID2() : Int
 
-    fun onMoveFragment(categoryID : Int, text : String)
+    fun onMoveFragment(categoryID : Int, text : String, color : String)
 
     fun getColor(color : String)
 

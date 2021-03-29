@@ -77,12 +77,20 @@
                         android:id="@+id/category_edit_color_1"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:src="@drawable/category_color_1"
+                        android:visibility="visible"/>
+
+                    <ImageView
+                        android:id="@+id/category_edit_color_1_test"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/category_color_1" />
 
                     <ImageView
                         android:id="@+id/category_edit_color1_check"
                         android:layout_width="18dp"
                         android:layout_height="12dp"
+                        android:layout_centerInParent="true"
                         android:background="@drawable/category_color_check"
                         android:visibility="gone" />
 

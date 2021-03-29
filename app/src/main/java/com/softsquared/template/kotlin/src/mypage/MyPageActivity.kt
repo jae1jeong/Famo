@@ -225,11 +225,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 val achievement = response.data.asJsonObject
-                val hashMap: HashMap<String, Int> = Gson().fromJson(
-                    achievement.toString(),
-                    HashMap::class.java
+                val hashMap: HashMap<String, Int> = Gson().fromJson(achievement.toString(), HashMap::class.java
                 )as HashMap<String, Int>
                 Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
+                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap.get(achievement)}")
 
             }
             else -> {

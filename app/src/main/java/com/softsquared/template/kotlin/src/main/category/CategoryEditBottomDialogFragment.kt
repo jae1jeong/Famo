@@ -468,7 +468,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
             }
         }
 
-        if (selectColor != 0) {
+        if (selectColor != 0 && text.isNotEmpty()) {
             category_edit_save.visibility = View.VISIBLE
             category_edit_no_save.visibility = View.GONE
 //            category_add_save.setBackgroundColor(Color.parseColor("#FFAE2A"))

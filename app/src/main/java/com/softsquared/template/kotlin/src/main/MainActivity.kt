@@ -42,7 +42,7 @@ import java.time.LocalDate
 
 
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
-    AddMemoView, TodayView, CategoryInquiryView, IScheduleCategoryRecyclerView{
+    AddMemoView, TodayView, CategoryInquiryView{
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
     private val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
     lateinit var categoryScheduleAdapter: MainCategoryAdapter
@@ -63,6 +63,11 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
         binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
+
+        Log.d("TAG", "onCreate: 메인액티비티")
+        binding.mainViewPager.currentItem = 0
+
+
 
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
@@ -263,23 +268,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainImageProfile.visibility = View.VISIBLE
     }
 
-    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
-    }
 
-    override fun onColor(): ArrayList<String> {
-
-        val aa = ArrayList<String>()
-        return aa
-    }
-
-    //일정찾기 - 필터 바텀다이얼로그로 이동
-    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
-        val scheduleFindFilterBottomDialogBinding =
-            SchedulefindFilterBottomDialogFragment()
-        scheduleFindFilterBottomDialogBinding.show(
-            supportFragmentManager, scheduleFindFilterBottomDialogBinding.tag
-        )
-    }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {
         if (response.isSuccess) {

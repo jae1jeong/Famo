@@ -31,19 +31,12 @@ import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class ScheduleBookmarkAdapter(
     var bookmarkListWhole: ArrayList<WholeScheduleBookmarkData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView,
+
     val clickListener:(WholeScheduleBookmarkData)->Unit
 ) :
     RecyclerView.Adapter<ScheduleBookmarkAdapter.ScheduleBookmarkHolder>(){
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
-
-
-    init {
-        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
-        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
-    }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleBookmarkHolder {
 

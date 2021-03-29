@@ -1,9 +1,11 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,6 +16,12 @@ import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
+import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
+import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
     myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
@@ -39,13 +47,14 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
         view.setOnClickListener {
 
         }
-        return ScheduleCategoryHolder(view, iScheduleCategoryRecyclerView!!).apply {
+        return ScheduleCategoryHolder(view).apply {
             itemView.setOnClickListener {
 
             }
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
 
         holder.text.text = categoryList[position].text
@@ -61,11 +70,24 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
             holder.color.setColorFilter(Color.parseColor("#00000000"))
         }
 
-        holder.itemView.setOnClickListener {
-            mPreviousIndex = position
-            notifyDataSetChanged()
-            iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
+        holder.itemView.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    Log.d(TAG, "onBindViewHolder: 클릭확인")
+                    mPreviousIndex = position
+                    notifyDataSetChanged()
+                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
+                }
+            }
+            false
         }
+
+//        holder.itemView.setOnClickListener {
+//            Log.d(TAG, "onBindViewHolder: 클릭확인")
+//            mPreviousIndex = position
+//            notifyDataSetChanged()
+//            iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
+//        }
 
     }
 
@@ -76,102 +98,17 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
     }
 
     inner class ScheduleCategoryHolder(
-        itemView: View,
-        myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView
-    ) : RecyclerView.ViewHolder(itemView),View.OnClickListener {
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
 
-        private var iSearchRecyclerViewInterface: IScheduleCategoryRecyclerView
 
         val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
         val color = itemView.findViewById<ImageView>(R.id.recyclerview_category_color)
 //        val button = itemView.findViewById<Button>(R.id.recyclerview_category_text)
 //        val category = itemView.findViewById<RelativeLayout>(R.id.item_category_list)
 
-        init {
-//            리스너연결
-            text.setOnClickListener(this)
-            color.setOnClickListener(this)
-            this.iSearchRecyclerViewInterface = myScheduleCategoryRecyclerView
-        }
-
-        override fun onClick(view: View?) {
-
-//            when (view) {
-//                text, color -> {
-
-//                    Log.d("로그", "onClick: 카테고리 클릭: $adapterPosition")
-//                    val wholeColor = iSearchRecyclerViewInterface.onColor()
-//                    var size = 0
-//                    var colorList: List<String>? = null
-//                    val colorStrList = ArrayList<String>()
-//                    val colorID = ArrayList<Int>()
-//                    Log.d("로그", "칼라값 받아오기 테스트: $color")
-//                    colorList = wholeColor.split(":")
-//
-//                    for (i in wholeColor.indices) {
-//                        if (wholeColor.substring(i, i + 1) == ":") {
-//                            size++
-//                        }
-//                    }
-//                    Log.d("로그", "사이즈 : $size")
-//
-//                    for (i in 0 until size) {
-//
-//                        if (colorList[i] == "#FF8484") {
-//                            colorStrList!!.add("#FF8484")
-//                            colorID.add(1)
-//                        }
-//                        if (colorList[i] == "#FCBC71") {
-//                            colorStrList!!.add("#FCBC71")
-//                            colorID.add(2)
-//                        }
-//                        if (colorList[i] == "#FCDC71") {
-//                            colorStrList!!.add("#FCDC71")
-//                            colorID.add(3)
-//                        }
-//                        if (colorList[i] == "#C6EF84") {
-//                            colorStrList!!.add("#C6EF84")
-//                            colorID.add(4)
-//                        }
-//                        if (colorList[i] == "#7ED391") {
-//                            colorStrList!!.add("#7ED391")
-//                            colorID.add(5)
-//                        }
-//                        if (colorList[i] == "#93EAD9") {
-//                            colorStrList!!.add("#93EAD9")
-//                            colorID.add(6)
-//                        }
-//                        if (colorList[i] == "#7CC3FF") {
-//                            colorStrList!!.add("#7CC3FF")
-//                            colorID.add(7)
-//                        }
-//                        if (colorList[i] == "#6D92F7") {
-//                            colorStrList!!.add("#6D92F7")
-//                            colorID.add(8)
-//                        }
-//                        if (colorList[i] == "#AB93FA") {
-//                            colorStrList!!.add("#AB93FA")
-//                            colorID.add(9)
-//                        }
-//                        if (colorList[i] == "#FFA2BE") {
-//                            colorStrList!!.add("#FFA2BE")
-//                            colorID.add(10)
-//                        }
-//
-//                    }
 
 
-
-
-//                    this.iSearchRecyclerViewInterface.onItemMoveBtnClicked(
-//                        colorID[adapterPosition],
-//                        categoryList[adapterPosition].id
-//                    )
-
-//                    Log.d("TAG", "onClick: 다시돌아옴?")
-//                }
-//            }
-        }
 
     }
 

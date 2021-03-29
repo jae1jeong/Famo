@@ -57,7 +57,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         //처음에는 메인fragment
         childFragmentManager.beginTransaction()
             .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
-            .commit()
+            .commitAllowingStateLoss()
 
 //        binding.loginIvWarning.setColorFilter(Color.parseColor("#FF0000"))
         binding.scheduleFindBtnCategory.setColorFilter(Color.parseColor("#bfc5cf"))
@@ -125,13 +125,13 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             .commit()
     }
 
-    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
-        val scheduleFindFilterBottomDialogBinding =
-            SchedulefindFilterBottomDialogFragment()
-        scheduleFindFilterBottomDialogBinding.show(
-            fragmentManager!!, scheduleFindFilterBottomDialogBinding.tag
-        )
-    }
+//    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
+//        val scheduleFindFilterBottomDialogBinding =
+//            SchedulefindFilterBottomDialogFragment()
+//        scheduleFindFilterBottomDialogBinding.show(
+//            fragmentManager!!, scheduleFindFilterBottomDialogBinding.tag
+//        )
+//    }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수

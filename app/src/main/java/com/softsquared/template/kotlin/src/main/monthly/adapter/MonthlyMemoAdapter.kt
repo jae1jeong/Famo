@@ -62,7 +62,7 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         val categoryColor = CategoryColorPicker.setCategoryColor(memo.colorState)
         val shape = GradientDrawable()
         Log.d("TAG", "setCategoryColorRadius: $categoryColor")
-        shape.setColor(Color.parseColor(categoryColor))
+//        shape.setColor(Color.parseColor(categoryColor))
         shape.cornerRadius = 180F
         holder.binding.itemMonthlyCategoryColor.background = shape
 

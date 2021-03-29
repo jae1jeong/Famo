@@ -51,6 +51,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
 
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
         //전체일정수
@@ -390,7 +391,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
 
                 Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt", )
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, 1)
-
 
             }
             else -> {

@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.*
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
@@ -28,6 +29,7 @@ import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.util.AskDialog
+import com.softsquared.template.kotlin.util.Constants
 
 class ScheduleCategoryEditAdapter(
     var categoryEditList: ArrayList<ScheduleCategoryData>,
@@ -111,44 +113,26 @@ class ScheduleCategoryEditAdapter(
                     Log.d("로그", "deleteSearchBtn: 검색 삭제 버튼 클릭")
                     Log.d("로그", "adapterPosition: $adapterPosition")
 
-//                    val categoryID = iCategoryRecyclerView!!.onCategoryID()
-//                    Log.d("로그", "categoryID어탭터: $categoryID")
-
-//                    iCategoryRecyclerView!!.onItemDeleteBtnClicked(adapterPosition)
-//                    CategoryEditService(this).
-
-//                    CategoryEditService(this@ScheduleCategoryEditAdapter)
-//                        .tryDeleteCategoryEditDelete(categoryID)
-//                    this.mySearchRecyclerViewInterface.onSearchItemDeleteBtnClicked(adapterPosition)
-
-//                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry()
-
-//                    Log.d(TAG, "onClick: ")
-
-
                     categoryID = categoryEditList[adapterPosition].id
 
                     iCategoryRecyclerView!!.onItemDeleteBtnClicked(categoryID)
-                    
-                    removeItem(adapterPosition)
-                    notifyDataSetChanged()
 
-//
-//                    CategoryInquiryService(this@ScheduleCategoryEditAdapter).tryGetCategoryInquiry(
-//                        categoryEditList[adapterPosition].id,
-//                        0,
-//                        10
+//                    val edit = ApplicationClass.sSharedPreferences.edit()
+//                    val check = ApplicationClass.sSharedPreferences.getString(
+//                        Constants.CATEGORY_DELETE_CHECK,
+//                        null
 //                    )
-
-                    //데이터가 있으면 일정 삭제 안되게
-//                    if (dataSize == 0) {
-//                        CategoryEditService(this@ScheduleCategoryEditAdapter)
-//                            .tryDeleteCategoryEditDelete(categoryID)
+//
+//                    if (check == "check") {
+//                        Log.d("TAG", "check: 확인")
 //                        removeItem(adapterPosition)
 //                        notifyDataSetChanged()
-//                    } else {
-//                        Log.d(TAG, "onClick: 일정 ")
+//                        edit.remove(Constants.CATEGORY_DELETE_CHECK)
+//                        edit.apply()
+//                    }else{
+//                        Log.d("TAG", "check: 확인X")
 //                    }
+
                 }
                 color, text -> {
                     Log.d("로그", "색상변경 버튼 클릭")

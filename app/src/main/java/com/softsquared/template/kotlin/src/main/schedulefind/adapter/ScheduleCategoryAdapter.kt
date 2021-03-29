@@ -42,11 +42,6 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
         return ScheduleCategoryHolder(view, iScheduleCategoryRecyclerView!!).apply {
             itemView.setOnClickListener {
 
-                val curPos: Int = adapterPosition
-                val profile: ScheduleCategoryData = categoryList[curPos]
-                profile.color
-
-
             }
         }
     }
@@ -66,7 +61,7 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
             holder.color.setColorFilter(Color.parseColor("#00000000"))
         }
 
-        holder.text.setOnClickListener {
+        holder.itemView.setOnClickListener {
             mPreviousIndex = position
             notifyDataSetChanged()
             iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)

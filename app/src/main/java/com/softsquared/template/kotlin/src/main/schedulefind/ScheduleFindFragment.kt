@@ -2,6 +2,8 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -57,16 +59,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
             .commit()
 
-//        ScheduleFindService(this).tryGetWholeScheduleCount()
-
-//         검색
-//        if (word != null){
-//            word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD,null)!!
-////            ScheduleFindService(this).tryGetScheduleSearch(searchWord)
-//        }
-
-
-//        val searchWord = ""
+//        binding.loginIvWarning.setColorFilter(Color.parseColor("#FF0000"))
+        binding.scheduleFindBtnCategory.setColorFilter(Color.parseColor("#bfc5cf"))
 
         val token =
             ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
@@ -216,7 +210,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                         ScheduleCategoryData(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            "#00000000"
+                            responseUser.data[i].colorInfo
                         )
                     )
 //                    #00000000

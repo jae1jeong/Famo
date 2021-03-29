@@ -6,17 +6,23 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
+import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.lately.adapter.WholeScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
+import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBinding>(
     FragmentScheduleFindLatelyBinding::bind, R.layout.fragment_schedule_find_lately),
     WholeLatelyScheduleView {
 
     var latelySchedulePagingCnt = 0
+    var testCnt = 0
 
     companion object {
         fun newInstance(): WholeLatelyScheduleFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
@@ -26,6 +32,8 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("TAG", "WholeLatelyScheduleFragment: 확인")
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
@@ -70,7 +78,11 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
+        if (testCnt != 0){
+            WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
+        }else{
+            WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,999)
+        }
 
     }
 
@@ -81,55 +93,111 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 showCustomToast("즐겨찾기 성공")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
-                val cnt = response.data.size
-                //페이징수 세팅
-                if (cnt % 10 == 0) {
-                    latelySchedulePagingCnt = cnt / 10
-                } else {
-                    latelySchedulePagingCnt = (cnt / 10) + 1
-                }
-                binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
+                if (testCnt == 0){
 
-//                binding.wholeLatelySchedulePaging.addBottomPageButton(LatelySchedulePagingCnt, 1)
-
-                val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
-
-                for (i in 0 until response.data.size) {
-
-                    if (response.data[i].schedulePick == -1) {
-                        latelyListWhole.add(
-                            WholeScheduleLatelyData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                R.drawable.schedule_find_inbookmark,
-                                response.data[i].categoryID
-                                ,response.data[i].colorInfo
-                            )
-                        )
-                        // 즐겨찾기 인 경우
+                    val cnt = response.data.size
+                    //페이징수 세팅
+                    if (cnt % 10 == 0) {
+                        latelySchedulePagingCnt = cnt / 10
                     } else {
-                        latelyListWhole.add(
-                            WholeScheduleLatelyData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                R.drawable.schedule_find_bookmark,
-                                response.data[i].categoryID,
-                                response.data[i].colorInfo
+                        latelySchedulePagingCnt = (cnt / 10) + 1
+                    }
+                    Log.d("TAG", "onGetLatelyScheduleInquirySuccess: $latelySchedulePagingCnt")
+                    binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
+                    testCnt++
+                    WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
+
+                }
+
+                if (testCnt != 0){
+                    val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
+
+                    for (i in 0 until response.data.size) {
+
+                        if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].categoryID, response.data[i].colorInfo
+                                )
                             )
+
+                        } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].categoryID,
+                                    "#CED5D9"
+                                )
+                            )
+
+                        } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_bookmark,
+                                    response.data[i].categoryID,
+                                    "#CED5D9"
+                                )
+                            )
+
+                        } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_bookmark,
+                                    response.data[i].categoryID,
+                                    response.data[i].colorInfo
+                                )
+                            )
+                        }
+                    }
+
+                    // 즐겨찾기/최근 일정 리사이클러뷰 연결
+                    binding.recyclerViewLately.layoutManager = GridLayoutManager(
+                        context, 2, GridLayoutManager.VERTICAL, false
+                    )
+                    binding.recyclerViewLately.setHasFixedSize(true)
+                    binding.recyclerViewLately.adapter = WholeScheduleLatelyAdapter(latelyListWhole) {
+                        val detailDialog = ScheduleDetailDialog(context!!)
+                        val scheduleItem = MemoItem(
+                            it.scheduleID,
+                            it.scheduleDate,
+                            0,
+                            it.scheduleName,
+                            it.scheduleMemo,
+                            false,
+                            null
                         )
+                        detailDialog.start(scheduleItem)
+                        detailDialog.setOnModifyBtnClickedListener {
+                            // 스케쥴 ID 보내기
+                            val edit = ApplicationClass.sSharedPreferences.edit()
+                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                            edit.apply()
+                            Constants.IS_EDIT = true
+
+                            //바텀 시트 다이얼로그 확장
+                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                        }
                     }
                 }
 
-                // 즐겨찾기/최근 일정 리사이클러뷰 연결
-                binding.recyclerViewLately.layoutManager = GridLayoutManager(
-                    context,1, GridLayoutManager.VERTICAL, false
-                )
-                binding.recyclerViewLately.setHasFixedSize(true)
-                binding.recyclerViewLately.adapter = WholeScheduleLatelyAdapter(latelyListWhole)
+
 
             }
             else -> {

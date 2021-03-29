@@ -11,7 +11,7 @@ import retrofit2.Response
 
 class CategoryFilterService(val view : CategoryFilterView) {
 
-    fun tryGetUserCategoryInquiry(scheduleCategoryID : Int, sort : String, offset : Int, limit : Int){
+    fun tryGetFilterCategoryInquiry(scheduleCategoryID : Int, sort : String, offset : Int, limit : Int){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(CategoryFilterRetrofitInterface::class.java)
 
         homeRetrofitInterface.getCategoryFilterInquiry(scheduleCategoryID,sort,offset,limit).enqueue(object :

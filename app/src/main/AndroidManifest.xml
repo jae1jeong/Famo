@@ -24,10 +24,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
 
+        <activity
+            android:name=".src.auth.agree.AgreeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- MyPageEdit -->
-        <activity android:name=".src.mypageedit.MyPageEditActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <!-- 일정검색 -->
+        <activity
+            android:name=".src.mypageedit.MyPageEditActivity"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 일정검색 -->
         <activity
             android:name=".src.searchhistories.ScheduleSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />

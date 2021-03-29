@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 
-class WholeScheduleLatelyAdapter(var latelyListWhole:ArrayList<WholeScheduleLatelyData>):
+class WholeScheduleLatelyAdapter(var latelyListWhole:ArrayList<WholeScheduleLatelyData>,
+    val clickListener:(WholeScheduleLatelyData)->Unit):
     RecyclerView.Adapter<WholeScheduleLatelyAdapter.ScheduleLatelyHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleLatelyHolder {
@@ -28,6 +29,10 @@ class WholeScheduleLatelyAdapter(var latelyListWhole:ArrayList<WholeScheduleLate
         holder.schedulePick.setImageResource(latelyListWhole[position].schedulePick)
         holder.scheduleMemo.text = latelyListWhole[position].scheduleMemo
         holder.color.setColorFilter(Color.parseColor(latelyListWhole[position].colorInfo))
+
+        holder.itemView.setOnClickListener {
+            clickListener(latelyListWhole[position])
+        }
     }
 
     override fun getItemCount(): Int = latelyListWhole.size

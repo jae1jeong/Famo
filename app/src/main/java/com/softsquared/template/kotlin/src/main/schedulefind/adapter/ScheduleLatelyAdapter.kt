@@ -8,9 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 
-class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>):
+class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>,
+                            val clickListener:(WholeScheduleLatelyData)->Unit):
     RecyclerView.Adapter<ScheduleLatelyAdapter.ScheduleLatelyHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleLatelyHolder {
@@ -30,6 +32,10 @@ class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>):
             holder.color.setColorFilter(Color.parseColor(latelyList[position].colorInfo))
         }else{
             holder.color.setColorFilter(Color.parseColor("#ced5d9"))
+        }
+
+        holder.itemView.setOnClickListener {
+            clickListener(latelyList[position])
         }
     }
 

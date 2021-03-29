@@ -139,10 +139,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         )
     }
 
-    override fun onScheduleDetail(memoTitle: String, memoContent: String, memoDate: String) {
-    }
-
-
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수
     override fun onColor(): ArrayList<String> {

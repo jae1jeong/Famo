@@ -15,78 +15,31 @@ import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 
-class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>
-) :
+class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
+                           val clickListener:(ScheduleWholeData)->Unit) :
     RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
 
-    val VIEW_TYPE_ITEM = 0
-    val VIEW_TYPE_LOADING = 1
-
-//    var wholeList: ArrayList<ScheduleWholeData>? = null
-//
-//    init {
-//        this.wholeList = wholeList
-//    }
-
-//    private var iCategoryRecyclerView: ICategoryRecyclerView? = null
-//
-//    init {
-//        Log.d(ContentValues.TAG, "ScheduleWholeAdapter - init() called")
-//        this.iCategoryRecyclerView = categoryRecyclerView
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
-
-//        return if (viewType == VIEW_TYPE_ITEM) {
-//            val view = LayoutInflater.from(parent.context)
-//                .inflate(R.layout.recyclerview_schedule_find_whole_item, parent, false)
-//            ScheduleWholeHolder(view)
-//        } else {
-//            val view =
-//                LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
-//            LoadingViewHolder(view)
-//        }
 
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recyclerview_schedule_find_whole_item, parent, false)
 
         return ScheduleWholeHolder(view)
 
-//        val scheduleWholeHolder = ScheduleWholeHolder(
-//            LayoutInflater
-//                .from(parent.context)
-//                .inflate(R.layout.recyclerview_schedule_find_whole_item, parent, false),
-//            this.iCategoryRecyclerView!!
-//        )
-//
-//        return scheduleWholeHolder
     }
 
-//    open fun showLoadingView(holder: LoadingViewHolder, position: Int) {}
-
-//    open fun populateItemRows(holder: ScheduleWholeHolder, position: Int) {
-////        holder.gender.setImageResource(profileList.get(position).gender)
-//        holder.title.text = wholeList?.get(position)!!.title
-//        holder.times.text = wholeList?.get(position)!!.times.toString()
-//        holder.content.text = wholeList?.get(position)!!.content
-//        holder.isBoolean.setImageResource(wholeList!![position].isBoolean)
-//        holder.cardView.setBackgroundResource(R.drawable.left_stroke);
-//    }
-
     override fun onBindViewHolder(holder: ScheduleWholeHolder, position: Int) {
-
-//        if (holder is ScheduleWholeHolder) {
-//            populateItemRows(holder, position)
-//        } else if (holder is LoadingViewHolder) {
-//            showLoadingView(holder, position)
-//        }
-//        holder.cardView.setBackgroundResource(R.drawable.left_stroke);
 
         holder.date.text = wholeList[position].date
         holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
+
+        holder.itemView.setOnClickListener {
+            clickListener(wholeList[position])
+        }
 
     }
 

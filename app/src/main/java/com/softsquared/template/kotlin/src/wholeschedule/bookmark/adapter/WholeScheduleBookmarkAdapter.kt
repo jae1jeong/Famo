@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
 
-class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeScheduleBookmarkData>):
+class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeScheduleBookmarkData>,
+    val clickListener:(WholeScheduleBookmarkData)->Unit):
     RecyclerView.Adapter<WholeScheduleBookmarkAdapter.ScheduleLatelyHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleLatelyHolder {
@@ -32,6 +33,10 @@ class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeSchedule
             holder.color.setColorFilter(Color.parseColor(bookmarkListWhole[position].colorInfo))
         }else{
             holder.color.setColorFilter(Color.parseColor("#ced5d9"))
+        }
+
+        holder.itemView.setOnClickListener {
+            clickListener(bookmarkListWhole[position])
         }
 
 

@@ -22,10 +22,12 @@ import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
+import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,11 +47,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
 
     var pagingCnt = 1
 
-    private lateinit var scheduleCategoryAdapter: ScheduleCategoryAdapter
-
-    // 전체 일정 어댑터
-    private lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
-
     private val partList: ArrayList<ScheduleWholeData> = arrayListOf()
 
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
@@ -59,7 +56,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         //전체일정수
         ScheduleFindService(this).tryGetWholeScheduleCount()
         //전체일정조회
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
+        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 4)
         //남은일정
         ScheduleFindService(this).tryGetRestScheduleCount("today")
 
@@ -86,7 +83,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         }
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
-        binding.scheduleFindPaging.setPageItemCount(4);
+        binding.scheduleFindPaging.setPageItemCount(2);
 
         //총 페이지 버튼 수와 현재 페이지 설정
 //        Log.d("TAG", "wholePagingCnt : ${wholePagingCnt} ")
@@ -99,14 +96,14 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, now_page)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
-                    ((now_page - 1)), 10
+                    ((now_page - 1) * 4), 4
                 )
             }
 
             override fun onPageCenter(now_page: Int) {
 
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
-                    ((now_page - 1) * 10), 10
+                    ((now_page - 1) * 4), 4
                 )
 
             }
@@ -116,7 +113,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 binding.scheduleFindPaging.addBottomPageButton(wholePagingCnt, now_page)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
-                    ((now_page - 1) * 10), 10
+                    ((now_page - 1) * 4), 4
                 )
 
             }
@@ -127,13 +124,13 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
         //최근일정
-        ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0, 2)
-        //즐겨찾기
-        ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
-
-        ScheduleFindService(this).tryGetWholeScheduleCount()
-        //전체일정
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
+//        ScheduleFindService(this).tryGetLatelyScheduleFindInquiry(0, 2)
+//        //즐겨찾기
+//        ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
+//
+//        ScheduleFindService(this).tryGetWholeScheduleCount()
+//        //전체일정
+//        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 4)
 
 
     }
@@ -158,9 +155,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         scheduleFindFilterBottomDialogBinding.show(
             fragmentManager!!, scheduleFindFilterBottomDialogBinding.tag
         )
-    }
-
-    override fun onScheduleDetail(memoTitle: String, memoContent: String, memoDate: String) {
     }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
@@ -314,9 +308,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                     }
                 }
 
-
-                scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList)
-
                 //전체일정 리사이큘러뷰 연결
                 binding.recyclerviewWhole.layoutManager =
                     GridLayoutManager(
@@ -324,7 +315,30 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                         false
                     )
                 binding.recyclerviewWhole.setHasFixedSize(true)
-                binding.recyclerviewWhole.adapter = scheduleWholeAdapter
+                binding.recyclerviewWhole.adapter = ScheduleWholeAdapter(wholeScheduleList){ it ->
+                    val detailDialog = ScheduleDetailDialog(context!!)
+                    val scheduleItem = MemoItem(
+                        it.id,
+                        it.date,
+                        0,
+                        it.name,
+                        it.memo,
+                        false,
+                        null
+                    )
+                    detailDialog.start(scheduleItem)
+                    detailDialog.setOnModifyBtnClickedListener {
+                        // 스케쥴 ID 보내기
+                        val edit = ApplicationClass.sSharedPreferences.edit()
+                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                        edit.apply()
+                        Constants.IS_EDIT = true
+
+                        //바텀 시트 다이얼로그 확장
+                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                    }
+
+                }
 
 
             }
@@ -368,10 +382,10 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                 Log.d("TAG", "onGetWholeScheduleCountSuccess - 전체 해낸일정수 - $cnt2")
 
                 //페이징수 세팅
-                if (cnt % 10 == 0) {
-                    wholePagingCnt = cnt / 10
+                if (cnt % 4 == 0) {
+                    wholePagingCnt = cnt / 4
                 } else {
-                    wholePagingCnt = (cnt / 10) + 1
+                    wholePagingCnt = (cnt / 4) + 1
                 }
 
                 Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt", )

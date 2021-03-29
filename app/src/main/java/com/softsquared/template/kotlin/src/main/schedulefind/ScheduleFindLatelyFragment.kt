@@ -5,14 +5,19 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
+import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleService
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleView
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
+import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 
 class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBinding>(
     FragmentScheduleFindLatelyBinding::bind, R.layout.fragment_schedule_find_lately
@@ -75,7 +80,36 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
                     context, LinearLayoutManager.VERTICAL, false
                 )
                 binding.recyclerViewLately.setHasFixedSize(true)
-                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole)
+//                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole,this)
+
+                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
+                    val detailDialog = ScheduleDetailDialog(context!!)
+                    val scheduleItem = MemoItem(
+                        it.scheduleID,
+                        it.scheduleDate,
+                        0,
+                        it.scheduleName,
+                        it.scheduleMemo,
+                        false,
+                        null
+                    )
+                    detailDialog.start(scheduleItem)
+                    detailDialog.setOnModifyBtnClickedListener {
+                        // 스케쥴 ID 보내기
+                        val edit = ApplicationClass.sSharedPreferences.edit()
+                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                        edit.apply()
+                        Constants.IS_EDIT = true
+
+                        //바텀 시트 다이얼로그 확장
+                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+
+//                val recycleAdapter = ScheduleBookmarkAdapter(boomarkList,this,)
+//                binding.recyclerViewBookmark.adapter = recycleAdapter
+                    }
+
+                }
+
 
             }
             else -> {

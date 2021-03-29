@@ -69,4 +69,10 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
     override fun onPostProfileImageFailure(message: String) {
     }
 
+    override fun onPatchProfileSuccess(response: BaseResponse) {
+    }
+
+    override fun onPatchProfileFailure(message: String) {
+    }
+
 }

@@ -28,6 +28,10 @@ import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -53,12 +57,12 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //전체일정수
-        ScheduleFindService(this).tryGetWholeScheduleCount()
-        //전체일정조회
-        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 4)
-        //남은일정
-        ScheduleFindService(this).tryGetRestScheduleCount("today")
+//        //전체일정수
+//        ScheduleFindService(this).tryGetWholeScheduleCount()
+//        //전체일정조회
+//        ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 4)
+//        //남은일정
+//        ScheduleFindService(this).tryGetRestScheduleCount("today")
 
         val adapter = ScheduleFindPagerAdapter(childFragmentManager)
         adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
@@ -324,9 +328,10 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
                         it.name,
                         it.memo,
                         false,
+                        null,
                         null
                     )
-                    detailDialog.start(scheduleItem)
+                    detailDialog.start(scheduleItem,null)
                     detailDialog.setOnModifyBtnClickedListener {
                         // 스케쥴 ID 보내기
                         val edit = ApplicationClass.sSharedPreferences.edit()

@@ -28,4 +28,7 @@ interface MyPageEditRetrofitInterface {
     @Multipart
     @POST("profiles/image")
     fun postMyProfileImage(@Part image:MultipartBody.Part):Call<SetProfileImageResponse>
+
+    @PATCH("profiles/image")
+    fun patchMyProfileImage():Call<BaseResponse>
 }

@@ -7,5 +7,6 @@ data class MemoItem (
     var title:String,
     var description:String?,
     var isChecked:Boolean,
-    val colorState:String?
+    val colorState:String?,
+    var formDateStr:String?
         )

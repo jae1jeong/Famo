@@ -7,12 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <include layout="@layout/shimmer_find_schedule"/>
-    </com.facebook.shimmer.ShimmerFrameLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +29,7 @@
                 android:layout_marginLeft="1dp">
 
                 <RelativeLayout
+                    android:background="@color/shimmer_loading_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -50,7 +45,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="현주님,"
                             android:textSize="18sp"
                             android:textColor="@color/black"
                             android:textStyle="normal"
@@ -65,7 +59,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/schedule_find_tv_today"
                                 android:textColor="@color/black"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
@@ -78,18 +71,9 @@
                                     android:id="@+id/schedule_find_tv_totay_schedule"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="일정이 2개"
                                     android:textColor="@color/black"
                                     android:textSize="18dp"
                                     android:textStyle="bold" />
-
-                                <ImageView
-                                    android:id="@+id/schedule_find_iv_totay_schedule_underline"
-                                    android:layout_width="65dp"
-                                    android:layout_height="8dp"
-                                    android:background="@drawable/schedule_underline"
-                                    android:layout_marginTop="14dp"
-                                    android:layout_marginLeft="4dp"/>
 
                             </RelativeLayout>
 
@@ -97,7 +81,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/schedule_find_tv_today2"
                                 android:textColor="@color/black"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
@@ -112,7 +95,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
-                        android:background="@drawable/schedule_find_icon" />
+                        />
                 </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
@@ -131,7 +114,7 @@
                     android:layout_height="228dp">
 
                     <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/schedule_find_tab_layout"
+                        android:id="@+id/shimmer_schedule_find_tab_layout"
                         app:tabTextAppearance="@style/tab_text"
                         app:tabTextColor="@color/text_gray"
                         app:tabSelectedTextColor="@color/orange"
@@ -143,14 +126,15 @@
                     </com.google.android.material.tabs.TabLayout>
 
                     <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/schedule_find_view_pager"
+                        android:background="@color/shimmer_loading_color"
+                        android:id="@+id/shimmer_schedule_find_view_pager"
                         android:layout_width="match_parent"
                         android:layout_height="134dp"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="25dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/schedule_find_tab_layout" />
+                        app:layout_constraintTop_toBottomOf="@+id/shimmer_schedule_find_tab_layout" />
 
                     <View
                         android:id="@+id/schedule_find_main_view"
@@ -162,9 +146,10 @@
                         app:layout_constraintTop_toBottomOf="@+id/schedule_find_view_pager"/>
 
                     <RelativeLayout
-                        android:id="@+id/schedule_find_btn_detail"
+                        android:background="@color/shimmer_loading_color"
+                        android:id="@+id/shimmer_schedule_find_btn_detail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="35dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -181,7 +166,7 @@
                             android:lineSpacingExtra="13sp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="25dp"
-                            android:text="@string/schedule_find_tv_detail_see" />
+                            />
 
                         <ImageView
                             android:layout_width="3dp"
@@ -205,26 +190,29 @@
                 android:orientation="vertical"
                 android:layout_marginTop="60dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/schedule_find_tv_whole_schedule"
-                    android:textColor="@color/black"
-                    android:textSize="20dp" />
+            <TextView
+                android:layout_marginStart="15dp"
+                android:background="@color/shimmer_loading_color"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview_whole"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginHorizontal="15dp"
+                android:background="@color/shimmer_loading_color"
+                android:id="@+id/shimmer_recyclerview_whole"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="15dp"/>
 
-                <com.lakue.pagingbutton.LakuePagingButton
-                    android:id="@+id/schedule_find_paging"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+            <com.lakue.pagingbutton.LakuePagingButton
+                android:id="@+id/schedule_find_paging"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
-            </LinearLayout>
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

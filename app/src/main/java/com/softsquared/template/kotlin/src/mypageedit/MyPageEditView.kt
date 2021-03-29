@@ -23,6 +23,9 @@ interface MyPageEditView {
     fun onPostProfileImageSuccess(response:SetProfileImageResponse)
     fun onPostProfileImageFailure(message: String)
 
+    // 프로필 삭제
+    fun onPatchProfileSuccess(response: BaseResponse)
+    fun onPatchProfileFailure(message: String)
 
 
 

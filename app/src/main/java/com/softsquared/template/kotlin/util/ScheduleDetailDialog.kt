@@ -23,7 +23,7 @@ class ScheduleDetailDialog(context: Context) {
         fun modifyBtnClicked()
     }
 
-    fun start(memoItem: MemoItem){
+    fun start(memoItem: MemoItem,topTitle:String?){
         // 다이얼로그 제목 안보이게 하기
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
@@ -52,18 +52,17 @@ class ScheduleDetailDialog(context: Context) {
             dlg.dismiss()
         }
 
-
+        dialogDialogTopTitle = dlg.findViewById(R.id.dialog_detail_text_date)
+        if(topTitle == null){
+            dialogDialogTopTitle.text = "일정 추가하기"
+        }else{
+            dialogDialogTopTitle.text = topTitle
+        }
         dlg.show()
 
     }
 
-    fun setDialogTitle(text:String?){
-        if(text == null){
-            dialogDialogTopTitle.text = "일정추가하기"
-        }else{
-            dialogDialogTopTitle.text = text
-        }
-    }
+
     fun setOnModifyBtnClickedListener(listener:()->Unit){
         this.listener = object:scheduleDetailDialogClickListener{
             override fun modifyBtnClicked() {

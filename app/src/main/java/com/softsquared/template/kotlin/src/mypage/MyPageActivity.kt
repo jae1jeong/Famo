@@ -188,10 +188,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         showCustomToast(response.message.toString())
         if (response.isSuccess && response.code == 100) {
-            //남은일정
-            binding.myPageTextRestScheduleCount.text = response.remainScheduleCount.toString()
-            //전체일정
-            binding.myPageTextAllScheduleCount.text = response.remainScheduleCount.toString()
+            val responseJsonArray = response.data.asJsonArray
+            responseJsonArray.forEach {
+                val jsonObject = it.asJsonObject
+                binding.myPageTextRestScheduleCount.text =  jsonObject.get("remainScheduleCount").asString
+            }
         } else {
             Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }

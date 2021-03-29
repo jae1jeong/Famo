@@ -83,4 +83,19 @@ class MyPageEditService(val editView : MyPageEditView) {
         })
     }
 
+    // 프로필 삭제
+    fun tryPatchMyProfileImage(){
+        val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
+        homeRetrofitInterface.patchMyProfileImage().enqueue(object:Callback<BaseResponse>{
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                editView.onPatchProfileSuccess(response.body() as BaseResponse)
+            }
+
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                editView.onPatchProfileFailure(t.message ?: "프로필 삭제 관련 통신 오류")
+            }
+
+        })
+    }
+
 }

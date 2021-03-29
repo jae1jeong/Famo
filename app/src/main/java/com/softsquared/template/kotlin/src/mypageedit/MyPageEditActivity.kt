@@ -34,7 +34,6 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityMyPageEditBinding
-import com.softsquared.template.kotlin.src.main.mypage.edit.*
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.account.AccountWithdrawalDialog
@@ -42,6 +41,7 @@ import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsResponse
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
+import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.onMyTextChanged
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -55,7 +55,7 @@ import java.time.LocalDate
 import java.util.*
 
 class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
-    (ActivityMyPageEditBinding::inflate), MyPageEditView {
+    (ActivityMyPageEditBinding::inflate), MyPageEditView,MyPageEditBottomSheetDialogInterface {
 
     private var selectedImageUri:Uri ?= null
     //카메라 변수
@@ -97,37 +97,41 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             //카메라 권한 설정
             settingPermission()
 
+
+            val myPageEditBottomSheetDialog = MyPageEditBottomSheetDialog()
+            myPageEditBottomSheetDialog.show(supportFragmentManager,myPageEditBottomSheetDialog.tag)
+
             // 갤러리/카메라 알림창
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("사진 찍기")
-                .setMessage("사진을 새로 찍으시거나 사진\n라이브러리에서 선택하세요.")
-                .setPositiveButton("카메라",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        //카메라 시작
-                        startCapture()
+//            val builder = AlertDialog.Builder(this)
+//            builder.setTitle("사진 찍기")
+//                .setMessage("사진을 새로 찍으시거나 사진\n라이브러리에서 선택하세요.")
+//                .setPositiveButton("카메라",
+//                    DialogInterface.OnClickListener { dialog, id ->
+//                        //카메라 시작
+//                        startCapture()
+//
+//                    })
+//                .setNegativeButton("갤러리",
+//                    DialogInterface.OnClickListener { dialog, id ->
+//
+//                        val intent = Intent(Intent.ACTION_PICK)
+//                        intent.setDataAndType(
+//                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                            "image/*"
+//                        )
+//                        startActivityForResult(intent, GET_GALLERY_IMAGE)
+//                    })
+//
+//            val alertDialog = builder.create()
 
-                    })
-                .setNegativeButton("갤러리",
-                    DialogInterface.OnClickListener { dialog, id ->
-
-                        val intent = Intent(Intent.ACTION_PICK)
-                        intent.setDataAndType(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            "image/*"
-                        )
-                        startActivityForResult(intent, GET_GALLERY_IMAGE)
-                    })
-
-            val alertDialog = builder.create()
-
-            //다이얼로그 색상
-            alertDialog.setOnShowListener {
-                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE)
-                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLUE)
-            }
+//            //다이얼로그 색상
+//            alertDialog.setOnShowListener {
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE)
+//                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLUE)
+//            }
 //            alertDialog.window!!.setBackgroundDrawable()
 
-            alertDialog.show()
+//            alertDialog.show()
         }
 
         //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게 및 화살표 방향설정
@@ -272,10 +276,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         }
 
 
-        //체크표시
-//        binding.myPageEditBtnSave.setOnClickListener {
-//
-//        }
 
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
@@ -286,15 +286,16 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             accountWithdrawal()
         }
 
-        //X버튼 클릭 시 내정보로 이동
+        // X버튼 클릭 시 내정보로 이동
         binding.myPageEditBack.setOnClickListener {
             finish()
         }
 
-        // 프로필 설정 버튼
-        binding.myPageEditBtnSave.setOnClickListener {
 
-        }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     //로그아웃 알림창
@@ -647,13 +648,44 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         Log.d("TAG", "onPostProfileImageFailure: $message")
     }
 
-//    fun getRealPathFromURI(contentUri:Uri):String{
-//        var cursor:Cursor? = null
-//        try{
-//            val proj = {MediaStore.Images.Media.DATA}
-//            cursot = contentResolver.query(contentUri,proj,null,null,null)
-//
-//        }
-//    }
+    override fun onPatchProfileSuccess(response: BaseResponse) {
+        if(response.isSuccess && response.code == 100){
+            Glide.with(this).load(R.drawable.my_page_img2)
+                .error(R.drawable.my_page_img2)
+                .centerCrop().into(binding.myPageEditImg)
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.putString(Constants.PROFILE_GALLERY,null)
+            edit.putString(Constants.PROFILE_KAMERA,null)
+            edit.apply()
+        }else{
+            showCustomToast(response.message.toString())
+        }
+        dismissLoadingDialog()
+    }
+
+    override fun onPatchProfileFailure(message: String) {
+        dismissLoadingDialog()
+        showCustomToast(message)
+    }
+
+    override fun selectImageGallery() {
+    }
+
+    override fun profileDelete() {
+        val askDialog = AskDialog(this)
+        askDialog.setTitle("프로필 삭제")
+        askDialog.setMessage("프로필을 삭제하시겠습니까?")
+        askDialog.setNegativeButton("취소"){
+            askDialog.dismiss()
+        }
+        askDialog.setPositiveButton("삭제"){
+            askDialog.dismiss()
+            showLoadingDialog(this)
+            MyPageEditService(this).tryPatchMyProfileImage()
+
+        }
+        askDialog.show()
+    }
+
 
 }

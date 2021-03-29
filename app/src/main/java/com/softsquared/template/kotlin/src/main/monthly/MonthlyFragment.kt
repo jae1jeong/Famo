@@ -106,7 +106,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     //바텀 시트 다이얼로그 확장
                     (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                 }
-                detailDialog.start(memo)
+                detailDialog.start(memo,memo.formDateStr)
 
             },{
                 // 일정삭제
@@ -320,6 +320,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     val scheduleCategoryIdJsonElement: JsonElement? = memoJsonObject.get("categoryID")
                     val scheduleColorInfoJsonElement: JsonElement? = memoJsonObject.get("colorInfo")
                     val scheduleDate = memoJsonObject.get("scheduleFormDate").asString
+                    val memoScheduleFormDate = memoJsonObject.get("scheduleFormDate").asString
 
                     val scheduleDayInt = scheduleStringDate[0].toInt()
                     val scheduleMonth = scheduleStringDate[1]
@@ -330,10 +331,10 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     }
                     var scheduleCategoryColor:String? = null
                     if(!scheduleColorInfoJsonElement!!.isJsonNull){
-                        scheduleCategoryColor = scheduleCategoryIdJsonElement.toString()
+                        scheduleCategoryColor = scheduleColorInfoJsonElement.asString
                     }
                     userMemos.add(scheduleDate)
-                    memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor))
+                    memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor,memoScheduleFormDate))
                 }
             }
             Log.d("TAG", "onGetMonthlyMemoItemSuccess: $memoList")

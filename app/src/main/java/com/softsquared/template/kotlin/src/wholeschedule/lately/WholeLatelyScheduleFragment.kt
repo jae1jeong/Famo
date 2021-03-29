@@ -181,9 +181,10 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                             it.scheduleName,
                             it.scheduleMemo,
                             false,
+                            null,
                             null
                         )
-                        detailDialog.start(scheduleItem)
+                        detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
                             val edit = ApplicationClass.sSharedPreferences.edit()

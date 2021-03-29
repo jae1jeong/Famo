@@ -105,9 +105,9 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
                             it.scheduleName,
                             it.scheduleMemo,
                             false,
-                            null
-                        )
-                        detailDialog.start(scheduleItem)
+                            null,
+                        null)
+                        detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
                             val edit = ApplicationClass.sSharedPreferences.edit()

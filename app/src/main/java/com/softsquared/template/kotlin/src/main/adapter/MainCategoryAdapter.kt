@@ -3,6 +3,7 @@ package com.softsquared.template.kotlin.src.main.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategorySche
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import org.w3c.dom.Text
 
-class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:(MainScheduleCategory)->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
+class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:()->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
     private var selectedCategoryView:TextView? = null
 
 
@@ -34,7 +35,7 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
         val scheduleCategory = categoryList[position]
         holder.categoryText.text = scheduleCategory.text
         holder.itemView.setOnClickListener {
-            clickListener(scheduleCategory)
+            clickListener()
             // 처음 선택할때
             if(selectedCategoryView == null){
                 val shape = GradientDrawable()
@@ -42,17 +43,34 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
                 shape.setColor(Color.parseColor(categoryList[position].color))
                 holder.itemView.background = shape
                 holder.categoryText.setTextColor(Color.WHITE)
+                selectedCategoryView = holder.itemView as TextView
+                scheduleCategory.selected = true
             }else{
-                // 이전에 선택한 다른 값이 있을때
-                selectedCategoryView!!.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
-                selectedCategoryView!!.setTextColor(Color.parseColor("#aeb7c4"))
-                val shape = GradientDrawable()
-                shape.cornerRadius = 180F
-                shape.setColor(Color.parseColor(categoryList[position].color))
-                (holder.itemView as TextView).setTextColor(Color.WHITE)
-                holder.itemView.background = shape
+                // 전에 선택했던 카테고리와 현재 누르려는 카테고리가 경우
+                if(selectedCategoryView == holder.itemView as TextView){
+                    Log.d("TAG", "onBindViewHolder: 같은 카테고리 선택")
+                    holder.itemView.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
+                    holder.itemView.setTextColor(Color.parseColor("#aeb7c4"))
+                    selectedCategoryView = null
+                    scheduleCategory.selected = false
+                }else{
+                    // 다를 경우
+                    selectedCategoryView!!.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
+                    selectedCategoryView!!.setTextColor(Color.parseColor("#aeb7c4"))
+                    categoryList.forEach {
+                        if(it.selected){
+                            it.selected = false
+                        }
+                    }
+                    val shape = GradientDrawable()
+                    shape.cornerRadius = 180F
+                    shape.setColor(Color.parseColor(categoryList[position].color))
+                    (holder.itemView as TextView).setTextColor(Color.WHITE)
+                    holder.itemView.background = shape
+                    selectedCategoryView = holder.itemView
+                    scheduleCategory.selected = true
+                }
             }
-            selectedCategoryView = holder.itemView as TextView
 
         }
     }

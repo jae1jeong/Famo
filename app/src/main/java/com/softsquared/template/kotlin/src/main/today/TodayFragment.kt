@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.today
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcel
@@ -17,7 +18,6 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
-import com.softsquared.template.kotlin.src.main.mypage.models.DoneScheduleCountResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.models.*
 import com.softsquared.template.kotlin.src.mypage.MyPageService
@@ -60,7 +60,6 @@ class TodayFragment() :
         todayMemoAdapter = MemoAdapter(memoList, context!!, {
             // 디테일 다이얼로그
             val scheduleDetailDialog = ScheduleDetailDialog(context!!)
-//            scheduleDetailDialog.setDialogTitle()
             // 디테일 다이얼로그 수정하기 버튼
             scheduleDetailDialog.setOnModifyBtnClickedListener {
                 // 스케쥴 ID 보내기
@@ -72,9 +71,10 @@ class TodayFragment() :
                 //바텀 시트 다이얼로그 확장
                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
             }
-            // 날짜 form 만들어야함
-            scheduleDetailDialog.start(it)
+
+            scheduleDetailDialog.start(it,it.formDateStr)
         }, {
+            changeCount(it.isChecked)
             // 일정완료 버튼
             TodayService(this).onPostCheckItem(CheckItemRequest(it.id))
         },{
@@ -102,11 +102,13 @@ class TodayFragment() :
                 viewHolder: RecyclerView.ViewHolder,
                 buffer: MutableList<SwipeButton>
             ) {
+
+                // R.drawable.schedule_delete
                 // add button
                 buffer.add(SwipeButton(context!!,
-                    "Delete",
-                    30,
-                    R.drawable.schedule_delete,
+                    "삭제",
+                    50,
+                    0,
                     Color.parseColor("#32363C"),
                     object: SwipeButtonClickListener {
                         override fun onClick(pos: Int) {
@@ -122,13 +124,23 @@ class TodayFragment() :
                         }
                     }
                     ))
+                //R.drawable.schedule_share
                 buffer.add(SwipeButton(context!!,
-                    "Share",
-                    30,
-                    R.drawable.schedule_share,
+                    "공유",
+                    50,
+                    0,
                     Color.parseColor("#FFAE2A"),
                     object: SwipeButtonClickListener {
                         override fun onClick(pos: Int) {
+                            val sendStringData ="${memoList[pos].title}\n${memoList[pos].description}\n${memoList[pos].formDateStr}"
+                            val sendIntent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT,sendStringData)
+                                type = "text/plain"
+                            }
+                            if(sendIntent.resolveActivity((activity as MainActivity).packageManager)!=null){
+                                startActivity(sendIntent)
+                            }
                         }
                     }
                 ))
@@ -192,6 +204,7 @@ class TodayFragment() :
                         if(!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
+                        val memoScheduleFormDate = memoJsonObject.get("scheduleFormDate").asString
 
                         var memoColorInfo:String? = null
                         if(!memoColorInfoJsonElement!!.isJsonNull){
@@ -219,7 +232,8 @@ class TodayFragment() :
                                 memoTitle,
                                 memoContent,
                                 memoIsChecked,
-                                memoColorInfo
+                                memoColorInfo,
+                                memoScheduleFormDate
                             )
                         )
                     }
@@ -333,9 +347,13 @@ class TodayFragment() :
 
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
         if(response.isSuccess && response.code == 100){
-                Log.d("todayFragment", "onGetUserTopCommentSuccess: 남은 일정 조회 성공")
-                restScheduleCount = response.remainScheduleCount
-                binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
+            val responseJsonArray = response.data.asJsonArray
+            responseJsonArray.forEach {
+                val jsonObject = it.asJsonObject
+                restScheduleCount = jsonObject.get("remainScheduleCount").asInt
+            }
+            Log.d("TAG", "onGetRestScheduleCountSuccess: $restScheduleCount")
+            binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
         }else{
             Log.d("TodayFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
@@ -366,7 +384,15 @@ class TodayFragment() :
     }
 
 
-    fun changeCount(){
-
+    fun changeCount(isChecked:Boolean){
+        if(!isChecked){
+            restScheduleCount--
+            doneScheduleCount++
+        }else{
+            restScheduleCount++
+            doneScheduleCount--
+        }
+        binding.todayTextRestSchedule.text = "남은일정 ${restScheduleCount}개"
+        binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount}개"
     }
 }

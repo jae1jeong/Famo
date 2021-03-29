@@ -32,7 +32,7 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
 
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
-        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
+//        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
     }
 
 
@@ -91,9 +91,10 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
                         it.scheduleName,
                         it.scheduleMemo,
                         false,
+                        null,
                         null
                     )
-                    detailDialog.start(scheduleItem)
+                    detailDialog.start(scheduleItem,null)
                     detailDialog.setOnModifyBtnClickedListener {
                         // 스케쥴 ID 보내기
                         val edit = ApplicationClass.sSharedPreferences.edit()

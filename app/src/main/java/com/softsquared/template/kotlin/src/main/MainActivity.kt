@@ -195,6 +195,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 }
             } else {
                 // 일정 추가하기
+                    selectedCategoryId = null
+                    categoryList.forEach {
+                        if(it.selected){
+                            selectedCategoryId = it.id
+                        }
+                    }
                 showLoadingDialog(this)
                 AddMemoService(this).tryPostAddMemo(
                     PostTodayRequestAddMemo(
@@ -421,6 +427,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         var memoCreatedAtMonth = ""
                         var memoCreatedAtDay = 0
                         var memoContent = ""
+                        val memoScheduleFormDate = memoJsonObject.get("scheduleFormDate").asString
                         val memoColorInfoJsonElement: JsonElement? =
                             memoJsonObject.get("colorInfo")
                         if (!memoContentJsonElement!!.isJsonNull) {
@@ -451,7 +458,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 memoTitle,
                                 memoContent,
                                 memoIsChecked,
-                                memoColorInfo
+                                memoColorInfo,
+                                memoScheduleFormDate
                             )
                         )
                     }
@@ -509,14 +517,19 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     MainScheduleCategory(
                         responseUser.data[i].categoryID,
                         responseUser.data[i].categoryName,
-                        responseUser.data[i].colorInfo
+                        responseUser.data[i].colorInfo,
+                        false
                     )
                 )
             }
 
-            categoryScheduleAdapter = MainCategoryAdapter(categoryList, this, {
-                selectedCategoryId = it.id
-            })
+            categoryScheduleAdapter = MainCategoryAdapter(categoryList, this) {
+//                categoryList.forEach {
+//                    if (it.selected) {
+//                        selectedCategoryId = it.id
+//                    }
+//                }
+            }
             binding.addMemoCategoryRecyclerview.apply {
                 layoutManager = LinearLayoutManager(
                     this@MainActivity,

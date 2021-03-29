@@ -54,7 +54,7 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         Log.d("TAG", "onBindViewHolder: $memo")
         if(memo.description == ""){
             val params = holder.itemView.layoutParams
-            params.height = 400
+            params.height = 350
             holder.itemView.layoutParams = params
             holder.itemView.requestLayout()
         }

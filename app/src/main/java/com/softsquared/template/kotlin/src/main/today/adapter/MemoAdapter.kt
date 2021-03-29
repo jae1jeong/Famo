@@ -51,7 +51,7 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         // 본문 내용이 없을시
         if(memo.description == ""){
             val params = holder.itemView.layoutParams
-            params.height = 400
+            params.height = 350
             holder.itemView.layoutParams = params
         }
         CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)

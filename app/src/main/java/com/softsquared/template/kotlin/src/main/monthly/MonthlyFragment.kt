@@ -15,9 +15,11 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentMonthlyBinding
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.monthly.adapter.MonthlyMemoAdapter
 import com.softsquared.template.kotlin.src.main.monthly.models.AllMemoResponse
@@ -31,10 +33,11 @@ import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsRespon
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
-import com.softsquared.template.kotlin.util.AskDialog
-import com.softsquared.template.kotlin.util.CalendarConverter
+import com.softsquared.template.kotlin.util.*
+import kotlinx.android.synthetic.main.fragment_monthly.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -46,7 +49,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBinding::bind, R.layout.fragment_monthly),MonthlyView,TodayView{
-    lateinit var monthlyMemoAdapter:MonthlyMemoAdapter
     val memoList:ArrayList<MemoItem> = arrayListOf()
     private val userCheckedDateList:ArrayList<LocalDate> = arrayListOf()
     private var todayDate:LocalDate ?= null
@@ -54,9 +56,22 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     private val userMemos:ArrayList<String> = arrayListOf()
 
     private var selectedView:TextView ?= null
-
     private var targetMonth:Int? = null
     private var targetYear:Int? = null
+
+    val daysOfWeek = arrayOf(
+        DayOfWeek.SUNDAY,
+        DayOfWeek.MONDAY,
+        DayOfWeek.WEDNESDAY,
+        DayOfWeek.THURSDAY,
+        DayOfWeek.FRIDAY,
+        DayOfWeek.SATURDAY
+    )
+
+    companion object{
+        var monthlyMemoAdapter:MonthlyMemoAdapter?=null
+    }
+
 
 
     private var currentMonth:YearMonth = YearMonth.now()
@@ -66,15 +81,32 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         val bundle = arguments
         if(bundle != null){
             val strDate = bundle.getString("selectedDate")
-            showCustomToast("bundle 들어옴")
-        }else{
-            showCustomToast("bundle Null")
+            if(strDate != ""){
+                Log.d("TAG", "onViewCreated: $strDate")
+                val dateStrList = strDate?.split("-")
+                currentMonth = YearMonth.parse("${dateStrList?.get(0)!!}-${dateStrList[1]}")
+                selectedDate = LocalDate.parse(strDate)
+                setMonthCalendar(currentMonth)
+            }
         }
 
+        monthly_shimmer_frame_layout.startShimmerAnimation()
 
             // 어댑터
             monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!,{
                                                                         memo->
+                val detailDialog = ScheduleDetailDialog(context!!)
+                detailDialog.setOnModifyBtnClickedListener {
+                    // 스케쥴 ID 보내기
+                    val edit = ApplicationClass.sSharedPreferences.edit()
+                    edit.putInt(Constants.EDIT_SCHEDULE_ID, memo.id)
+                    edit.apply()
+                    Constants.IS_EDIT = true
+
+                    //바텀 시트 다이얼로그 확장
+                    (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                }
+                detailDialog.start(memo)
 
             },{
                 // 일정삭제
@@ -101,9 +133,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
     fun setUpCalendar(){
 
         class CalendarViewContainer(view: View): ViewContainer(view) {
@@ -112,17 +141,17 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
             // 달력 일자 클릭 리스너
             init {
-                selectedDate = LocalDate.now()
-
+                if(selectedDate == null){
+                    selectedDate = LocalDate.now()
+                }
                 view.setOnClickListener {
                     if(day.owner == DayOwner.THIS_MONTH){
                         setPassivePreviousDayView()
                         val currentSelection = selectedDate
-                        showCustomToast(selectedDate.toString())
-                        selectedView = textView
                         if(selectedDate == day.date){
                             if (currentSelection != null) {
                                 binding.calendarView.notifyDateChanged(currentSelection)
+                                selectedView = textView
                             }
                             MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
                         }else{
@@ -130,6 +159,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                             MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(selectedDate.toString())
                             textView.setBackgroundResource(R.drawable.background_item_calendar_today)
                             textView.elevation = 5f
+                            selectedView = textView
                             binding.calendarView.notifyDateChanged(day.date)
 
                             if(currentSelection != null){
@@ -144,6 +174,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
             override fun bind(container: CalendarViewContainer, day: CalendarDay) {
                 container.textView.text = day.date.dayOfMonth.toString()
+                // 해당 월의 날인 경우
                 if(day.owner == DayOwner.THIS_MONTH){
                     container.textView.setTextColor(Color.BLACK)
                     userCheckedDateList.forEach {
@@ -162,6 +193,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                         selectedView = container.textView
                     }
                 }else{
+                    // 해당 월의 날이 아닌 경우
                     container.textView.setTextColor(Color.GRAY)
                 }
                 container.day = day
@@ -170,18 +202,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         }
 
 
-        val firstMonth = currentMonth.minusMonths(0)
-        val lastMonth = currentMonth.plusMonths(0)
-        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-        val daysOfWeek = arrayOf(
-            DayOfWeek.SUNDAY,
-            DayOfWeek.MONDAY,
-            DayOfWeek.WEDNESDAY,
-            DayOfWeek.THURSDAY,
-            DayOfWeek.FRIDAY,
-            DayOfWeek.SATURDAY
-        )
-        binding.calendarView.setup(firstMonth,lastMonth,daysOfWeek.first())
+        binding.calendarView.setup(currentMonth.minusMonths(0),currentMonth.plusMonths(0),daysOfWeek.first())
 
 
         // 달력 헤더
@@ -197,15 +218,56 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 }
                 container.headerBtnYearDatePicker.text = "${month.year}"
                 container.headerBtnMonthPlus.setOnClickListener {
-                    showCustomToast("${currentMonth.plusMonths(1)}")
+                    currentMonth = currentMonth.plusMonths(1)
+                    Log.d("TAG", "bind: $currentMonth")
+                    setMonthCalendar(currentMonth)
+
+                }
+                container.headerBtnMonthMinus.setOnClickListener {
+                    currentMonth = currentMonth.minusMonths(1)
+                    Log.d("TAG", "bind: $currentMonth")
+                    setMonthCalendar(currentMonth)
                 }
                 container.headerBtnYearDatePicker.setOnClickListener {
-                    showCustomToast("${currentMonth.minusMonths(1)}")
                 }
+                // 현재요일 텍스트 색상 처리
+                container.setDayStyleBold(LocalDate.now().dayOfWeek.toString())
             }
 
 
             override fun create(view: View): CalendarViewHeader  = CalendarViewHeader(view)
+        }
+    }
+
+    fun setMonthCalendar(curMonth:YearMonth){
+        val asyncDialog = LoadingDialog(context!!)
+        val yearMonthString = curMonth.toString().split("-")
+        targetYear = yearMonthString[0].toInt()
+        if(yearMonthString[1].toInt() < 10){
+            targetMonth = if(yearMonthString[1].contains("0")){
+                yearMonthString[1].replace("0","").toInt()
+            }else{
+                yearMonthString[1].toInt()
+            }
+        }
+        // job1 -> job2 -> dialog dismiss
+        GlobalScope.launch(Dispatchers.Main) {
+
+            val job1 = launch {
+                Log.d("TAG", "bind: job1called")
+                MonthlyService(this@MonthlyFragment).onGetUserDateList(targetMonth!!,targetYear!!)
+            }
+            val job2 = launch{
+                job1.join()
+                Log.d("TAG", "bind: job2called")
+                binding.calendarView.setup(curMonth,curMonth,daysOfWeek.first())
+            }
+            val asyncDialogJob = launch {
+                asyncDialog.show()
+                job2.join()
+                delay(1000)
+                asyncDialog.dismiss()
+            }
 
         }
 
@@ -223,6 +285,13 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             }
             val job2 = launch {
                 MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
+            }
+            val job3 = launch(Dispatchers.Main) {
+                delay(2000)
+                monthly_shimmer_frame_layout.stopShimmerAnimation()
+                monthly_shimmer_frame_layout.visibility = View.GONE
+                binding.monthlyRecyclerview.visibility = View.VISIBLE
+                binding.calendarView.visibility = View.VISIBLE
             }
 
         }
@@ -267,7 +336,8 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor))
                 }
             }
-            monthlyMemoAdapter.setNewMemoList(memoList)
+            Log.d("TAG", "onGetMonthlyMemoItemSuccess: $memoList")
+            monthlyMemoAdapter?.setNewMemoList(memoList)
         }else{
             showCustomToast(response.message.toString())
         }
@@ -278,26 +348,9 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     override fun onGetAllMemosSuccess(response: AllMemoResponse) {
-        if(response.isSuccess && response.code == 100){
-            val memoJsonArray = response.data.asJsonArray
-            memoJsonArray.forEach {
-                val memoJsonObject = it.asJsonObject
-                val scheduleId = memoJsonObject.get("scheduleID").asInt
-                val scheduleDate = memoJsonObject.get("scheduleDate").asString
-                val scheduleTitle = memoJsonObject.get("scheduleName").asString
-                val scheduleContent = memoJsonObject.get("scheduleMemo").asString
-                val colorInfoJsonObject:JsonElement? = memoJsonObject.get("colorInfo")
-            }
-
-        }else{
-            dismissLoadingDialog()
-            showCustomToast(response.message.toString())
-        }
     }
 
     override fun onGetAllMemosFailure(message: String) {
-        dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onGetUserDateListSuccess(response: MonthlyUserDateListResponse) {
@@ -332,7 +385,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     memoList.removeIf {
                         it.id == scheduleID
                     }
-                    monthlyMemoAdapter.setNewMemoList(memoList)
+                    monthlyMemoAdapter?.setNewMemoList(memoList)
                     dismissLoadingDialog()
                 }else->{
                 dismissLoadingDialog()

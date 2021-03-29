@@ -110,6 +110,8 @@ dependencies {
     //페이징라이브러리
     implementation 'com.github.lakue119:LakuePagingButton:1.0.0'
 
-//    implementation 'com.android.support:design:27.1.1'
+    // 로딩 애니메이션
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
 
 }

@@ -59,13 +59,16 @@ class DatePickBottomSheetDialog:BottomSheetDialogFragment() {
             bundle.putString("selectedDate",strDate)
             val monthlyFragment = MonthlyFragment()
             monthlyFragment.arguments = bundle
-            transaction.replace(R.id.main_view_pager,monthlyFragment)
-            transaction.commitNow()
+            transaction.add(R.id.main_view_pager,monthlyFragment)
+            transaction.commit()
+            dismiss()
         }
         // 취소 버튼
         monthly_btn_cancel.setOnClickListener {
             dismiss()
         }
     }
+
+
 
 }

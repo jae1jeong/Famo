@@ -37,6 +37,7 @@ import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.util.CalendarConverter
 import com.softsquared.template.kotlin.util.Constants
+import kotlinx.android.synthetic.main.fragment_today.*
 import java.time.LocalDate
 
 
@@ -46,8 +47,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     private val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
     lateinit var categoryScheduleAdapter: MainCategoryAdapter
     private var selectedCategoryId:Int?= null
-    
 
+    private var editScheduleID:Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +92,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         if (Constants.IS_EDIT) {
-                            val editScheduleID = ApplicationClass.sSharedPreferences.getInt(
+                            editScheduleID = ApplicationClass.sSharedPreferences.getInt(
                                 Constants.EDIT_SCHEDULE_ID,
                                 -1
                             )
@@ -138,7 +139,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         // 바텀시트 다이얼로그 확인 버튼
         binding.addMemoDialogBtnOk.setOnClickListener {
             if (Constants.IS_EDIT) {
-                val editScheduleID = ApplicationClass.sSharedPreferences.getInt(
+                editScheduleID = ApplicationClass.sSharedPreferences.getInt(
                     Constants.EDIT_SCHEDULE_ID,
                     -1
                 )
@@ -176,7 +177,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
             if (Constants.IS_EDIT) {
                 // 수정하기
-                val editScheduleID =
+                editScheduleID =
                     ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID, -1)
                 if (editScheduleID != -1) {
                     showLoadingDialog(this)
@@ -213,9 +214,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     }
 
-    fun moveViewPagerFragment(idx:Int){
-        binding.mainViewPager.currentItem = idx
-    }
 
     // 바텀시트 다이얼로그 상태 관리
     fun stateChangeBottomSheet(state: String) {
@@ -257,8 +255,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onBackPressed() {
-//        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,ScheduleFindFragment())
-//            .commit()
 
     }
 
@@ -297,9 +293,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     TodayService(this).onGetScheduleItems()
 
                     selectedCategoryId = null
-                    // 안됨
-//                    val todayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
-//                    todayFragment.checkIsMemoListEmpty()
                     // 초기화
                     binding.addMemoEditTitle.setText("")
                     binding.addMemoEditContent.setText("")
@@ -328,9 +321,31 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
                     showCustomToast(response.message.toString())
-                    showLoadingDialog(this)
-                    TodayService(this).onGetScheduleItems()
+//                    TodayService(this).onGetScheduleItems()
+                    TodayFragment.todayMemoAdapter?.let {
+                        TodayFragment.todayMemoAdapter!!.memoList.forEach {
+                            if (it.id == editScheduleID) {
+                                it.title = binding.addMemoEditTitle.text.toString()
+                                it.description = binding.addMemoEditContent.text.toString()
+                                TodayFragment.todayMemoAdapter?.notifyItemChanged(
+                                    TodayFragment.todayMemoAdapter!!.memoList.indexOf(
+                                        it
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    MonthlyFragment.monthlyMemoAdapter?.let{
+                        MonthlyFragment.monthlyMemoAdapter!!.memoList.forEach {
+                            if(it.id == editScheduleID){
+                                it.title = binding.addMemoEditTitle.text.toString()
+                                it.description = binding.addMemoEditContent.text.toString()
+                                MonthlyFragment.monthlyMemoAdapter?.notifyItemChanged(MonthlyFragment.monthlyMemoAdapter!!.memoList.indexOf(it))
+                            }
+                        }
+                    }
                     selectedCategoryId = null
+                    stateChangeBottomSheet(Constants.HIDE_SHEET)
                 }
                 else -> {
                     dismissLoadingDialog()
@@ -444,10 +459,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         )
                     }
                     TodayFragment.todayMemoAdapter?.setNewMemoList(TodayFragment.memoList)
-                    // 오늘 프래그먼트에서 함수 사용
-//                    val todayFragment: TodayFragment = supportFragmentManager.findFragmentById(R.id.main_view_pager) as TodayFragment
-//                    todayFragment.checkIsMemoListEmpty()
-
+                    if(TodayFragment.todayMemoAdapter?.itemCount == 1){
+                        today_frame_layout_no_item.visibility = View.GONE
+                    }
                     dismissLoadingDialog()
                 }
                 else -> {

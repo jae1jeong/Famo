@@ -21,6 +21,10 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeSchedul
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -37,13 +41,16 @@ class ScheduleFindBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBi
 
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
-        ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
+        GlobalScope.launch(Dispatchers.IO){
+            delay(1000)
+            ScheduleBookmarkService(this@ScheduleFindBookmarkFragment).tryGetScheduleBookmark(0, 2)
+        }
     }
 
 
     override fun onResume() {
         super.onResume()
-        ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
+//        ScheduleBookmarkService(this).tryGetScheduleBookmark(0, 2)
     }
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 

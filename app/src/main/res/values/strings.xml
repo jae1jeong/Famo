@@ -13,9 +13,9 @@
     <string name="splash_title">쉽고 빠른 메모의 시작!</string>
 
     <!-- Main -->
-    <string name="monthly"><u>월간</u></string>
-    <string name="today"><u>오늘</u></string>
-    <string name="find_schedule"><u>일정 찾기</u></string>
+    <string name="monthly">월간</string>
+    <string name="today">오늘</string>
+    <string name="find_schedule">일정 찾기</string>
 
 
     <!--Today -->

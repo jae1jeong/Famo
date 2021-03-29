@@ -3,9 +3,11 @@ package com.softsquared.template.kotlin.src.main.monthly.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
@@ -49,9 +51,23 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         holder.itemView.setOnClickListener {
             clickListener(memo)
         }
-//        CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.itemMonthlyCategoryColor)
+        Log.d("TAG", "onBindViewHolder: $memo")
+        if(memo.description == ""){
+            val params = holder.itemView.layoutParams
+            params.height = 400
+            holder.itemView.layoutParams = params
+            holder.itemView.requestLayout()
+        }
+
+        val categoryColor = CategoryColorPicker.setCategoryColor(memo.colorState)
+        val shape = GradientDrawable()
+        Log.d("TAG", "setCategoryColorRadius: $categoryColor")
+        shape.setColor(Color.parseColor(categoryColor))
+        shape.cornerRadius = 180F
+        holder.binding.itemMonthlyCategoryColor.background = shape
 
     }
+
 
     fun setNewMemoList(newMemoList:ArrayList<MemoItem>){
         this.memoList = newMemoList

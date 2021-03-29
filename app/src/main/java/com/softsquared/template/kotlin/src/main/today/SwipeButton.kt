@@ -39,7 +39,6 @@ class SwipeButton
 
         p.color = Color.WHITE
         p.textSize = textSize.toFloat()
-
         val r = Rect()
         val cHeight = rectF.height()
         val cWidth = rectF.width()
@@ -68,10 +67,8 @@ class SwipeButton
 //        val bitmap = Bitmap.createBitmap(25,25,Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(bitmap)
-//        d!!.setBounds(0,0,canvas.width,canvas.height)
-        d!!.setBounds(0,0,50,50)
-
-        d!!.draw(canvas)
+        d.setBounds(0,0,canvas.width,canvas.height)
+        d.draw(canvas)
         return bitmap
     }
 }

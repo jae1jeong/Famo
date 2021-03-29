@@ -151,7 +151,7 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
     ) {
         val pos = viewHolder.adapterPosition
         var translationX = dX
-        var itemView = viewHolder.itemView
+        val itemView = viewHolder.itemView
         if(pos<0){
             swipePosition = pos
             return
@@ -166,7 +166,7 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
                 }else{
                     buffer = buttonBuffer[pos]!!
                 }
-                translationX = dX * buffer.size.toFloat() * buttonWidth.toFloat() / itemView.width
+                translationX = dX * buffer.size.toFloat() * buttonWidth.toFloat()  / itemView.width
                 drawButton(c,itemView,buffer,pos,translationX)
             }
         }
@@ -178,7 +178,7 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
         val dButtonWidth = -1 * translationX/buffer.size
         for(button in buffer){
             val left = right - dButtonWidth
-            button.onDraw(c, RectF(left,itemView.top.toFloat(),right,itemView.bottom.toFloat()),pos)
+            button.onDraw(c, RectF(left-80,itemView.top.toFloat(),right,itemView.bottom.toFloat()),pos)
             right = left
         }
     }

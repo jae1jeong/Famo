@@ -248,7 +248,7 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
-                Toast.makeText(activity,"전체일정조회",Toast.LENGTH_SHORT).show()
+//                Toast.makeText(activity,"전체일정조회",Toast.LENGTH_SHORT).show()
 
                 val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
 
@@ -424,7 +424,6 @@ class ScheduleFindMainFragment() : BaseFragment<FragmentScheduleMainFindBinding>
 
         when (response.code) {
             100 -> {
-                showCustomToast("남은일정조회성공")
                 Log.d("TAG", "onGetTodayRestScheduleSuccess: 남은일정조회성공")
                 binding.scheduleFindTvTotaySchedule.text = " 일정이 " +
                         response.data[0].remainScheduleCount.toString() +

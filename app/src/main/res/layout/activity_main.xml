@@ -60,6 +60,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
+        android:elevation="5dp"
         android:background="@drawable/background_bottom_sheet_dialog_add_memo"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:id="@+id/main_frame_bottom_sheet"

@@ -8,6 +8,8 @@ object CalendarConverter {
             "WEDNESDAY"-> "수"
             "THURSDAY"-> "목"
             "FRIDAY"-> "금"
+            "SATURDAY"->"토"
+            "SUNDAY"->"일"
             else-> "알 수 없음"
         }
     }

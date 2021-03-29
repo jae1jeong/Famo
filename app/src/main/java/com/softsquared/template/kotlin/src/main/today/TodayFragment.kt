@@ -29,6 +29,11 @@ import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountRespo
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.android.synthetic.main.fragment_today.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
@@ -46,6 +51,9 @@ class TodayFragment() :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 애니메이션 시작
+        today_shimmer_header_frame_layout.startShimmerAnimation()
+        today_shimmer_frame_layout.startShimmerAnimation()
 
         // 어댑터
         val mLayoutManager = LinearLayoutManager(context)
@@ -130,7 +138,19 @@ class TodayFragment() :
 
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
-        showLoadingDialog(context!!)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val loadingAnimation = launch {
+                delay(1000)
+                today_shimmer_frame_layout.stopShimmerAnimation()
+                today_shimmer_header_frame_layout.stopShimmerAnimation()
+                today_shimmer_header_frame_layout.visibility = View.GONE
+                today_shimmer_frame_layout.visibility = View.GONE
+                binding.todayRecyclerView.visibility = View.VISIBLE
+                binding.todayLayoutTopMent.visibility = View.VISIBLE
+                checkIsMemoListEmpty()
+            }
+        }
         // 오늘 일정 조회
         TodayService(this).onGetScheduleItems()
         // 상단멘트
@@ -149,11 +169,6 @@ class TodayFragment() :
                 binding.todayFrameLayoutNoItem.visibility = View.VISIBLE
             }
         }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
@@ -209,23 +224,17 @@ class TodayFragment() :
                         )
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
-                    // 메모가 없으면 뷰를 보여줘야하기 때문에 체크 메서드 함수 호출
-                    checkIsMemoListEmpty()
-                    dismissLoadingDialog()
                 }
                 else->{
-                    dismissLoadingDialog()
                     showCustomToast(response.message.toString())
                 }
             }
         }else{
-            dismissLoadingDialog()
             showCustomToast(response.message.toString())
         }
     }
 
     override fun onGetScheduleItemsFailure(message: String) {
-        dismissLoadingDialog()
         showCustomToast(message)
     }
 
@@ -271,21 +280,21 @@ class TodayFragment() :
 
     override fun onGetUserTopCommentSuccess(response: TopCommentResponse) {
         if(response.isSuccess && response.code == 100){
+            Log.d("todayFragment", "onGetUserTopCommentSuccess: 상단멘트 조회 성공")
             when(response.goalStatus){
                 // 디데이 설정 o
                 1 -> {
-                    val goalTitle = response.goalTitle
-                    val goalDday = response.Dday
-                    binding.todayTextGoalTitle.text = "${goalTitle}까지"
-                    binding.todayTextGoalSubTitle.text = "D-${goalDday}일 남았어요!"
+                        val goalTitle = response.goalTitle
+                        val goalDday = response.Dday
+                        binding.todayTextGoalTitle.text = "${goalTitle}까지"
+                        binding.todayTextGoalSubTitle.text = "D-${goalDday}일 남았어요!"
                 }
                 // 디데이 설정 x
                 -1 ->{
-                    val nickName = response.nickname
-                    val titleComment = response.titleComment
-                    binding.todayTextGoalTitle.text = "${nickName}님"
-                    binding.todayTextGoalSubTitle.text = titleComment
-
+                        val nickName = response.nickname
+                        val titleComment = response.titleComment
+                        binding.todayTextGoalTitle.text = "${nickName}님"
+                        binding.todayTextGoalSubTitle.text = titleComment
                 }
             }
         }else{
@@ -324,8 +333,9 @@ class TodayFragment() :
 
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
         if(response.isSuccess && response.code == 100){
-            restScheduleCount = response.remainScheduleCount
-            binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
+                Log.d("todayFragment", "onGetUserTopCommentSuccess: 남은 일정 조회 성공")
+                restScheduleCount = response.remainScheduleCount
+                binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
         }else{
             Log.d("TodayFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
@@ -336,9 +346,9 @@ class TodayFragment() :
 
     override fun onGetTotalScheduleCountSuccess(response: TotalScheduleCountResponse) {
         if(response.isSuccess && response.code == 100){
+            Log.d("todayFragment", "onGetUserTopCommentSuccess: 해낸 일정 조회 성공")
             doneScheduleCount = response.totaldonedata[0].doneScheduleCount.toString().toInt()
-            binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount.toString()}개"
-
+            binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount}개"
         }else{
             showCustomToast(response.message.toString())
         }

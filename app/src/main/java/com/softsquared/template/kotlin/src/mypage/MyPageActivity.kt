@@ -1,10 +1,8 @@
 package com.softsquared.template.kotlin.src.mypage
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.*
 import android.util.Base64
@@ -12,6 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
@@ -30,6 +29,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     var check = 100
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
+    val monthsAchievementsMap :Map<String, Int> = mapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         val goalTitle = intent.getStringExtra("goalTitle")
         check = intent.getIntExtra("check", 100)
 
-//        MyPageService(this).tryGetRestScheduleCount("today")
         MyPageService(this).tryGetTotalScheduleCount()
         MyPageService(this).tryGetMyPage()
         MyPageService(this).tryGetMonthsAchievement()
@@ -225,7 +224,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         when (response.code) {
             100 -> {
-                showCustomToast("월별달성률조회성공")
+                val achievement = response.data.asJsonObject
+                val hashMap: HashMap<String, Int> = Gson().fromJson(
+                    achievement.toString(),
+                    HashMap::class.java
+                )as HashMap<String, Int>
+                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
+
             }
             else -> {
 

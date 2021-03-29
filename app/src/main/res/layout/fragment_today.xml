@@ -8,6 +8,49 @@
     android:gravity="center"
     tools:context=".src.main.today.TodayFragment">
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/today_shimmer_header_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/shimmer_today_top_ment" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/today_shimmer_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/today_shimmer_header_frame_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+            <include layout="@layout/shimmer_today_recyclerview" />
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,9 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/today_layout_top_ment"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -32,7 +75,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="기말고사까지"
                     android:textColor="@color/black"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +84,6 @@
                     android:id="@+id/today_text_goal_sub_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20일 남았어요!"
                     android:textColor="@color/black"
                     android:textSize="26sp"
                     android:textStyle="bold"
@@ -55,7 +96,6 @@
                     android:id="@+id/today_text_done_schedule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="해낸일정 개"
                     app:layout_constraintStart_toStartOf="@+id/today_text_goal_sub_title"
                     app:layout_constraintTop_toBottomOf="@+id/today_text_goal_sub_title" />
 
@@ -64,7 +104,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="남은일정"
                     app:layout_constraintBottom_toBottomOf="@+id/textView3"
                     app:layout_constraintStart_toEndOf="@+id/textView3"
                     app:layout_constraintTop_toTopOf="@+id/textView3" />
@@ -91,6 +130,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <FrameLayout
+                android:visibility="gone"
                 android:layout_marginTop="50dp"
                 android:id="@+id/today_frame_layout_no_item"
                 android:layout_marginHorizontal="15dp"
@@ -125,6 +165,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="invisible"
                 android:id="@+id/today_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

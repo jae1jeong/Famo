@@ -36,19 +36,22 @@ class MemoAdapter(var memoList:MutableList<MemoItem>,private val context: Contex
         // 체크 버튼 리스너
         holder.binding.todayItemBtnMemoCheck.setOnClickListener {
             if(memo.isChecked){
-                changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
-                memo.isChecked = !memo.isChecked
                 checkListener(memo)
+                memo.isChecked = !memo.isChecked
+                changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
+
             }else{
-                changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
-                memo.isChecked = !memo.isChecked
                 checkListener(memo)
+                memo.isChecked = !memo.isChecked
+                changeCheckBtnBackground(memo.isChecked,holder.binding.todayItemBtnMemoCheck)
             }
+            notifyItemChanged(position)
+
         }
         // 본문 내용이 없을시
-        if(memo.description == null){
+        if(memo.description == ""){
             val params = holder.itemView.layoutParams
-            params.height = 90
+            params.height = 400
             holder.itemView.layoutParams = params
         }
         CategoryColorPicker.setCategoryColorRadius(memo.colorState,holder.binding.todayTextCategoryColor)

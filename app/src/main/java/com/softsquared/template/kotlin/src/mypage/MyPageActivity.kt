@@ -3,13 +3,24 @@ package com.softsquared.template.kotlin.src.mypage
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.*
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
@@ -30,6 +41,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
     val monthsAchievementsMap :Map<String, Int> = mapOf()
+
+    val temList10: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -225,10 +238,152 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 val achievement = response.data.asJsonObject
-                val hashMap: HashMap<String, Int> = Gson().fromJson(achievement.toString(), HashMap::class.java
-                )as HashMap<String, Int>
+                val hashMap: HashMap<String, Int> = Gson().fromJson(
+                    achievement.toString(), HashMap::class.java
+                ) as HashMap<String, Int>
                 Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
-                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap.get(achievement)}")
+
+
+                val list = hashMap.toString()
+                val temList = list.substring(1, list.length - 1)
+                val temList2 = temList.split(",".toRegex()).toTypedArray()
+                //월
+                val temList3: ArrayList<String> = ArrayList()
+                //달성률
+                val temList4: ArrayList<String> = ArrayList()
+
+                for (i in temList2.indices) {
+                    temList3.add(temList2[i].split("=".toRegex()).toTypedArray()[0])
+                    temList4.add(temList2[i].split("=".toRegex()).toTypedArray()[1])
+                }
+
+                for (i in 0 until temList3.size) {
+                    temList10.add(temList3[i].split("-")[1])
+                }
+
+                //그래프 시작
+
+                val lineChart = findViewById<View>(R.id.chart) as LineChart
+
+                val test = 1
+
+                //그래프 마커좌표
+                val entries: ArrayList<Entry> = ArrayList()
+                entries.add(Entry(test.toFloat(), 10F))
+                entries.add(Entry(2F, 30F))
+                entries.add(Entry(3F, 0F))
+//                entries.add(Entry(4F, 70F))
+//                entries.add(Entry(5F, 60F))
+//                entries.add(Entry(6F, 40F))
+//        entries.add(Entry(60F, 60F))
+
+                val lineDataSet = LineDataSet(entries, "속성명1")
+                lineDataSet.lineWidth = 1f
+                lineDataSet.circleRadius = 6f
+                lineDataSet.setCircleColor(Color.parseColor("#ffae2a"))
+//        lineDataSet.circleHoleColor(Color.BLUE)
+//        lineDataSet.setCircleColorHole(Color.BLUE)
+                lineDataSet.color = Color.parseColor("#ffae2a")
+                lineDataSet.setDrawCircleHole(true)
+                lineDataSet.setDrawCircles(true)
+                lineDataSet.setDrawHorizontalHighlightIndicator(false)
+                lineDataSet.setDrawHighlightIndicators(false)
+                //값보여주기
+                lineDataSet.setDrawValues(false)
+
+
+                val lineData = LineData(lineDataSet)
+                lineChart.data = lineData
+
+                val xAxis = lineChart.xAxis
+                xAxis.textColor = Color.BLACK
+                xAxis.enableGridDashedLine(8f, 24f, 0f)
+
+                val yLAxis = lineChart.axisLeft
+                yLAxis.textColor = Color.BLACK
+//        yLAxis.setDrawAxisLine(false)
+//        yLAxis.setDrawLabels(false)
+//        yLAxis.setDrawGridLines(false)
+//        yLAxis.setDrawLabels(false)
+//        yLAxis.setDrawAxisLine(false)
+//        yLAxis.setDrawGridLines(false
+
+                //true로 지정시 오른쪽 y좌표도 생김
+                val yRAxis = lineChart.axisRight
+                yRAxis.setDrawLabels(false)
+                yRAxis.setDrawAxisLine(false)
+                yRAxis.setDrawGridLines(false)
+
+
+                //우측하단 description label 제거
+//        val des: Description = lineChart.description
+//        des.isEnabled = false
+//        des.setText("");
+                val description = Description()
+                description.text = "";
+                lineChart.description = description
+
+                lineChart.isDoubleTapToZoomEnabled = false
+                lineChart.setDrawGridBackground(true)
+//        lineChart.animateY(2000, Easing.EaseInCubic)
+
+                lineDataSet.setDrawFilled(true)
+                val fillGradient = ContextCompat.getDrawable(this, R.drawable.my_page_graph_gradient)
+                lineDataSet.fillDrawable = fillGradient
+
+                lineChart.run {
+                    description.isEnabled = true //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
+//            setMaxVisibleValueCount(4) // 최대 보이는 그래프 개수를 7개로 정해주었다.
+                    setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
+                    setDrawGridBackground(false)//격자구조 넣을건지
+                    invalidate()
+
+                    axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                        axisMaximum = 101f //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMinimum = 0f // 최소값 0
+                        granularity = 20f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
+
+                        //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
+                        setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                        setDrawGridLines(false) //격자 라인 활용
+                        setDrawAxisLine(true) // 축 그리기 설정
+
+                        axisLineColor = ContextCompat.getColor(context, R.color.graph_color) // 축 색깔 설정
+                        gridColor = ContextCompat.getColor(context,R.color.black) // 축 아닌 격자 색깔 설정
+//                textColor = ContextCompat.getColor(context,R.color.colorSemi50Black) // 라벨 텍스트 컬러 설정
+                        textSize = 8f //라벨 텍스트 크기
+                    }
+                    xAxis.run {
+                        position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
+                        axisMaximum = (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMinimum = 0f // 최소값 0
+                        granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
+                        setDrawAxisLine(true) // 축 그림
+                        setDrawGridLines(false) // 격자
+                        setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                        axisLineWidth = 0.1f
+                        setBorderWidth(0.1f)
+                        spaceMax = 0.1f
+
+                        gridColor = ContextCompat.getColor(context, R.color.black)
+                        axisLineColor = ContextCompat.getColor(context, R.color.graph_color)
+
+//                textColor = ContextCompat.getColor(context,R.color.purple_700) //라벨 색상
+                        valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
+                        textSize = 8f // 텍스트 크기
+                    }
+                    axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
+                    setTouchEnabled(true) // 그래프 터치해도 아무 변화없게 막음
+                    animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
+                    legend.isEnabled = false //차트 범례 설정
+
+                }
+
+                val marker = MyMarkerView(this, R.layout.markerviewtext)
+                marker.chartView = lineChart
+                lineChart.marker = marker
+
+
 
             }
             else -> {
@@ -238,6 +393,29 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     }
 
     override fun onGetMonthsAchievmentsFailure(message: String) {
+    }
+
+    //x축 값 설정
+    inner class MyXAxisFormatter : ValueFormatter() {
+
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+
+            val a = "3월"
+            var days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
+            val test = ArrayList<String>()
+
+            for (i in 0 until temList10.size){
+                days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
+                test.add(temList10[i])
+            }
+
+
+
+
+            return test.getOrNull(value.toInt() - 1) ?: value.toString()
+        }
+
     }
 
 }

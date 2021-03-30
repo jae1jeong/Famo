@@ -175,7 +175,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
 
         //EditText 변화에 따른 완료버튼 활성화
         category_add_et.onMyTextChanged {
-            if (it.toString().count() > 0){
+            if (it.toString().count() >= 0){
                 check()
             }
         }

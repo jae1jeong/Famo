@@ -26,29 +26,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/main_tab_layout"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:weightSum="10"
+            android:background="@color/white"
             android:paddingTop="25dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tabSelectedTextColor="@color/orange"
-            app:tabTextAppearance="@style/tab_text"
-            app:tabTextColor="@color/text_gray">
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <ImageView
-            android:id="@+id/main_image_profile"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/my_profile_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/main_tab_layout"
+            android:id="@+id/main_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/main_tab_layout"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_weight="10"
+                android:id="@+id/main_tab_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabSelectedTextColor="@color/orange"
+                app:tabTextAppearance="@style/tab_text"
+                app:tabTextColor="@color/text_gray">
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/main_image_profile"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/my_profile_icon"
+                />
+        </LinearLayout>
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/main_view_pager"
@@ -57,7 +68,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_tab_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/main_top_layout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

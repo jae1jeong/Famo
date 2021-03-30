@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -21,6 +22,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/schedule_find_main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

@@ -12,6 +12,7 @@ import com.softsquared.template.kotlin.databinding.ActivityKakaoLoginNumberBindi
 import com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberService
 import com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberView
 import com.softsquared.template.kotlin.src.auth.kakaologin.models.PatchKakaoLoginNumberRequest
+import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.util.Constants
 
@@ -20,6 +21,12 @@ class AgreeActivity : BaseActivity<ActivityAgreeBinding>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding.agreeBtnStartSignup.setOnClickListener {
+            val intent = Intent(this,SignUpActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 }

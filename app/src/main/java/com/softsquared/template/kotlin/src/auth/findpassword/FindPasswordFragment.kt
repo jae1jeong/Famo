@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.auth.findpassword
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -52,6 +53,22 @@ class FindPasswordFragment:BaseFragment<FragmentFindPasswordBinding>(FragmentFin
             }
 
         })
+        binding.findPasswordEditAuthNumber.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if(p0?.length!! <= 6){
+                    binding.findPasswordBtnAuthCheck.setTextColor(Color.BLACK)
+                }else{
+                    binding.findPasswordBtnAuthCheck.setTextColor(resources.getColor(R.color.auth_button_text))
+                }
+            }
+
+        })
 
         // 휴대폰 인증 문자전송 버튼
         binding.findPasswordBtnSendMessage.setOnClickListener {
@@ -74,11 +91,11 @@ class FindPasswordFragment:BaseFragment<FragmentFindPasswordBinding>(FragmentFin
             SignUpService(this).tryGetCheckAuthNumber(GetRequestCheckAuthNumber(binding.findPasswordEditPhoneNumber.text.toString(),binding.findPasswordEditAuthNumber.text.toString()))
         }
 
-        // 휴대폰 인증 확인 버튼
-        binding.findPasswordBtnAuthCheck.setOnClickListener {
-            showLoadingDialog(context!!)
-            SignUpService(this).tryGetCheckAuthNumber(GetRequestCheckAuthNumber(binding.findPasswordEditPhoneNumber.text.toString(),binding.findPasswordEditAuthNumber.text.toString()))
-        }
+//        // 휴대폰 인증 확인 버튼
+//        binding.findPasswordBtnAuthCheck.setOnClickListener {
+//            showLoadingDialog(context!!)
+//            SignUpService(this).tryGetCheckAuthNumber(GetRequestCheckAuthNumber(binding.findPasswordEditPhoneNumber.text.toString(),binding.findPasswordEditAuthNumber.text.toString()))
+//        }
 
         // 확인 버튼
         binding.findPasswordBtnFindPassword.setOnClickListener {

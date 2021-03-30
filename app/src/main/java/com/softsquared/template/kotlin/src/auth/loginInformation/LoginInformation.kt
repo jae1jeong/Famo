@@ -12,6 +12,7 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityLoginInfoBinding
+import com.softsquared.template.kotlin.src.auth.agree.AgreeActivity
 import com.softsquared.template.kotlin.src.auth.find.FindUserActivity
 import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.KakaoLoginResponse
@@ -35,7 +36,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
         }
         // 회원가입 버튼
         binding.loginInfoTextSignUp.setOnClickListener {
-            startActivity(Intent(this,SignUpActivity::class.java))
+            startActivity(Intent(this,AgreeActivity::class.java))
         }
         // 아이디/비밀번호 찾기 버튼
         binding.loginInfoTextFindIdPassword.setOnClickListener {

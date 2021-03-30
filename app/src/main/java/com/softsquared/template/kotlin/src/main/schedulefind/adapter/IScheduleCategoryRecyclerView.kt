@@ -10,4 +10,6 @@ interface IScheduleCategoryRecyclerView {
     //칼라값 가져오기
     fun onColor() : ArrayList<String>
 
+    // 카테고리가 두 번 선택 됬을떄 프래그먼트 전환
+    fun onClickedTwice()
 }

@@ -2,9 +2,12 @@ package com.softsquared.template.kotlin.util
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import androidx.annotation.StringRes
 import com.softsquared.template.kotlin.R
 import kotlinx.android.synthetic.main.fragment_ask_dialog.view.*
@@ -95,14 +98,21 @@ class AskDialog(private val context: Context) {
     fun create() {
         dialog = builder.create()
     }
-
     fun show() {
         dialog = builder.create()
         dialog?.let{
             dialog!!.window?.setBackgroundDrawableResource(R.drawable.background_ask_dialog)
 
         }
+        val params = WindowManager.LayoutParams()
+        params.copyFrom(dialog?.window?.attributes)
+        params.width = 1100
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params.dimAmount = 10f
         dialog?.show()
+        val window = dialog?.window
+        window?.attributes = params
+
     }
 
     fun dismiss() {

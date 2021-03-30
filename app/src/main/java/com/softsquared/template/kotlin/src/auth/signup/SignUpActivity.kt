@@ -10,7 +10,7 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivitySignUpBinding
-import com.softsquared.template.kotlin.src.auth.login.LoginActivity
+//import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.signup.models.*
 
 class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate)
@@ -98,7 +98,7 @@ class SignUpActivity:BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding::
             when(signUpResponse.code){
                 100 ->{
                     showCustomToast(signUpResponse.message.toString())
-                    startActivity(Intent(this,LoginActivity::class.java))
+//                    startActivity(Intent(this,LoginActivity::class.java))
                     finish()
                 }
                 else->{

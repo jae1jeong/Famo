@@ -78,7 +78,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/schedule_find_tv_today"
                             android:textColor="@color/black"
-                            android:textSize="18dp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <RelativeLayout
@@ -91,7 +91,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="일정이 2개"
                                 android:textColor="@color/black"
-                                android:textSize="18dp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
 
                             <ImageView
@@ -110,7 +110,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/schedule_find_tv_today2"
                             android:textColor="@color/black"
-                            android:textSize="18dp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>

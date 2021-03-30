@@ -20,6 +20,9 @@ class SetNewPasswordActivity:BaseActivity<ActivitySetNewPasswordBinding>(Activit
 
         val optAuthToken = intent.getStringExtra(Constants.OTP_TOKEN)
 
+        val id = intent.getStringExtra("id")
+        Log.d("TAG", "SetNewPasswordActivity id : $id")
+
         binding.setPasswordBtn.setOnClickListener {
             if(binding.setPasswordEditPassword.text.length == 0 || binding.setPasswordEditRepassword.text.length == 0){
                 Log.d("TAG", "onCreate: 1 ")
@@ -33,7 +36,7 @@ class SetNewPasswordActivity:BaseActivity<ActivitySetNewPasswordBinding>(Activit
                         showCustomToast("잘못된 요청입니다.")
                     }else{
                         showLoadingDialog(this)
-                        SetNewPasswordService(this).trySetNewPassword(optAuthToken, PostSetNewPasswordRequest(binding.setPasswordEditPassword.text.toString(),binding.setPasswordEditRepassword.text.toString()))
+                        SetNewPasswordService(this).trySetNewPassword(optAuthToken, PostSetNewPasswordRequest(id!!,binding.setPasswordEditRepassword.text.toString()))
                     }
                 }
             }
@@ -42,7 +45,7 @@ class SetNewPasswordActivity:BaseActivity<ActivitySetNewPasswordBinding>(Activit
 
     override fun onPostSetNewPasswordSuccess(response: BaseResponse) {
         if(response.isSuccess && response.code == 100){
-            val intent = Intent(this,LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             showCustomToast(response.message.toString())
         }

@@ -108,10 +108,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         val name = ApplicationClass.sSharedPreferences.getString(
             Constants.USER_NICKNAME, null)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b4b0e8b7b6c1b7c16b1fc921b15c1ce87eb3eb04
         //이름설정
         if (name != null){
             scheduleFindName!!.text = name + "님,"

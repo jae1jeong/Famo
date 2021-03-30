@@ -163,11 +163,15 @@ class FindPasswordFragment:BaseFragment<FragmentFindPasswordBinding>(FragmentFin
     }
 
     override fun onGetCompareSuccess(response: BaseResponse) {
+
+        val id = binding.signUpEditId.text.toString()
+
         if(response.isSuccess){
             when(response.code){
                 100->{
                     val intent = Intent(context!!,SetNewPasswordActivity::class.java)
                     intent.putExtra(Constants.OTP_TOKEN,otpToken)
+                    intent.putExtra("id",id)
                     startActivity(intent)
                 }
                 407->{

@@ -96,15 +96,8 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindViewPager!!.adapter = adapter
         scheduleFindTabLayout!!.setupWithViewPager(scheduleFindViewPager)
 
-
         //앞으로 내보내기
         scheduleFindtTvTotaySchedule!!.bringToFront()
-
-        val token =
-            ApplicationClass.sSharedPreferences.getString(ApplicationClass.X_ACCESS_TOKEN, null)
-                .toString()
-//        Log.d("TAG", "일정찾기 홈 $token")
-
 
         //자세히 보기 클릭 시
         scheduleFindBtnDetail!!.setOnClickListener {

@@ -137,6 +137,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                             .centerCrop().into(binding.myPageImg)
                     } else if (kakaoImg!!.isNotEmpty()) {
                         Glide.with(this).load(kakaoImg)
+                                .error(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageImg)
                     }
                     //check = 1 > 갤러리
@@ -153,7 +154,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     //처음에는 기본 이미지
                     if (gallery == null && camera == null) {
                         Glide.with(this).load(R.drawable.my_page_img2)
-                            .centerCrop().into(binding.myPageImg)
+                                .error(R.drawable.my_page_img2)
+                                .centerCrop().into(binding.myPageImg)
                     } else if (check == 1) {
                         binding.myPageImg.setImageURI(galleryUrl)
                     } else {
@@ -226,11 +228,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 val achievement = response.data.asJsonObject
-                val hashMap: HashMap<String, Int> = Gson().fromJson(
-                    achievement.toString(),
-                    HashMap::class.java
+                val hashMap: HashMap<String, Int> = Gson().fromJson(achievement.toString(), HashMap::class.java
                 )as HashMap<String, Int>
                 Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
+                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap.get(achievement)}")
 
             }
             else -> {

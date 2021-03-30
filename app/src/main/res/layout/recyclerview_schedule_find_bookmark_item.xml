@@ -27,7 +27,10 @@
         android:textSize="14sp"
         android:lineSpacingExtra="11sp"
         app:layout_constraintStart_toEndOf="@+id/recycler_part_color"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="1"
+        android:ems="20"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/recycler_part_times"

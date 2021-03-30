@@ -28,9 +28,9 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_tab_layout"
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:paddingTop="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tabSelectedTextColor="@color/orange"
@@ -47,7 +47,8 @@
             android:src="@drawable/my_profile_icon"
             app:layout_constraintBottom_toBottomOf="@+id/main_tab_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/main_tab_layout" />
+            app:layout_constraintTop_toTopOf="@+id/main_tab_layout"
+            />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/main_view_pager"
@@ -91,6 +92,7 @@
                 android:layout_marginBottom="40dp"
                 >
                 <TextView
+                    android:id="@+id/add_memo_bottom_sheet_text_top_title"
                     android:layout_weight="9"
                     android:textStyle="bold"
                     android:layout_width="match_parent"
@@ -115,6 +117,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp">
                 <EditText
+                    android:singleLine="true"
+                    android:maxLines="1"
                     android:id="@+id/add_memo_edit_title"
                     android:paddingLeft="10dp"
                     android:hint="@string/add_memo_write_title"

@@ -44,6 +44,7 @@ import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResp
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.onMyTextChanged
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -82,6 +83,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     var context: Context? = null
 
+
+    var selectedImagePath = ""
+    val IMAGE_REQUEST_CODE = 100
+
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,42 +101,9 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         binding.myPageEditImg.setOnClickListener {
             //카메라 권한 설정
             settingPermission()
-
-
             val myPageEditBottomSheetDialog = MyPageEditBottomSheetDialog()
             myPageEditBottomSheetDialog.show(supportFragmentManager,myPageEditBottomSheetDialog.tag)
 
-            // 갤러리/카메라 알림창
-//            val builder = AlertDialog.Builder(this)
-//            builder.setTitle("사진 찍기")
-//                .setMessage("사진을 새로 찍으시거나 사진\n라이브러리에서 선택하세요.")
-//                .setPositiveButton("카메라",
-//                    DialogInterface.OnClickListener { dialog, id ->
-//                        //카메라 시작
-//                        startCapture()
-//
-//                    })
-//                .setNegativeButton("갤러리",
-//                    DialogInterface.OnClickListener { dialog, id ->
-//
-//                        val intent = Intent(Intent.ACTION_PICK)
-//                        intent.setDataAndType(
-//                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                            "image/*"
-//                        )
-//                        startActivityForResult(intent, GET_GALLERY_IMAGE)
-//                    })
-//
-//            val alertDialog = builder.create()
-
-//            //다이얼로그 색상
-//            alertDialog.setOnShowListener {
-//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE)
-//                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLUE)
-//            }
-//            alertDialog.window!!.setBackgroundDrawable()
-
-//            alertDialog.show()
         }
 
         //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게 및 화살표 방향설정
@@ -276,7 +248,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         }
 
 
-
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
             logoutDialog()
@@ -379,31 +350,28 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         //갤러리
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == AppCompatActivity.RESULT_OK && data != null && data.data != null) {
-            val selectedImageUri: Uri? = data.data
-            Log.d("TAG", "onActivityResult:dd  ${data.data!!.path}")
+        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
 
-//            currentPhotoPath = getExternalFilesDir(selectedImageUri.toString())
-//
-//            Log.d("TAG", "onActivityResult:dd  ${getExternalFilesDir(selectedImageUri.toString())}")
-            val file = File(data.data!!.path!!.toString())
-            val requestFile = file?.let { RequestBody.create(
-                "multipart/form-data".toMediaTypeOrNull(),
-                it
-            ) }
-            val requestImage = requestFile?.let { MultipartBody.Part.createFormData(
-                "profileImage",
-                file.name,
-                it
-            ) }
-            if (requestImage != null) {
-                showLoadingDialog(this)
-                MyPageEditService(this).tryPostMyProfileImage(requestImage)
+            selectedImageUri = data?.data
+            binding.myPageEditImg.setImageURI(data?.data)
+
+            val cursor = selectedImageUri?.let { contentResolver.query(it,null,null,null,null) }
+            if(cursor == null){
+                selectedImagePath = selectedImageUri?.path.toString()
+            }else{
+                cursor.moveToFirst()
+                val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                selectedImagePath = cursor.getString(idx)
+                cursor.close()
             }
 
+            Log.d("TAG", "onActivityResult: $selectedImagePath")
 
-
-            binding.myPageEditImg.setImageURI(selectedImageUri)
+            val file = File(selectedImagePath)
+            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
+            val requestImage = MultipartBody.Part.createFormData("profileImage",file.name,requestFile)
+            showLoadingDialog(this)
+            MyPageEditService(this).tryPostMyProfileImage(requestImage)
 
             val edit = ApplicationClass.sSharedPreferences.edit()
             edit.putString(Constants.PROFILE_GALLERY, selectedImageUri.toString())
@@ -607,16 +575,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
 
                 val intent = Intent(this, MyPageActivity::class.java)
-//                intent.putExtra("day", day)
-//                intent.putExtra("goalTitle", binding.myPageEditEtGoaltitle.toString())
                 intent.putExtra("check", imgCnt)
                 startActivity(intent)
-//                myPageActivityView.moveMyPage()
-//                nickname = binding.myPageEditEtName.text.toString(),
-//                titleComment = binding.myPageEditEtComments.text.toString(),
-//                goalStatus = dDaySettingCnt,
-//                goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
-//                goalDate = goalDate!!
 
 
             }
@@ -669,7 +629,11 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     }
 
     override fun selectImageGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent,IMAGE_REQUEST_CODE)
     }
+
 
     override fun profileDelete() {
         val askDialog = AskDialog(this)

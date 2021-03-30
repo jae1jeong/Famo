@@ -33,6 +33,10 @@ class DatePickBottomSheetDialog:BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //날짜 변화에 대한
+        val todayDate = LocalDate.now()
+        monthly_datePicker_text_header.text= "${todayDate.year}년 ${todayDate.month.value}월"
+
+
         val listener = DatePicker.OnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
 
             if (monthOfYear + 1 < 10 && dayOfMonth < 10) {
@@ -45,6 +49,8 @@ class DatePickBottomSheetDialog:BottomSheetDialogFragment() {
                 strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
             }
             dateCnt++
+            val bottomSheetDialogHeaderText= strDate.split("-")
+            monthly_datePicker_text_header.text= "${bottomSheetDialogHeaderText[0]}년 ${bottomSheetDialogHeaderText[1].replace("0","")}월"
         }
         val month: Int = monthly_dataPicker.month
         val year = monthly_dataPicker.year

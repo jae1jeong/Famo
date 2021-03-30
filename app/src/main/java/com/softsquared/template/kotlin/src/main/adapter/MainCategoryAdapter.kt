@@ -15,7 +15,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.CategorySche
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import org.w3c.dom.Text
 
-class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:()->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
+class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:(MainScheduleCategory)->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
     private var selectedCategoryView:TextView? = null
 
 
@@ -34,8 +34,16 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
     override fun onBindViewHolder(holder: MainCategoryViewHolder, position: Int) {
         val scheduleCategory = categoryList[position]
         holder.categoryText.text = scheduleCategory.text
+        if(scheduleCategory.selected){
+            val shape = GradientDrawable()
+            shape.cornerRadius = 180F
+            shape.setColor(Color.parseColor(categoryList[position].color))
+            holder.itemView.background = shape
+            holder.categoryText.setTextColor(Color.WHITE)
+            selectedCategoryView = holder.itemView as TextView
+        }
+
         holder.itemView.setOnClickListener {
-            clickListener()
             // 처음 선택할때
             if(selectedCategoryView == null){
                 val shape = GradientDrawable()
@@ -71,7 +79,7 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
                     scheduleCategory.selected = true
                 }
             }
-
+            clickListener(scheduleCategory)
         }
     }
 
@@ -81,5 +89,6 @@ class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategor
         this.categoryList = newCategoryList
         notifyDataSetChanged()
     }
+
 
 }

@@ -3,9 +3,15 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.lakue.pagingbutton.LakuePagingButton
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
@@ -19,16 +25,9 @@ import com.softsquared.template.kotlin.util.Constants
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
 
 
-class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBinding>(
-    FragmentScheduleFindCategoryBinding::bind, R.layout.fragment_schedule_find_category
-), CategoryInquiryView, CategoryFilterInterface, CategoryFilterView, ScheduleFindView,
-    View.OnClickListener, SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener{
-
-    companion object {
-        fun newInstance(): ScheduleFindCategoryFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
-            return ScheduleFindCategoryFragment()
-        }
-    }
+class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFilterInterface,
+    CategoryFilterView, ScheduleFindView, View.OnClickListener,
+    SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener{
 
     private var schedulefindFilterBottomDialogFragment: SchedulefindFilterBottomDialogFragment? =
         null
@@ -53,10 +52,19 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
     var recentsCnt = 1
     var bookmarkCnt = 1
 
+    var categoryFilter : ImageView? = null
+    var catogorySchedulePaging : LakuePagingButton? = null
+    var recyclerviewScheduleFindCategory : RecyclerView? = null
+
 
     @SuppressLint("InflateParams")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        //setContentView 같다
+        val view = inflater.inflate(R.layout.fragment_schedule_find_category, container, false)
+
+        categoryFilter = view.findViewById(R.id.category_filter)
+        catogorySchedulePaging = view.findViewById(R.id.category_schedule_paging)
+        recyclerviewScheduleFindCategory = view.findViewById(R.id.recyclerview_schedule_find_category)
 
         var extra = this.arguments
         if (extra != null) {
@@ -71,14 +79,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
             Log.d("ScheduleFindCategoryFragment searchWord", "값: $searchWord")
         }
 
-        binding.categoryFilter.setOnClickListener(this)
-
-        //        필터
-//        binding.categoryFilter.setOnClickListener {
-//
-//            (activity as MainActivity).onMoveFilterFragment(scheduleCategoryID)
-//        }
-
+        categoryFilter!!.setOnClickListener(this)
 
         val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
 
@@ -91,51 +92,46 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
         if (scheduleCategoryID != -1){
 
             if (categoryPagintCnt != 0){
-                CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 2)
+                CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
             }else{
                 CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 999)
             }
         }
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
-        binding.catogorySchedulePaging.setPageItemCount(2);
-        binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+        catogorySchedulePaging!!.setPageItemCount(4);
+        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
         //페이지 리스너를 클릭했을 때의 이벤트
-        binding.catogorySchedulePaging.setOnPageSelectListener(object : OnPageSelectListener {
+        catogorySchedulePaging!!.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, now_page)
+                catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, now_page)
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 2), 2)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
 
             }
 
             override fun onPageCenter(now_page: Int) {
 
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 2), 2)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, now_page)
+                catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, now_page)
                 CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 2), 2)
+                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
             }
         })
 
+        return view
 
     }
-
-//    override fun viewPagerApiRequest() {
-//        super.viewPagerApiRequest()
-//        // 카테고리
-//        CategoryInquiryService(this).tryGetCategoryInquiry(categoryID, 0, 10)
-//    }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
@@ -155,14 +151,14 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
                     val cnt = categoryInquiryResponse.data.size
                     //페이징수 세팅
-                    if (cnt % 2 == 0) {
-                        categorySchedulePagingCnt = cnt / 2
+                    if (cnt % 10 == 0) {
+                        categorySchedulePagingCnt = cnt / 10
                     } else {
-                        categorySchedulePagingCnt = (cnt / 2) + 1
+                        categorySchedulePagingCnt = (cnt / 10) + 1
                     }
-                    binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
                     categoryPagintCnt++
-                    CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 2)
+                    CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
                 }
 
                 if (categoryPagintCnt != 0 ){
@@ -194,11 +190,11 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                             )
                         }
                     }
-                    binding.recyclerviewScheduleFindCategory.layoutManager =
+                    recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(context, 2, GridLayoutManager.VERTICAL,
                             false)
-                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                    binding.recyclerviewScheduleFindCategory.adapter =
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.adapter =
                         CategoryScheduleInquiryAdapter(categoryList)
                 }
 
@@ -235,7 +231,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     } else {
                         categorySchedulePagingCnt = (filterCnt / 10) + 1
                     }
-                    binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
                     leftPagintCnt++
                     CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 10)
                 }
@@ -300,13 +296,13 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         }
                     }
 
-                    binding.recyclerviewScheduleFindCategory.layoutManager =
+                    recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                    binding.recyclerviewScheduleFindCategory.adapter = CategoryFilterAdapter(
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                         categoryFilterList
                     )
                 }
@@ -320,7 +316,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     } else {
                         categorySchedulePagingCnt = (filterCnt / 10) + 1
                     }
-                    binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
                     donePagintCnt++
                     CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "done", 0, 10)
                 }
@@ -385,13 +381,13 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         }
                     }
 
-                    binding.recyclerviewScheduleFindCategory.layoutManager =
+                    recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                    binding.recyclerviewScheduleFindCategory.adapter = CategoryFilterAdapter(
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                         categoryFilterList
                     )
                 }
@@ -405,7 +401,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     } else {
                         categorySchedulePagingCnt = (filterCnt / 10) + 1
                     }
-                    binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
                     recentPagintCnt++
                     CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 10)
                 }
@@ -469,13 +465,13 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         }
                     }
 
-                    binding.recyclerviewScheduleFindCategory.layoutManager =
+                    recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                    binding.recyclerviewScheduleFindCategory.adapter = CategoryFilterAdapter(
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                         categoryFilterList
                     )
                 }
@@ -489,7 +485,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     } else {
                         categorySchedulePagingCnt = (filterCnt / 10) + 1
                     }
-                    binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
                     pickPagintCnt++
                     CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 10)
                 }
@@ -554,13 +550,13 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                         }
                     }
 
-                    binding.recyclerviewScheduleFindCategory.layoutManager =
+                    recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-                    binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                    binding.recyclerviewScheduleFindCategory.adapter = CategoryFilterAdapter(
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                         categoryFilterList
                     )
                 }
@@ -617,7 +613,6 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
 
         when (response.code) {
             100 -> {
-                showCustomToast("검색 성공")
                 Log.d("TAG", "onGetScheduleSearchSuccess: 검색 성공")
 
                 val searchCnt = response.data.size
@@ -628,7 +623,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     categorySchedulePagingCnt = (searchCnt / 10) + 1
                 }
 
-                binding.catogorySchedulePaging.addBottomPageButton(categorySchedulePagingCnt, 1)
+                catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
                 val searchList: ArrayList<ScheduleSearchData> = arrayListOf()
 
@@ -689,16 +684,15 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                     }
                 }
 
-                binding.recyclerviewScheduleFindCategory.layoutManager =
+                recyclerviewScheduleFindCategory!!.layoutManager =
                     GridLayoutManager(
                         context, 2, GridLayoutManager.VERTICAL,
                         false
                     )
-                binding.recyclerviewScheduleFindCategory.setHasFixedSize(true)
-                binding.recyclerviewScheduleFindCategory.adapter = ScheduleSearchAdapter(searchList)
+                recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList)
             }
             else -> {
-                showCustomToast("검색 성공")
                 Log.d("TAG", "onGetScheduleSearchSuccess: 검색 실패 ${response.message.toString()}")
             }
         }
@@ -754,7 +748,7 @@ class ScheduleFindCategoryFragment : BaseFragment<FragmentScheduleFindCategoryBi
                 Toast.makeText(activity, "최신", Toast.LENGTH_SHORT).show()
 
                 if (recentPagintCnt != 0){
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 2)
+                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 10)
                 }else{
                     CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 999)
                 }

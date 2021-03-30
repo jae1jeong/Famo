@@ -72,14 +72,14 @@ abstract class BaseFragment<B : ViewBinding>(
             fragmentOnCreated = true
             viewPagerApiRequest()
         }
-        // fragment가 onCreated 됬을때
+        // fragment가 onCreated 됬을 경우
         else if(isVisibleToUser){
             fragmentResume = false
             fragmentVisible = true
             fragmentOnCreated = true
         }
 
-        // fragment를 나갈때
+        // fragment를 나갈 경우
         else if(!isVisibleToUser && fragmentOnCreated){
             fragmentVisible = false
             fragmentResume = false

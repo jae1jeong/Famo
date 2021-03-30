@@ -43,10 +43,10 @@ class TodayFragment() :
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
         var todayMemoAdapter:MemoAdapter ?= null
+        var doneScheduleCount = 0
+        var restScheduleCount = 0
     }
 
-    private var doneScheduleCount = 0
-    private var restScheduleCount = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,7 +74,7 @@ class TodayFragment() :
 
             scheduleDetailDialog.start(it,it.formDateStr)
         }, {
-            changeCount(it.isChecked)
+            changeCount(it.isChecked,"CHECK")
             // 일정완료 버튼
             TodayService(this).onPostCheckItem(CheckItemRequest(it.id))
         },{
@@ -85,7 +85,7 @@ class TodayFragment() :
             adapter = todayMemoAdapter
         }
 
-        // 메모가 없을때
+        // 메모가 없을때 뷰 클릭
         binding.todayImageNoItem.setOnClickListener {
             (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
         }
@@ -117,6 +117,11 @@ class TodayFragment() :
                                 .setMessage("일정을 삭제하시겠습니까?")
                                 .setPositiveButton("삭제"){
                                     showLoadingDialog(context!!)
+                                    if(memoList[pos].isChecked){
+                                        changeCount(false,Constants.DELETE_CHECKED_ITEM)
+                                    }else{
+                                        changeCount(false,Constants.DELETE_NOT_CHECKED_ITEM)
+                                    }
                                     TodayService(this@TodayFragment).onPutDeleteMemo(memoList[pos].id)
                                 }
                                 .setNegativeButton("취소"){
@@ -257,7 +262,6 @@ class TodayFragment() :
             when(response.code){
                 100->{
                     memoList.removeIf {
-                        showCustomToast(scheduleID.toString())
                         it.id == scheduleID
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
@@ -325,7 +329,6 @@ class TodayFragment() :
         }else{
             showCustomToast(response.message.toString())
         }
-        dismissLoadingDialog()
     }
 
     override fun onPostSchedulePositionFailure(message: String) {
@@ -384,15 +387,29 @@ class TodayFragment() :
     }
 
 
-    fun changeCount(isChecked:Boolean){
-        if(!isChecked){
-            restScheduleCount--
-            doneScheduleCount++
-        }else{
-            restScheduleCount++
-            doneScheduleCount--
+    fun changeCount(isChecked:Boolean,state:String){
+        when(state){
+            Constants.CHECK->{
+                if(!isChecked){
+                    restScheduleCount--
+                    doneScheduleCount++
+                }else{
+                    restScheduleCount++
+                    doneScheduleCount--
+                }
+            }
+            Constants.DELETE_CHECKED_ITEM->{
+                doneScheduleCount--
+            }
+            Constants.DELETE_NOT_CHECKED_ITEM->{
+                restScheduleCount--
+            }
+            else->{
+                showCustomToast("잘못된 요청입니다.")
+            }
         }
         binding.todayTextRestSchedule.text = "남은일정 ${restScheduleCount}개"
         binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount}개"
+
     }
 }

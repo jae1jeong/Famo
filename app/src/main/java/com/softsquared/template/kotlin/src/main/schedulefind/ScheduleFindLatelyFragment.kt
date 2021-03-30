@@ -2,12 +2,15 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseFragment
-import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleLatelyAdapter
@@ -18,23 +21,24 @@ import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelySched
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBinding>(
-    FragmentScheduleFindLatelyBinding::bind, R.layout.fragment_schedule_find_lately
-), WholeLatelyScheduleView {
+class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    var recyclerViewLately : RecyclerView? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        //setContentView 같다
+        val view = inflater.inflate(R.layout.fragment_schedule_find_lately, container,
+            false)
+
+        recyclerViewLately = view.findViewById(R.id.recyclerView_lately)
+
+        return view
     }
-
-//        createLatelyRecyclerview()
-
-
-    override fun viewPagerApiRequest() {
-        super.viewPagerApiRequest()
-//        WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0, 2)
-    }
-
 
     override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
 
@@ -76,13 +80,13 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
                 }
 
                 // 즐겨찾기/최근 일정 리사이클러뷰 연결
-                binding.recyclerViewLately.layoutManager = LinearLayoutManager(
+                recyclerViewLately!!.layoutManager = LinearLayoutManager(
                     context, LinearLayoutManager.VERTICAL, false
                 )
-                binding.recyclerViewLately.setHasFixedSize(true)
+                recyclerViewLately!!.setHasFixedSize(true)
 //                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole,this)
 
-                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
+                recyclerViewLately!!.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
                     val detailDialog = ScheduleDetailDialog(context!!)
                     val scheduleItem = MemoItem(
                         it.scheduleID,
@@ -111,10 +115,8 @@ class ScheduleFindLatelyFragment : BaseFragment<FragmentScheduleFindLatelyBindin
 
                 }
 
-
             }
             else -> {
-                showCustomToast("즐겨찾기 실패")
                 Log.d(
                     "TAG",
                     "onGetLatelyScheduleInquirySuccess: 최근일정조회실패 - ${response.message.toString()}"

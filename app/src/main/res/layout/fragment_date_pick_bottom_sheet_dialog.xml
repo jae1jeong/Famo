@@ -3,22 +3,37 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="50dp"
+    >
+
+    <TextView
+        android:layout_marginTop="23dp"
+        android:id="@+id/monthly_datePicker_text_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/monthly_dataPicker"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <DatePicker
-        android:layout_marginHorizontal="16dp"
+        android:theme="@android:style/Theme.Holo.Light"
         android:id="@+id/monthly_dataPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="16dp"
         android:calendarTextColor="@color/black"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/monthly_datePicker_text_header" />
 
     <LinearLayout
+        android:paddingVertical="5dp"
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

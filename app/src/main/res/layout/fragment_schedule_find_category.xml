@@ -41,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.lakue.pagingbutton.LakuePagingButton
-                android:id="@+id/catogory_schedule_paging"
+                android:id="@+id/category_schedule_paging"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

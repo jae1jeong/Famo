@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
@@ -27,6 +29,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.*
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
@@ -35,6 +38,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
+import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.CalendarConverter
 import com.softsquared.template.kotlin.util.Constants
 import kotlinx.android.synthetic.main.fragment_today.*
@@ -42,13 +46,16 @@ import java.time.LocalDate
 
 
 class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
-    AddMemoView, TodayView, CategoryInquiryView, IScheduleCategoryRecyclerView{
+    AddMemoView, TodayView, CategoryInquiryView{
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
-    private val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
-    lateinit var categoryScheduleAdapter: MainCategoryAdapter
-    private var selectedCategoryId:Int?= null
 
     private var editScheduleID:Int = -1
+
+    companion object{
+        lateinit var categoryScheduleAdapter: MainCategoryAdapter
+        val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
+        var selectedCategoryId:Int?= null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +70,26 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
         binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
+        binding.mainViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 ->{
+//                        binding.mainLayout.setBackgroundColor(Color.WHITE)
+                    }
+                    else->{
+//                        binding.mainLayout.setBackgroundColor(resources.getColor(R.color.light_gray))
+                    }
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+        })
+
 
         //유저 이미지 클릭 시 마이페이지로 이동
         binding.mainImageProfile.setOnClickListener {
@@ -70,16 +97,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             startActivity(intent)
         }
 
-        // 디바이스 화면 높이 구하기
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getRealSize(size)
-        val deviceHeight = size.y
-        // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
-        val bottomSheetDialogHeight = deviceHeight - 470
-        val params = binding.mainFrameBottomSheet.layoutParams
-        params.height = bottomSheetDialogHeight
 
+        setHeightBottomSheetDialog()
         // 바텀 시트 다이얼로그
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mainFrameBottomSheet)
 
@@ -97,10 +116,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 -1
                             )
                             if (editScheduleID != -1) {
+                                binding.addMemoBottomSheetTextTopTitle.text = "일정 수정하기"
                                 AddMemoService(this@MainActivity).tryGetDetailMemo(
                                     editScheduleID
                                 )
                             }
+                        }else{
+                            binding.addMemoBottomSheetTextTopTitle.text = "오늘 일정 추가하기"
                         }
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
@@ -114,6 +136,14 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                     dayName
                                 )
                             })"
+                        }
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN->{
+                        if(Constants.IS_EDIT){
+                            Constants.IS_EDIT = false
+                            setFormBottomSheetDialog("","","")
+                            editScheduleID = -1
+                            binding.addMemoBottomSheetTextTopTitle.text = "오늘 일정 추가하기"
                         }
                     }
                 }
@@ -221,6 +251,18 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
 
+    fun setHeightBottomSheetDialog(){
+        // 디바이스 화면 높이 구하기
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getRealSize(size)
+        val deviceHeight = size.y
+        // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
+        val bottomSheetDialogHeight = deviceHeight - 450
+        val params = binding.mainFrameBottomSheet.layoutParams
+        params.height = bottomSheetDialogHeight
+    }
+
     // 바텀시트 다이얼로그 상태 관리
     fun stateChangeBottomSheet(state: String) {
         when (state) {
@@ -228,13 +270,33 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             Constants.COLLASPE -> {
-//                bottomSheetBehavior.peekHeight = 350
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
             Constants.HIDE_SHEET -> {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                if(Constants.IS_EDIT){
+                    AskDialog(this)
+                            .setTitle("일정 수정 취소")
+                            .setMessage("일정 수정을 취소하시겠습니까?")
+                            .setNegativeButton("나가기"){
+                                setFormBottomSheetDialog("","","")
+                                categoryList.forEach {
+                                    if(it.selected){
+                                        it.selected = false
+                                    }
+                                }
+                                initializeCategoryAdapter(categoryList)
+                                Constants.IS_EDIT = false
+                                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                            }
+                            .setPositiveButton("계속 수정하기"){
+                            }
+                            .show()
+                }else{
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
             }
         }
+        setHeightBottomSheetDialog()
     }
 
     fun onMoveScheduleFind(searchWord: String) {
@@ -261,30 +323,19 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
     override fun onBackPressed() {
-
+        AskDialog(this)
+                .setTitle("앱 종료")
+                .setMessage("앱을 종료하시겠습니까?")
+                .setPositiveButton("종료"){
+                    finishAffinity()
+                }
+                .setNegativeButton("취소"){}
+                .show()
     }
 
     fun fragmentSetting() {
         binding.mainTabLayout.visibility = View.VISIBLE
         binding.mainImageProfile.visibility = View.VISIBLE
-    }
-
-    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
-    }
-
-    override fun onColor(): ArrayList<String> {
-
-        val aa = ArrayList<String>()
-        return aa
-    }
-
-    //일정찾기 - 필터 바텀다이얼로그로 이동
-    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
-        val scheduleFindFilterBottomDialogBinding =
-            SchedulefindFilterBottomDialogFragment()
-        scheduleFindFilterBottomDialogBinding.show(
-            supportFragmentManager, scheduleFindFilterBottomDialogBinding.tag
-        )
     }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {
@@ -299,7 +350,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     // 초기화
                     binding.addMemoEditTitle.setText("")
                     binding.addMemoEditContent.setText("")
-                    stateChangeBottomSheet(Constants.HIDE_SHEET)
+                    categoryList.forEach {
+                        if(it.selected){
+                            it.selected = false
+                        }
+                    }
+                    initializeCategoryAdapter(categoryList)
+                    stateChangeBottomSheet(Constants.COLLASPE)
+                    TodayFragment.restScheduleCount = TodayFragment.restScheduleCount + 1
+                    today_text_rest_schedule.text = "남은일정 ${TodayFragment.restScheduleCount}개"
                 }
                 else -> {
                     showCustomToast(response.message.toString())
@@ -323,8 +382,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 100 -> {
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
-                    showCustomToast(response.message.toString())
-//                    TodayService(this).onGetScheduleItems()
+                    showCustomToast("일정이 성공적으로 수정되었습니다.")
+                    stateChangeBottomSheet(Constants.HIDE_SHEET)
                     TodayFragment.todayMemoAdapter?.let {
                         TodayFragment.todayMemoAdapter!!.memoList.forEach {
                             if (it.id == editScheduleID) {
@@ -348,7 +407,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         }
                     }
                     selectedCategoryId = null
-                    stateChangeBottomSheet(Constants.HIDE_SHEET)
+                    categoryList.forEach {
+                        if(it.selected){
+                            it.selected = false
+                        }
+                    }
+                    initializeCategoryAdapter(categoryList)
                 }
                 else -> {
                     dismissLoadingDialog()
@@ -522,23 +586,26 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     )
                 )
             }
+            initializeCategoryAdapter(categoryList)
 
-            categoryScheduleAdapter = MainCategoryAdapter(categoryList, this) {
-//                categoryList.forEach {
-//                    if (it.selected) {
-//                        selectedCategoryId = it.id
-//                    }
-//                }
+
+        }
+    }
+
+    fun initializeCategoryAdapter(categoryList:ArrayList<MainScheduleCategory>){
+        categoryScheduleAdapter = MainCategoryAdapter(categoryList, this) {
+            if(it.selected){
+                selectedCategoryId = it.id
             }
-            binding.addMemoCategoryRecyclerview.apply {
-                layoutManager = LinearLayoutManager(
+        }
+        binding.addMemoCategoryRecyclerview.apply {
+            layoutManager = LinearLayoutManager(
                     this@MainActivity,
                     LinearLayoutManager.HORIZONTAL,
                     false
-                )
-                setHasFixedSize(true)
-                adapter = categoryScheduleAdapter
-            }
+            )
+            setHasFixedSize(true)
+            adapter = categoryScheduleAdapter
         }
     }
 
@@ -551,10 +618,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     override fun onGetCategoryInquiryFail(message: String) {
     }
 
-//    override fun onDialogButtonClick(text: String) {
-//        Log.d("TAG", "onDialogButtonClick: jj")
-//        binding.mainViewPager.currentItem = 2
-//    }
 
 
 }

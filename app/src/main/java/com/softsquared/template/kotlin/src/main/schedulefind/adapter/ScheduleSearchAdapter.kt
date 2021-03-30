@@ -49,14 +49,15 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
         val name = holder.scheduleName.text
         val changeNameColor = SpannableStringBuilder(name)
 
-        //검색제목 색 변경
-        for (i in name.indices) {
+        val forCnt = name.length - searchWord!!.length +1
 
-            if (searchWord.equals(name.substring(i, searchWord!!.length + i))) {
+        //검색제목 색 변경
+        for (i in 0 until forCnt) {
+
+            if (searchWord.equals(name.substring(i, searchWord!!.length+i))) {
                 changeNameColor.setSpan(
                     ForegroundColorSpan(Color.parseColor("#ffae2a")),
-                    0, searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+                    i, i+searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 holder.scheduleName.text = changeNameColor
             }
         }
@@ -64,12 +65,12 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
         val memo = holder.scheduleMemo.text
         val changeMemoColor = SpannableStringBuilder(memo)
         //검색 내용 색 변경
-        for (i in memo.indices) {
+        for (i in 0 until forCnt) {
 
-            if (searchWord.equals(memo.substring(i, searchWord!!.length + i))) {
+            if (searchWord.equals(memo.substring(i, searchWord!!.length+i))) {
                 changeMemoColor.setSpan(
                     ForegroundColorSpan(Color.parseColor("#ffae2a")),
-                    0, searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    i, i+searchWord.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 holder.scheduleMemo.text = changeMemoColor
             }

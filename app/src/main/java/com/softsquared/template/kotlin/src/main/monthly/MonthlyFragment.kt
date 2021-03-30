@@ -1,11 +1,13 @@
 package com.softsquared.template.kotlin.src.main.monthly
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonElement
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -40,6 +42,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -122,11 +125,23 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     }.show()
 
             },{
-
+                // 공유
+                val sendStringData ="${it.title}\n${it.description}\n${it.formDateStr}\nBy Famo"
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT,sendStringData)
+                    type = "text/plain"
+                }
+                if(sendIntent.resolveActivity((activity as MainActivity).packageManager)!=null){
+                    startActivity(sendIntent)
+                }
             })
             binding.monthlyRecyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter
+                val callback = MonthlyMemoDragHelper(monthlyMemoAdapter!!,context!!,ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),-1)
+                val helper = ItemTouchHelper(callback)
+                helper.attachToRecyclerView(this)
             }
 
 
@@ -134,16 +149,13 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     fun setUpCalendar(){
-
         class CalendarViewContainer(view: View): ViewContainer(view) {
             val textView = view.findViewById<TextView>(R.id.calendar_day_text)
             lateinit var day:CalendarDay
 
             // 달력 일자 클릭 리스너
             init {
-                if(selectedDate == null){
-                    selectedDate = LocalDate.now()
-                }
+
                 view.setOnClickListener {
                     if(day.owner == DayOwner.THIS_MONTH){
                         setPassivePreviousDayView()
@@ -173,6 +185,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
         binding.calendarView.dayBinder = object:DayBinder<CalendarViewContainer>{
             override fun bind(container: CalendarViewContainer, day: CalendarDay) {
+
                 container.textView.text = day.date.dayOfMonth.toString()
                 // 해당 월의 날인 경우
                 if(day.owner == DayOwner.THIS_MONTH){
@@ -187,7 +200,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                         }
                     }
                     // 오늘 날짜
-                    if(todayDate == day.date){
+                    if(todayDate == day.date && selectedDate == null){
                         container.textView.setBackgroundResource(R.drawable.background_item_calendar_today)
                         container.textView.elevation = 5f
                         selectedView = container.textView
@@ -203,7 +216,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
 
         binding.calendarView.setup(currentMonth.minusMonths(0),currentMonth.plusMonths(0),daysOfWeek.first())
-
 
         // 달력 헤더
         binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
@@ -239,6 +251,19 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         }
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(!isVisibleToUser && isResumed){
+            if(monthly_shimmer_frame_layout.isAnimationStarted){
+                monthly_shimmer_frame_layout.stopShimmerAnimation()
+            }
+            if(selectedDate != null){
+                selectedDate = null
+            }
+        }
+
+    }
+
     fun setMonthCalendar(curMonth:YearMonth){
         val asyncDialog = LoadingDialog(context!!)
         val yearMonthString = curMonth.toString().split("-")
@@ -254,12 +279,10 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         GlobalScope.launch(Dispatchers.Main) {
 
             val job1 = launch {
-                Log.d("TAG", "bind: job1called")
                 MonthlyService(this@MonthlyFragment).onGetUserDateList(targetMonth!!,targetYear!!)
             }
             val job2 = launch{
                 job1.join()
-                Log.d("TAG", "bind: job2called")
                 binding.calendarView.setup(curMonth,curMonth,daysOfWeek.first())
             }
             val asyncDialogJob = launch {
@@ -271,6 +294,48 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
         }
 
+    }
+
+    fun initializeMonthlyAdapter(newMemoList:ArrayList<MemoItem>){
+        // 어댑터
+        monthlyMemoAdapter = MonthlyMemoAdapter(newMemoList, context!!,{
+            memo->
+            val detailDialog = ScheduleDetailDialog(context!!)
+            detailDialog.setOnModifyBtnClickedListener {
+                // 스케쥴 ID 보내기
+                val edit = ApplicationClass.sSharedPreferences.edit()
+                edit.putInt(Constants.EDIT_SCHEDULE_ID, memo.id)
+                edit.apply()
+                Constants.IS_EDIT = true
+
+                //바텀 시트 다이얼로그 확장
+                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+            }
+            detailDialog.start(memo,memo.formDateStr)
+
+        },{
+            // 일정삭제
+            memo->
+            AskDialog(context!!)
+                    .setTitle("일정삭제")
+                    .setMessage("일정을 삭제하시겠습니까?")
+                    .setPositiveButton("삭제"){
+                        showLoadingDialog(context!!)
+                        TodayService(this).onPutDeleteMemo(memo.id)
+                    }
+                    .setNegativeButton("취소"){
+                    }.show()
+
+        },{
+
+        })
+        binding.monthlyRecyclerview.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = monthlyMemoAdapter
+            val callback = MonthlyMemoDragHelper(monthlyMemoAdapter!!,context!!,ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),-1)
+            val helper = ItemTouchHelper(callback)
+            helper.attachToRecyclerView(this)
+        }
     }
 
     override fun viewPagerApiRequest() {
@@ -288,10 +353,16 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             }
             val job3 = launch(Dispatchers.Main) {
                 delay(2000)
-                monthly_shimmer_frame_layout.stopShimmerAnimation()
-                monthly_shimmer_frame_layout.visibility = View.GONE
-                binding.monthlyRecyclerview.visibility = View.VISIBLE
-                binding.calendarView.visibility = View.VISIBLE
+                try{
+                    if(monthly_shimmer_frame_layout.isAnimationStarted){
+                        monthly_shimmer_frame_layout.stopShimmerAnimation()
+                        monthly_shimmer_frame_layout.visibility = View.GONE
+                        binding.monthlyRecyclerview.visibility = View.VISIBLE
+                        binding.calendarView.visibility = View.VISIBLE
+                    }
+                }catch (e:NullPointerException){
+                    Log.d("monthlyFragment", "viewPagerApiRequest: shimmer null pointerException")
+                }
             }
 
         }
@@ -337,8 +408,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor,memoScheduleFormDate))
                 }
             }
-            Log.d("TAG", "onGetMonthlyMemoItemSuccess: $memoList")
-            monthlyMemoAdapter?.setNewMemoList(memoList)
+            initializeMonthlyAdapter(memoList)
         }else{
             showCustomToast(response.message.toString())
         }
@@ -386,7 +456,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     memoList.removeIf {
                         it.id == scheduleID
                     }
-                    monthlyMemoAdapter?.setNewMemoList(memoList)
+                    initializeMonthlyAdapter(memoList)
                     dismissLoadingDialog()
                 }else->{
                 dismissLoadingDialog()

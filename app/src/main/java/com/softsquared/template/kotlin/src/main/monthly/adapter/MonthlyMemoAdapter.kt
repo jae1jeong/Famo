@@ -3,6 +3,8 @@ package com.softsquared.template.kotlin.src.main.monthly.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,7 +53,6 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         holder.itemView.setOnClickListener {
             clickListener(memo)
         }
-        Log.d("TAG", "onBindViewHolder: $memo")
         if(memo.description == ""){
             val params = holder.itemView.layoutParams
             params.height = 350
@@ -62,8 +63,8 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         val categoryColor = CategoryColorPicker.setCategoryColor(memo.colorState)
         val shape = GradientDrawable()
         Log.d("TAG", "setCategoryColorRadius: $categoryColor")
-        shape.setColor(Color.parseColor(categoryColor))
         shape.cornerRadius = 180F
+        shape.setColorFilter(Color.parseColor(categoryColor), PorterDuff.Mode.SRC_IN)
         holder.binding.itemMonthlyCategoryColor.background = shape
 
     }
@@ -73,6 +74,28 @@ class MonthlyMemoAdapter(var memoList:MutableList<MemoItem>,private val context:
         this.memoList = newMemoList
         notifyDataSetChanged()
     }
+
+    fun swapItems(fromPosition:Int, toPosition:Int){
+        if (fromPosition != toPosition) {
+            if (fromPosition < toPosition) {
+                for (i in fromPosition until toPosition) {
+                    var temp = memoList[i+1]
+                    memoList[i + 1] = memoList[i]
+                    memoList[i] = temp
+
+                }
+            } else {
+                for (i in toPosition..fromPosition-1) {
+                    var temp = memoList[fromPosition-i]
+                    memoList[fromPosition-i] = memoList[fromPosition-i-1]
+                    memoList[fromPosition-i-1] = temp
+                }
+            }
+
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+
 
     override fun getItemCount(): Int  = memoList.size
 

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityCategoryEditBinding
@@ -28,6 +29,7 @@ import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.util.AskDialog
+import com.softsquared.template.kotlin.util.Constants
 
 class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     (ActivityCategoryEditBinding::inflate), ICategoryRecyclerView, CategoryEditView,
@@ -106,6 +108,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         dialog.show()
     }
 
+    //삭제불가 다이얼로그
     fun deleteImpossibleDialog() {
         val dialog = DeleteImpossibleDialog(this)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -131,6 +134,9 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                 showLoadingDialog(this)
                 if (dataSize == 0) {
                     Log.d("TAG", "onItemDeleteBtnClicked: 삭제성공")
+//                    val edit = ApplicationClass.sSharedPreferences.edit()
+//                    edit.putString(Constants.CATEGORY_DELETE_CHECK,"check")
+//                    edit.apply()
                     CategoryEditService(this)
                             .tryDeleteCategoryEditDelete(categoryID.toString())
                     dismissLoadingDialog()
@@ -143,6 +149,10 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
             .setNegativeButton("취소"){
             }.show()
 
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     //삭제불가
@@ -164,10 +174,11 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         return Integer.parseInt(tempCategoryID!![0])
     }
 
-    override fun onMoveFragment(categoryID: Int, text: String) {
+    override fun onMoveFragment(categoryID: Int, text: String, color : String) {
         val categoryEditBottomDialogFragment = CategoryEditBottomDialogFragment()
         val bunble = Bundle()
         bunble.putString("color", wholeColor)
+        bunble.putString("selectColor", color)
         bunble.putString("name", text)
         bunble.putInt("size", size!!)
         bunble.putInt("categoryID", categoryID)
@@ -219,6 +230,8 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     override fun onDeleteCategoryDeleteSuccess(response: BaseResponse) {
+
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
     }
 
     override fun onDeleteCategoryDeleteFail(message: String) {

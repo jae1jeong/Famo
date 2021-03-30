@@ -3,10 +3,13 @@ package com.softsquared.template.kotlin.src.main
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Html
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
+import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
@@ -83,13 +86,17 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
         binding.mainTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                showCustomToast(tab?.text.toString())
                 val spannable = SpannableString(tab?.text)
                 spannable.setSpan(UnderlineSpan(),0,spannable.length,0)
+//                tab?.text = spannable
+//                tab?.setText(Html.fromHtml("<u>${tab?.text}</u>"))
+
+                spannable.setSpan(StyleSpan(Typeface.BOLD),0,spannable.length,0)
                 tab?.text = spannable
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
+                tab?.text = tab?.text
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {

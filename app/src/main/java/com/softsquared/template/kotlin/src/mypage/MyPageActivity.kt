@@ -32,6 +32,7 @@ import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountRespon
 import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity
 import com.softsquared.template.kotlin.util.Constants
+import java.io.ByteArrayOutputStream
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
     MyPageView {
@@ -44,8 +45,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     val temList10: ArrayList<String> = ArrayList()
 
-    val url = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,8 +52,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         val goalTitle = intent.getStringExtra("goalTitle")
         check = intent.getIntExtra("check", 100)
 
+        //전체일정
         MyPageService(this).tryGetTotalScheduleCount()
+        //내정보조회
         MyPageService(this).tryGetMyPage()
+        //월별달성
         MyPageService(this).tryGetMonthsAchievement()
 
         //이미지 앞으로 내보내기
@@ -72,22 +74,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             goBack()
         }
 
-
     }
 
     // 뒤로가기
     fun goBack() {
         finish()
-    }
-
-    fun stringToBitmap(encodedString: String): Bitmap? {
-        return try {
-            val encodeByte: ByteArray = Base64.decode(encodedString, Base64.DEFAULT)
-            BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
-        } catch (e: Exception) {
-            e.message
-            null
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -99,53 +90,35 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 showCustomToast("MyPage조회성공")
 
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
-                    Constants.KAKAO_THUMBNAILIMAGEURL,
-                    null
-                )
-                val day = ApplicationClass.sSharedPreferences.getString(
-                    Constants.DAY,
-                    null
-                )
-                val name = ApplicationClass.sSharedPreferences.getString(
-                    Constants.USER_NICKNAME,
-                    null
-                )
-                val goalTitle = ApplicationClass.sSharedPreferences.getString(
-                    Constants.GOALTITLE,
-                    null
-                )
-                val dDayCheck = ApplicationClass.sSharedPreferences
-                    .getString(Constants.DDAY_SETTING, null)
+                    Constants.KAKAO_THUMBNAILIMAGEURL, null)
+                val day = ApplicationClass.sSharedPreferences.getString(Constants.DAY,
+                    null)
+                val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,
+                    null)
+                val goalTitle = ApplicationClass.sSharedPreferences.getString(Constants.GOALTITLE,
+                    null)
+                val dDayCheck = ApplicationClass.sSharedPreferences.getString(Constants.DDAY_CHECK,
+                    null)
                 val comments = ApplicationClass.sSharedPreferences.getString(
-                    Constants.COMMENTS,
-                    null
+                    Constants.COMMENTS, null
                 )
-                val gallery =
-                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
-
-                val camera =
-                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_KAMERA, null)
-
-                if (gallery != null) {
-                    galleryUrl = gallery.toUri()
-                }
-
-                if (camera != null) {
-                    cameraImg = stringToBitmap(camera)
-                }
+//                val gallery =
+//                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
+//
+//                val camera =
+//                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_KAMERA, null)
+//
+//                if (gallery != null) {
+//                    galleryUrl = gallery.toUri()
+//                }
+//
+//                if (camera != null) {
+//                    cameraImg = stringToBitmap(camera)
+//                }
 
 
 //                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
 //                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
-
-                if (day != null) {
-                    binding.myPageTextDoneScheduleCount.text = day
-                }
-
-                //처음에는
-                //카톡프사가 있으면 있는거적용
-                //없으면 기본이미지 적용
-                //수정 시 url이 생긴다면 이미지는 url로 교체
 
                 if (response.loginMethod == "K") {
 
@@ -165,20 +138,29 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 //페모로그인일경우
                 if (response.loginMethod == "F") {
+
                     Log.d("TAG", "myPage: ㅇㅇ")
                     Log.d("TAG", "myPage: ${response.profileImageURL}")
+
                     Glide.with(this).load(response.profileImageURL)
                         .error(R.drawable.my_page_img2)
                         .centerCrop().into(binding.myPageImg)
+
                 }
 
                 //이름 적용
                 binding.myPageTvName.text = name
 
-                //디데이가 설정되어있지 않거나, 값이 없으면 기본 문구가 나오게 설정
-                if (dDayCheck != "1" || (goalTitle == null && day == null)) {
+                //디데이가 설정되어있지 않으면 기본문구
+                if (dDayCheck != "1") {
                     binding.myPageTvComments.text = "오늘 하루도 힘내세요!"
-                } else {
+                }
+                //기간이 끝난 경우
+                if (dDayCheck == "1" && Integer.parseInt(day) <= 0){
+                    binding.myPageTvComments.text = "목표기간이 끝났습니다!"
+                }
+                //디데이 설정이 유효할경우
+                else {
                     binding.myPageTvComments.text = goalTitle + "까지 D-" + day + "일\n남았어요!"
                 }
 

@@ -37,6 +37,12 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
         recyclerViewLately = view.findViewById(R.id.recyclerView_lately)
 
+        GlobalScope.launch(Dispatchers.IO){
+            delay(1000)
+            WholeLatelyScheduleService(this@ScheduleFindLatelyFragment)
+                .tryGetLatelyScheduleInquiry(0, 2)
+        }
+
         return view
     }
 

@@ -125,7 +125,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 
         //유저 이미지 클릭 시 마이페이지로 이동
-        binding.mainImageProfile.setOnClickListener {
+        binding.myPage.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)
             startActivity(intent)
         }
@@ -374,7 +374,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     fun fragmentSetting() {
         binding.mainTabLayout.visibility = View.VISIBLE
-        binding.mainImageProfile.visibility = View.VISIBLE
+        binding.myPage.visibility = View.VISIBLE
     }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {

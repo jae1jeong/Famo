@@ -69,6 +69,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     var dDaySettingCnt = 1
     var accountSettingCnt = 1
 
+    var dDayCheck = 0
+
     // 날짜
     var strDate = ""
     // 날짜를 선택유무에 대한 변수
@@ -151,6 +153,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditBtnDdayCheck.visibility = View.VISIBLE
                 binding.myPageEditBtnDdayCheck2.visibility = View.VISIBLE
                 binding.myPageEditLinearDdaySetting.visibility = View.VISIBLE
+                dDayCheck = 1
             }
 
             if (dDaySettingCnt % 2 == 0){
@@ -158,6 +161,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditBtnDdayCheck.visibility = View.GONE
                 binding.myPageEditBtnDdayCheck2.visibility = View.GONE
                 binding.myPageEditLinearDdaySetting.visibility = View.GONE
+                dDayCheck = -1
             }
 
             dDaySettingCnt++
@@ -461,26 +465,15 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val dday =
                     ApplicationClass.sSharedPreferences.getString(Constants.DAY, null)
 
-
                 val email = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_EMAIL,
                     null)
+
+                val dDayCheck = ApplicationClass.sSharedPreferences
+                    .getString(Constants.DDAY_CHECK, null)
 
                 Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
                 Log.d("TAG", "onGetMyPageSuccess: dday :$dday")
 
-                val gallery =
-                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY, null)
-
-                val camera =
-                    ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_KAMERA, null)
-
-                if (gallery != null) {
-                    galleryUrl = gallery.toUri()
-                }
-
-                if (camera != null) {
-                    cameraImg = stringToBitmap(camera)
-                }
 
                 Log.d("TAG", "onGetMyPageSuccess: imgCnt :$imgCnt")
 
@@ -506,7 +499,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 if (response.loginMethod == "F") {
                     Log.d("TAG", "onGetMyPageSuccess: ㅇㅇ")
                     Log.d("TAG", "onGetMyPageSuccess: ${response.profileImageURL}")
-                    Glide.with(this).load(response.profileImageURL.toUri())
+                    Glide.with(this).load(response.profileImageURL)
                         .error(R.drawable.my_page_img2)
                         .centerCrop().into(binding.myPageEditImg)
 
@@ -521,7 +514,23 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 binding.myPageEditEtGoaltitle.setText(response.goalTitle)
 
-                binding.myPageEditDay.setText(dday.toString())
+                //디데이설정상태면
+                if (dDayCheck == "1"){
+                    binding.myPageEditBtnDdayCheck.visibility = View.VISIBLE
+                    binding.myPageEditBtnDdayCheck2.visibility = View.VISIBLE
+                }else{
+                    binding.myPageEditBtnDdayCheck.visibility = View.GONE
+                    binding.myPageEditBtnDdayCheck2.visibility = View.GONE
+                }
+
+
+
+                if (Integer.parseInt(dday) <= 0){
+                    binding.myPageEditDay.setText("0")
+                }else{
+                    binding.myPageEditDay.setText(dday.toString())
+                }
+
 
             }
             else -> {
@@ -559,7 +568,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 edit.putString(Constants.COMMENTS, comments)
                 edit.putString(Constants.DAY, day.toString())
                 edit.putString(Constants.GOALTITLE, goalTitle)
-                edit.putString(Constants.DDAY_SETTING, dDaySettingCnt.toString())
+                edit.putString(Constants.DDAY_CHECK, dDayCheck.toString())
                 edit.apply()
 
 
@@ -584,9 +593,9 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         if(response.isSuccess && response.code == 100){
             showCustomToast(response.message.toString())
 
-            val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.PROFILE_GALLERY,null)
-            edit.apply()
+//            val edit = ApplicationClass.sSharedPreferences.edit()
+//            edit.putString(Constants.PROFILE_GALLERY, response.profileImageURL)
+//            edit.apply()
 
         }else{
             showCustomToast(response.message.toString())

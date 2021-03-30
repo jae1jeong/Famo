@@ -13,7 +13,7 @@ object Constants {
     val COMMENTS = "COMMENTS"
     val DAY = "DAY"
     val GOALTITLE = "GOALTITLE"
-    val DDAY_SETTING = "DDAY_SETTING"
+    val DDAY_CHECK = "DDAY_CHECK"
     val FIND_USER_ID = "FIND_USER_ID"
     val OTP_TOKEN = "OTP_TOKEN"
 

@@ -30,7 +30,9 @@
     <com.google.android.material.tabs.TabLayout
         app:tabTextAppearance="@style/tab_text"
         app:tabTextColor="@color/text_gray"
-        app:tabSelectedTextColor="@color/orange"
+        app:tabSelectedTextColor="@color/black"
+        android:textStyle="normal"
+        android:textSize="18sp"
         android:id="@+id/whole_schedule_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

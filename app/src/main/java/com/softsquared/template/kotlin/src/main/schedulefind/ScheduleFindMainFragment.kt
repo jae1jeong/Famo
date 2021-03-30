@@ -2,6 +2,7 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -78,6 +79,9 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindViewPager = view.findViewById(R.id.schedule_find_view_pager)
         scheduleFindTabLayout = view.findViewById(R.id.schedule_find_tab_layout)
         scheduleFindtTvTotaySchedule = view.findViewById(R.id.schedule_find_tv_totay_schedule)
+
+        scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
+        scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(3); // 밑줄높이(두께)
 
         //전체일정수
         ScheduleFindService(this).tryGetWholeScheduleCount()

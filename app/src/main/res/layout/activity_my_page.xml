@@ -275,11 +275,10 @@
                     android:textStyle="bold"/>
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="181dp"
-                android:background="@drawable/my_page_temporary_graph"
-                android:layout_marginTop="16dp"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="300dp"
+                android:layout_height="180dp"/>
 
         </LinearLayout>
 

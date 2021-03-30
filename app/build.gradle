@@ -113,5 +113,8 @@ dependencies {
     // 로딩 애니메이션
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 
+    //그래프
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 
 }

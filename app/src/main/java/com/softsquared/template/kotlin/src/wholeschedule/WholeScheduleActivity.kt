@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.wholeschedule
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import com.softsquared.template.kotlin.config.BaseActivity
@@ -31,9 +32,11 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         binding.wholeScheduleViewPager.adapter = adapter
         binding.wholeScheduleTabLayout.setupWithViewPager(binding.wholeScheduleViewPager)
 
+        binding.wholeScheduleTabLayout.setSelectedTabIndicatorColor(Color.parseColor("#000000")); // 밑줄색
+        binding.wholeScheduleTabLayout.setSelectedTabIndicatorHeight(2); // 밑줄높이(두께)
+
+        //X버튼
         binding.wholeScheduleXBtn.setOnClickListener {
-//            val intent = Intent(this,MainActivity::class.java)
-//            startActivity(intent)
             finish()
         }
     }

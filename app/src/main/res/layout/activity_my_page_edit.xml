@@ -396,9 +396,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <EditText
+                    android:id="@+id/my_page_edit_account_mail"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/background_et_my_page_edit"

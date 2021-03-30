@@ -5,7 +5,9 @@ import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -60,6 +62,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         var selectedCategoryId:Int?= null
     }
 
+    //카테고리 편집으로 보내줄 변수
+    var name = ""
+    var color = ""
+    var size = 0
+    var categoryID = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,7 +84,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 showCustomToast(tab?.text.toString())
-//                val spannable = Spannable()
+                val spannable = SpannableString(tab?.text)
+                spannable.setSpan(UnderlineSpan(),0,spannable.length,0)
+                tab?.text = spannable
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -204,7 +214,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // 바텀 시트 다이얼로그 카테고리 추가 버튼
         binding.addMemoBtnCategoryAdd.setOnClickListener {
-            startActivity(Intent(this, CategoryEditActivity::class.java))
+//            startActivity(Intent(this, CategoryEditActivity::class.java))
+            val intent = Intent(this,CategoryEditActivity::class.java)
+            intent.putExtra("name", name)
+            intent.putExtra("color", color)
+            intent.putExtra("size", size)
+            intent.putExtra("categoryID", categoryID)
+            startActivity(intent)
         }
 
 
@@ -601,6 +617,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         false
                     )
                 )
+
+                name += responseUser.data[i].categoryName + ":"
+                color += responseUser.data[i].colorInfo + ":"
+                size = responseUser.data.size
+
+                categoryID += "${responseUser.data[i].categoryID}:"
             }
             initializeCategoryAdapter(categoryList)
 

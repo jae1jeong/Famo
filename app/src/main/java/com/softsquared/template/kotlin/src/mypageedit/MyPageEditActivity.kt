@@ -259,12 +259,25 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         // X버튼 클릭 시 내정보로 이동
         binding.myPageEditBack.setOnClickListener {
+//            finish()
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
             finish()
         }
 
 
     }
 
+<<<<<<< HEAD
+=======
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+//    override fun onBackPressed() {
+//        finish()
+//    }
+
+>>>>>>> 73d11c80b4bd23972b0344cbd25ec16badbf7574
     //로그아웃 알림창
     fun logoutDialog() {
         val dialog = LogoutDialog(this)
@@ -369,10 +382,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             showLoadingDialog(this)
             MyPageEditService(this).tryPostMyProfileImage(requestImage)
 
-            val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.PROFILE_GALLERY, selectedImageUri.toString())
-            edit.apply()
-            imgCnt = 1
+//            val edit = ApplicationClass.sSharedPreferences.edit()
+//            edit.putString(Constants.PROFILE_GALLERY, selectedImageUri.toString())
+//            edit.apply()
+//            imgCnt = 1
         }
 
         //카메라
@@ -401,12 +414,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditImg.setImageBitmap(bitmap)
                 Log.d("TAG", "onActivityResult: 보내는bitmap $bitmap")
 
-                val test = bitmapToString(bitmap)
-                val edit = ApplicationClass.sSharedPreferences.edit()
-                edit.putString(Constants.PROFILE_KAMERA, test)
-                edit.apply()
+//                val test = bitmapToString(bitmap)
+//                val edit = ApplicationClass.sSharedPreferences.edit()
+//                edit.putString(Constants.PROFILE_KAMERA, test)
+//                edit.apply()
             }
-            imgCnt = 2
+//            imgCnt = 2
         }
 
     }
@@ -452,8 +465,11 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                     ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME, null)
 
                 val dday =
-                    ApplicationClass.sSharedPreferences.getString(Constants.DAY,null)
+                    ApplicationClass.sSharedPreferences.getString(Constants.DAY, null)
 
+
+                val email = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_EMAIL,
+                    null)
 
                 Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
                 Log.d("TAG", "onGetMyPageSuccess: dday :$dday")
@@ -473,53 +489,36 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 }
 
                 Log.d("TAG", "onGetMyPageSuccess: imgCnt :$imgCnt")
+
                 if (response.loginMethod == "K") {
-                    //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
-                    if (kakaoImg!!.isEmpty()) {
-                        Glide.with(this).load(R.drawable.my_page_img2)
-                            .centerCrop().into(binding.myPageEditImg)
-                    } else if (kakaoImg!!.isNotEmpty()) {
+
+                    if (response.profileImageURL == null) {
+                        //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
                         Glide.with(this).load(kakaoImg)
+                            .error(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageEditImg)
+                    } else {
+                        //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
+                        Glide.with(this).load(response.profileImageURL)
+                            .error(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageEditImg)
                     }
 
-                    if (intentCnt == 1) {
-                        binding.myPageEditImg.setImageURI(galleryUrl)
-                    } else if (intentCnt == 2) {
-                        binding.myPageEditImg.setImageBitmap(cameraImg)
-                    }
+                    binding.myPageEditAccountMail.setText(email)
+
                 }
 
-//페모로그인일경우
+                //페모로그인일경우
                 if (response.loginMethod == "F") {
-                    //처음에는 기본 이미지
-                    if (gallery == null && camera == null) {
-                        Glide.with(this).load(R.drawable.my_page_img2)
-                            .centerCrop().into(binding.myPageEditImg)
-                    } else if (intentCnt == 1) {
-                        binding.myPageEditImg.setImageURI(galleryUrl)
-                    } else if (intentCnt == 2) {
-                        binding.myPageEditImg.setImageBitmap(cameraImg)
-                    }
+                    Log.d("TAG", "onGetMyPageSuccess: ㅇㅇ")
+                    Log.d("TAG", "onGetMyPageSuccess: ${response.profileImageURL}")
+                    Glide.with(this).load(response.profileImageURL.toUri())
+                        .error(R.drawable.my_page_img2)
+                        .centerCrop().into(binding.myPageEditImg)
 
+                    binding.myPageEditAccountMail.setText("페모회원입니다!")
                 }
 
-
-//                if (response.loginMethod == "K") {
-//
-//                    if (kakaoImg!!.isNotEmpty()) {
-//                        Log.d("TAG", "onGetMyPageSuccess: 카로확인")
-//                        Glide.with(this).load(kakaoImg)
-//                            .centerCrop().into(binding.myPageEditImg)
-//                    } else {
-//                        Log.d("TAG", "onGetMyPageSuccess: 카로확인2")
-//                        Glide.with(this).load(R.drawable.my_page_img2)
-//                            .centerCrop().into(binding.myPageEditImg)
-//                    }
-//                } else {
-//                    Glide.with(this).load(R.drawable.my_page_img2)
-//                        .centerCrop().into(binding.myPageEditImg)
-//                }
 
                 //이름 적용
                 binding.myPageEditEtName.setText(name)
@@ -590,6 +589,11 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
         if(response.isSuccess && response.code == 100){
             showCustomToast(response.message.toString())
+
+            val edit = ApplicationClass.sSharedPreferences.edit()
+            edit.putString(Constants.PROFILE_GALLERY,null)
+            edit.apply()
+
         }else{
             showCustomToast(response.message.toString())
             Log.d("TAG", "onPostProfileImageSuccess: ${response.message}")

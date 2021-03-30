@@ -123,13 +123,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         }
     }
 
-    //프래그먼트 간 이동하기 위한 선언
-    companion object {
-        fun newInstance(): ScheduleFindFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
-            return ScheduleFindFragment()
-        }
-    }
-
     //카테고리 클릭 시 카테고리별 일정으로 이동
     override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
         val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
@@ -141,7 +134,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
             .commit()
     }
-
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수

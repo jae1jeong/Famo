@@ -26,6 +26,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
     LoginInformationView{
 
     var kakaoUrl = ""
+    var kakaoEmail = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +58,14 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
                                 "\nnickname: ${user.kakaoAccount!!.profile!!.nickname}" +
                                 "\ntoken: ${token!!.accessToken} "
                     )
+
                     val accessToken = token.accessToken
                     val refreshToken = token.refreshToken
                     if (user.kakaoAccount?.profile!!.thumbnailImageUrl != null){
-
                         kakaoUrl = user.kakaoAccount!!.profile!!.thumbnailImageUrl
                     }
+
+                    kakaoEmail = user.kakaoAccount!!.email.toString()
 
 //                    val intent = Intent(this, MainActivity::class.java)
 //                    intent.putExtra("accessToken",accessToken)
@@ -108,6 +111,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
         edit.putInt(Constants.USER_ID, response.userID)
         edit.putString(Constants.USER_NICKNAME, response.nickname)
         edit.putString(Constants.KAKAO_THUMBNAILIMAGEURL, kakaoUrl)
+        edit.putString(Constants.KAKAO_EMAIL, kakaoEmail)
         edit.apply()
 
         when(response.code){

@@ -107,8 +107,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         val name = ApplicationClass.sSharedPreferences.getString(
             Constants.USER_NICKNAME, null)
 
-<<<<<<< HEAD
-=======
         //이름설정
         if (name != null){
             scheduleFindName!!.text = name + "님,"
@@ -117,7 +115,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         //앞으로 내보내기
         scheduleFindtTvTotaySchedule!!.bringToFront()
 
->>>>>>> blue
         //자세히 보기 클릭 시
         scheduleFindBtnDetail!!.setOnClickListener {
             val intent = Intent(activity, WholeScheduleActivity::class.java)

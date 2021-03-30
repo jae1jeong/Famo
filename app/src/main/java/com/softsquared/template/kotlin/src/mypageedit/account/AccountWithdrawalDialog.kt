@@ -25,7 +25,7 @@ class AccountWithdrawalDialog(context:Context) : Dialog(context)
         save.setOnClickListener {
             Toast.makeText(context,"yes",Toast.LENGTH_SHORT).show()
             Log.d("TAG", "회원탈퇴성공")
-//            AccountWithdrwalService(this).tryPatchAccountWithdrawal()
+            AccountWithdrwalService(this).tryPatchAccountWithdrawal()
         }
 
         cancel.setOnClickListener {

@@ -269,9 +269,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 //그래프 마커좌표
                 val entries: ArrayList<Entry> = ArrayList()
-                entries.add(Entry(test.toFloat(), 10F))
-                entries.add(Entry(2F, 30F))
-                entries.add(Entry(3F, 0F))
+
+                for (i in 0 until temList10.size){
+                    entries.add(Entry((i+1).toFloat(), temList4[i].toFloat()))
+                }
+
 //                entries.add(Entry(4F, 70F))
 //                entries.add(Entry(5F, 60F))
 //                entries.add(Entry(6F, 40F))
@@ -361,9 +363,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         setDrawAxisLine(true) // 축 그림
                         setDrawGridLines(false) // 격자
                         setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                        axisLineWidth = 0.1f
-                        setBorderWidth(0.1f)
-                        spaceMax = 0.1f
 
                         gridColor = ContextCompat.getColor(context, R.color.black)
                         axisLineColor = ContextCompat.getColor(context, R.color.graph_color)

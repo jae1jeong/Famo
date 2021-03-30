@@ -64,6 +64,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindViewPager : ViewPager? = null
     var scheduleFindTabLayout : TabLayout? = null
     var scheduleFindTvTotaySchedule : TextView? = null
+    var scheduleFindName : TextView? = null
 
     //메인액티비티 oncreate랑 비슷하다
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,6 +78,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindViewPager = view.findViewById(R.id.schedule_find_view_pager)
         scheduleFindTabLayout = view.findViewById(R.id.schedule_find_tab_layout)
         scheduleFindtTvTotaySchedule = view.findViewById(R.id.schedule_find_tv_totay_schedule)
+        scheduleFindName = view.findViewById(R.id.schedule_find_name)
 
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
         scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(3); // 밑줄높이(두께)
@@ -95,6 +97,15 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
         scheduleFindViewPager!!.adapter = adapter
         scheduleFindTabLayout!!.setupWithViewPager(scheduleFindViewPager)
+
+
+        val name = ApplicationClass.sSharedPreferences.getString(
+            Constants.USER_NICKNAME, null)
+
+        //이름설정
+        if (name != null){
+            scheduleFindName!!.text = name
+        }
 
         //앞으로 내보내기
         scheduleFindtTvTotaySchedule!!.bringToFront()

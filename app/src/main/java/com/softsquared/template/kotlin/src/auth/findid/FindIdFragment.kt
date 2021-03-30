@@ -43,6 +43,7 @@ class FindIdFragment:BaseFragment<FragmentFindIdBinding>(FragmentFindIdBinding::
             }
         })
 
+
         // 인증요청 버튼
         binding.findIdBtnAuth.setOnClickListener {
             showLoadingDialog(context!!)

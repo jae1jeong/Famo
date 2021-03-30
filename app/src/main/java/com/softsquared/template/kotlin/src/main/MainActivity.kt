@@ -4,6 +4,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -11,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.JsonElement
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
@@ -76,6 +81,21 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
         binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
+        binding.mainTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                showCustomToast(tab?.text.toString())
+                val spannable = SpannableString(tab?.text)
+                spannable.setSpan(UnderlineSpan(),0,spannable.length,0)
+                tab?.text = spannable
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+        })
         binding.mainViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             }
@@ -83,10 +103,10 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             override fun onPageSelected(position: Int) {
                 when(position){
                     0 ->{
-//                        binding.mainLayout.setBackgroundColor(Color.WHITE)
+                        binding.mainTopLayout.setBackgroundColor(Color.WHITE)
                     }
                     else->{
-//                        binding.mainLayout.setBackgroundColor(resources.getColor(R.color.light_gray))
+                        binding.mainTopLayout.setBackgroundColor(resources.getColor(R.color.light_gray))
                     }
                 }
             }
@@ -270,7 +290,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         display.getRealSize(size)
         val deviceHeight = size.y
         // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
-        val bottomSheetDialogHeight = deviceHeight - 450
+        val bottomSheetDialogHeight = deviceHeight - 435
         val params = binding.mainFrameBottomSheet.layoutParams
         params.height = bottomSheetDialogHeight
     }

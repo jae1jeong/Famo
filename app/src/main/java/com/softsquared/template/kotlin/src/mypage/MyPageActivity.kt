@@ -242,7 +242,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 ) as HashMap<String, Int>
                 Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
 
-
                 val list = hashMap.toString()
                 val temList = list.substring(1, list.length - 1)
                 val temList2 = temList.split(",".toRegex()).toTypedArray()
@@ -359,6 +358,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         axisMinimum = 0f // 최소값 0
                         axisMaximum =
                             (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMaximum = (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
 //                        axisMinimum = 0F // 최소값 0
                         granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
                         setDrawAxisLine(true) // 축 그림
@@ -409,6 +409,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             }
             return test.getOrNull(value.toInt() - 1) ?: value.toString()
 
+            return test.getOrNull(value.toInt() - 1) ?: value.toString()
         }
     }
 }

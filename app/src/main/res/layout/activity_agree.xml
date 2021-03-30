@@ -112,7 +112,7 @@
             </ScrollView>
 
             <Button
-                android:id="@+id/login_btn_login"
+                android:id="@+id/agree_btn_start_signup"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:layout_marginTop="44dp"

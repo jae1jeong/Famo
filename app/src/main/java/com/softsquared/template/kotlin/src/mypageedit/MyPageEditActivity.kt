@@ -268,6 +268,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     }
 
+<<<<<<< HEAD
+=======
     override fun onBackPressed() {
         super.onBackPressed()
     }
@@ -275,6 +277,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 //        finish()
 //    }
 
+>>>>>>> 73d11c80b4bd23972b0344cbd25ec16badbf7574
     //로그아웃 알림창
     fun logoutDialog() {
         val dialog = LogoutDialog(this)

@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
+import java.lang.NullPointerException
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView{
 
@@ -107,6 +108,10 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         val name = ApplicationClass.sSharedPreferences.getString(
             Constants.USER_NICKNAME, null)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4b0e8b7b6c1b7c16b1fc921b15c1ce87eb3eb04
         //이름설정
         if (name != null){
             scheduleFindName!!.text = name + "님,"
@@ -162,13 +167,22 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     }
 
-//    override fun onMoveFilterFragment(scheduleCategoryID: Int) {
-//        val scheduleFindFilterBottomDialogBinding =
-//            SchedulefindFilterBottomDialogFragment()
-//        scheduleFindFilterBottomDialogBinding.show(
-//            fragmentManager!!, scheduleFindFilterBottomDialogBinding.tag
-//        )
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        shimmer_main_layout.startShimmerAnimation()
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(2500)
+            try{
+                if(shimmer_main_layout.isAnimationStarted){
+                    shimmer_main_layout.stopShimmerAnimation()
+                    shimmer_main_layout.visibility = View.GONE
+                    schedule_find_main_layout.visibility = View.VISIBLE
+                }
+            }catch (e:NullPointerException){
+
+            }
+        }
+    }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수

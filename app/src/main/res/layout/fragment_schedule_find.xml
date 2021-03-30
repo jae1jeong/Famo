@@ -19,9 +19,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:orientation="vertical">
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_schedule_find_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/shimmer_schedule_find_main"
+                    />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
+                android:id="@+id/schedule_find_top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -60,6 +70,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/schedule_find_category_layout"
+                android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -72,7 +85,8 @@
                     android:src="@drawable/category_edit_plus" />
 
                 <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView

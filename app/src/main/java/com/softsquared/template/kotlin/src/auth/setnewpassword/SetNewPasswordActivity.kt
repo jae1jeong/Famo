@@ -31,9 +31,7 @@ class SetNewPasswordActivity:BaseActivity<ActivitySetNewPasswordBinding>(Activit
                 }else{
                     if(optAuthToken == null){
                         showCustomToast("잘못된 요청입니다.")
-                        Log.d("TAG", "onCreate: 3 ")
                     }else{
-                        Log.d("TAG", "onCreate: 4")
                         showLoadingDialog(this)
                         SetNewPasswordService(this).trySetNewPassword(optAuthToken, PostSetNewPasswordRequest(binding.setPasswordEditPassword.text.toString(),binding.setPasswordEditRepassword.text.toString()))
                     }

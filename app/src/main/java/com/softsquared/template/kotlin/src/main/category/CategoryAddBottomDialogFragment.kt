@@ -11,9 +11,11 @@ import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
+import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
@@ -476,6 +478,9 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
 
                 val categoryEditAdapter =
                     ScheduleCategoryEditAdapter(addList, activity as CategoryEditActivity)
+
+                MainActivity.categoryList.add(MainScheduleCategory(categoryID.toInt(),text,inputColor,false))
+                MainActivity.categoryScheduleAdapter.setNewCategoryList(MainActivity.categoryList)
 
                 categoryEditAdapter.addItem(scheduleCategoryData)
                 categoryEditAdapter.notifyDataSetChanged()

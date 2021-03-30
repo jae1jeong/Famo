@@ -8,28 +8,34 @@
     android:gravity="center"
     android:layout_marginLeft="5dp">
 
-    <ImageView
-        android:id="@+id/recyclerview_category_color"
-        android:layout_width="42dp"
-        android:layout_height="27dp"
-        android:src="@drawable/category_basic_squre"
+<!--    <ImageView-->
+<!--        android:id="@+id/recyclerview_category_color"-->
+<!--        android:layout_width="42dp"-->
+<!--        android:layout_height="27dp"-->
+<!--        android:src="@drawable/category_basic_squre"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <TextView
+        android:id="@+id/recyclerview_category_text"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:background="@drawable/background_main_category"
+        android:fontFamily="@font/noto_sans_cjkkr_medium"
+        android:gravity="center"
+        android:text="학교"
+        android:textSize="14sp"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/recyclerview_category_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_sans_cjkkr_medium"
-        android:gravity="center"
-        android:text="학교"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerview_category_color"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerview_category_color"
-        app:layout_constraintStart_toStartOf="@+id/recyclerview_category_color"
-        app:layout_constraintTop_toTopOf="@id/recyclerview_category_color"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    app:layout_constraintBottom_toBottomOf="@+id/recyclerview_category_color"-->
+<!--    app:layout_constraintEnd_toEndOf="@+id/recyclerview_category_color"-->
+<!--    app:layout_constraintStart_toStartOf="@+id/recyclerview_category_color"-->
+<!--    app:layout_constraintTop_toTopOf="@id/recyclerview_category_color"-->

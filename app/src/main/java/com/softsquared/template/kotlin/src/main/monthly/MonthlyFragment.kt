@@ -139,9 +139,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             binding.monthlyRecyclerview.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter
-                val callback = MonthlyMemoDragHelper(monthlyMemoAdapter!!,context!!,ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),-1)
-                val helper = ItemTouchHelper(callback)
-                helper.attachToRecyclerView(this)
             }
 
 
@@ -332,9 +329,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         binding.monthlyRecyclerview.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = monthlyMemoAdapter
-            val callback = MonthlyMemoDragHelper(monthlyMemoAdapter!!,context!!,ItemTouchHelper.UP.or(ItemTouchHelper.DOWN),-1)
-            val helper = ItemTouchHelper(callback)
-            helper.attachToRecyclerView(this)
         }
     }
 

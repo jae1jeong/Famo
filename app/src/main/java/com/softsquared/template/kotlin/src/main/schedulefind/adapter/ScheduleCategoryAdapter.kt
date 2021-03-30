@@ -2,7 +2,9 @@ package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,26 +14,28 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
 import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView) :
+class ScheduleCategoryAdapter(var categoryList: ArrayList<MainScheduleCategory>,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView,val context:Context) :
     RecyclerView.Adapter<ScheduleCategoryAdapter.ScheduleCategoryHolder>(), CategoryInquiryView {
 
     private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
     var mPreviousIndex = -1
 
-    private var selectedView: TextView? = null
+    private var selectedCategoryView: TextView? = null
     var boolean = false
     var cnt = 1
 
@@ -42,7 +46,7 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleCategoryHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recyclerview_schedule_find_category_item, parent, false)
+            .inflate(R.layout.item_main_category, parent, false)
 
         view.setOnClickListener {
 
@@ -57,43 +61,57 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ScheduleCategoryHolder, position: Int) {
 
-        holder.text.text = categoryList[position].text
-        holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
+        holder.categoryText.text = categoryList[position].text
+        val scheduleCategory = categoryList[position]
 
-        val colorStrList = iScheduleCategoryRecyclerView!!.onColor()
-        Log.d(TAG, "onBindViewHolder: $colorStrList")
+        holder.itemView.setOnClickListener {
+            // 처음 선택할때
+            if(selectedCategoryView == null){
+                val shape = GradientDrawable()
+                shape.cornerRadius = 180F
+                shape.setColor(Color.parseColor(categoryList[position].color))
+                holder.itemView.background = shape
+                holder.categoryText.setTextColor(Color.WHITE)
+                selectedCategoryView = holder.itemView as TextView
+                scheduleCategory.selected = true
+                iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(scheduleCategory.id)
 
+            }else{
+                // 전에 선택했던 카테고리와 현재 누르려는 카테고리가 경우
+                if(selectedCategoryView == holder.itemView as TextView){
+                    Log.d("TAG", "onBindViewHolder: 같은 카테고리 선택")
+                    iScheduleCategoryRecyclerView!!.onClickedTwice()
+                    holder.itemView.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
+                    holder.itemView.setTextColor(Color.parseColor("#aeb7c4"))
+                    selectedCategoryView = null
+                    scheduleCategory.selected = false
+                }else{
+                    // 다를 경우
+                    selectedCategoryView!!.setBackgroundDrawable(context.resources.getDrawable(R.drawable.background_main_category))
+                    selectedCategoryView!!.setTextColor(Color.parseColor("#aeb7c4"))
+                    categoryList.forEach {
+                        if(it.selected){
+                            it.selected = false
+                        }
+                    }
+                    val shape = GradientDrawable()
+                    shape.cornerRadius = 180F
+                    shape.setColor(Color.parseColor(categoryList[position].color))
+                    (holder.itemView as TextView).setTextColor(Color.WHITE)
+                    holder.itemView.background = shape
+                    selectedCategoryView = holder.itemView
+                    scheduleCategory.selected = true
+                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(scheduleCategory.id)
 
-        if (mPreviousIndex == position){
-            holder.color.setColorFilter(Color.parseColor(colorStrList[position]))
-        }else{
-            holder.color.setColorFilter(Color.parseColor("#00000000"))
-        }
-
-        holder.itemView.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    Log.d(TAG, "onBindViewHolder: 클릭확인")
-                    mPreviousIndex = position
-                    notifyDataSetChanged()
-                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
                 }
             }
-            false
         }
-
-//        holder.itemView.setOnClickListener {
-//            Log.d(TAG, "onBindViewHolder: 클릭확인")
-//            mPreviousIndex = position
-//            notifyDataSetChanged()
-//            iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(categoryList[position].id)
-//        }
 
     }
 
     override fun getItemCount(): Int = categoryList.size
 
-    fun addItem(scheduleCategoryData: ScheduleCategoryData) {
+    fun addItem(scheduleCategoryData: MainScheduleCategory) {
         categoryList.add(scheduleCategoryData)
     }
 
@@ -101,11 +119,7 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<ScheduleCategoryData>,
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
 
-
-        val text = itemView.findViewById<TextView>(R.id.recyclerview_category_text)
-        val color = itemView.findViewById<ImageView>(R.id.recyclerview_category_color)
-//        val button = itemView.findViewById<Button>(R.id.recyclerview_category_text)
-//        val category = itemView.findViewById<RelativeLayout>(R.id.item_category_list)
+        val categoryText = itemView.findViewById<TextView>(R.id.main_category_text)
 
 
 

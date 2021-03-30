@@ -19,11 +19,18 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
+import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
+import kotlinx.android.synthetic.main.fragment_schedule_find.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -53,6 +60,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     @SuppressLint("ResourceAsColor", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        shimmer_schedule_find_top.startShimmerAnimation()
 
         //처음에는 메인fragment
         childFragmentManager.beginTransaction()
@@ -98,6 +107,20 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         super.viewPagerApiRequest()
         //카테고리
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(2000)
+            try {
+                if(shimmer_schedule_find_top.isAnimationStarted){
+                    shimmer_schedule_find_top.stopShimmerAnimation()
+                    shimmer_schedule_find_top.visibility = View.GONE
+                    binding.scheduleFindTopLayout.visibility = View.VISIBLE
+                    binding.scheduleFindCategoryLayout.visibility = View.VISIBLE
+                }
+            }catch (e:NullPointerException){
+                Log.e("TAG", "viewPagerApiRequest: $e", )
+            }
+
+        }
     }
 
     //카테고리 클릭 시 카테고리별 일정으로 이동
@@ -177,19 +200,26 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         return colorStrList
     }
 
+    override fun onClickedTwice() {
+        childFragmentManager.beginTransaction()
+                .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
+                .commit()
+    }
+
     //유저별 카테고리조회 성공
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         when (responseUser.code) {
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess: 카테고리조회성공")
-                val categoryList: ArrayList<ScheduleCategoryData> = arrayListOf()
+                val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
 
                 for (i in 0 until responseUser.data.size) {
                     categoryList.add(
-                        ScheduleCategoryData(
+                        MainScheduleCategory(
                             responseUser.data[i].categoryID,
                             responseUser.data[i].categoryName,
-                            responseUser.data[i].colorInfo
+                            responseUser.data[i].colorInfo,
+                                false
                         )
                     )
 //                    #00000000
@@ -207,7 +237,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                     context, LinearLayoutManager.HORIZONTAL, false
                 )
                 binding.recyclerviewCategory.setHasFixedSize(true)
-                binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this)
+                binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this,context!!)
+
 //                scheduleCategoryAdapter.notifyDataSetChanged()
 
             }

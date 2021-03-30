@@ -278,7 +278,7 @@
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="300dp"
-                android:layout_height="180dp"/>
+                android:layout_height="190dp"/>
 
         </LinearLayout>
 

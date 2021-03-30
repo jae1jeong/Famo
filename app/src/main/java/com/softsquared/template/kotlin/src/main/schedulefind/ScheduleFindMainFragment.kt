@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -67,6 +68,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindName : TextView? = null
 
     //메인액티비티 oncreate랑 비슷하다
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //setContentView 같다
         val view = inflater.inflate(R.layout.fragment_schedule_main_find, container, false)
@@ -104,7 +106,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
         //이름설정
         if (name != null){
-            scheduleFindName!!.text = name
+            scheduleFindName!!.text = name + "님,"
         }
 
         //앞으로 내보내기

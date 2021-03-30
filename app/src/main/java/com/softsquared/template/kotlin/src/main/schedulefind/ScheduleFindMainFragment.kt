@@ -83,6 +83,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
         scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(3); // 밑줄높이(두께)
 
+
         //전체일정수
         ScheduleFindService(this).tryGetWholeScheduleCount()
         //전체일정조회

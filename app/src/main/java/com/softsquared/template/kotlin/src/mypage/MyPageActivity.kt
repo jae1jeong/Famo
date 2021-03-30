@@ -40,9 +40,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     var check = 100
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
-    val monthsAchievementsMap :Map<String, Int> = mapOf()
+    val monthsAchievementsMap: Map<String, Int> = mapOf()
 
     val temList10: ArrayList<String> = ArrayList()
+
+    val url = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,41 +142,34 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     binding.myPageTextDoneScheduleCount.text = day
                 }
 
-                //카카오로그인일경우
-                //카톡프사가 없으면 기본 이미지, 있으면 적용
+                //처음에는
+                //카톡프사가 있으면 있는거적용
+                //없으면 기본이미지 적용
+                //수정 시 url이 생긴다면 이미지는 url로 교체
 
                 if (response.loginMethod == "K") {
-                    //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
-                    if (kakaoImg!!.isEmpty()) {
-                        Glide.with(this).load(R.drawable.my_page_img2)
-                            .centerCrop().into(binding.myPageImg)
-                    } else if (kakaoImg!!.isNotEmpty()) {
+
+                    if (response.profileImageURL == null) {
+                        //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
                         Glide.with(this).load(kakaoImg)
-                                .error(R.drawable.my_page_img2)
+                            .error(R.drawable.my_page_img2)
+                            .centerCrop().into(binding.myPageImg)
+                    } else {
+                        //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
+                        Glide.with(this).load(response.profileImageURL)
+                            .error(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageImg)
                     }
-                    //check = 1 > 갤러리
-                    //check = 2 > 카메라
-                    if (check == 1) {
-                        binding.myPageImg.setImageURI(galleryUrl)
-                    } else if (check == 2) {
-                        binding.myPageImg.setImageBitmap(cameraImg)
-                    }
+
                 }
 
                 //페모로그인일경우
                 if (response.loginMethod == "F") {
-                    //처음에는 기본 이미지
-                    if (gallery == null && camera == null) {
-                        Glide.with(this).load(R.drawable.my_page_img2)
-                                .error(R.drawable.my_page_img2)
-                                .centerCrop().into(binding.myPageImg)
-                    } else if (check == 1) {
-                        binding.myPageImg.setImageURI(galleryUrl)
-                    } else {
-                        binding.myPageImg.setImageBitmap(cameraImg)
-                    }
-
+                    Log.d("TAG", "myPage: ㅇㅇ")
+                    Log.d("TAG", "myPage: ${response.profileImageURL}")
+                    Glide.with(this).load(response.profileImageURL)
+                        .error(R.drawable.my_page_img2)
+                        .centerCrop().into(binding.myPageImg)
                 }
 
                 //이름 적용
@@ -206,7 +201,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             val responseJsonArray = response.data.asJsonArray
             responseJsonArray.forEach {
                 val jsonObject = it.asJsonObject
-                binding.myPageTextRestScheduleCount.text =  jsonObject.get("remainScheduleCount").asString
+                binding.myPageTextRestScheduleCount.text =
+                    jsonObject.get("remainScheduleCount").asString
             }
         } else {
             Log.d("MyPageFragment", "onGetRestScheduleCountSuccess: ${response.message}")
@@ -331,11 +327,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //        lineChart.animateY(2000, Easing.EaseInCubic)
 
                 lineDataSet.setDrawFilled(true)
-                val fillGradient = ContextCompat.getDrawable(this, R.drawable.my_page_graph_gradient)
+                val fillGradient =
+                    ContextCompat.getDrawable(this, R.drawable.my_page_graph_gradient)
                 lineDataSet.fillDrawable = fillGradient
 
                 lineChart.run {
-                    description.isEnabled = true //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
+                    description.isEnabled =
+                        true //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
 //            setMaxVisibleValueCount(4) // 최대 보이는 그래프 개수를 7개로 정해주었다.
                     setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
                     setDrawGridBackground(false)//격자구조 넣을건지
@@ -351,14 +349,16 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         setDrawGridLines(false) //격자 라인 활용
                         setDrawAxisLine(true) // 축 그리기 설정
 
-                        axisLineColor = ContextCompat.getColor(context, R.color.graph_color) // 축 색깔 설정
-                        gridColor = ContextCompat.getColor(context,R.color.black) // 축 아닌 격자 색깔 설정
+                        axisLineColor =
+                            ContextCompat.getColor(context, R.color.graph_color) // 축 색깔 설정
+                        gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
 //                textColor = ContextCompat.getColor(context,R.color.colorSemi50Black) // 라벨 텍스트 컬러 설정
                         textSize = 8f //라벨 텍스트 크기
                     }
                     xAxis.run {
                         position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
-                        axisMaximum = (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMaximum =
+                            (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
                         axisMinimum = 0f // 최소값 0
                         granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
                         setDrawAxisLine(true) // 축 그림
@@ -387,7 +387,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 lineChart.marker = marker
 
 
-
             }
             else -> {
 
@@ -408,7 +407,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             var days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
             val test = ArrayList<String>()
 
-            for (i in 0 until temList10.size){
+            for (i in 0 until temList10.size) {
                 days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
                 test.add(temList10[i])
             }
@@ -420,5 +419,15 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         }
 
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val url = ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY,null)
+//            Log.d("TAG", "onResume 확인")
+//            Glide.with(this).load(url)
+//                .error(R.drawable.my_page_img2)
+//                .centerCrop().into(binding.myPageImg)
+
+//    }
 
 }

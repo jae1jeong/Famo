@@ -267,8 +267,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 //그래프 마커좌표
                 val entries: ArrayList<Entry> = ArrayList()
-                for (i in 0 until temList10.size){
-                    entries.add(Entry((i+1).toFloat(), temList4[i].toFloat()))
+                for (i in 0 until temList10.size) {
+                    entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
                 }
 
                 //라벨
@@ -357,6 +357,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                             (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
                         axisMinimum = 0f // 최소값 0
                         axisMaximum = (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMaximum =
+                            (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
 //                        axisMinimum = 0F // 최소값 0
                         granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
                         setDrawAxisLine(true) // 축 그림
@@ -403,24 +405,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             val test = ArrayList<String>()
 
             for (i in 0 until temList10.size) {
-                days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
                 test.add(temList10[i])
                 for (i in 0 until temList10.size) {
                     test.add(temList10[i] + "월")
                 }
             }
             return test.getOrNull(value.toInt() - 1) ?: value.toString()
+
         }
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        val url = ApplicationClass.sSharedPreferences.getString(Constants.PROFILE_GALLERY,null)
-//            Log.d("TAG", "onResume 확인")
-//            Glide.with(this).load(url)
-//                .error(R.drawable.my_page_img2)
-//                .centerCrop().into(binding.myPageImg)
-
-//    }
-
 }

@@ -73,12 +73,12 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
             when(v){
                 pick -> {
                     //즐겨찾기 안되있으면 별표시
-                    if (wholeList[adapterPosition].pick == 2131165412) {
+                    if (wholeList[adapterPosition].pick == 2131165416) {
                         pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        wholeList[adapterPosition].pick = 2131165416
+                        wholeList[adapterPosition].pick = 2131165412
                     } else {
                         pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        wholeList[adapterPosition].pick = 2131165412
+                        wholeList[adapterPosition].pick = 2131165416
                     }
                     ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                 }

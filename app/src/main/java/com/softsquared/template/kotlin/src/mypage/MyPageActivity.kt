@@ -268,20 +268,15 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 //그래프 마커좌표
                 val entries: ArrayList<Entry> = ArrayList()
-                entries.add(Entry(test.toFloat(), 10F))
-                entries.add(Entry(2F, 30F))
-                entries.add(Entry(3F, 0F))
-//                entries.add(Entry(4F, 70F))
-//                entries.add(Entry(5F, 60F))
-//                entries.add(Entry(6F, 40F))
-//        entries.add(Entry(60F, 60F))
+                for (i in 0 until temList10.size){
+                    entries.add(Entry((i+1).toFloat(), temList4[i].toFloat()))
+                }
 
+                //라벨
                 val lineDataSet = LineDataSet(entries, "속성명1")
                 lineDataSet.lineWidth = 1f
                 lineDataSet.circleRadius = 6f
                 lineDataSet.setCircleColor(Color.parseColor("#ffae2a"))
-//        lineDataSet.circleHoleColor(Color.BLUE)
-//        lineDataSet.setCircleColorHole(Color.BLUE)
                 lineDataSet.color = Color.parseColor("#ffae2a")
                 lineDataSet.setDrawCircleHole(true)
                 lineDataSet.setDrawCircles(true)
@@ -326,11 +321,13 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 lineChart.setDrawGridBackground(true)
 //        lineChart.animateY(2000, Easing.EaseInCubic)
 
+                //그리디언트색상
                 lineDataSet.setDrawFilled(true)
                 val fillGradient =
                     ContextCompat.getDrawable(this, R.drawable.my_page_graph_gradient)
                 lineDataSet.fillDrawable = fillGradient
 
+                //setting
                 lineChart.run {
                     description.isEnabled =
                         true //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
@@ -353,27 +350,31 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                             ContextCompat.getColor(context, R.color.graph_color) // 축 색깔 설정
                         gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
 //                textColor = ContextCompat.getColor(context,R.color.colorSemi50Black) // 라벨 텍스트 컬러 설정
-                        textSize = 8f //라벨 텍스트 크기
+                        textSize = 11f //라벨 텍스트 크기
                     }
                     xAxis.run {
                         position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
+<<<<<<< HEAD
                         axisMaximum =
                             (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
                         axisMinimum = 0f // 최소값 0
+=======
+                        axisMaximum = (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+//                        axisMinimum = 0F // 최소값 0
+>>>>>>> blue
                         granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
                         setDrawAxisLine(true) // 축 그림
                         setDrawGridLines(false) // 격자
                         setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                        axisLineWidth = 0.1f
-                        setBorderWidth(0.1f)
-                        spaceMax = 0.1f
 
                         gridColor = ContextCompat.getColor(context, R.color.black)
                         axisLineColor = ContextCompat.getColor(context, R.color.graph_color)
 
 //                textColor = ContextCompat.getColor(context,R.color.purple_700) //라벨 색상
                         valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
-                        textSize = 8f // 텍스트 크기
+                        paddingTop.plus(10f)
+
+                        textSize = 11f // 텍스트 크기
                     }
                     axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
                     setTouchEnabled(true) // 그래프 터치해도 아무 변화없게 막음
@@ -382,6 +383,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 }
 
+                //마커 클릭 시 값보이게
                 val marker = MyMarkerView(this, R.layout.markerviewtext)
                 marker.chartView = lineChart
                 lineChart.marker = marker
@@ -400,20 +402,19 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     //x축 값 설정
     inner class MyXAxisFormatter : ValueFormatter() {
 
-
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
 
-            val a = "3월"
-            var days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
             val test = ArrayList<String>()
 
+<<<<<<< HEAD
             for (i in 0 until temList10.size) {
                 days = arrayOf("10월", "11월", "12월", "1월", "2월", a)
                 test.add(temList10[i])
+=======
+            for (i in 0 until temList10.size){
+                test.add(temList10[i]+"월")
+>>>>>>> blue
             }
-
-
-
 
             return test.getOrNull(value.toInt() - 1) ?: value.toString()
         }

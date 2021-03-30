@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -66,8 +67,10 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindViewPager : ViewPager? = null
     var scheduleFindTabLayout : TabLayout? = null
     var scheduleFindTvTotaySchedule : TextView? = null
+    var scheduleFindName : TextView? = null
 
     //메인액티비티 oncreate랑 비슷하다
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //setContentView 같다
         val view = inflater.inflate(R.layout.fragment_schedule_main_find, container, false)
@@ -79,6 +82,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindViewPager = view.findViewById(R.id.schedule_find_view_pager)
         scheduleFindTabLayout = view.findViewById(R.id.schedule_find_tab_layout)
         scheduleFindtTvTotaySchedule = view.findViewById(R.id.schedule_find_tv_totay_schedule)
+        scheduleFindName = view.findViewById(R.id.schedule_find_name)
 
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
         scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(3); // 밑줄높이(두께)
@@ -100,9 +104,20 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindTabLayout!!.setupWithViewPager(scheduleFindViewPager)
 
 
+        val name = ApplicationClass.sSharedPreferences.getString(
+            Constants.USER_NICKNAME, null)
+
+<<<<<<< HEAD
+=======
+        //이름설정
+        if (name != null){
+            scheduleFindName!!.text = name + "님,"
+        }
+
         //앞으로 내보내기
         scheduleFindtTvTotaySchedule!!.bringToFront()
 
+>>>>>>> blue
         //자세히 보기 클릭 시
         scheduleFindBtnDetail!!.setOnClickListener {
             val intent = Intent(activity, WholeScheduleActivity::class.java)

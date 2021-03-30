@@ -92,7 +92,7 @@ class SchedulefindFilterBottomDialogFragment() : BottomSheetDialogFragment(),
 
 //        btn_ok!!.setOnClickListener(this)
 
-        //남은 일정 클릭 시
+//        남은 일정 클릭 시
 //        filter_btn_remain.setOnClickListener {
 //
 //            if (remainCnt % 2 != 0) {

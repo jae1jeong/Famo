@@ -70,13 +70,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
         binding.scheduleFindBtnCategory.setColorFilter(Color.parseColor("#bfc5cf"))
 
-        val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
-
-        //검색
-        if (word != null){
-            binding.scheduleFindBtn.text = word
-        }
-
         //검색창 클릭 시
         binding.scheduleFindBtn.setOnClickListener {
             val intent = Intent(activity, ScheduleSearchActivity::class.java)
@@ -125,6 +118,9 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
     //카테고리 클릭 시 카테고리별 일정으로 이동
     override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
+
+        binding.scheduleFindBtn.text = ""
+
         val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
         val bundle = Bundle()
 //        bundle.putInt("categoryID", position)
@@ -320,7 +316,9 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         if (word != null) {
             Log.d("TAG", "onResume: 안 $word")
 
-            if (word!!.length > 0) {
+            binding.scheduleFindBtn.text = word
+
+            if (Constants.SEARCH_CHECK) {
                 val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
                 childFragmentManager.beginTransaction()
                     .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)

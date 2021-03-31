@@ -204,61 +204,61 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
                     for (i in 0 until response.data.size) {
                         //즐겨찾기 X and 카테고리 O인경우
-                        if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                        if (response.data[i].colorInfo == null) {
                             wholeScheduleList.add(
                                 ScheduleWholeData(
                                     response.data[i].scheduleID,
                                     response.data[i].scheduleDate,
                                     response.data[i].scheduleName,
                                     response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].schedulePick,
                                     response.data[i].scheduleStatus,
                                     "#CED5D9"
                                 )
                             )
 //                            "#CED5D9"
                             //즐겨찾기X and 카테고리O
-                        } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                        } else if (response.data[i].colorInfo != null) {
                             wholeScheduleList.add(
                                 ScheduleWholeData(
                                     response.data[i].scheduleID,
                                     response.data[i].scheduleDate,
                                     response.data[i].scheduleName,
                                     response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].schedulePick,
                                     response.data[i].scheduleStatus,
                                     response.data[i].colorInfo
                                 )
                             )
                         }
                         //즐겨찾기O and 카테고리 X
-                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-                            wholeScheduleList.add(
-                                ScheduleWholeData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    response.data[i].scheduleStatus,
-                                    "#CED5D9"
-                                )
-                            )
-                        }
-                        //즐겨찾기 O and 카테고리 O
-                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-                            wholeScheduleList.add(
-                                ScheduleWholeData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    response.data[i].scheduleStatus,
-                                    response.data[i].colorInfo
-                                )
-                            )
-                        }
+//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+//                            wholeScheduleList.add(
+//                                ScheduleWholeData(
+//                                    response.data[i].scheduleID,
+//                                    response.data[i].scheduleDate,
+//                                    response.data[i].scheduleName,
+//                                    response.data[i].scheduleMemo,
+//                                    R.drawable.schedule_find_bookmark,
+//                                    response.data[i].scheduleStatus,
+//                                    "#CED5D9"
+//                                )
+//                            )
+//                        }
+//                        //즐겨찾기 O and 카테고리 O
+//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+//                            wholeScheduleList.add(
+//                                ScheduleWholeData(
+//                                    response.data[i].scheduleID,
+//                                    response.data[i].scheduleDate,
+//                                    response.data[i].scheduleName,
+//                                    response.data[i].scheduleMemo,
+//                                    R.drawable.schedule_find_bookmark,
+//                                    response.data[i].scheduleStatus,
+//                                    response.data[i].colorInfo
+//                                )
+//                            )
+//                        }
                     }
                 }
 

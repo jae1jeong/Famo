@@ -39,10 +39,15 @@ class ScheduleWholeAdapter(
     override fun onBindViewHolder(holder: ScheduleWholeHolder, position: Int) {
 
         holder.date.text = wholeList[position].date
-        holder.pick.setImageResource(wholeList[position].pick)
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
+
+        if (wholeList[position].pick == -1){
+            holder.pick.setImageResource(R.drawable.schedule_find_inbookmark)
+        }else{
+            holder.pick.setImageResource(R.drawable.schedule_find_bookmark)
+        }
 
 
         val params = LinearLayout.LayoutParams(
@@ -101,18 +106,29 @@ class ScheduleWholeAdapter(
             )
             Log.d("TAG", "onClick: ${wholeList[0].id}")
 
-            when(v){
-                pick -> {
-                    //즐겨찾기 안되있으면 별표시
-                    if (wholeList[adapterPosition].pick == 2131165416) {
-                        pick.setImageResource(R.drawable.schedule_find_bookmark)
-                        wholeList[adapterPosition].pick = 2131165412
-                    } else {
-                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                        wholeList[adapterPosition].pick = 2131165416
-                    }
-                    ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
-                }
+
+            //지금 즐찾안되있는놈 두번눌러야 색변함
+           when(v){
+               pick -> {
+                   Log.d("TAG", "onClick확인: ${wholeList[adapterPosition].pick}")
+
+                   if (wholeList[adapterPosition].pick == -1){
+                       pick.setImageResource(R.drawable.schedule_find_bookmark)
+                       wholeList[adapterPosition].pick = 1
+                   }else{
+                       pick.setImageResource(R.drawable.schedule_find_inbookmark)
+                       wholeList[adapterPosition].pick = -1
+                   }
+
+//                   if (wholeList[adapterPosition].pick == 2131165412) {
+//                       pick.setImageResource(R.drawable.schedule_find_bookmark)
+//                       wholeList[adapterPosition].pick = 2131165416
+//                   } else {
+//                       pick.setImageResource(R.drawable.schedule_find_inbookmark)
+//                       wholeList[adapterPosition].pick = 2131165412
+//                   }
+                   ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
+               }
 
 
 //                shape -> {

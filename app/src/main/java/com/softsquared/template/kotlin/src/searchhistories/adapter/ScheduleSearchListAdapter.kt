@@ -13,6 +13,7 @@ import com.softsquared.template.kotlin.src.searchhistories.SearchHistoriesServic
 import com.softsquared.template.kotlin.src.searchhistories.SearchHistoriesView
 import com.softsquared.template.kotlin.src.searchhistories.models.SearchHistoriesResponse
 import com.softsquared.template.kotlin.src.searchhistories.models.SearchListData
+import com.softsquared.template.kotlin.util.Constants
 
 class ScheduleSearchListAdapter(var searchList: ArrayList<SearchListData>) :
     RecyclerView.Adapter<ScheduleSearchListAdapter.SearchListHolder>(),
@@ -59,6 +60,7 @@ class ScheduleSearchListAdapter(var searchList: ArrayList<SearchListData>) :
 
 
                     Log.d("TAG", "onClick1: $adapterPosition")
+                    Constants.SEARCH_CHECK = false
                     SearchHistoriesService(this@ScheduleSearchListAdapter)
                         .tryDeleteSearchHistories(searchList[adapterPosition].text)
                     removeItem(adapterPosition)

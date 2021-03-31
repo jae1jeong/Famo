@@ -31,6 +31,7 @@ class AccountWithdrawalDialog(context:Context) : Dialog(context)
         cancel.setOnClickListener {
             Toast.makeText(context,"아니오눌림",Toast.LENGTH_SHORT).show()
             Log.d("TAG", "아니오 눌림 ")
+            dismiss()
         }
 
     }

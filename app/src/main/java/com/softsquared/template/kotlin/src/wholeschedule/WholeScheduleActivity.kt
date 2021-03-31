@@ -3,6 +3,8 @@ package com.softsquared.template.kotlin.src.wholeschedule
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.widget.FrameLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityWholeScheduleBinding
 import com.softsquared.template.kotlin.src.wholeschedule.adapter.WholeSchedulePagerAdapter
@@ -33,7 +35,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         binding.wholeScheduleTabLayout.setupWithViewPager(binding.wholeScheduleViewPager)
 
         binding.wholeScheduleTabLayout.setSelectedTabIndicatorColor(Color.parseColor("#000000")); // 밑줄색
-        binding.wholeScheduleTabLayout.setSelectedTabIndicatorHeight(2); // 밑줄높이(두께)
+        binding.wholeScheduleTabLayout.setSelectedTabIndicatorHeight(9); // 밑줄높이(두께)
 
         //X버튼
         binding.wholeScheduleXBtn.setOnClickListener {

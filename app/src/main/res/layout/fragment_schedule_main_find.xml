@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_main_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <include layout="@layout/shimmer_find_schedule"/>
-    </com.facebook.shimmer.ShimmerFrameLayout>
+<!--    <com.facebook.shimmer.ShimmerFrameLayout-->
+<!--        android:id="@+id/shimmer_main_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        >-->
+<!--        <include layout="@layout/shimmer_find_schedule"/>-->
+<!--    </com.facebook.shimmer.ShimmerFrameLayout>-->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/schedule_find_main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,8 @@
                 android:background="@drawable/background_item_memo"
                 android:elevation="5dp"
                 android:layout_marginRight="1dp"
-                android:layout_marginLeft="1dp">
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="2dp">
 
                 <ImageView
                     android:layout_width="69dp"

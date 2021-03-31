@@ -74,7 +74,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
         //검색
         if (word != null){
-            binding.scheduleFindBtn.setText(word)
+            binding.scheduleFindBtn.text = word
         }
 
         //검색창 클릭 시

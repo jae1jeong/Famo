@@ -68,7 +68,8 @@
                 android:text="아니오"
                 android:textStyle="normal"
                 android:textSize="15sp"
-                android:textColor="#a7adb5"/>
+                android:textColor="#a7adb5"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
 
             <Button
                 android:id="@+id/account_check"
@@ -79,7 +80,8 @@
                 android:text="네"
                 android:textSize="15sp"
                 android:textColor="@color/white"
-                android:textStyle="normal"/>
+                android:textStyle="normal"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
 
         </LinearLayout>
 

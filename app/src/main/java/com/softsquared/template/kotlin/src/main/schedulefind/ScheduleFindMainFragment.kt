@@ -8,43 +8,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.lakue.pagingbutton.LakuePagingButton
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.AddMemoView
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
-import com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
-import java.lang.NullPointerException
+
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView{
 
@@ -72,7 +63,11 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     //메인액티비티 oncreate랑 비슷하다
     @SuppressLint("SetTextI18n")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         //setContentView 같다
         val view = inflater.inflate(R.layout.fragment_schedule_main_find, container, false)
 
@@ -86,7 +81,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindName = view.findViewById(R.id.schedule_find_name)
 
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
-        scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(3); // 밑줄높이(두께)
+        scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(9); // 밑줄높이(두께)
 
 
         //전체일정수
@@ -106,7 +101,8 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
 
         val name = ApplicationClass.sSharedPreferences.getString(
-            Constants.USER_NICKNAME, null)
+            Constants.USER_NICKNAME, null
+        )
 
         //이름설정
         if (name != null){
@@ -165,19 +161,19 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        shimmer_main_layout.startShimmerAnimation()
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(2500)
-            try{
-                if(shimmer_main_layout.isAnimationStarted){
-                    shimmer_main_layout.stopShimmerAnimation()
-                    shimmer_main_layout.visibility = View.GONE
-                    schedule_find_main_layout.visibility = View.VISIBLE
-                }
-            }catch (e:NullPointerException){
-
-            }
-        }
+//        shimmer_main_layout.startShimmerAnimation()
+//        GlobalScope.launch(Dispatchers.Main) {
+//            delay(2500)
+//            try{
+//                if(shimmer_main_layout.isAnimationStarted){
+//                    shimmer_main_layout.stopShimmerAnimation()
+//                    shimmer_main_layout.visibility = View.GONE
+//                    schedule_find_main_layout.visibility = View.VISIBLE
+//                }
+//            }catch (e: NullPointerException){
+//
+//            }
+//        }
     }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
@@ -273,7 +269,8 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                         false
                     )
                 recyclerviewWhole!!.setHasFixedSize(true)
-                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList){ it ->
+
+                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList) { it ->
                     val detailDialog = ScheduleDetailDialog(context!!)
                     val scheduleItem = MemoItem(
                         it.id,
@@ -285,7 +282,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                         null,
                         null
                     )
-                    detailDialog.start(scheduleItem,null)
+                    detailDialog.start(scheduleItem, null)
                     detailDialog.setOnModifyBtnClickedListener {
                         // 스케쥴 ID 보내기
                         val edit = ApplicationClass.sSharedPreferences.edit()
@@ -346,7 +343,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                     wholePagingCnt = (cnt / 10) + 1
                 }
 
-                Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt", )
+                Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt")
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, 1)
 
             }

@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +38,8 @@ import kotlinx.android.synthetic.main.fragment_schedule_find_bookmark.*
 class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoView {
 
     var recyclerViewBookmark: RecyclerView? = null
+    var scheduleFindBookmark: NestedScrollView? = null
+    var scheduleFindFrameLayoutNoItem: FrameLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +53,8 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
         )
 
         recyclerViewBookmark = view.findViewById(R.id.recyclerView_bookmark)
+        scheduleFindBookmark = view.findViewById(R.id.schedule_find_bookmark)
+        scheduleFindFrameLayoutNoItem = view.findViewById(R.id.schedule_find_frame_layout_no_item)
 
         GlobalScope.launch(Dispatchers.IO) {
             delay(1000)
@@ -66,68 +72,72 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
 
                 val boomarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
-                for (i in 0 until response.data.size) {
+                if (response.data.size == 0){
+                    scheduleFindBookmark!!.visibility = View.GONE
+                    scheduleFindFrameLayoutNoItem!!.visibility = View.VISIBLE
+                }else{
+                    for (i in 0 until response.data.size) {
 
-                    if (response.data[i].colorInfo != null) {
-                        boomarkList.add(
-                            WholeScheduleBookmarkData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                response.data[i].schedulePick,
-                                response.data[i].categoryID,
-                                response.data[i].colorInfo
+                        if (response.data[i].colorInfo != null) {
+                            boomarkList.add(
+                                WholeScheduleBookmarkData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    response.data[i].schedulePick,
+                                    response.data[i].categoryID,
+                                    response.data[i].colorInfo
+                                )
                             )
-                        )
-                    } else {
-                        boomarkList.add(
-                            WholeScheduleBookmarkData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                response.data[i].schedulePick,
-                                response.data[i].categoryID,
-                                "#ced5d9"
+                        } else {
+                            boomarkList.add(
+                                WholeScheduleBookmarkData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    response.data[i].schedulePick,
+                                    response.data[i].categoryID,
+                                    "#ced5d9"
+                                )
                             )
-                        )
+                        }
+
+
                     }
+                    recyclerViewBookmark!!.layoutManager = LinearLayoutManager(
+                        context, LinearLayoutManager.VERTICAL, false
+                    )
+                    recyclerViewBookmark!!.setHasFixedSize(true)
+                    recyclerViewBookmark!!.adapter = ScheduleBookmarkAdapter(boomarkList) { it ->
+                        val detailDialog = ScheduleDetailDialog(context!!)
+                        val scheduleItem = MemoItem(
+                            it.scheduleID,
+                            "",
+                            0,
+                            it.scheduleName,
+                            it.scheduleMemo,
+                            false,
+                            null,
+                            null)
 
+                        detailDialog.start(scheduleItem,null)
+                        detailDialog.setOnModifyBtnClickedListener {
+                            // 스케쥴 ID 보내기
+                            val edit = ApplicationClass.sSharedPreferences.edit()
+                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                            edit.apply()
+                            Constants.IS_EDIT = true
 
-                }
-                recyclerViewBookmark!!.layoutManager = LinearLayoutManager(
-                    context, LinearLayoutManager.VERTICAL, false
-                )
-                recyclerViewBookmark!!.setHasFixedSize(true)
-                recyclerViewBookmark!!.adapter = ScheduleBookmarkAdapter(boomarkList) { it ->
-                    val detailDialog = ScheduleDetailDialog(context!!)
-                    val scheduleItem = MemoItem(
-                        it.scheduleID,
-                        "",
-                        0,
-                        it.scheduleName,
-                        it.scheduleMemo,
-                        false,
-                        null,
-                    "")
+                            //바텀 시트 다이얼로그 확장
+                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
 
-                    detailDialog.start(scheduleItem,"탑제목?")
-                    detailDialog.setOnModifyBtnClickedListener {
-                        // 스케쥴 ID 보내기
-                        val edit = ApplicationClass.sSharedPreferences.edit()
-                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
-                        edit.apply()
-                        Constants.IS_EDIT = true
+                        }
 
-                        //바텀 시트 다이얼로그 확장
-                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
-
-//                val recycleAdapter = ScheduleBookmarkAdapter(boomarkList,this,)
-//                binding.recyclerViewBookmark.adapter = recycleAdapter
                     }
-
                 }
+
 
 
             }

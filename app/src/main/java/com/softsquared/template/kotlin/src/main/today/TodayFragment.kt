@@ -87,15 +87,19 @@ class TodayFragment() :
 
         // 메모가 없을때 뷰 클릭
         binding.todayImageNoItem.setOnClickListener {
-            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
         }
 
         fun changeSchedulePosition(fromPos:Int,targetPos:Int){
+            Log.d("순서", "$fromPos 에서 -> $targetPos 로")
+            Log.d("순서", "isSuccess: ${memoList[fromPos].id}번 일정 위치를 ${memoList[fromPos].title} $targetPos 로 이동")
             TodayService(this).onPostChangeItemPosition(ChangePositionItemRequest(memoList[fromPos].id,targetPos))
         }
         // 리사이클러뷰 아이템 스와이프,드래그
-        val swipe = object: MemoSwipeHelper(todayMemoAdapter!!,context!!,binding.todayRecyclerView,200,{
-          fromPos,targetPos ->   changeSchedulePosition(fromPos,targetPos)
+        val swipe = object: MemoSwipeHelper(todayMemoAdapter!!, context!!, binding.todayRecyclerView, 200, { fromPos, targetPos ->
+            // 서로 바뀐 것 같아서 반대로
+            changeSchedulePosition(targetPos,fromPos)
+            for (i in 0 until memoList.size) Log.d("순서", "index:$i ${memoList[i].title}")
         })
         {
             override fun instantiateMyButton(
@@ -356,7 +360,7 @@ class TodayFragment() :
                 restScheduleCount = jsonObject.get("remainScheduleCount").asInt
             }
             Log.d("TAG", "onGetRestScheduleCountSuccess: $restScheduleCount")
-            binding.todayTextRestSchedule.text=  "남은일정 ${restScheduleCount}개"
+            binding.todayTextRestSchedule.text=  "남은 일정 ${restScheduleCount}개"
         }else{
             Log.d("TodayFragment", "onGetRestScheduleCountSuccess: ${response.message}")
         }
@@ -369,7 +373,7 @@ class TodayFragment() :
         if(response.isSuccess && response.code == 100){
             Log.d("todayFragment", "onGetUserTopCommentSuccess: 해낸 일정 조회 성공")
             doneScheduleCount = response.totaldonedata[0].doneScheduleCount.toString().toInt()
-            binding.todayTextDoneSchedule.text = "해낸일정 ${doneScheduleCount}개"
+            binding.todayTextDoneSchedule.text = "해낸 일정 ${doneScheduleCount}개"
         }else{
             showCustomToast(response.message.toString())
         }

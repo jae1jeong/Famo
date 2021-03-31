@@ -18,6 +18,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.bookmark.adapter.WholeScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
+import kotlinx.android.synthetic.main.category_delete_impossible_dialog.*
 import java.util.ArrayList
 
 class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBinding>(
@@ -185,7 +186,8 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                             Constants.IS_EDIT = true
 
                             //바텀 시트 다이얼로그 확장
-                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+//                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            (MainActivity.mContext as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                         }
                     }
                 }

@@ -68,7 +68,7 @@
 
     <TextView
         android:gravity="center"
-        android:background="@color/shimmer_loading_color"
+        android:background="@drawable/background_shimmer_radius"
         android:id="@+id/textView17"
         android:layout_width="40dp"
         android:layout_height="40dp"

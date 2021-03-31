@@ -26,8 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <LinearLayout
-            android:weightSum="10"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/white"
             android:paddingTop="25dp"
             android:id="@+id/main_top_layout"
@@ -38,9 +37,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.tabs.TabLayout
-                android:layout_weight="10"
+                app:tabIndicatorHeight="0dp"
+                app:tabIndicatorFullWidth="false"
+                android:layout_gravity="start"
+                app:tabMaxWidth="0dp"
+                app:tabGravity="start"
+                app:tabMode="fixed"
                 android:id="@+id/main_tab_layout"
-                android:layout_width="0dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,13 +55,16 @@
             </com.google.android.material.tabs.TabLayout>
 
             <ImageView
+                android:layout_marginEnd="16dp"
                 android:id="@+id/my_page"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/my_profile_icon" />
-        </LinearLayout>
+                android:src="@drawable/my_profile_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/main_tab_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_tab_layout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.viewpager.widget.ViewPager

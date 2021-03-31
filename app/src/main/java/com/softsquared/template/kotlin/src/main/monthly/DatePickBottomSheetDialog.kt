@@ -60,7 +60,6 @@ class DatePickBottomSheetDialog:BottomSheetDialogFragment() {
         // 완료 버튼
         monthly_btn_finish.setOnClickListener {
             val transaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
-            Log.d("monthly", "onViewCreated:$strDate ")
             val bundle = Bundle()
             bundle.putString("selectedDate",strDate)
             val monthlyFragment = MonthlyFragment()

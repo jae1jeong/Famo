@@ -453,7 +453,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         when(response.code){
             100 -> {
                 Log.d("TAG", "onGetMyPageSuccess: MyPage수정페이지 조회성공")
-                showCustomToast("MyPage수정페이지 조회성공")
 
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_THUMBNAILIMAGEURL,
@@ -503,7 +502,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                         .error(R.drawable.my_page_img2)
                         .centerCrop().into(binding.myPageEditImg)
 
-                    binding.myPageEditAccountMail.setText("페모회원입니다!")
+                    binding.myPageEditAccountMail.setText("페모 회원입니다!")
                 }
 
 
@@ -549,7 +548,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         when(response.code){
             100 -> {
                 Log.d("TAG", "onPutMyPageUpdateSuccess: MyPage수정성공")
-                showCustomToast("수정성공")
 
                 val sampleDate = strDate
                 val sf = SimpleDateFormat("yyyy-MM-dd")
@@ -575,6 +573,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val intent = Intent(this, MyPageActivity::class.java)
                 intent.putExtra("check", imgCnt)
                 startActivity(intent)
+                finish()
 
 
             }
@@ -591,7 +590,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
         if(response.isSuccess && response.code == 100){
-            showCustomToast(response.message.toString())
 
 //            val edit = ApplicationClass.sSharedPreferences.edit()
 //            edit.putString(Constants.PROFILE_GALLERY, response.profileImageURL)

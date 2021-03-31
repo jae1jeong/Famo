@@ -89,6 +89,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 val dateStrList = strDate?.split("-")
                 currentMonth = YearMonth.parse("${dateStrList?.get(0)!!}-${dateStrList[1]}")
                 selectedDate = LocalDate.parse(strDate)
+                Log.d("TAG", "onViewCreated currentMonth: $currentMonth")
                 setMonthCalendar(currentMonth)
             }
         }
@@ -96,8 +97,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         monthly_shimmer_frame_layout.startShimmerAnimation()
 
             // 어댑터
-            monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!,{
-                                                                        memo->
+            monthlyMemoAdapter = MonthlyMemoAdapter(memoList, context!!, { memo ->
                 val detailDialog = ScheduleDetailDialog(context!!)
                 detailDialog.setOnModifyBtnClickedListener {
                     // 스케쥴 ID 보내기
@@ -109,30 +109,31 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     //바텀 시트 다이얼로그 확장
                     (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                 }
-                detailDialog.start(memo,memo.formDateStr)
+                detailDialog.start(memo, memo.formDateStr)
 
-            },{
+            }, {
                 // 일정삭제
-                memo->
+                memo ->
                 AskDialog(context!!)
-                    .setTitle("일정삭제")
-                    .setMessage("일정을 삭제하시겠습니까?")
-                    .setPositiveButton("삭제"){
-                        showLoadingDialog(context!!)
-                        TodayService(this).onPutDeleteMemo(memo.id)
-                    }
-                    .setNegativeButton("취소"){
-                    }.show()
+                        .setTitle("일정삭제")
+                        .setMessage("일정을 삭제하시겠습니까?")
+                        .setPositiveButton("삭제") {
+                            showLoadingDialog(context!!)
+                            TodayService(this).onPutDeleteMemo(memo.id)
+                        }
+                        .setNegativeButton("취소") {
+                        }.show()
 
-            },{
+            }, {
                 // 공유
-                val sendStringData ="${it.title}\n${it.description}\n${it.formDateStr}\nBy Famo"
+                val sendStringData = "${it.title}\n${it.description}\n${it.formDateStr}\n"
                 val sendIntent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT,sendStringData)
+                    putExtra(Intent.EXTRA_TEXT, sendStringData)
                     type = "text/plain"
                 }
-                if(sendIntent.resolveActivity((activity as MainActivity).packageManager)!=null){
+                Log.d("monthly", "onViewCreated: share sendIntent ${sendIntent} ${sendIntent.resolveActivity((activity as MainActivity).packageManager) == null}")
+                if (sendIntent.resolveActivity((activity as MainActivity).packageManager) != null) {
                     startActivity(sendIntent)
                 }
             })
@@ -152,7 +153,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
 
             // 달력 일자 클릭 리스너
             init {
-
+                Log.d("TAG", "setUpCalendar: calendar init")
                 view.setOnClickListener {
                     if(day.owner == DayOwner.THIS_MONTH){
                         setPassivePreviousDayView()
@@ -218,24 +219,38 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         binding.calendarView.monthHeaderBinder = object:MonthHeaderFooterBinder<CalendarViewHeader>{
             override fun bind(container: CalendarViewHeader, month: CalendarMonth) {
                 container.headerMonthTextTitle.text = "${CalendarConverter.monthToShortMonthName(month.yearMonth.month.name)}"
-                container.headerLayoutYear.setOnClickListener {
-                    val datePickBottomSheetDialog = DatePickBottomSheetDialog()
-                    datePickBottomSheetDialog.show(
-                        childFragmentManager,
-                        datePickBottomSheetDialog.tag
-                    )
+                container.headerLayoutYear.setOnTouchListener { _, event ->
+                    when(event.action){
+                        MotionEvent.ACTION_DOWN->{
+                            val datePickBottomSheetDialog = DatePickBottomSheetDialog()
+                            datePickBottomSheetDialog.show(
+                                    childFragmentManager,
+                                    datePickBottomSheetDialog.tag
+                            )
+                        }
+                    }
+                    false
                 }
                 container.headerBtnYearDatePicker.text = "${month.year}"
-                container.headerBtnMonthPlus.setOnClickListener {
-                    currentMonth = currentMonth.plusMonths(1)
-                    Log.d("TAG", "bind: $currentMonth")
-                    setMonthCalendar(currentMonth)
+                container.headerBtnMonthPlus.setOnTouchListener { _, event ->
+                    when(event.action){
+                        MotionEvent.ACTION_DOWN->{
+                            currentMonth = currentMonth.plusMonths(1)
+                            setMonthCalendar(currentMonth)
 
+                        }
+                    }
+                    false
                 }
-                container.headerBtnMonthMinus.setOnClickListener {
-                    currentMonth = currentMonth.minusMonths(1)
-                    Log.d("TAG", "bind: $currentMonth")
-                    setMonthCalendar(currentMonth)
+                container.headerBtnMonthMinus.setOnTouchListener { _, event ->
+                    when(event.action){
+                        MotionEvent.ACTION_DOWN->{
+                            currentMonth = currentMonth.minusMonths(1)
+                            setMonthCalendar(currentMonth)
+
+                        }
+                    }
+                    false
                 }
                 container.headerBtnYearDatePicker.setOnClickListener {
                 }
@@ -274,7 +289,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         }
         // job1 -> job2 -> dialog dismiss
         GlobalScope.launch(Dispatchers.Main) {
-
             val job1 = launch {
                 MonthlyService(this@MonthlyFragment).onGetUserDateList(targetMonth!!,targetYear!!)
             }
@@ -324,6 +338,16 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     }.show()
 
         },{
+            val sendStringData = "${it.title}\n${it.description}\n${it.formDateStr}\n"
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, sendStringData)
+                type = "text/plain"
+            }
+            Log.d("monthly", "onViewCreated: share sendIntent ${sendIntent} ${sendIntent.resolveActivity((activity as MainActivity).packageManager) == null}")
+            if (sendIntent.resolveActivity((activity as MainActivity).packageManager) != null) {
+                startActivity(sendIntent)
+            }
 
         })
         binding.monthlyRecyclerview.apply {
@@ -333,6 +357,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     override fun viewPagerApiRequest() {
+        Log.d("TAG", "viewPagerApiRequest called ")
         super.viewPagerApiRequest()
         todayDate = LocalDate.now()
         targetYear = todayDate?.year
@@ -425,6 +450,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 val isScheduleDay = it.asJsonObject.get("date").asString
                 userCheckedDateList.add(LocalDate.parse(isScheduleDay))
             }
+            Log.d("TAG", "onGetUserDateListSuccess: 유저 날짜 리스트 api success")
             setUpCalendar()
 
         }else{

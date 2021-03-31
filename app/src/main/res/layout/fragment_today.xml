@@ -9,7 +9,7 @@
     tools:context=".src.main.today.TodayFragment">
 
     <com.facebook.shimmer.ShimmerFrameLayout
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/today_shimmer_header_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_marginTop="43dp"
+                android:layout_marginTop="20dp"
                 android:id="@+id/today_layout_top_ment"
                 android:visibility="invisible"
                 android:layout_width="match_parent"

@@ -6,12 +6,14 @@ import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.RectF
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
+import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -43,21 +45,26 @@ abstract class MemoSwipeHelper(adapter: MemoAdapter, context:Context, private va
         if(swipePosition < 0) return@OnTouchListener false
         val point =  Point(motionEvent.rawX.toInt(),motionEvent.rawY.toInt())
         val swipeViewHolder = recyclerView.findViewHolderForAdapterPosition(swipePosition)
-        val swipedItem = swipeViewHolder!!.itemView
-        val rect = Rect()
-        swipedItem.getGlobalVisibleRect(rect)
+        try {
+            val swipedItem = swipeViewHolder!!.itemView
+            val rect = Rect()
+            swipedItem.getGlobalVisibleRect(rect)
 
-        if(motionEvent.action == MotionEvent.ACTION_DOWN ||
-            motionEvent.action == MotionEvent.ACTION_MOVE ||
-                motionEvent.action == MotionEvent.ACTION_UP){
-            if(rect.top < point.y && rect.bottom > point.y)
-                gestureDetector.onTouchEvent(motionEvent)
-            else {
-                removeQueue.add(swipePosition)
-                swipePosition = -1
-                recoverSwipeItem()
+            if(motionEvent.action == MotionEvent.ACTION_DOWN ||
+                    motionEvent.action == MotionEvent.ACTION_MOVE ||
+                    motionEvent.action == MotionEvent.ACTION_UP){
+                if(rect.top < point.y && rect.bottom > point.y)
+                    gestureDetector.onTouchEvent(motionEvent)
+                else {
+                    removeQueue.add(swipePosition)
+                    swipePosition = -1
+                    recoverSwipeItem()
+                }
             }
+        }catch (e:NullPointerException){
+            Log.d("TAG", "$e: ")
         }
+
         false
     }
     @Synchronized

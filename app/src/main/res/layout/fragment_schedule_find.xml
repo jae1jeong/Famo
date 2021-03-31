@@ -20,6 +20,7 @@
             android:layout_marginTop="17dp"
             android:orientation="vertical">
             <com.facebook.shimmer.ShimmerFrameLayout
+                android:layout_marginTop="20dp"
                 android:id="@+id/shimmer_schedule_find_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

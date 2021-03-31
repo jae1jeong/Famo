@@ -1,5 +1,6 @@
 package com.softsquared.template.kotlin.src.main
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
@@ -14,6 +15,7 @@ import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
@@ -63,6 +65,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         lateinit var categoryScheduleAdapter: MainCategoryAdapter
         val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
         var selectedCategoryId:Int?= null
+        lateinit var mContext: Context
     }
 
     //카테고리 편집으로 보내줄 변수
@@ -73,7 +76,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        mContext = this
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         // viewPager
@@ -83,26 +86,40 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         adapter.addFragment(ScheduleFindFragment(), resources.getString(R.string.find_schedule))
         binding.mainViewPager.adapter = adapter
         binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-        binding.mainTabLayout.setSelectedTabIndicatorHeight(0)
         binding.mainTabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val spannable = SpannableString(tab?.text)
                 spannable.setSpan(UnderlineSpan(),0,spannable.length,0)
-//                tab?.text = spannable
-//                tab?.setText(Html.fromHtml("<u>${tab?.text}</u>"))
-
                 spannable.setSpan(StyleSpan(Typeface.BOLD),0,spannable.length,0)
                 tab?.text = spannable
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab?.text = tab?.text
+                // 밑줄 spannable 텍스트 초기화
+                when(tab?.position){
+                    0 ->{
+                        tab.text = "월간"
+                    }
+                    1->{
+                        tab.text = "오늘"
+                    }
+                    2->{
+                        tab.text = "일정 찾기"
+                    }
+                    else->{}
+                }
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
         })
+        // 처음 앱 실행시 탭 밑줄
+//        val firstCreateTabSpannable = SpannableString("월간")
+//        firstCreateTabSpannable.setSpan(UnderlineSpan(),0,firstCreateTabSpannable.length,0)
+//        firstCreateTabSpannable.setSpan(StyleSpan(Typeface.BOLD),0,firstCreateTabSpannable.length,0)
+//        (binding.mainTabLayout.get(0) as TabLayout).text = firstCreateTabSpannable
+
         binding.mainViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             }
@@ -297,7 +314,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         display.getRealSize(size)
         val deviceHeight = size.y
         // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
-        val bottomSheetDialogHeight = deviceHeight - 435
+        val bottomSheetDialogHeight = deviceHeight - 445
         val params = binding.mainFrameBottomSheet.layoutParams
         params.height = bottomSheetDialogHeight
     }
@@ -397,7 +414,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     initializeCategoryAdapter(categoryList)
                     stateChangeBottomSheet(Constants.COLLASPE)
                     TodayFragment.restScheduleCount = TodayFragment.restScheduleCount + 1
-                    today_text_rest_schedule.text = "남은일정 ${TodayFragment.restScheduleCount}개"
+                    today_text_rest_schedule.text = "남은 일정 ${TodayFragment.restScheduleCount}개"
                 }
                 else -> {
                     showCustomToast(response.message.toString())

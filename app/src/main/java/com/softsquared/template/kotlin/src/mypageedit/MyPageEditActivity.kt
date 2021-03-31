@@ -56,9 +56,10 @@ import java.time.LocalDate
 import java.util.*
 
 class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
-    (ActivityMyPageEditBinding::inflate), MyPageEditView,MyPageEditBottomSheetDialogInterface {
+    (ActivityMyPageEditBinding::inflate), MyPageEditView, MyPageEditBottomSheetDialogInterface {
 
-    private var selectedImageUri:Uri ?= null
+    private var selectedImageUri: Uri? = null
+
     //카메라 변수
     private val GET_GALLERY_IMAGE = 200
     val REQUEST_IMAGE_CAPTURE = 1
@@ -73,18 +74,18 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     // 날짜
     var strDate = ""
+
     // 날짜를 선택유무에 대한 변수
     var dateCnt = 0
 
     //카메라/갤러리 확인변수
-    var imgCnt : Int? = null
-    var intentCnt : Int? = null
+    var imgCnt: Int? = null
+    var intentCnt: Int? = null
 
     var galleryUrl: Uri? = null
     var cameraImg: Bitmap? = null
 
     var context: Context? = null
-
 
     var selectedImagePath = ""
     val IMAGE_REQUEST_CODE = 100
@@ -97,6 +98,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         intentCnt = intent.getIntExtra("check", 100)
 
+        var dDayOneCnt = 0
+
         MyPageEditService(this).tryGetMyPage()
 
         //이미지 클릭 시
@@ -104,13 +107,33 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             //카메라 권한 설정
             settingPermission()
             val myPageEditBottomSheetDialog = MyPageEditBottomSheetDialog()
-            myPageEditBottomSheetDialog.show(supportFragmentManager,myPageEditBottomSheetDialog.tag)
+            myPageEditBottomSheetDialog.show(
+                supportFragmentManager,
+                myPageEditBottomSheetDialog.tag
+            )
 
         }
 
+        val checkDday =
+            ApplicationClass.sSharedPreferences.getString(Constants.DDAY_CHECK, null)
+        Log.d("TAG", "dDaycheck: $checkDday")
+
         //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게 및 화살표 방향설정
         binding.myPageEditBtnTopMent.setOnClickListener {
-            if (topMentCnt % 2 != 0){
+
+            //즐겨찾기가 되어있으면
+            //상단 멘트 클릭 시 달력도 같이 보이게끔 설정
+            //1. 즐겨찾기가 되어있는지 확인
+            //1-1 되어있다면 달력 Vi
+            //1-2 아니라면 달력 go
+
+            if (checkDday == "1") {
+                binding.myPageEditLinearDdaySetting.visibility = View.VISIBLE
+            } else {
+                binding.myPageEditLinearDdaySetting.visibility = View.GONE
+            }
+
+            if (topMentCnt % 2 != 0) {
                 binding.myPageEditLinearTopMent.visibility = View.VISIBLE
                 binding.myPageEditTopMentView.visibility = View.GONE
 
@@ -118,9 +141,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditMentTopArrow.visibility = View.VISIBLE
 
                 binding.myPageEditTopMentView.visibility = View.GONE
-            }
-
-            if (topMentCnt % 2 == 0){
+            } else {
                 binding.myPageEditLinearTopMent.visibility = View.GONE
                 binding.myPageEditTopMentView.visibility = View.VISIBLE
 
@@ -129,6 +150,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 binding.myPageEditTopMentView.visibility = View.VISIBLE
             }
+
             topMentCnt++
 //            binding.myPageEditLinearTopMent.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
@@ -148,7 +170,17 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         //디데이 설정 버튼 클릭 시
         //버튼 색상 및 화살표 하단내용 나오게
         binding.myPageEditBtnDday.setOnClickListener {
-            if (dDaySettingCnt % 2 != 0){
+
+            //디데이가 설정되어있으면 DataPikcer도 바로 보이게끔 설정
+            if (dDayOneCnt == 0){
+                if (checkDday == "1"){
+                    dDaySettingCnt++
+
+                }
+                dDayOneCnt++
+            }
+
+            if (dDaySettingCnt % 2 != 0) {
 //                binding.myPageEditBtnDday.setColorFilter(Color.parseColor("#FFAE2A"))
                 binding.myPageEditBtnDdayCheck.visibility = View.VISIBLE
                 binding.myPageEditBtnDdayCheck2.visibility = View.VISIBLE
@@ -156,7 +188,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 dDayCheck = 1
             }
 
-            if (dDaySettingCnt % 2 == 0){
+            if (dDaySettingCnt % 2 == 0) {
 //                binding.myPageEditBtnDday.setColorFilter(Color.parseColor("#FFFFFF"))
                 binding.myPageEditBtnDdayCheck.visibility = View.GONE
                 binding.myPageEditBtnDdayCheck2.visibility = View.GONE
@@ -170,7 +202,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         //계정 설정 화살표 클릭 시
         //하단 내용 나오게
         binding.myPageEditBtnAccountSetting.setOnClickListener {
-            if (accountSettingCnt % 2 != 0){
+            if (accountSettingCnt % 2 != 0) {
                 binding.myPageEditBtnAccountSettingView.visibility = View.GONE
                 binding.myPageEditLinearAccountSetting.visibility = View.VISIBLE
 
@@ -180,7 +212,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditBtnAccountSettingView.visibility = View.GONE
             }
 
-            if (accountSettingCnt % 2 == 0){
+            if (accountSettingCnt % 2 == 0) {
                 binding.myPageEditBtnAccountSettingView.visibility = View.VISIBLE
                 binding.myPageEditLinearAccountSetting.visibility = View.GONE
 
@@ -219,28 +251,29 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     val onlyDate: LocalDate = LocalDate.now()
-                    if (dateCnt == 0){
+                    if (dateCnt == 0) {
 //                binding.myPageEditEtComments.setText(onlyDate.toString())
                         val str = onlyDate.toString()
                         val format = SimpleDateFormat("YYYY-MM-DD")
-                        val nowDate : Date? = format.parse(str)
+                        val nowDate: Date? = format.parse(str)
                         strDate = str
-                    }else{
+                    } else {
 //                binding.myPageEditEtComments.setText(strDate)
 
                     }
 
-                    if (dDaySettingCnt % 2 != 0){
+                    if (dDaySettingCnt % 2 != 0) {
                         dDaySettingCnt = 1
-                    }else{
+                    } else {
                         dDaySettingCnt = -1
                     }
 
-                    Log.d("TAG", "상단멘트사전확인: ${binding.myPageEditEtComments.text}")
+                    Log.d("TAG", "strDate: $strDate")
+
                     val myPageUpdateRequest = PutMyPageUpdateRequest(
                         nickname = binding.myPageEditEtName.text.toString(),
                         titleComment = binding.myPageEditEtComments.text.toString(),
-                        goalStatus = dDaySettingCnt,
+                        goalStatus = dDayCheck,
                         goalTitle = binding.myPageEditEtGoaltitle.text.toString(),
                         goalDate = strDate
                     )
@@ -286,6 +319,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     //회원탈퇴 알림창
     fun accountWithdrawal() {
         val dialog = AccountWithdrawalDialog(this)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
 
@@ -362,10 +396,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             selectedImageUri = data?.data
             binding.myPageEditImg.setImageURI(data?.data)
 
-            val cursor = selectedImageUri?.let { contentResolver.query(it,null,null,null,null) }
-            if(cursor == null){
+            val cursor = selectedImageUri?.let { contentResolver.query(it, null, null, null, null) }
+            if (cursor == null) {
                 selectedImagePath = selectedImageUri?.path.toString()
-            }else{
+            } else {
                 cursor.moveToFirst()
                 val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
                 selectedImagePath = cursor.getString(idx)
@@ -375,8 +409,9 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             Log.d("TAG", "onActivityResult: $selectedImagePath")
 
             val file = File(selectedImagePath)
-            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
-            val requestImage = MultipartBody.Part.createFormData("profileImage",file.name,requestFile)
+            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+            val requestImage =
+                MultipartBody.Part.createFormData("profileImage", file.name, requestFile)
             showLoadingDialog(this)
             MyPageEditService(this).tryPostMyProfileImage(requestImage)
 
@@ -408,7 +443,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                     this.contentResolver,
                     Uri.fromFile(file)
                 )
-                val bitmap : Bitmap = ImageDecoder.decodeBitmap(decode)
+                val bitmap: Bitmap = ImageDecoder.decodeBitmap(decode)
                 binding.myPageEditImg.setImageBitmap(bitmap)
                 Log.d("TAG", "onActivityResult: 보내는bitmap $bitmap")
 
@@ -422,7 +457,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     }
 
-    fun bitmapToString(bitmap: Bitmap) : String{
+    fun bitmapToString(bitmap: Bitmap): String {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val b = baos.toByteArray()
@@ -441,7 +476,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     }
 
 
-
     override fun onGetMyPageCommentsSuccess(response: MyPageCommentsResponse) {
     }
 
@@ -450,7 +484,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onGetMyPageSuccess(response: MyPageResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetMyPageSuccess: MyPage수정페이지 조회성공")
 
@@ -464,8 +498,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val dday =
                     ApplicationClass.sSharedPreferences.getString(Constants.DAY, null)
 
-                val email = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_EMAIL,
-                    null)
+                val email = ApplicationClass.sSharedPreferences.getString(
+                    Constants.KAKAO_EMAIL,
+                    null
+                )
 
                 val dDayCheck = ApplicationClass.sSharedPreferences
                     .getString(Constants.DDAY_CHECK, null)
@@ -514,21 +550,24 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditEtGoaltitle.setText(response.goalTitle)
 
                 //디데이설정상태면
-                if (dDayCheck == "1"){
+                if (response.goalStatus == "1") {
                     binding.myPageEditBtnDdayCheck.visibility = View.VISIBLE
                     binding.myPageEditBtnDdayCheck2.visibility = View.VISIBLE
-                }else{
+                    this.dDayCheck = 1
+
+                } else {
                     binding.myPageEditBtnDdayCheck.visibility = View.GONE
                     binding.myPageEditBtnDdayCheck2.visibility = View.GONE
                 }
 
 
+                binding.myPageEditDay.setText("D"+response.Dday)
 
-                if (Integer.parseInt(dday) <= 0){
-                    binding.myPageEditDay.setText("0")
-                }else{
-                    binding.myPageEditDay.setText(dday.toString())
-                }
+//                if (Integer.parseInt(dday) <= 0){
+//                    binding.myPageEditDay.setText("0")
+//                }else{
+//                    binding.myPageEditDay.setText(dday.toString())
+//                }
 
 
             }
@@ -545,7 +584,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onPutMyPageUpdateSuccess(response: BaseResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 Log.d("TAG", "onPutMyPageUpdateSuccess: MyPage수정성공")
 
@@ -553,7 +592,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 val sf = SimpleDateFormat("yyyy-MM-dd")
                 val date = sf.parse(sampleDate)
                 val today = Calendar.getInstance()
-                val day = ((date.time - today.time.time) / (60 * 60 * 24 * 1000)) + 1
+//                val day = ((date.time - today.time.time) / (60 * 60 * 24 * 1000)) + 1
+                val day = ((date.time) / (60 * 60 * 24 * 1000)) + 1
 
                 Log.d("TAG", "dday값확인: $day")
                 binding.myPageEditDay.setText(day.toString())
@@ -591,11 +631,15 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     override fun onPostProfileImageSuccess(response: SetProfileImageResponse) {
         if(response.isSuccess && response.code == 100){
 
+        }
+        if (response.isSuccess && response.code == 100) {
+            showCustomToast(response.message.toString())
+
 //            val edit = ApplicationClass.sSharedPreferences.edit()
 //            edit.putString(Constants.PROFILE_GALLERY, response.profileImageURL)
 //            edit.apply()
 
-        }else{
+        } else {
             showCustomToast(response.message.toString())
             Log.d("TAG", "onPostProfileImageSuccess: ${response.message}")
 
@@ -610,15 +654,15 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     }
 
     override fun onPatchProfileSuccess(response: BaseResponse) {
-        if(response.isSuccess && response.code == 100){
+        if (response.isSuccess && response.code == 100) {
             Glide.with(this).load(R.drawable.my_page_img2)
                 .error(R.drawable.my_page_img2)
                 .centerCrop().into(binding.myPageEditImg)
             val edit = ApplicationClass.sSharedPreferences.edit()
-            edit.putString(Constants.PROFILE_GALLERY,null)
-            edit.putString(Constants.PROFILE_KAMERA,null)
+            edit.putString(Constants.PROFILE_GALLERY, null)
+            edit.putString(Constants.PROFILE_KAMERA, null)
             edit.apply()
-        }else{
+        } else {
             showCustomToast(response.message.toString())
         }
         dismissLoadingDialog()
@@ -632,7 +676,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     override fun selectImageGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent,IMAGE_REQUEST_CODE)
+        startActivityForResult(intent, IMAGE_REQUEST_CODE)
     }
 
 
@@ -640,10 +684,10 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
         val askDialog = AskDialog(this)
         askDialog.setTitle("프로필 삭제")
         askDialog.setMessage("프로필을 삭제하시겠습니까?")
-        askDialog.setNegativeButton("취소"){
+        askDialog.setNegativeButton("취소") {
             askDialog.dismiss()
         }
-        askDialog.setPositiveButton("삭제"){
+        askDialog.setPositiveButton("삭제") {
             askDialog.dismiss()
             showLoadingDialog(this)
             MyPageEditService(this).tryPatchMyProfileImage()

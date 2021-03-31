@@ -152,16 +152,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 binding.myPageTvName.text = name
 
                 //디데이가 설정되어있지 않으면 기본문구
-                if (dDayCheck != "1") {
-                    binding.myPageTvComments.text = "오늘 하루도 힘내세요!"
+                if (dDayCheck != "1" || response.Dday >= 0) {
+                    binding.myPageTvComments.text = response.titleComment
                 }
-                //기간이 끝난 경우
-                if (dDayCheck == "1" && Integer.parseInt(day) <= 0){
-                    binding.myPageTvComments.text = "목표기간이 끝났습니다!"
-                }
-                //디데이 설정이 유효할경우
-                else {
-                    binding.myPageTvComments.text = goalTitle + "까지 D-" + day + "일\n남았어요!"
+
+                if (dDayCheck == "1" && response.Dday < 0) {
+                    binding.myPageTvComments.text = goalTitle + "까지 D" + response.Dday + "일\n남았어요!"
                 }
 
             }

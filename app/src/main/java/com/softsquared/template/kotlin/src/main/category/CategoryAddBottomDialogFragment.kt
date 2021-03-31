@@ -31,9 +31,12 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
     //bundle로 받기위한 변수
     var bundleColor: String? = null
     var size: Int? = null
+    var name : String? = null
 
     //bundle로 받은 값을 나누기 위한 변수
     var bundleCheckColor: List<String>? = null
+    var bundleName : List<String>? = null
+    var bundleNameList = ArrayList<String>()
 
     //색상 추가 입력변수
     var text = ""
@@ -59,9 +62,23 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
             extra = arguments
             size = extra!!.getInt("size", 0)
             bundleColor = extra.getString("color")
+            name = extra.getString("name")
             Log.d("CategoryAddBottomDialogFragment", "값: $size")
             Log.d("CategoryAddBottomDialogFragment", "값: $bundleColor")
+            Log.d("CategoryAddBottomDialogFragment", "값: $name")
         }
+
+        //클릭리스너 여부
+        var isBoolean1 = true
+        var isBoolean2 = true
+        var isBoolean3 = true
+        var isBoolean4 = true
+        var isBoolean5 = true
+        var isBoolean6 = true
+        var isBoolean7 = true
+        var isBoolean8 = true
+        var isBoolean9 = true
+        var isBoolean10 = true
 
         //이미 선택한 색상을 구분하기위한 List
         val categoryColor = ArrayList<String>()
@@ -77,6 +94,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
         categoryColor.add("#FFA2BE")
 
         bundleCheckColor = bundleColor!!.split(":")
+        bundleName = name!!.split(":")
 
         //이미 선택된 색상 찾아서 num에 저장
         for (i in 0 until size!!) {
@@ -86,6 +104,8 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                     num.add(j + 1)
                 }
             }
+            bundleNameList!!.add(bundleName!![i])
+            Log.d("TAG", "bundleNameList: ${bundleNameList!![i]}")
         }
 
         // 이미 선택된 색상이면, default색상 처리 및 클릭 시 체크표시 안나오게 설정
@@ -94,42 +114,52 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
                 1 -> {
                     category_color_1.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color1_check.background = null
+                    isBoolean1 = false
                 }
                 2 -> {
                     category_color_2.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color2_check.background = null
+                    isBoolean2 = false
                 }
                 3 -> {
                     category_color_3.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color3_check.background = null
+                    isBoolean3 = false
                 }
                 4 -> {
                     category_color_4.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color4_check.background = null
+                    isBoolean4 = false
                 }
                 5 -> {
                     category_color_5.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color5_check.background = null
+                    isBoolean5 = false
                 }
                 6 -> {
                     category_color_6.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color6_check.background = null
+                    isBoolean6 = false
                 }
                 7 -> {
                     category_color_7.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color7_check.background = null
+                    isBoolean7 = false
                 }
                 8 -> {
                     category_color_8.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color8_check.background = null
+                    isBoolean8 = false
                 }
                 9 -> {
                     category_color_9.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color9_check.background = null
+                    isBoolean9 = false
                 }
                 10 -> {
                     category_color_10.setColorFilter(Color.parseColor("#CED5D9"))
                     category_color10_check.background = null
+                    isBoolean10 = false
                 }
             }
         }
@@ -149,8 +179,8 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
         //이름/색상 선택 안할 경우
         category_add_no_save.setOnClickListener {
             if (selectColor != 0 || text.isNotEmpty()) {
-                Toast.makeText(context, "이름 혹은 색상을 선택해주세요", Toast.LENGTH_SHORT).show()
-            }
+                Toast.makeText(context, "이름 혹은 색상을 선택해주세요\n혹은 이미 사용 중인 카테고리명입니다.",
+                    Toast.LENGTH_SHORT).show() }
         }
 
         //완료 버튼
@@ -183,237 +213,257 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
         }
 
         //첫번째 색상 클릭 시
-        category_color_1.setOnClickListener {
-            //홀수면 체크표시, 짝수면 체크X
-            if (color1 % 2 != 0) {
-                category_color1_check.visibility = View.VISIBLE
-                selectColor = 1
+        if (isBoolean1){
+            category_color_1.setOnClickListener {
+                //홀수면 체크표시, 짝수면 체크X
+                if (color1 % 2 != 0) {
+                    category_color1_check.visibility = View.VISIBLE
+                    selectColor = 1
 
-                //체크표시 될 때 나머지 색상들 체크해제
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    //체크표시 될 때 나머지 색상들 체크해제
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color1_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color1_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                //클릭 할 때마다 조건을 확인하여 완료버튼 활성화
+                check()
+                color1++
             }
-            //클릭 할 때마다 조건을 확인하여 완료버튼 활성화
-            check()
-            color1++
         }
 
-        category_color_2.setOnClickListener {
-            if (color2 % 2 != 0) {
-                category_color2_check.visibility = View.VISIBLE
-                selectColor = 2
+        if (isBoolean2){
+            category_color_2.setOnClickListener {
+                if (color2 % 2 != 0) {
+                    category_color2_check.visibility = View.VISIBLE
+                    selectColor = 2
 
-                category_color1_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color2_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color2_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color2++
             }
-            check()
-            color2++
         }
 
-        category_color_3.setOnClickListener {
-            if (color3 % 2 != 0) {
-                category_color3_check.visibility = View.VISIBLE
-                selectColor = 3
+        if (isBoolean3){
+            category_color_3.setOnClickListener {
+                if (color3 % 2 != 0) {
+                    category_color3_check.visibility = View.VISIBLE
+                    selectColor = 3
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color3_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color3_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color3++
             }
-            check()
-            color3++
         }
 
-        category_color_4.setOnClickListener {
-            if (color4 % 2 != 0) {
-                category_color4_check.visibility = View.VISIBLE
-                selectColor = 4
+        if (isBoolean4){
+            category_color_4.setOnClickListener {
+                if (color4 % 2 != 0) {
+                    category_color4_check.visibility = View.VISIBLE
+                    selectColor = 4
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color4_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color4_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color4++
             }
-            check()
-            color4++
         }
 
-        category_color_5.setOnClickListener {
-            if (color5 % 2 != 0) {
-                category_color5_check.visibility = View.VISIBLE
-                selectColor = 5
+        if (isBoolean5){
+            category_color_5.setOnClickListener {
+                if (color5 % 2 != 0) {
+                    category_color5_check.visibility = View.VISIBLE
+                    selectColor = 5
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color5_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color5_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color5++
             }
-            check()
-            color5++
         }
 
-        category_color_6.setOnClickListener {
-            if (color6 % 2 != 0) {
-                category_color6_check.visibility = View.VISIBLE
-                selectColor = 6
+        if (isBoolean6){
+            category_color_6.setOnClickListener {
+                if (color6 % 2 != 0) {
+                    category_color6_check.visibility = View.VISIBLE
+                    selectColor = 6
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color6_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color6_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color6++
             }
-            check()
-            color6++
         }
 
-        category_color_7.setOnClickListener {
-            if (color7 % 2 != 0) {
-                category_color7_check.visibility = View.VISIBLE
-                selectColor = 7
+        if (isBoolean7){
+            category_color_7.setOnClickListener {
+                if (color7 % 2 != 0) {
+                    category_color7_check.visibility = View.VISIBLE
+                    selectColor = 7
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color7_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color7_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color7++
             }
-            check()
-            color7++
         }
 
-        category_color_8.setOnClickListener {
-            if (color8 % 2 != 0) {
-                category_color8_check.visibility = View.VISIBLE
-                selectColor = 8
+        if (isBoolean8){
+            category_color_8.setOnClickListener {
+                if (color8 % 2 != 0) {
+                    category_color8_check.visibility = View.VISIBLE
+                    selectColor = 8
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color8_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color8_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color8++
             }
-            check()
-            color8++
         }
 
-        category_color_9.setOnClickListener {
-            if (color9 % 2 != 0) {
-                category_color9_check.visibility = View.VISIBLE
-                selectColor = 9
+        if (isBoolean9){
+            category_color_9.setOnClickListener {
+                if (color9 % 2 != 0) {
+                    category_color9_check.visibility = View.VISIBLE
+                    selectColor = 9
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color10_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color10_check.visibility = View.GONE
 
-            } else {
-                category_color9_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color9_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color9++
             }
-            check()
-            color9++
         }
 
-        category_color_10.setOnClickListener {
-            if (color10 % 2 != 0) {
-                category_color10_check.visibility = View.VISIBLE
-                selectColor = 10
+        if (isBoolean10){
+            category_color_10.setOnClickListener {
+                if (color10 % 2 != 0) {
+                    category_color10_check.visibility = View.VISIBLE
+                    selectColor = 10
 
-                category_color1_check.visibility = View.GONE
-                category_color2_check.visibility = View.GONE
-                category_color3_check.visibility = View.GONE
-                category_color4_check.visibility = View.GONE
-                category_color5_check.visibility = View.GONE
-                category_color6_check.visibility = View.GONE
-                category_color7_check.visibility = View.GONE
-                category_color8_check.visibility = View.GONE
-                category_color9_check.visibility = View.GONE
+                    category_color1_check.visibility = View.GONE
+                    category_color2_check.visibility = View.GONE
+                    category_color3_check.visibility = View.GONE
+                    category_color4_check.visibility = View.GONE
+                    category_color5_check.visibility = View.GONE
+                    category_color6_check.visibility = View.GONE
+                    category_color7_check.visibility = View.GONE
+                    category_color8_check.visibility = View.GONE
+                    category_color9_check.visibility = View.GONE
 
-            } else {
-                category_color10_check.visibility = View.GONE
-                selectColor = 0
+                } else {
+                    category_color10_check.visibility = View.GONE
+                    selectColor = 0
+                }
+                check()
+                color10++
             }
-            check()
-            color10++
         }
 
     }
@@ -423,8 +473,9 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
         text = category_add_et.text.toString()
         Log.d("TAG", "check: test $text")
         Log.d("TAG", "check: num $num")
-        for (i in 0 until num.size) {
 
+        //이미 선택된 색상이이면 안되게끔
+        for (i in 0 until num.size) {
             if (selectColor == num[i]) {
                 category_add_save.visibility = View.GONE
                 category_add_no_save.visibility = View.VISIBLE
@@ -432,6 +483,7 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
             }
         }
 
+        //색상을 선택했고 카테고리명을 입력할 경우 버튼활성화
         if (selectColor != 0 && text.isNotEmpty()) {
             category_add_save.visibility = View.VISIBLE
             category_add_no_save.visibility = View.GONE
@@ -440,6 +492,15 @@ class CategoryAddBottomDialogFragment : BottomSheetDialogFragment(),
             category_add_save.visibility = View.GONE
             category_add_no_save.visibility = View.VISIBLE
             Log.d("TAG", "check: 체크함수 비활성화 확인")
+        }
+
+        //동일 카테고리명 판별
+        for (i in 0 until bundleNameList.size){
+            if (bundleNameList[i] == text){
+                category_add_save.visibility = View.GONE
+                category_add_no_save.visibility = View.VISIBLE
+                Log.d("TAG", "check: 체크함수 비활성화 확인")
+            }
         }
 
     }

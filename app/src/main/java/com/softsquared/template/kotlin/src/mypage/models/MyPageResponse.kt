@@ -11,6 +11,6 @@ data class MyPageResponse(
     @SerializedName("titleComment") val titleComment : String,
     @SerializedName("goalStatus") val goalStatus : String,
     @SerializedName("goalTitle") val goalTitle : String,
-    @SerializedName("Dday") val Dday : String,
+    @SerializedName("Dday") val Dday : Int,
     @SerializedName("goalDate") val goalDate : String
 ):BaseResponse()

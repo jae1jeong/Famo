@@ -48,13 +48,18 @@
 <!--        android:background="@color/view_color"-->
 <!--        android:layout_marginTop="15dp"/>-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_search_list"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18.5dp"
         android:layout_marginRight="21dp"
-        android:layout_marginTop="22dp"/>
+        android:layout_marginTop="22dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_search_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </androidx.core.widget.NestedScrollView>
 
 
 

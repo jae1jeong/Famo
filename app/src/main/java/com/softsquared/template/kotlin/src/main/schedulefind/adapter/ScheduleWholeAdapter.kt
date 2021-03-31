@@ -1,12 +1,15 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
+import android.R.id.text1
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
@@ -15,10 +18,14 @@ import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 
-class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
-                           val clickListener:(ScheduleWholeData)->Unit) :
+
+class ScheduleWholeAdapter(
+    var wholeList: ArrayList<ScheduleWholeData>,
+    val clickListener: (ScheduleWholeData) -> Unit
+) :
     RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
 
+    var cnt = 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
 
@@ -36,6 +43,30 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
+
+
+        val params = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        val secondParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        params.setMargins(0, 0,  0,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+        secondParams.setMargins(40, 0,  2,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+
+        if (cnt % 2 != 0){
+            Log.d("TAG", "onBindViewHolder: 마진테스트")
+            holder.itemView.layoutParams = params
+            cnt++
+        }else{
+            Log.d("TAG", "onBindViewHolder: 마진테스트")
+
+            cnt++
+        }
 
         holder.itemView.setOnClickListener {
             clickListener(wholeList[position])
@@ -82,6 +113,7 @@ class ScheduleWholeAdapter(var wholeList: ArrayList<ScheduleWholeData>,
                     }
                     ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                 }
+
 
 //                shape -> {
 //                    val shape : LayerDrawable =  ContextCompat.getDrawable(get,

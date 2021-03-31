@@ -22,8 +22,9 @@ import kotlinx.android.synthetic.main.category_delete_impossible_dialog.*
 import java.util.ArrayList
 
 class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkBinding>(
-    FragmentScheduleFindBookmarkBinding::bind, R.layout.fragment_schedule_find_bookmark),
-    WholeBookmarkScheduleView{
+    FragmentScheduleFindBookmarkBinding::bind, R.layout.fragment_schedule_find_bookmark
+),
+    WholeBookmarkScheduleView {
 
     var bookmarkSchedulePagingCnt = 0
     var testCnt = 0
@@ -40,10 +41,10 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 //        }
 
         //페이징 수를 위해 설정
-        if (testCnt > 0){
-            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,10)
-        }else{
-            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,999)
+        if (testCnt > 0) {
+            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 10)
+        } else {
+            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 999)
         }
 
         Log.d("TAG", "WholeScheduleBookmarkFragment: 확인")
@@ -56,7 +57,10 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(
+                    bookmarkSchedulePagingCnt,
+                    now_page
+                )
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
                     .tryGetScheduleBookmark(((now_page - 1)), 10)
 
@@ -64,16 +68,19 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
             override fun onPageCenter(now_page: Int) {
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)*10), 10)
+                    .tryGetScheduleBookmark(((now_page - 1) * 10), 10)
 
             }
 
             //NextButton Click
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
-                binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, now_page)
+                binding.wholeBookmarkSchedulePaging.addBottomPageButton(
+                    bookmarkSchedulePagingCnt,
+                    now_page
+                )
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)*10), 10)
+                    .tryGetScheduleBookmark(((now_page - 1) * 10), 10)
 
             }
         })
@@ -83,127 +90,126 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 전체즐겨찾기조회성공")
 
-                if (testCnt == 0){
-                    val cnt = response.data.size
-                    //페이징수 세팅
-                    if (cnt % 10 == 0) {
-                        bookmarkSchedulePagingCnt = cnt / 10
-                    } else {
-                        bookmarkSchedulePagingCnt = (cnt / 10) + 1
-                    }
-                    binding.wholeBookmarkSchedulePaging.addBottomPageButton(bookmarkSchedulePagingCnt, 1)
-                    testCnt++
-                    WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0,10)
-
-                }
-
-
-                if (testCnt != 0){
-                    val bookmarkListWhole: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
-
-                    for (i in 0 until response.data.size) {
-
-                        if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
-                            bookmarkListWhole.add(
-                                WholeScheduleBookmarkData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
-                                    response.data[i].categoryID
-                                    ,response.data[i].colorInfo
-                                )
-                            )
-
-                        } else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null){
-                            bookmarkListWhole.add(
-                                WholeScheduleBookmarkData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
-                                    response.data[i].categoryID,
-                                    "#CED5D9"
-                                )
-                            )
-                        }else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
-                            bookmarkListWhole.add(
-                                WholeScheduleBookmarkData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    response.data[i].categoryID,
-                                    "#CED5D9"
-                                )
-                            )
-                        }else{
-                            bookmarkListWhole.add(
-                                WholeScheduleBookmarkData(
-                                    response.data[i].scheduleID,
-                                    response.data[i].scheduleDate,
-                                    response.data[i].scheduleName,
-                                    response.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    response.data[i].categoryID,
-                                    response.data[i].colorInfo
-                                )
-                            )
+                if (response.data.size == 0) {
+                    binding.scheduleFindBookmark!!.visibility = View.GONE
+                    binding.scheduleFindFrameLayoutNoItem!!.visibility = View.VISIBLE
+                } else {
+                    if (testCnt == 0) {
+                        val cnt = response.data.size
+                        //페이징수 세팅
+                        if (cnt % 10 == 0) {
+                            bookmarkSchedulePagingCnt = cnt / 10
+                        } else {
+                            bookmarkSchedulePagingCnt = (cnt / 10) + 1
                         }
-                    }
-
-                    // 즐겨찾기/최근 일정 리사이클러뷰 연결
-                    binding.recyclerViewBookmark.layoutManager = GridLayoutManager(
-                        context,2, GridLayoutManager.VERTICAL, false
-                    )
-
-                    binding.recyclerViewBookmark.setHasFixedSize(true)
-                    binding.recyclerViewBookmark.adapter = WholeScheduleBookmarkAdapter(bookmarkListWhole){
-                        val detailDialog = ScheduleDetailDialog(context!!)
-                        val scheduleItem = MemoItem(
-                            it.scheduleID,
-                            it.scheduleDate,
-                            0,
-                            it.scheduleName,
-                            it.scheduleMemo,
-                            false,
-                            null,
-                            null
+                        binding.wholeBookmarkSchedulePaging.addBottomPageButton(
+                            bookmarkSchedulePagingCnt,
+                            1
                         )
-                        detailDialog.start(scheduleItem,null)
-                        detailDialog.setOnModifyBtnClickedListener {
-                            // 스케쥴 ID 보내기
-                            val edit = ApplicationClass.sSharedPreferences.edit()
-                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
-                            edit.apply()
-                            Constants.IS_EDIT = true
+                        testCnt++
+                        WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 10)
 
-                            //바텀 시트 다이얼로그 확장
-//                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
-                            (MainActivity.mContext as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                    }
+
+
+                    if (testCnt != 0) {
+                        val bookmarkListWhole: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
+
+                        for (i in 0 until response.data.size) {
+
+                            if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                bookmarkListWhole.add(
+                                    WholeScheduleBookmarkData(
+                                        response.data[i].scheduleID,
+                                        response.data[i].scheduleDate,
+                                        response.data[i].scheduleName,
+                                        response.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_inbookmark,
+                                        response.data[i].categoryID, response.data[i].colorInfo
+                                    )
+                                )
+
+                            } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                bookmarkListWhole.add(
+                                    WholeScheduleBookmarkData(
+                                        response.data[i].scheduleID,
+                                        response.data[i].scheduleDate,
+                                        response.data[i].scheduleName,
+                                        response.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_inbookmark,
+                                        response.data[i].categoryID,
+                                        "#CED5D9"
+                                    )
+                                )
+                            } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                                bookmarkListWhole.add(
+                                    WholeScheduleBookmarkData(
+                                        response.data[i].scheduleID,
+                                        response.data[i].scheduleDate,
+                                        response.data[i].scheduleName,
+                                        response.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_bookmark,
+                                        response.data[i].categoryID,
+                                        "#CED5D9"
+                                    )
+                                )
+                            } else {
+                                bookmarkListWhole.add(
+                                    WholeScheduleBookmarkData(
+                                        response.data[i].scheduleID,
+                                        response.data[i].scheduleDate,
+                                        response.data[i].scheduleName,
+                                        response.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_bookmark,
+                                        response.data[i].categoryID,
+                                        response.data[i].colorInfo
+                                    )
+                                )
+                            }
                         }
+
+                        // 즐겨찾기/최근 일정 리사이클러뷰 연결
+                        binding.recyclerViewBookmark.layoutManager = GridLayoutManager(
+                            context, 2, GridLayoutManager.VERTICAL, false
+                        )
+
+                        binding.recyclerViewBookmark.setHasFixedSize(true)
+                        binding.recyclerViewBookmark.adapter =
+                            WholeScheduleBookmarkAdapter(bookmarkListWhole) {
+                                val detailDialog = ScheduleDetailDialog(context!!)
+                                val scheduleItem = MemoItem(
+                                    it.scheduleID,
+                                    it.scheduleDate,
+                                    0,
+                                    it.scheduleName,
+                                    it.scheduleMemo,
+                                    false,
+                                    null,
+                                    null
+                                )
+                                detailDialog.start(scheduleItem, null)
+                                detailDialog.setOnModifyBtnClickedListener {
+                                    // 스케쥴 ID 보내기
+                                    val edit = ApplicationClass.sSharedPreferences.edit()
+                                    edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                                    edit.apply()
+                                    Constants.IS_EDIT = true
+
+                                    //바텀 시트 다이얼로그 확장
+                                    (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                                }
+                            }
                     }
                 }
 
 
-
-
-
             }
-            else -> {
-                showCustomToast("즐겨찾기 실패")
-                Log.d(
-                    "TAG",
-                    "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공 ${response.message.toString()}"
-                )
-            }
+
+
         }
     }
 

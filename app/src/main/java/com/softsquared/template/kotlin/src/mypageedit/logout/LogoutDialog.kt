@@ -41,6 +41,7 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
 
         cancel.setOnClickListener {
             Log.d("TAG", "onPositiveClicked: 취소버튼 눌림")
+            dismiss()
         }
 
     }

@@ -179,7 +179,8 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         val bunble = Bundle()
         bunble.putString("color", wholeColor)
         bunble.putString("selectColor", color)
-        bunble.putString("name", text)
+        bunble.putString("selectName", text)
+        bunble.putString("wholeName",wholeName)
         bunble.putInt("size", size!!)
         bunble.putInt("categoryID", categoryID)
         categoryEditBottomDialogFragment.arguments = bunble

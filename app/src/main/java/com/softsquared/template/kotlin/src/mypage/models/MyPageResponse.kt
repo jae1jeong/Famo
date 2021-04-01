@@ -9,7 +9,7 @@ data class MyPageResponse(
     @SerializedName("nickname") val nickname : String,
     @SerializedName("profileImageURL") val profileImageURL : String,
     @SerializedName("titleComment") val titleComment : String,
-    @SerializedName("goalStatus") val goalStatus : String,
+    @SerializedName("goalStatus") val goalStatus : Int,
     @SerializedName("goalTitle") val goalTitle : String,
     @SerializedName("Dday") val Dday : Int,
     @SerializedName("goalDate") val goalDate : String

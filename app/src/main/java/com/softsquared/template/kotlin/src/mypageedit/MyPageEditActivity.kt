@@ -90,6 +90,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     var selectedImagePath = ""
     val IMAGE_REQUEST_CODE = 100
 
+    var checkDday = 0
+
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,8 +116,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         }
 
-        val checkDday =
-            ApplicationClass.sSharedPreferences.getString(Constants.DDAY_CHECK, null)
+//        val checkDday =
+//            ApplicationClass.sSharedPreferences.getString(Constants.DDAY_CHECK, null)
         Log.d("TAG", "dDaycheck: $checkDday")
 
         //상단 멘트설정 화살표 클릭 시 밑에 내용 나오게 및 화살표 방향설정
@@ -127,7 +129,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             //1-1 되어있다면 달력 Vi
             //1-2 아니라면 달력 go
 
-            if (checkDday == "1") {
+            if (checkDday == 1) {
                 binding.myPageEditLinearDdaySetting.visibility = View.VISIBLE
             } else {
                 binding.myPageEditLinearDdaySetting.visibility = View.GONE
@@ -173,7 +175,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
             //디데이가 설정되어있으면 DataPikcer도 바로 보이게끔 설정
             if (dDayOneCnt == 0){
-                if (checkDday == "1"){
+                if (checkDday == 1){
                     dDaySettingCnt++
 
                 }
@@ -512,6 +514,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 Log.d("TAG", "onGetMyPageSuccess: imgCnt :$imgCnt")
 
+                checkDday = response.goalStatus
+
                 if (response.loginMethod == "K") {
 
                     if (response.profileImageURL == null) {
@@ -550,7 +554,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditEtGoaltitle.setText(response.goalTitle)
 
                 //디데이설정상태면
-                if (response.goalStatus == "1") {
+                if (response.goalStatus == 1) {
                     binding.myPageEditBtnDdayCheck.visibility = View.VISIBLE
                     binding.myPageEditBtnDdayCheck2.visibility = View.VISIBLE
                     this.dDayCheck = 1

@@ -40,7 +40,7 @@
 
     <FrameLayout
         android:visibility="gone"
-        android:id="@+id/schedule_find_frame_layout_no_item"
+        android:id="@+id/schedule_find_bookmark_frame_layout_no_item"
         android:layout_marginHorizontal="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,5 +75,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

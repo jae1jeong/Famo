@@ -12,15 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.databinding.FragmentScheduleFindBookmarkBinding
-import com.softsquared.template.kotlin.src.main.AddMemoService
 import com.softsquared.template.kotlin.src.main.AddMemoView
 import com.softsquared.template.kotlin.src.main.MainActivity
-import com.softsquared.template.kotlin.src.main.category.ICategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
@@ -39,7 +34,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
 
     var recyclerViewBookmark: RecyclerView? = null
     var scheduleFindBookmark: NestedScrollView? = null
-    var scheduleFindFrameLayoutNoItem: FrameLayout? = null
+    var scheduleFindBookmarkFrameLayoutNoItem: FrameLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +49,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
 
         recyclerViewBookmark = view.findViewById(R.id.recyclerView_bookmark)
         scheduleFindBookmark = view.findViewById(R.id.schedule_find_bookmark)
-        scheduleFindFrameLayoutNoItem = view.findViewById(R.id.schedule_find_frame_layout_no_item)
+        scheduleFindBookmarkFrameLayoutNoItem = view.findViewById(R.id.schedule_find_bookmark_frame_layout_no_item)
 
         GlobalScope.launch(Dispatchers.IO) {
             delay(1000)
@@ -74,7 +69,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
 
                 if (response.data.size == 0){
                     scheduleFindBookmark!!.visibility = View.GONE
-                    scheduleFindFrameLayoutNoItem!!.visibility = View.VISIBLE
+                    scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.VISIBLE
                 }else{
                     for (i in 0 until response.data.size) {
 

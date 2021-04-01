@@ -40,7 +40,6 @@ class ScheduleCategoryAdapter(var categoryList: ArrayList<MainScheduleCategory>,
     var cnt = 1
 
     init {
-        Log.d("TAG", "ScheduleCategoryAdapter: init() called ")
         this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
     }
 

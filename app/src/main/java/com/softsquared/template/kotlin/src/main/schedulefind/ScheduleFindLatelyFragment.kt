@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
     var recyclerViewLately : RecyclerView? = null
+    var scheduleFindLatelyFrameLayoutNoItem: FrameLayout? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //setContentView 같다
@@ -36,6 +38,7 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
             false)
 
         recyclerViewLately = view.findViewById(R.id.recyclerView_lately)
+        scheduleFindLatelyFrameLayoutNoItem = view.findViewById(R.id.schedule_find_lately_frame_layout_no_item)
 
         GlobalScope.launch(Dispatchers.IO){
             delay(1000)
@@ -54,72 +57,80 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
                 val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
 
-                for (i in 0 until response.data.size) {
+                if (response.data.size == 0){
+                    recyclerViewLately!!.visibility = View.GONE
+                    scheduleFindLatelyFrameLayoutNoItem!!.visibility = View.VISIBLE
+                }
+                else{
+                    recyclerViewLately!!.visibility = View.VISIBLE
+                    scheduleFindLatelyFrameLayoutNoItem!!.visibility = View.GONE
 
-                    if (response.data[i].colorInfo != null){
-                        latelyListWhole.add(
-                            WholeScheduleLatelyData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                R.drawable.schedule_find_inbookmark,
-                                response.data[i].categoryID,
-                                response.data[i].colorInfo
+                    for (i in 0 until response.data.size) {
+
+                        if (response.data[i].colorInfo != null){
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].categoryID,
+                                    response.data[i].colorInfo
+                                )
                             )
-                        )
-                    }else{
-                        latelyListWhole.add(
-                            WholeScheduleLatelyData(
-                                response.data[i].scheduleID,
-                                response.data[i].scheduleDate,
-                                response.data[i].scheduleName,
-                                response.data[i].scheduleMemo,
-                                R.drawable.schedule_find_inbookmark,
-                                response.data[i].categoryID,
-                                "#ced5d9"
+                        }else{
+                            latelyListWhole.add(
+                                WholeScheduleLatelyData(
+                                    response.data[i].scheduleID,
+                                    response.data[i].scheduleDate,
+                                    response.data[i].scheduleName,
+                                    response.data[i].scheduleMemo,
+                                    R.drawable.schedule_find_inbookmark,
+                                    response.data[i].categoryID,
+                                    "#ced5d9"
+                                )
                             )
-                        )
+
+                        }
 
                     }
 
-                }
-
-                // 즐겨찾기/최근 일정 리사이클러뷰 연결
-                recyclerViewLately!!.layoutManager = LinearLayoutManager(
-                    context, LinearLayoutManager.VERTICAL, false
-                )
-                recyclerViewLately!!.setHasFixedSize(true)
-//                binding.recyclerViewLately.adapter = ScheduleLatelyAdapter(latelyListWhole,this)
-
-                recyclerViewLately!!.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
-                    val detailDialog = ScheduleDetailDialog(context!!)
-                    val scheduleItem = MemoItem(
-                        it.scheduleID,
-                        it.scheduleDate,
-                        0,
-                        it.scheduleName,
-                        it.scheduleMemo,
-                        false,
-                        null,
-                        null
+                    // 즐겨찾기/최근 일정 리사이클러뷰 연결
+                    recyclerViewLately!!.layoutManager = LinearLayoutManager(
+                        context, LinearLayoutManager.VERTICAL, false
                     )
-                    detailDialog.start(scheduleItem,null)
-                    detailDialog.setOnModifyBtnClickedListener {
-                        // 스케쥴 ID 보내기
-                        val edit = ApplicationClass.sSharedPreferences.edit()
-                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
-                        edit.apply()
-                        Constants.IS_EDIT = true
+                    recyclerViewLately!!.setHasFixedSize(true)
 
-                        //바텀 시트 다이얼로그 확장
-                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                    recyclerViewLately!!.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
+                        val detailDialog = ScheduleDetailDialog(context!!)
+                        val scheduleItem = MemoItem(
+                            it.scheduleID,
+                            it.scheduleDate,
+                            0,
+                            it.scheduleName,
+                            it.scheduleMemo,
+                            false,
+                            null,
+                            null
+                        )
+                        detailDialog.start(scheduleItem,null)
+                        detailDialog.setOnModifyBtnClickedListener {
+                            // 스케쥴 ID 보내기
+                            val edit = ApplicationClass.sSharedPreferences.edit()
+                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                            edit.apply()
+                            Constants.IS_EDIT = true
 
-//                val recycleAdapter = ScheduleBookmarkAdapter(boomarkList,this,)
-//                binding.recyclerViewBookmark.adapter = recycleAdapter
+                            //바텀 시트 다이얼로그 확장
+                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+
+                        }
+
                     }
-
                 }
+
+
 
             }
             else -> {

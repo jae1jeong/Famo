@@ -28,6 +28,9 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         fun newInstance(): WholeLatelyScheduleFragment {    // shs: 함수의 반환 형이 Fragment 형이라...
             return WholeLatelyScheduleFragment()
         }
+        val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
+        lateinit var wholeScheduleLatelyAdapter:WholeScheduleLatelyAdapter
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,7 +93,6 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 
         when(response.code){
             100 -> {
-                showCustomToast("즐겨찾기 성공")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
                 if (testCnt == 0){
@@ -110,7 +112,6 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 }
 
                 if (testCnt != 0){
-                    val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
 
                     for (i in 0 until response.data.size) {
 
@@ -171,18 +172,17 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                     binding.recyclerViewLately.layoutManager = GridLayoutManager(
                         context, 2, GridLayoutManager.VERTICAL, false
                     )
-                    binding.recyclerViewLately.setHasFixedSize(true)
-                    binding.recyclerViewLately.adapter = WholeScheduleLatelyAdapter(latelyListWhole) {
+                    wholeScheduleLatelyAdapter = WholeScheduleLatelyAdapter(latelyListWhole) {
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(
-                            it.scheduleID,
-                            it.scheduleDate,
-                            0,
-                            it.scheduleName,
-                            it.scheduleMemo,
-                            false,
-                            null,
-                            null
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
                         )
                         detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
@@ -196,13 +196,12 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                             (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                         }
                     }
+                    binding.recyclerViewLately.setHasFixedSize(true)
+                    binding.recyclerViewLately.adapter = wholeScheduleLatelyAdapter
                 }
-
-
 
             }
             else -> {
-                showCustomToast("즐겨찾기 실패")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회실패 - ${response.message.toString()}")
             }
         }

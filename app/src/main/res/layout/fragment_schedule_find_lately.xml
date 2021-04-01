@@ -39,6 +39,44 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/schedule_find_lately_frame_layout_no_item"
+        android:layout_marginHorizontal="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/today_image_no_item"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/today_memo_write"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/today_text_no_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="최근생성한 메모가 없습니다."
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@+id/today_image_no_item" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

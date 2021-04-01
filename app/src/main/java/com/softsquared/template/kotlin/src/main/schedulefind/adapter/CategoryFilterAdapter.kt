@@ -11,8 +11,8 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 
-class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData>
-) : RecyclerView.Adapter<CategoryFilterAdapter.ScheduleWholeHolder>() {
+class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData>,
+    val clickListener : (CategoryFilterData) -> Unit) : RecyclerView.Adapter<CategoryFilterAdapter.ScheduleWholeHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
 
@@ -30,6 +30,10 @@ class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData
         holder.name.text = categoryFilterList[position].scheduleName
         holder.memo.text = categoryFilterList[position].scheduleMemo
         holder.border.setColorFilter(Color.parseColor(categoryFilterList[position].colorInfo))
+
+        holder.itemView.setOnClickListener {
+            clickListener(categoryFilterList[position])
+        }
 
     }
 

@@ -37,42 +37,40 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        //임시 검색기록 리사이클러뷰
-//        createSearchList()
-
         SearchHistoriesService(this).tryGetSearchHistories()
 
-        binding.scheduleSearchEt.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
 
+        binding.scheduleSearchEt.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             val searchWord = binding.scheduleSearchEt.text.toString()
 
-            when (actionId) {
-                IME_ACTION_SEARCH -> {
-                    showCustomToast("aaaaaa")
-                    Log.d("TAG", "ScheduleSearchActivity: ")
-//                    finish()
-
-                    val searchWord = binding.scheduleSearchEt.text.toString()
-
-                    val edit = ApplicationClass.sSharedPreferences.edit()
-                    edit.putString(Constants.SEARCHWROD, searchWord)
-                    edit.apply()
-//                    ScheduleFindService(this).tryGetScheduleSearch(searchWord)
-
-                    finish()
+            if (searchWord.isNotEmpty()) {
+                Log.d("TAG", "onCreate: 검색어1")
+                when (actionId) {
+                    IME_ACTION_SEARCH -> {
+                        val edit = ApplicationClass.sSharedPreferences.edit()
+                        edit.putString(Constants.SEARCHWROD, searchWord)
+                        edit.putString(Constants.SEARCH_WROD_COLOR, searchWord)
+                        edit.apply()
+                        Constants.SEARCH_CHECK = true
+                        finish()
 
 //                    MainActivity().onMoveScheduleFind(searchWord)
 //                    iScheduleCategoryRecyclerView!!.onItemMoveBtnClicked(1,1)
+                    }
                 }
-            }
 
+            } else {
+                Log.d("TAG", "onCreate: 검색어2")
+                showCustomToast("검색어를 입력해주세요.")
+            }
             false
+
         })
 
 
         //뒤로가기
         binding.searchBack.setOnClickListener {
+            Constants.SEARCH_CHECK = false
             finish()
         }
 
@@ -97,7 +95,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
 
     override fun onGetSearchHistoriesSuccess(response: SearchHistoriesResponse) {
 
-        when(response.code){
+        when (response.code) {
 
             100 -> {
                 Log.d("TAG", "onGetSearchHistoriesSuccess: 검식기록조회성공")
@@ -119,7 +117,10 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
                 binding.recyclerviewSearchList.adapter = ScheduleSearchListAdapter(searchList)
             }
             else -> {
-                Log.d("TAG", "onGetSearchHistoriesSuccess: 검식기록조회실패 - ${response.message.toString()}")
+                Log.d(
+                    "TAG",
+                    "onGetSearchHistoriesSuccess: 검식기록조회실패 - ${response.message.toString()}"
+                )
             }
         }
 

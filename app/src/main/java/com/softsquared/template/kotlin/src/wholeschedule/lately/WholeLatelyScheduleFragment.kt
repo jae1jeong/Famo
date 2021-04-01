@@ -12,6 +12,7 @@ import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBin
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.lately.adapter.WholeScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
@@ -37,6 +38,8 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("TAG", "WholeLatelyScheduleFragment: 확인")
+        // 사이즈가 0인 경우는 초기화
+        wholeScheduleLatelyAdapter = WholeScheduleLatelyAdapter(latelyListWhole){}
 
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
@@ -183,7 +186,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                                 false,
                                 null,
                                 null
-                        )
+                        ,0)
                         detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
@@ -193,7 +196,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                             Constants.IS_EDIT = true
 
                             //바텀 시트 다이얼로그 확장
-                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.EXPAND)
                         }
                     }
                     binding.recyclerViewLately.setHasFixedSize(true)

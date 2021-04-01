@@ -32,6 +32,11 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
     var recyclerViewLately : RecyclerView? = null
     var scheduleFindLatelyFrameLayoutNoItem: FrameLayout? = null
 
+
+    companion object{
+        val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
+        lateinit var scheduleLatelyAdapter:ScheduleLatelyAdapter
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //setContentView 같다
         val view = inflater.inflate(R.layout.fragment_schedule_find_lately, container,
@@ -49,14 +54,17 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        scheduleLatelyAdapter = ScheduleLatelyAdapter(latelyListWhole){}
+    }
     override fun onGetLatelyScheduleInquirySuccess(response: LatelyScheduleInquiryResponse) {
 
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
-                val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
-
+                latelyListWhole.clear()
                 if (response.data.size == 0){
                     recyclerViewLately!!.visibility = View.GONE
                     scheduleFindLatelyFrameLayoutNoItem!!.visibility = View.VISIBLE
@@ -101,19 +109,18 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
                         context, LinearLayoutManager.VERTICAL, false
                     )
                     recyclerViewLately!!.setHasFixedSize(true)
-
-                    recyclerViewLately!!.adapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
+                    scheduleLatelyAdapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(
-                            it.scheduleID,
-                            it.scheduleDate,
-                            0,
-                            it.scheduleName,
-                            it.scheduleMemo,
-                            false,
-                            null,
-                            null
-                        )
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
+                        ,0)
                         detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
@@ -128,6 +135,7 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
                         }
 
                     }
+                    recyclerViewLately!!.adapter = scheduleLatelyAdapter
                 }
 
 

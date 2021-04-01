@@ -68,6 +68,10 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var scheduleFindCategoryFrameLayoutNoItem: FrameLayout? = null
     var categoryTextNoItem: TextView? = null
 
+    companion object{
+        val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
+        lateinit var categoryScheduleInquiryAdapter:CategoryScheduleInquiryAdapter
+    }
     @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,12 +92,10 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         var extra = this.arguments
         if (extra != null) {
             extra = arguments
-//            categoryID = extra?.getInt("categoryID", 10)!!
             scheduleCategoryID = extra!!.getInt("scheduleCategoryID", -1)
             searchWord = extra!!.getString("searchWord").toString()
 
 
-//            Log.d("ScheduleFindCategoryFragment categoryID", "값: $categoryID")
             Log.d("ScheduleFindCategoryFragment scheduleCategoryID", "값: $scheduleCategoryID")
             Log.d("ScheduleFindCategoryFragment searchWord", "값: $searchWord")
         }
@@ -155,6 +157,11 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList){}
+    }
+
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
     }
@@ -168,7 +175,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         when (categoryInquiryResponse.code) {
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess 성공")
-
+                categoryList.clear()
                 if (categoryInquiryResponse.data.size > 0) {
 
                     if (categoryPagintCnt == 0) {
@@ -189,7 +196,6 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     }
 
                     if (categoryPagintCnt != 0) {
-                        val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
 
                         for (i in 0 until categoryInquiryResponse.data.size) {
 
@@ -222,11 +228,9 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 context, 2, GridLayoutManager.VERTICAL,
                                 false
                             )
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                        recyclerviewScheduleFindCategory!!.adapter =
-                            CategoryScheduleInquiryAdapter(categoryList) {
-                                val detailDialog = ScheduleDetailDialog(context!!)
-                                val scheduleItem = MemoItem(
+                        categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList) {
+                            val detailDialog = ScheduleDetailDialog(context!!)
+                            val scheduleItem = MemoItem(
                                     it.id,
                                     it.date,
                                     0,
@@ -235,19 +239,22 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                     false,
                                     null,
                                     null
-                                )
-                                detailDialog.start(scheduleItem, null)
-                                detailDialog.setOnModifyBtnClickedListener {
-                                    // 스케쥴 ID 보내기
-                                    val edit = ApplicationClass.sSharedPreferences.edit()
-                                    edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
-                                    edit.apply()
-                                    Constants.IS_EDIT = true
+                            ,0)
+                            detailDialog.start(scheduleItem, null)
+                            detailDialog.setOnModifyBtnClickedListener {
+                                // 스케쥴 ID 보내기
+                                val edit = ApplicationClass.sSharedPreferences.edit()
+                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                                edit.apply()
+                                Constants.IS_EDIT = true
 
-                                    //바텀 시트 다이얼로그 확장
-                                    (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
-                                }
+                                //바텀 시트 다이얼로그 확장
+                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
+                        }
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter =categoryScheduleInquiryAdapter
+
                     }
 
                 }
@@ -384,7 +391,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 false,
                                 null,
                                 null
-                            )
+                            ,0)
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -499,7 +506,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 false,
                                 null,
                                 null
-                            )
+                            ,0)
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -616,7 +623,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 false,
                                 null,
                                 null
-                            )
+                            ,0)
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -732,7 +739,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 false,
                                 null,
                                 null
-                            )
+                            ,0)
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -886,7 +893,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             false,
                             null,
                             null
-                        )
+                        ,0)
                         detailDialog.start(scheduleItem, null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기

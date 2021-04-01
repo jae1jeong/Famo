@@ -141,9 +141,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 layoutManager = LinearLayoutManager(context)
                 adapter = monthlyMemoAdapter
             }
-
-
-
     }
 
     fun setUpCalendar(){
@@ -373,7 +370,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 MonthlyService(this@MonthlyFragment).onGetMonthlyMemoItems(todayDate.toString())
             }
             val job3 = launch(Dispatchers.Main) {
-                delay(2000)
+                delay(1000)
                 try{
                     if(monthly_shimmer_frame_layout.isAnimationStarted){
                         monthly_shimmer_frame_layout.stopShimmerAnimation()
@@ -413,6 +410,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     val scheduleColorInfoJsonElement: JsonElement? = memoJsonObject.get("colorInfo")
                     val scheduleDate = memoJsonObject.get("scheduleFormDate").asString
                     val memoScheduleFormDate = memoJsonObject.get("scheduleFormDate").asString
+                    val memoScheduleOrder = memoJsonObject.get("scheduleOrder").asInt
 
                     val scheduleDayInt = scheduleStringDate[0].toInt()
                     val scheduleMonth = scheduleStringDate[1]
@@ -426,7 +424,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                         scheduleCategoryColor = scheduleColorInfoJsonElement.asString
                     }
                     userMemos.add(scheduleDate)
-                    memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor,memoScheduleFormDate))
+                    memoList.add(MemoItem(scheduleId, scheduleMonth, scheduleDayInt, scheduleTitle, scheduleContent, false, scheduleCategoryColor,memoScheduleFormDate,memoScheduleOrder))
                 }
             }
             initializeMonthlyAdapter(memoList)

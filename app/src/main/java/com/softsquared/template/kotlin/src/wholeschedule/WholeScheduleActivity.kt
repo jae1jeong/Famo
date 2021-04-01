@@ -19,6 +19,7 @@ import com.softsquared.template.kotlin.databinding.ActivityWholeScheduleBinding
 import com.softsquared.template.kotlin.src.main.AddMemoService
 import com.softsquared.template.kotlin.src.main.AddMemoView
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.MainEditMemoBottomSheetDialog
 import com.softsquared.template.kotlin.src.main.adapter.MainCategoryAdapter
 import com.softsquared.template.kotlin.src.main.category.CategoryEditActivity
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
@@ -26,9 +27,14 @@ import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindBookmarkFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindCategoryFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindLatelyFragment
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindMainFragment
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.wholeschedule.adapter.WholeSchedulePagerAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.bookmark.WholeScheduleBookmarkFragment
+import com.softsquared.template.kotlin.src.wholeschedule.bookmark.adapter.WholeScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.lately.WholeLatelyScheduleFragment
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.CalendarConverter
@@ -192,7 +198,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                             editScheduleID,
                             PatchMemo(
                                     binding.addMemoEditTitle.text.toString(),
-                                    null,
+                                    MainActivity.editingDate,
                                     MainActivity.selectedCategoryId,
                                     binding.addMemoEditContent.text.toString()
                             )
@@ -208,6 +214,15 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         // 바텀시트 다이얼로그 취소 버튼
         binding.addMemoBtnDialogCancel.setOnClickListener {
             stateChangeBottomSheet(Constants.HIDE_SHEET)
+        }
+
+        // 바텀시트 다이얼로그 날짜 버튼
+        binding.addMemoTextDateInfo.setOnClickListener {
+            val datePickBottomSheetDialog = WholeScheduleEditBottomSheetDialog()
+            datePickBottomSheetDialog.show(
+                    supportFragmentManager,
+                    datePickBottomSheetDialog.tag
+            )
         }
     }
 
@@ -233,6 +248,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
             Constants.HIDE_SHEET -> {
+                if(Constants.IS_EDIT){
                     AskDialog(this)
                             .setTitle("일정 수정 취소")
                             .setMessage("일정 수정을 취소하시겠습니까?")
@@ -250,6 +266,10 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                             .setPositiveButton("계속 수정하기"){
                             }
                             .show()
+                }else{
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
 
             }
         }
@@ -262,6 +282,11 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         binding.addMemoEditContent.setText(memoContent)
 
     }
+    fun receiveDateFromDatePicker(strDate:String){
+        MainActivity.editingDate = strDate
+        binding.addMemoTextDateInfo.text = "$strDate (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(strDate).dayOfWeek.toString())})"
+    }
+
 
     fun initializeCategoryAdapter(categoryList:ArrayList<MainScheduleCategory>){
         MainActivity.categoryScheduleAdapter = MainCategoryAdapter(categoryList, this) {
@@ -291,40 +316,114 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
         if (response.isSuccess) {
             when (response.code) {
                 100 -> {
+                    MainActivity.editingDate = null
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
                     showCustomToast("일정이 성공적으로 수정되었습니다.")
                     stateChangeBottomSheet(Constants.HIDE_SHEET)
-                    TodayFragment.todayMemoAdapter?.let {
-                        TodayFragment.todayMemoAdapter!!.memoList.forEach {
-                            if (it.id == editScheduleID) {
-                                it.title = binding.addMemoEditTitle.text.toString()
-                                it.description = binding.addMemoEditContent.text.toString()
-                                TodayFragment.todayMemoAdapter?.notifyItemChanged(
-                                        TodayFragment.todayMemoAdapter!!.memoList.indexOf(
-                                                it
-                                        )
-                                )
+//                    TodayFragment.todayMemoAdapter?.let {
+//                        TodayFragment.todayMemoAdapter!!.memoList.forEach {
+//                            if (it.id == editScheduleID) {
+//                                it.title = binding.addMemoEditTitle.text.toString()
+//                                it.description = binding.addMemoEditContent.text.toString()
+//                                TodayFragment.todayMemoAdapter?.notifyItemChanged(
+//                                        TodayFragment.todayMemoAdapter!!.memoList.indexOf(
+//                                                it
+//                                        )
+//                                )
+//                            }
+//                        }
+//                    }
+//                    MonthlyFragment.monthlyMemoAdapter?.let{
+//                        MonthlyFragment.monthlyMemoAdapter!!.memoList.forEach {
+//                            if(it.id == editScheduleID){
+//                                it.title = binding.addMemoEditTitle.text.toString()
+//                                it.description = binding.addMemoEditContent.text.toString()
+//                                MonthlyFragment.monthlyMemoAdapter?.notifyItemChanged(MonthlyFragment.monthlyMemoAdapter!!.memoList.indexOf(it))
+//                            }
+//                        }
+//                    }
+
+                    try{
+                        WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter?.let {
+                            WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter.bookmarkListWhole.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter?.notifyItemChanged(WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter.bookmarkListWhole.indexOf(it))
+                                }
                             }
                         }
                     }
-                    MonthlyFragment.monthlyMemoAdapter?.let{
-                        MonthlyFragment.monthlyMemoAdapter!!.memoList.forEach {
-                            if(it.id == editScheduleID){
-                                it.title = binding.addMemoEditTitle.text.toString()
-                                it.description = binding.addMemoEditContent.text.toString()
-                                MonthlyFragment.monthlyMemoAdapter?.notifyItemChanged(MonthlyFragment.monthlyMemoAdapter!!.memoList.indexOf(it))
+                    catch (e:UninitializedPropertyAccessException){}
+
+                    try{
+                        WholeLatelyScheduleFragment.wholeScheduleLatelyAdapter?.let {
+                            WholeLatelyScheduleFragment.wholeScheduleLatelyAdapter.latelyListWhole.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    WholeLatelyScheduleFragment.wholeScheduleLatelyAdapter?.notifyItemChanged(WholeLatelyScheduleFragment.wholeScheduleLatelyAdapter.latelyListWhole.indexOf(it))
+                                }
                             }
                         }
+                    }
+                    catch (e:UninitializedPropertyAccessException){}
+
+
+                    try{
+                        ScheduleFindBookmarkFragment.scheduleBookmarkAdapter?.let {
+                            ScheduleFindBookmarkFragment.scheduleBookmarkAdapter.bookmarkListWhole.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindBookmarkFragment.scheduleBookmarkAdapter?.notifyItemChanged(ScheduleFindBookmarkFragment.bookmarkList.indexOf(it))
+                                }
+                            }
+                        }
+                    }
+                    catch(e:UninitializedPropertyAccessException){}
+
+
+                    try{
+                        ScheduleFindLatelyFragment.scheduleLatelyAdapter?.let {
+                            ScheduleFindLatelyFragment.scheduleLatelyAdapter.latelyList.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindLatelyFragment.scheduleLatelyAdapter.notifyItemChanged(ScheduleFindLatelyFragment.latelyListWhole.indexOf(it))
+                                }
+                            }
+                        }
+                    }catch (e:UninitializedPropertyAccessException){
+
                     }
 
-                    WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter?.let{
-                        WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter.bookmarkListWhole.forEach {
-                            it.scheduleName = binding.addMemoEditTitle.text.toString()
-                            it.scheduleMemo = binding.addMemoEditContent.text.toString()
-                            WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter?.notifyItemChanged(WholeScheduleBookmarkFragment.wholeScheduleBookmarkAdapter.bookmarkListWhole.indexOf(it))
+
+                    ScheduleFindMainFragment.scheduleWholeAdapter?.let {
+                        ScheduleFindMainFragment.scheduleWholeAdapter.wholeList.forEach {
+                            if (it.id == editScheduleID) {
+                                it.name = binding.addMemoEditTitle.text.toString()
+                                it.memo = binding.addMemoEditContent.text.toString()
+                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList.indexOf(it))
+                            }
                         }
                     }
+                    try{
+
+                        ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.let {
+                            ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.categoryList.forEach {
+                                if (it.id == editScheduleID) {
+                                    it.name = binding.addMemoEditTitle.text.toString()
+                                    it.memo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.notifyItemChanged(ScheduleFindCategoryFragment.categoryList.indexOf(it))
+                                }
+                            }
+                        }
+                    }catch (e:UninitializedPropertyAccessException){
+//                        ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(){}
+                    }
+
 
                     // 카테고리 선택 초기화
                     MainActivity.selectedCategoryId = null
@@ -333,7 +432,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                             it.selected = false
                         }
                     }
-
+                    stateChangeBottomSheet(Constants.HIDE_SHEET)
 
                 }
                 else -> {

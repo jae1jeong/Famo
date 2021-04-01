@@ -8,5 +8,6 @@ data class MemoItem (
     var description:String?,
     var isChecked:Boolean,
     val colorState:String?,
-    var formDateStr:String?
+    var formDateStr:String?,
+    var scheduleOrder:Int
         )

@@ -38,6 +38,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        wholeScheduleBookmarkAdapter = WholeScheduleBookmarkAdapter(bookmarkListWhole){}
 
         //페이징 수를 위해 설정
         if (testCnt > 0) {
@@ -189,7 +190,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                                     false,
                                     null,
                                     null
-                            )
+                            ,0)
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기

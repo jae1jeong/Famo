@@ -36,6 +36,11 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
     var scheduleFindBookmark: NestedScrollView? = null
     var scheduleFindBookmarkFrameLayoutNoItem: FrameLayout? = null
 
+
+    companion object{
+        val bookmarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
+        lateinit var scheduleBookmarkAdapter:ScheduleBookmarkAdapter
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,13 +64,17 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        scheduleBookmarkAdapter = ScheduleBookmarkAdapter(bookmarkList){}
+    }
+
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
 
-                val boomarkList: ArrayList<WholeScheduleBookmarkData> = arrayListOf()
 
                 if (response.data.size == 0){
                     scheduleFindBookmark!!.visibility = View.GONE
@@ -74,7 +83,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                     for (i in 0 until response.data.size) {
 
                         if (response.data[i].colorInfo != null) {
-                            boomarkList.add(
+                            bookmarkList.add(
                                 WholeScheduleBookmarkData(
                                     response.data[i].scheduleID,
                                     response.data[i].scheduleDate,
@@ -86,7 +95,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                                 )
                             )
                         } else {
-                            boomarkList.add(
+                            bookmarkList.add(
                                 WholeScheduleBookmarkData(
                                     response.data[i].scheduleID,
                                     response.data[i].scheduleDate,
@@ -105,17 +114,17 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                         context, LinearLayoutManager.VERTICAL, false
                     )
                     recyclerViewBookmark!!.setHasFixedSize(true)
-                    recyclerViewBookmark!!.adapter = ScheduleBookmarkAdapter(boomarkList) { it ->
+                    scheduleBookmarkAdapter= ScheduleBookmarkAdapter(bookmarkList) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(
-                            it.scheduleID,
-                            "",
-                            0,
-                            it.scheduleName,
-                            it.scheduleMemo,
-                            false,
-                            null,
-                            null)
+                                it.scheduleID,
+                                "",
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null,0)
 
                         detailDialog.start(scheduleItem,null)
                         detailDialog.setOnModifyBtnClickedListener {
@@ -131,6 +140,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                         }
 
                     }
+                    recyclerViewBookmark!!.adapter = scheduleBookmarkAdapter
                 }
 
 

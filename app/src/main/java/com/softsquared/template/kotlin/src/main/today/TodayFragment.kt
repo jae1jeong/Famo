@@ -92,7 +92,7 @@ class TodayFragment() :
 
         fun changeSchedulePosition(fromPos:Int,targetPos:Int){
             Log.d("순서", "$fromPos 에서 -> $targetPos 로")
-            Log.d("순서", "isSuccess: ${memoList[fromPos].id}번 일정 위치를 ${memoList[fromPos].title} $targetPos 로 이동")
+            Log.d("순서", "isSuccess: ${memoList[fromPos].id}번 일정 위치를 ${memoList[fromPos].title} $targetPos 로 이동 ${memoList.size}")
             TodayService(this).onPostChangeItemPosition(ChangePositionItemRequest(memoList[fromPos].id,targetPos))
         }
         // 리사이클러뷰 아이템 스와이프,드래그
@@ -213,6 +213,7 @@ class TodayFragment() :
                         if(!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
+                        val memoScheduleOrder = memoJsonObject.get("scheduleOrder").asInt
                         val memoScheduleFormDate = memoJsonObject.get("scheduleFormDate").asString
 
                         var memoColorInfo:String? = null
@@ -242,14 +243,14 @@ class TodayFragment() :
                                 memoContent,
                                 memoIsChecked,
                                 memoColorInfo,
-                                memoScheduleFormDate
+                                memoScheduleFormDate,
+                                    memoScheduleOrder
                             )
                         )
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
                 }
                 else->{
-                    showCustomToast(response.message.toString())
                 }
             }
         }else{

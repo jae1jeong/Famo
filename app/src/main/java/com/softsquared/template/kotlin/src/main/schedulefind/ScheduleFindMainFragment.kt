@@ -63,6 +63,13 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindTvTotaySchedule : TextView? = null
     var scheduleFindName : TextView? = null
 
+
+    companion object{
+        lateinit var scheduleWholeAdapter:ScheduleWholeAdapter
+        val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
+
+    }
+
     //메인액티비티 oncreate랑 비슷하다
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -163,9 +170,10 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this){}
 //        shimmer_main_layout.startShimmerAnimation()
 //        GlobalScope.launch(Dispatchers.Main) {
-//            delay(2500)
+//            delay(1000)
 //            try{
 //                if(shimmer_main_layout.isAnimationStarted){
 //                    shimmer_main_layout.stopShimmerAnimation()
@@ -198,9 +206,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
-//                Toast.makeText(activity,"전체일정조회",Toast.LENGTH_SHORT).show()
 
-                val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
 
                 if (response.data.size > 0) {
 
@@ -272,18 +278,18 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                     )
                 recyclerviewWhole!!.setHasFixedSize(true)
 
-                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList,this) { it ->
+                scheduleWholeAdapter =  ScheduleWholeAdapter(wholeScheduleList,this) { it ->
                     val detailDialog = ScheduleDetailDialog(context!!)
                     val scheduleItem = MemoItem(
-                        it.id,
-                        it.date,
-                        0,
-                        it.name,
-                        it.memo,
-                        false,
-                        null,
-                        null
-                    )
+                            it.id,
+                            it.date,
+                            0,
+                            it.name,
+                            it.memo,
+                            false,
+                            null,
+                            null
+                    ,0)
                     detailDialog.start(scheduleItem, null)
                     detailDialog.setOnModifyBtnClickedListener {
                         // 스케쥴 ID 보내기
@@ -297,6 +303,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                     }
 
                 }
+                recyclerviewWhole!!.adapter = scheduleWholeAdapter
 
 
             }

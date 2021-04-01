@@ -3,9 +3,9 @@ package com.softsquared.template.kotlin.src.main.schedulefind.models
 import java.util.*
 
 data class ScheduleWholeData(val id : Int,
-                             val date : String,
-                             val name : String,
-                             val memo : String?,
+                             var date : String,
+                             var name : String,
+                             var memo : String?,
                              var pick: Int,
                              val status : Int,
-                             val color : String?)
+                             var color : String?)

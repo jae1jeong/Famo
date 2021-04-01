@@ -4,8 +4,8 @@ import java.util.*
 
 data class WholeScheduleLatelyData(val scheduleID : Int,
                                    val scheduleDate : String,
-                                   val scheduleName : String,
-                                   val scheduleMemo : String,
+                                   var scheduleName : String,
+                                   var scheduleMemo : String,
                                    val schedulePick : Int,
                                    val categoryID : Int,
                                    val colorInfo : String)

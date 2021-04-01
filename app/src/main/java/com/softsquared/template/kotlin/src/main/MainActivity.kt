@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -34,6 +35,7 @@ import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
+import com.softsquared.template.kotlin.src.main.monthly.DatePickBottomSheetDialog
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.*
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
@@ -48,6 +50,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
+import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.CalendarConverter
 import com.softsquared.template.kotlin.util.Constants
@@ -65,6 +68,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         lateinit var categoryScheduleAdapter: MainCategoryAdapter
         val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
         var selectedCategoryId:Int?= null
+        var editingDate:String? = null
     }
 
     //카테고리 편집으로 보내줄 변수
@@ -72,6 +76,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     var color = ""
     var size = 0
     var categoryID = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -228,7 +233,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     PostTodayRequestAddMemo(
                         binding.addMemoEditTitle.text.toString(),
                         binding.addMemoEditContent.text.toString(),
-                        selectedCategoryId
+                        selectedCategoryId,
+                            editingDate
                     )
                 )
             }
@@ -264,12 +270,13 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 editScheduleID =
                     ApplicationClass.sSharedPreferences.getInt(Constants.EDIT_SCHEDULE_ID, -1)
                 if (editScheduleID != -1) {
+                    Log.d("TAG", "onCreate: $editingDate")
                     showLoadingDialog(this)
                     AddMemoService(this).tryPatchMemo(
                         editScheduleID,
                         PatchMemo(
                             binding.addMemoEditTitle.text.toString(),
-                            null,
+                            editingDate,
                             selectedCategoryId,
                             binding.addMemoEditContent.text.toString()
                         )
@@ -290,7 +297,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     PostTodayRequestAddMemo(
                         binding.addMemoEditTitle.text.toString(),
                         binding.addMemoEditContent.text.toString(),
-                        selectedCategoryId
+                        selectedCategoryId,
+                            editingDate
                     )
                 )
             }
@@ -302,8 +310,21 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         }
 
 
+        // 바텀시트 다이얼로그 날짜 버튼
+        binding.addMemoTextDateInfo.setOnClickListener {
+            val datePickBottomSheetDialog = MainEditMemoBottomSheetDialog()
+            datePickBottomSheetDialog.show(
+                    supportFragmentManager,
+                    datePickBottomSheetDialog.tag
+            )
+        }
+
     }
 
+    fun receiveDateFromDatePicker(strDate:String){
+        editingDate = strDate
+        binding.addMemoTextDateInfo.text = "$strDate (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(strDate).dayOfWeek.toString())})"
+    }
 
     fun setHeightBottomSheetDialog(){
         // 디바이스 화면 높이 구하기
@@ -361,21 +382,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
     }
 
 
-    fun replaceFragment(fragment: Fragment) {
-        val adapter = MainPagerAdapter(supportFragmentManager)
-        adapter.addFragment(fragment, "월간")
-        binding.mainViewPager.adapter = adapter
-        binding.mainTabLayout.setupWithViewPager(binding.mainViewPager)
-//        binding.mainFrameLayout.visibility = View.VISIBLE
-//        binding.mainTabLayout.visibility = View.GONE
-//        binding.mainImageProfile.visibility = View.GONE
-//        supportFragmentManager.beginTransaction().replace(R.id.main_frame_layout,fragment)
-//                    .commit()
-//        val fragmentManager : FragmentManager = supportFragmentManager;
-//        val fragmentTransaction : FragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.main_frame_layout, fragment).commit();      // Fragment로 사용할 MainActivity내의 layout공간을 선택합니다.
-    }
-
     override fun onBackPressed() {
         AskDialog(this)
                 .setTitle("앱 종료")
@@ -387,10 +393,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 .show()
     }
 
-    fun fragmentSetting() {
-        binding.mainTabLayout.visibility = View.VISIBLE
-        binding.myPage.visibility = View.VISIBLE
-    }
 
     override fun onPostAddMemoSuccess(response: BaseResponse) {
         if (response.isSuccess) {
@@ -399,11 +401,12 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     showCustomToast("일정이 작성 되었습니다!")
                     stateChangeBottomSheet(Constants.COLLASPE)
                     TodayService(this).onGetScheduleItems()
-
+                    editingDate = null
                     selectedCategoryId = null
                     // 초기화
                     binding.addMemoEditTitle.setText("")
                     binding.addMemoEditContent.setText("")
+                    binding.addMemoTextDateInfo.text = ""
                     categoryList.forEach {
                         if(it.selected){
                             it.selected = false
@@ -434,6 +437,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         if (response.isSuccess) {
             when (response.code) {
                 100 -> {
+                    editingDate = null
+                    binding.addMemoTextDateInfo.text = ""
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
                     showCustomToast("일정이 성공적으로 수정되었습니다.")
@@ -459,6 +464,47 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 MonthlyFragment.monthlyMemoAdapter?.notifyItemChanged(MonthlyFragment.monthlyMemoAdapter!!.memoList.indexOf(it))
                             }
                         }
+                    }
+                    try{
+                        ScheduleFindLatelyFragment.scheduleLatelyAdapter?.let {
+                            ScheduleFindLatelyFragment.scheduleLatelyAdapter.latelyList.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindLatelyFragment.scheduleLatelyAdapter.notifyItemChanged(ScheduleFindLatelyFragment.latelyListWhole.indexOf(it))
+                                }
+                            }
+                        }
+                    }catch (e:UninitializedPropertyAccessException){
+
+                    }
+
+                    try{
+                        ScheduleFindMainFragment.scheduleWholeAdapter?.let {
+                        ScheduleFindMainFragment.scheduleWholeAdapter.wholeList.forEach {
+                            if (it.id == editScheduleID) {
+                                it.name = binding.addMemoEditTitle.text.toString()
+                                it.memo = binding.addMemoEditContent.text.toString()
+                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList.indexOf(it))
+                            }
+                        }
+                    }}
+                    catch (e:UninitializedPropertyAccessException){
+
+                    }
+
+                    try{
+
+                        ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.let {
+                            ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.categoryList.forEach {
+                                if (it.id == editScheduleID) {
+                                    it.name = binding.addMemoEditTitle.text.toString()
+                                    it.memo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindCategoryFragment.categoryScheduleInquiryAdapter.notifyItemChanged(ScheduleFindCategoryFragment.categoryList.indexOf(it))
+                                }
+                            }
+                        }
+                    }catch (e:UninitializedPropertyAccessException){
                     }
                     selectedCategoryId = null
                     categoryList.forEach {
@@ -551,6 +597,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
+                        val memoScheduleOrder = memoJsonObject.get("scheduleOrder").asInt
+
 
                         for (i in 0..1) {
                             if (i > 0) {
@@ -577,7 +625,8 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 memoContent,
                                 memoIsChecked,
                                 memoColorInfo,
-                                memoScheduleFormDate
+                                memoScheduleFormDate,
+                                    memoScheduleOrder
                             )
                         )
                     }

@@ -41,6 +41,10 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         // 사이즈가 0인 경우는 초기화
         wholeScheduleLatelyAdapter = WholeScheduleLatelyAdapter(latelyListWhole){}
 
+        binding.scheduelFindLatelyImageNoItem.setOnClickListener {
+            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
 //        binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
@@ -52,7 +56,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, now_page)
                 WholeLatelyScheduleService(this@WholeLatelyScheduleFragment)
-                    .tryGetLatelyScheduleInquiry(((now_page - 1)), 10)
+                    .tryGetLatelyScheduleInquiry(((now_page - 1)*10), 10)
 
             }
             override fun onPageCenter(now_page: Int) {
@@ -87,6 +91,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         if (testCnt != 0){
             WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
         }else{
+            showLoadingDialog(context!!)
             WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,999)
         }
 
@@ -208,6 +213,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회실패 - ${response.message.toString()}")
             }
         }
+        dismissLoadingDialog()
     }
 
     override fun onGetLatelyScheduleInquiryFail(message: String) {

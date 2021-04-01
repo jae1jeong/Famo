@@ -102,6 +102,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         var dDayOneCnt = 0
 
+        showLoadingDialog(this)
         MyPageEditService(this).tryGetMyPage()
 
         //이미지 클릭 시
@@ -580,10 +581,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 showCustomToast("${response.message.toString()}}")
             }
         }
+        dismissLoadingDialog()
 
     }
 
     override fun onGetMyPageFail(message: String) {
+        dismissLoadingDialog()
     }
 
     override fun onPutMyPageUpdateSuccess(response: BaseResponse) {

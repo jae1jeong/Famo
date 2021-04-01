@@ -40,10 +40,15 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
         wholeScheduleBookmarkAdapter = WholeScheduleBookmarkAdapter(bookmarkListWhole){}
 
+        binding.scheduelFindBookmarkImageNoItem.setOnClickListener {
+            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
         //페이징 수를 위해 설정
         if (testCnt > 0) {
             WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 10)
         } else {
+            showLoadingDialog(context!!)
             WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 999)
         }
 
@@ -61,7 +66,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                     now_page
                 )
                 WholeBookmarkScheduleService(this@WholeScheduleBookmarkFragment)
-                    .tryGetScheduleBookmark(((now_page - 1)), 10)
+                    .tryGetScheduleBookmark(((now_page - 1)* 10), 10)
 
             }
 
@@ -214,6 +219,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
 
         }
+        dismissLoadingDialog()
     }
 
     override fun onGetScheduleBookmarkFail(message: String) {

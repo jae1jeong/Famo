@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
     var recyclerViewLately : RecyclerView? = null
     var scheduleFindLatelyFrameLayoutNoItem: FrameLayout? = null
+    var scheduelFindLatelyImageNoItem : ImageView? = null
 
 
     companion object{
@@ -44,11 +46,16 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
 
         recyclerViewLately = view.findViewById(R.id.recyclerView_lately)
         scheduleFindLatelyFrameLayoutNoItem = view.findViewById(R.id.schedule_find_lately_frame_layout_no_item)
+        scheduelFindLatelyImageNoItem = view.findViewById(R.id.scheduel_find_lately_image_no_item)
 
         GlobalScope.launch(Dispatchers.IO){
             delay(1000)
             WholeLatelyScheduleService(this@ScheduleFindLatelyFragment)
                 .tryGetLatelyScheduleInquiry(0, 2)
+        }
+
+        scheduelFindLatelyImageNoItem!!.setOnClickListener {
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
         }
 
         return view

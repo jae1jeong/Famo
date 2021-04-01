@@ -21,11 +21,17 @@ import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleIn
 
 class ScheduleWholeAdapter(
     var wholeList: ArrayList<ScheduleWholeData>,
+    myScheduleCategoryRecyclerView: IScheduleUpdate,
     val clickListener: (ScheduleWholeData) -> Unit
 ) :
     RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
 
     var cnt = 1
+    private var iScheduleCategoryRecyclerView: IScheduleUpdate? = null
+
+    init {
+        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
 
@@ -106,8 +112,6 @@ class ScheduleWholeAdapter(
             )
             Log.d("TAG", "onClick: ${wholeList[0].id}")
 
-
-            //지금 즐찾안되있는놈 두번눌러야 색변함
            when(v){
                pick -> {
                    Log.d("TAG", "onClick확인: ${wholeList[adapterPosition].pick}")
@@ -120,26 +124,8 @@ class ScheduleWholeAdapter(
                        wholeList[adapterPosition].pick = -1
                    }
 
-//                   if (wholeList[adapterPosition].pick == 2131165412) {
-//                       pick.setImageResource(R.drawable.schedule_find_bookmark)
-//                       wholeList[adapterPosition].pick = 2131165416
-//                   } else {
-//                       pick.setImageResource(R.drawable.schedule_find_inbookmark)
-//                       wholeList[adapterPosition].pick = 2131165412
-//                   }
                    ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
                }
-
-
-//                shape -> {
-//                    val shape : LayerDrawable =  ContextCompat.getDrawable(get,
-//                        R.drawable.left_stroke) as LayerDrawable
-//
-//                    val gradientDrawable = shape
-//                        .findDrawableByLayerId(R.id.iv_shape) as GradientDrawable
-//
-//                    gradientDrawable.setColor(Color.BLUE) // change color
-//                }
 
             }
         }
@@ -158,6 +144,7 @@ class ScheduleWholeAdapter(
         when(response.code){
             100 -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 성공")
+//                iScheduleCategoryRecyclerView!!.onUpdate()
             }
             else -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 실패 ${response.message.toString()}")

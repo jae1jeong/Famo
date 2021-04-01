@@ -90,7 +90,6 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 
         when(response.code){
             100 -> {
-                showCustomToast("즐겨찾기 성공")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
 
                 if (testCnt == 0){
@@ -198,11 +197,8 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                     }
                 }
 
-
-
             }
             else -> {
-                showCustomToast("즐겨찾기 실패")
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회실패 - ${response.message.toString()}")
             }
         }

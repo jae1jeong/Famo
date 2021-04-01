@@ -35,9 +35,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 
-class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView{
+class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
+    IScheduleUpdate{
 
     //카테고리 편집으로 보내줄 변수
     var name = ""
@@ -270,7 +272,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                     )
                 recyclerviewWhole!!.setHasFixedSize(true)
 
-                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList) { it ->
+                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList,this) { it ->
                     val detailDialog = ScheduleDetailDialog(context!!)
                     val scheduleItem = MemoItem(
                         it.id,
@@ -392,6 +394,13 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     }
 
     override fun onGetScheduleSearchFail(message: String) {
+    }
+
+
+    override fun onUpdate() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.schedule_find_main_fragment, ScheduleFindFragment())
+            .commit()
     }
 
 

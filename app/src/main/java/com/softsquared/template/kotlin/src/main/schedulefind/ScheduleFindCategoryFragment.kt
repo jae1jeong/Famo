@@ -32,20 +32,25 @@ import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialo
 
 class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFilterInterface,
     CategoryFilterView, ScheduleFindView, View.OnClickListener,
-    SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener{
+    SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener {
 
     private var schedulefindFilterBottomDialogFragment: SchedulefindFilterBottomDialogFragment? =
         null
 
-    //전체페이징수
+    //페이징수
     var categorySchedulePagingCnt = 0
 
-    // 카테고리/필터 조회시 전체수를 위한 변수
+    //카테고리조회 페이징 수를 구하기 위한 변수
     var categoryPagintCnt = 0
-    var recentPagintCnt = 0
-    var leftPagintCnt = 0
-    var pickPagintCnt = 0
-    var donePagintCnt = 0
+
+    // 카테고리-필터 조회 4가지 구분을 위한 변수
+    var leftPagintCnt = -1
+    var donePagintCnt = -1
+    var recentPagintCnt = -1
+    var pickPagintCnt = -1
+
+    //필터별 전체수를 위한 변수
+    var totalCnt = 0
 
     //카테고리를 클릭한 것인지 확인하기 위한 변수
     var scheduleCategoryID = -1
@@ -57,21 +62,27 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var recentsCnt = 1
     var bookmarkCnt = 1
 
-    var categoryFilter : ImageView? = null
-    var catogorySchedulePaging : LakuePagingButton? = null
-    var recyclerviewScheduleFindCategory : RecyclerView? = null
-    var scheduleFindCategoryFrameLayoutNoItem : FrameLayout? = null
-    var categoryTextNoItem : TextView? = null
+    var categoryFilter: ImageView? = null
+    var catogorySchedulePaging: LakuePagingButton? = null
+    var recyclerviewScheduleFindCategory: RecyclerView? = null
+    var scheduleFindCategoryFrameLayoutNoItem: FrameLayout? = null
+    var categoryTextNoItem: TextView? = null
 
     @SuppressLint("InflateParams")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         //setContentView 같다
         val view = inflater.inflate(R.layout.fragment_schedule_find_category, container, false)
 
         categoryFilter = view.findViewById(R.id.category_filter)
         catogorySchedulePaging = view.findViewById(R.id.category_schedule_paging)
-        recyclerviewScheduleFindCategory = view.findViewById(R.id.recyclerview_schedule_find_category)
-        scheduleFindCategoryFrameLayoutNoItem = view.findViewById(R.id.schedule_find_category_frame_layout_no_item)
+        recyclerviewScheduleFindCategory =
+            view.findViewById(R.id.recyclerview_schedule_find_category)
+        scheduleFindCategoryFrameLayoutNoItem =
+            view.findViewById(R.id.schedule_find_category_frame_layout_no_item)
         categoryTextNoItem = view.findViewById(R.id.category_text_no_item)
 
         var extra = this.arguments
@@ -92,7 +103,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
 
         //검색
-        if (word != null){
+        if (word != null) {
             ScheduleFindService(this).tryGetScheduleSearch(word)
             val edit = ApplicationClass.sSharedPreferences.edit()
             edit.remove(Constants.SEARCHWROD)
@@ -100,11 +111,11 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         }
 
         //카테고리를 클릭 할때에만 조회
-        if (scheduleCategoryID != -1){
+        if (scheduleCategoryID != -1) {
 
-            if (categoryPagintCnt != 0){
+            if (categoryPagintCnt != 0) {
                 CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
-            }else{
+            } else {
                 CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 999)
             }
         }
@@ -158,86 +169,100 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             100 -> {
                 Log.d("TAG", "onGetCategoryInquirySuccess 성공")
 
-                if (categoryPagintCnt == 0){
+                if (categoryInquiryResponse.data.size > 0) {
 
-                    val cnt = categoryInquiryResponse.data.size
-                    //페이징수 세팅
-                    if (cnt % 10 == 0) {
-                        categorySchedulePagingCnt = cnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (cnt / 10) + 1
-                    }
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
-                    categoryPagintCnt++
-                    CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
-                }
+                    if (categoryPagintCnt == 0) {
 
-                if (categoryPagintCnt != 0 ){
-                    val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
+                        recyclerviewScheduleFindCategory!!.visibility = View.VISIBLE
+                        scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
 
-                    for (i in 0 until categoryInquiryResponse.data.size) {
-
-                        if (categoryInquiryResponse.data[i].schedulePick == -1) {
-                            categoryList.add(
-                                CategoryScheduleInquiryData(
-                                    categoryInquiryResponse.data[i].scheduleID,
-                                    categoryInquiryResponse.data[i].scheduleDate,
-                                    categoryInquiryResponse.data[i].scheduleName,
-                                    categoryInquiryResponse.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_inbookmark,
-                                    categoryInquiryResponse.data[i].colorInfo
-                                )
-                            )
+                        val cnt = categoryInquiryResponse.data.size
+                        //페이징수 세팅
+                        if (cnt % 10 == 0) {
+                            categorySchedulePagingCnt = cnt / 10
                         } else {
-                            categoryList.add(
-                                CategoryScheduleInquiryData(
-                                    categoryInquiryResponse.data[i].scheduleID,
-                                    categoryInquiryResponse.data[i].scheduleDate,
-                                    categoryInquiryResponse.data[i].scheduleName,
-                                    categoryInquiryResponse.data[i].scheduleMemo,
-                                    R.drawable.schedule_find_bookmark,
-                                    categoryInquiryResponse.data[i].colorInfo
-                                )
-                            )
+                            categorySchedulePagingCnt = (cnt / 10) + 1
                         }
+                        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+                        categoryPagintCnt++
+                        CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
                     }
-                    recyclerviewScheduleFindCategory!!.layoutManager =
-                        GridLayoutManager(context, 2, GridLayoutManager.VERTICAL,
-                            false)
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter =
-                        CategoryScheduleInquiryAdapter(categoryList){
-                            val detailDialog = ScheduleDetailDialog(context!!)
-                            val scheduleItem = MemoItem(
-                                it.id,
-                                it.date,
-                                0,
-                                it.name,
-                                it.memo,
-                                false,
-                                null,
-                                null
-                            )
-                            detailDialog.start(scheduleItem, null)
-                            detailDialog.setOnModifyBtnClickedListener {
-                                // 스케쥴 ID 보내기
-                                val edit = ApplicationClass.sSharedPreferences.edit()
-                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
-                                edit.apply()
-                                Constants.IS_EDIT = true
 
-                                //바텀 시트 다이얼로그 확장
-                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                    if (categoryPagintCnt != 0) {
+                        val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
+
+                        for (i in 0 until categoryInquiryResponse.data.size) {
+
+                            if (categoryInquiryResponse.data[i].schedulePick == -1) {
+                                categoryList.add(
+                                    CategoryScheduleInquiryData(
+                                        categoryInquiryResponse.data[i].scheduleID,
+                                        categoryInquiryResponse.data[i].scheduleDate,
+                                        categoryInquiryResponse.data[i].scheduleName,
+                                        categoryInquiryResponse.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_inbookmark,
+                                        categoryInquiryResponse.data[i].colorInfo
+                                    )
+                                )
+                            } else {
+                                categoryList.add(
+                                    CategoryScheduleInquiryData(
+                                        categoryInquiryResponse.data[i].scheduleID,
+                                        categoryInquiryResponse.data[i].scheduleDate,
+                                        categoryInquiryResponse.data[i].scheduleName,
+                                        categoryInquiryResponse.data[i].scheduleMemo,
+                                        R.drawable.schedule_find_bookmark,
+                                        categoryInquiryResponse.data[i].colorInfo
+                                    )
+                                )
                             }
                         }
+                        recyclerviewScheduleFindCategory!!.layoutManager =
+                            GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter =
+                            CategoryScheduleInquiryAdapter(categoryList) {
+                                val detailDialog = ScheduleDetailDialog(context!!)
+                                val scheduleItem = MemoItem(
+                                    it.id,
+                                    it.date,
+                                    0,
+                                    it.name,
+                                    it.memo,
+                                    false,
+                                    null,
+                                    null
+                                )
+                                detailDialog.start(scheduleItem, null)
+                                detailDialog.setOnModifyBtnClickedListener {
+                                    // 스케쥴 ID 보내기
+                                    val edit = ApplicationClass.sSharedPreferences.edit()
+                                    edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                                    edit.apply()
+                                    Constants.IS_EDIT = true
+
+                                    //바텀 시트 다이얼로그 확장
+                                    (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                                }
+                            }
+                    }
+
                 }
+                else{
+                    recyclerviewScheduleFindCategory!!.visibility = View.GONE
+                    scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.VISIBLE
+                    categoryTextNoItem!!.text = "관련 카테고리 일정이 없습니다."
+                }
+
 
             }
             else -> {
                 Log.d(
                     "TAG",
-                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}"
-                )
+                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}")
             }
         }
 
@@ -256,344 +281,484 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             100 -> {
                 Log.d("TAG", "onGetCategoryFilterInquirySuccess: 필터조회성공")
 
-                //남은
-                if (leftPagintCnt == 0){
-                    val filterCnt = response.data.size
-                    //페이징수 세팅
-                    if (filterCnt % 10 == 0) {
-                        categorySchedulePagingCnt = filterCnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (filterCnt / 10) + 1
+                //일정이 있으면
+                if (response.data.size > 0) {
+
+                    recyclerviewScheduleFindCategory!!.visibility = View.VISIBLE
+                    scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
+
+                    //남은일정필터
+                    if (leftPagintCnt % 4 == 1){
+                        val filterCnt = response.data.size
+                        //페이징수 세팅
+                        if (filterCnt % 10 == 0) {
+                            categorySchedulePagingCnt = filterCnt / 10
+                        } else {
+                            categorySchedulePagingCnt = (filterCnt / 10) + 1
+                        }
+                        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+
+                        leftPagintCnt++
+                        totalCnt++
+
+                        CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                            scheduleCategoryID,
+                            "left",
+                            0,
+                            10
+                        )
+
+                    }else if(totalCnt > 0){
+                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+
+                        if (response.data.size > 0) {
+
+                            for (i in 0 until response.data.size) {
+
+                                //즐겨찾기가 아닌경우
+                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].colorInfo
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            response.data[i].colorInfo
+                                        )
+                                    )
+                                }
+
+                            }
+                        }
+
+                        recyclerviewScheduleFindCategory!!.layoutManager =
+                            GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
+                            categoryFilterList){
+
+                            val detailDialog = ScheduleDetailDialog(context!!)
+                            val scheduleItem = MemoItem(
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
+                            )
+                            detailDialog.start(scheduleItem, null)
+                            detailDialog.setOnModifyBtnClickedListener {
+                                // 스케쥴 ID 보내기
+                                val edit = ApplicationClass.sSharedPreferences.edit()
+                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                                edit.apply()
+                                Constants.IS_EDIT = true
+
+                                //바텀 시트 다이얼로그 확장
+                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            }
+                        }
+                        totalCnt--
+                        leftPagintCnt--
                     }
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
-                    leftPagintCnt++
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 10)
-                }
 
-                if (leftPagintCnt != 0){
-                    val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+                    //완료일정필터
+                    if (donePagintCnt % 4 == 2){
+                        val filterCnt = response.data.size
+                        //페이징수 세팅
+                        if (filterCnt % 10 == 0) {
+                            categorySchedulePagingCnt = filterCnt / 10
+                        } else {
+                            categorySchedulePagingCnt = (filterCnt / 10) + 1
+                        }
+                        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                    if (response.data.size > 0) {
+                        donePagintCnt++
+                        totalCnt++
 
-                        for (i in 0 until response.data.size) {
+                        CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                            scheduleCategoryID,
+                            "done",
+                            0,
+                            10
+                        )
 
-                            //즐겨찾기가 아닌경우
-                            if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        response.data[i].colorInfo
+
+                    }else if(totalCnt > 0){
+                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+
+                        if (response.data.size > 0) {
+
+                            for (i in 0 until response.data.size) {
+
+                                //즐겨찾기가 아닌경우
+                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].colorInfo
+                                        )
                                     )
-                                )
+                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            response.data[i].colorInfo
+                                        )
+                                    )
+                                }
+
                             }
-                            else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo != null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        response.data[i].colorInfo
-                                    )
-                                )
+                        }
+
+                        recyclerviewScheduleFindCategory!!.layoutManager =
+                            GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
+                            categoryFilterList){
+
+                            val detailDialog = ScheduleDetailDialog(context!!)
+                            val scheduleItem = MemoItem(
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
+                            )
+                            detailDialog.start(scheduleItem, null)
+                            detailDialog.setOnModifyBtnClickedListener {
+                                // 스케쥴 ID 보내기
+                                val edit = ApplicationClass.sSharedPreferences.edit()
+                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                                edit.apply()
+                                Constants.IS_EDIT = true
+
+                                //바텀 시트 다이얼로그 확장
+                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
 
                         }
+                        totalCnt--
+                        donePagintCnt--
                     }
 
-                    recyclerviewScheduleFindCategory!!.layoutManager =
-                        GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL,
-                            false
+
+                    //최근일정필터
+                    if (recentPagintCnt % 4 == 3){
+                        val filterCnt = response.data.size
+                        //페이징수 세팅
+                        if (filterCnt % 10 == 0) {
+                            categorySchedulePagingCnt = filterCnt / 10
+                        } else {
+                            categorySchedulePagingCnt = (filterCnt / 10) + 1
+                        }
+                        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+
+                        recentPagintCnt++
+                        totalCnt++
+
+                        CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                            scheduleCategoryID,
+                            "recent",
+                            0,
+                            10
                         )
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                        categoryFilterList
-                    )
-                }
 
-                //완료
-                if (donePagintCnt == 0){
-                    val filterCnt = response.data.size
-                    //페이징수 세팅
-                    if (filterCnt % 10 == 0) {
-                        categorySchedulePagingCnt = filterCnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (filterCnt / 10) + 1
-                    }
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
-                    donePagintCnt++
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "done", 0, 10)
-                }
 
-                if (donePagintCnt != 0){
-                    val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+                    }else if(totalCnt > 0){
+                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
-                    if (response.data.size > 0) {
+                        if (response.data.size > 0) {
 
-                        for (i in 0 until response.data.size) {
+                            for (i in 0 until response.data.size) {
 
-                            //즐겨찾기가 아닌경우
-                            if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        response.data[i].colorInfo
+                                //즐겨찾기가 아닌경우
+                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].colorInfo
+                                        )
                                     )
-                                )
+                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            response.data[i].colorInfo
+                                        )
+                                    )
+                                }
+
                             }
-                            else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo != null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        response.data[i].colorInfo
-                                    )
-                                )
+                        }
+
+                        recyclerviewScheduleFindCategory!!.layoutManager =
+                            GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
+                            categoryFilterList){
+
+                            val detailDialog = ScheduleDetailDialog(context!!)
+                            val scheduleItem = MemoItem(
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
+                            )
+                            detailDialog.start(scheduleItem, null)
+                            detailDialog.setOnModifyBtnClickedListener {
+                                // 스케쥴 ID 보내기
+                                val edit = ApplicationClass.sSharedPreferences.edit()
+                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                                edit.apply()
+                                Constants.IS_EDIT = true
+
+                                //바텀 시트 다이얼로그 확장
+                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
 
                         }
+                        totalCnt--
+                        recentPagintCnt--
                     }
 
-                    recyclerviewScheduleFindCategory!!.layoutManager =
-                        GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL,
-                            false
+
+                    //즐겨찾기일정필터
+                    if (pickPagintCnt % 4 == 0){
+                        val filterCnt = response.data.size
+                        //페이징수 세팅
+                        if (filterCnt % 10 == 0) {
+                            categorySchedulePagingCnt = filterCnt / 10
+                        } else {
+                            categorySchedulePagingCnt = (filterCnt / 10) + 1
+                        }
+                        catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+
+                        pickPagintCnt++
+                        totalCnt++
+
+                        CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                            scheduleCategoryID,
+                            "pick",
+                            0,
+                            10
                         )
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                        categoryFilterList
-                    )
-                }
 
-                //최신
-                if (recentPagintCnt == 0){
-                    val filterCnt = response.data.size
-                    //페이징수 세팅
-                    if (filterCnt % 10 == 0) {
-                        categorySchedulePagingCnt = filterCnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (filterCnt / 10) + 1
-                    }
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
-                    recentPagintCnt++
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 10)
-                }
+                    }else if(totalCnt > 0){
+                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
-                if (recentPagintCnt != 0){
-                    val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
+                        if (response.data.size > 0) {
 
-                    if (response.data.size > 0) {
+                            for (i in 0 until response.data.size) {
 
-                        for (i in 0 until response.data.size) {
-
-                            if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        response.data[i].colorInfo
+                                //즐겨찾기가 아닌경우
+                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].colorInfo
+                                        )
                                     )
-                                )
+                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_inbookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            "#CED5D9"
+                                        )
+                                    )
+                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
+                                    categoryFilterList.add(
+                                        CategoryFilterData(
+                                            response.data[i].scheduleID,
+                                            response.data[i].scheduleDate,
+                                            response.data[i].scheduleName,
+                                            response.data[i].scheduleMemo,
+                                            R.drawable.schedule_find_bookmark,
+                                            response.data[i].colorInfo
+                                        )
+                                    )
+                                }
+
                             }
-                            else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo != null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        response.data[i].colorInfo
-                                    )
-                                )
+                        }
+
+                        recyclerviewScheduleFindCategory!!.layoutManager =
+                            GridLayoutManager(
+                                context, 2, GridLayoutManager.VERTICAL,
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
+                            categoryFilterList){
+
+                            val detailDialog = ScheduleDetailDialog(context!!)
+                            val scheduleItem = MemoItem(
+                                it.scheduleID,
+                                it.scheduleDate,
+                                0,
+                                it.scheduleName,
+                                it.scheduleMemo,
+                                false,
+                                null,
+                                null
+                            )
+                            detailDialog.start(scheduleItem, null)
+                            detailDialog.setOnModifyBtnClickedListener {
+                                // 스케쥴 ID 보내기
+                                val edit = ApplicationClass.sSharedPreferences.edit()
+                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.scheduleID)
+                                edit.apply()
+                                Constants.IS_EDIT = true
+
+                                //바텀 시트 다이얼로그 확장
+                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
 
                         }
+                        totalCnt--
+                        pickPagintCnt--
                     }
-
-                    recyclerviewScheduleFindCategory!!.layoutManager =
-                        GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL,
-                            false
-                        )
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                        categoryFilterList
-                    )
+                }
+                //메모가 없으면
+                else{
+                    recyclerviewScheduleFindCategory!!.visibility = View.GONE
+                    scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.VISIBLE
+                    categoryTextNoItem!!.text = "필터조회한 메모가 없습니다."
                 }
 
-                //즐겨찾기
-                if (pickPagintCnt == 0){
-                    val filterCnt = response.data.size
-                    //페이징수 세팅
-                    if (filterCnt % 10 == 0) {
-                        categorySchedulePagingCnt = filterCnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (filterCnt / 10) + 1
-                    }
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
-                    pickPagintCnt++
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 10)
-                }
 
-                if (pickPagintCnt != 0){
-                    val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
-                    if (response.data.size > 0) {
-
-                        for (i in 0 until response.data.size) {
-
-                            //즐겨찾기가 아닌경우
-                            if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        response.data[i].colorInfo
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo == null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        "#CED5D9"
-                                    )
-                                )
-                            }
-                            else if(response.data[i].schedulePick == 1 && response.data[i].colorInfo != null){
-                                categoryFilterList.add(
-                                    CategoryFilterData(
-                                        response.data[i].scheduleID,
-                                        response.data[i].scheduleDate,
-                                        response.data[i].scheduleName,
-                                        response.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
-                                        response.data[i].colorInfo
-                                    )
-                                )
-                            }
-
-                        }
-                    }
-
-                    recyclerviewScheduleFindCategory!!.layoutManager =
-                        GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL,
-                            false
-                        )
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                        categoryFilterList
-                    )
-                }
             }
             else -> {
                 Log.d(
@@ -651,12 +816,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
                 val searchCnt = response.data.size
 
-                if (response.data.size == 0){
+                if (response.data.size == 0) {
                     recyclerviewScheduleFindCategory!!.visibility = View.GONE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.VISIBLE
                     categoryTextNoItem!!.text = "검색어에 맞는 메모가 없습니다."
 
-                }else{
+                } else {
                     recyclerviewScheduleFindCategory!!.visibility = View.VISIBLE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
 
@@ -687,8 +852,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                         response.data[i].colorInfo
                                     )
                                 )
-                            }
-                            else if(response.data[i].colorInfo == null){
+                            } else if (response.data[i].colorInfo == null) {
                                 searchList.add(
                                     ScheduleSearchData(
                                         response.data[i].scheduleID,
@@ -710,7 +874,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             false
                         )
                     recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                    recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList){
+                    recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList) {
 
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(
@@ -773,45 +937,53 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             R.id.filter_btn_remain -> {
                 Toast.makeText(activity, "남은", Toast.LENGTH_SHORT).show()
 
-                if (leftPagintCnt != 0){
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 10)
-                }else{
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "left", 0, 999)
-                }
+                leftPagintCnt = 1
+
+                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                    scheduleCategoryID,
+                    "left",
+                    0,
+                    999
+                )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 
             R.id.filter_btn_completion -> {
                 Toast.makeText(activity, "완료", Toast.LENGTH_SHORT).show()
 
-                if (donePagintCnt != 0){
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "done", 0, 10)
-                }else{
+                donePagintCnt = 2
 
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "done", 0, 999)
-                }
+                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                    scheduleCategoryID,
+                    "done",
+                    0,
+                    999)
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 
             R.id.filter_btn_recents -> {
                 Toast.makeText(activity, "최신", Toast.LENGTH_SHORT).show()
 
-                if (recentPagintCnt != 0){
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 10)
-                }else{
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "recent", 0, 999)
-                }
+                recentPagintCnt = 3
+                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                    scheduleCategoryID,
+                    "recent",
+                    0,
+                    999
+                )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 
             R.id.filter_btn_bookmark -> {
                 Toast.makeText(activity, "즐겨찾기", Toast.LENGTH_SHORT).show()
 
-                if (pickPagintCnt != 0){
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "pick", 0, 10)
-                }else{
-                    CategoryFilterService(this).tryGetFilterCategoryInquiry(scheduleCategoryID, "pick", 0, 999)
-                }
+                pickPagintCnt = 0
+                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+                    scheduleCategoryID,
+                    "pick",
+                    0,
+                    999
+                )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 

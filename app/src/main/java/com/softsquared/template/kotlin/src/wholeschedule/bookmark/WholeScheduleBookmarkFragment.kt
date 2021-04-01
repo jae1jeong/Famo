@@ -96,8 +96,11 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
                 if (response.data.size == 0) {
                     binding.scheduleFindBookmark!!.visibility = View.GONE
-                    binding.scheduleFindFrameLayoutNoItem!!.visibility = View.VISIBLE
+                    binding.scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.VISIBLE
+
                 } else {
+                    binding.scheduleFindBookmark!!.visibility = View.VISIBLE
+                    binding.scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.GONE
                     if (testCnt == 0) {
                         val cnt = response.data.size
                         //페이징수 세팅

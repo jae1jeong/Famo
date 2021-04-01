@@ -214,7 +214,6 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
         if (response.isSuccess) {
             when (response.code) {
                 100 -> {
-                    showCustomToast("카테고리 생성 테스트")
                     Log.d("TAG", "onPostCategoryInsertSuccess: 카테고리생성 테스트")
                 }
                 else -> {

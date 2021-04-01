@@ -66,6 +66,7 @@
     <string name="information_get_start">시작하기</string>
 
     <!--Add Memo -->
+    <string name="add_memo_edit_schedule">일정 수정하기</string>
     <string name="add_memo_write_title">제목 입력</string>
     <string name="add_memo_add_schedule">오늘 일정 추가하기</string>
     <string name="add_memo_add_memo">일정 메모하기</string>

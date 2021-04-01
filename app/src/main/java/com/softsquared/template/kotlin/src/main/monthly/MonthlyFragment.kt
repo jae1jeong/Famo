@@ -295,6 +295,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             val job2 = launch{
                 job1.join()
                 binding.calendarView.setup(curMonth,curMonth,daysOfWeek.first())
+                binding.calendarView.scrollToMonth(curMonth)
             }
             val asyncDialogJob = launch {
                 asyncDialog.show()
@@ -304,6 +305,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             }
 
         }
+
 
     }
 

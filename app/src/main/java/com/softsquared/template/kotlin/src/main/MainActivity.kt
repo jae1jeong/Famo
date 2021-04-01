@@ -65,7 +65,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         lateinit var categoryScheduleAdapter: MainCategoryAdapter
         val categoryList: ArrayList<MainScheduleCategory> = arrayListOf()
         var selectedCategoryId:Int?= null
-        lateinit var mContext: Context
     }
 
     //카테고리 편집으로 보내줄 변수
@@ -76,7 +75,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = this
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
         // viewPager

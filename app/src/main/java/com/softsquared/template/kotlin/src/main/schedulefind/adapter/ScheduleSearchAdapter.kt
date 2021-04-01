@@ -65,8 +65,8 @@ class ScheduleSearchAdapter(var searchList: ArrayList<ScheduleSearchData>) :
         val memo = holder.scheduleMemo.text
         val changeMemoColor = SpannableStringBuilder(memo)
         //검색 내용 색 변경
+        Log.d("TAG", "onBindViewHolder: $searchWord $memo ")
         for (i in 0 until forCnt) {
-
             if (searchWord.equals(memo.substring(i, searchWord!!.length+i))) {
                 changeMemoColor.setSpan(
                     ForegroundColorSpan(Color.parseColor("#ffae2a")),

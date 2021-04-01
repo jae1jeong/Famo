@@ -3,75 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardview"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="160dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="5dp"
-    >
+    android:layout_marginBottom="20dp"
+    app:cardElevation="5dp">
 
-    <ImageView
-        android:id="@+id/wholoe_schedule_border"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/schedule_border" />
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/wholoe_schedule_border"
+            android:layout_width="154dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/schedule_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/wholoe_schedule_border"
+            >
 
-            <TextView
-                android:id="@+id/recycler_whole_times"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2021.02.10"
-                android:textStyle="normal"
-                android:textSize="13sp"
-                android:textColor="#aeb7c4" />
+            <!--            <RelativeLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content">-->
 
-            <ImageView
-                android:id="@+id/recycler_whole_isboolean"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/schedule_find_inbookmark" />
+            <!--                <TextView-->
+            <!--                    android:id="@+id/recycler_whole_times"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="2021.02.10"-->
+            <!--                    android:textStyle="normal"-->
+            <!--                    android:textSize="13sp"-->
+            <!--                    android:textColor="#aeb7c4" />-->
 
-        </RelativeLayout>
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/recycler_whole_isboolean"-->
+            <!--                    android:layout_width="20dp"-->
+            <!--                    android:layout_height="20dp"-->
+            <!--                    android:layout_alignParentRight="true"-->
+            <!--                    android:layout_marginRight="15dp"-->
+            <!--                    android:background="@drawable/schedule_find_inbookmark" />-->
 
-        <TextView
-            android:id="@+id/recycler_whole_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="37dp"
-            android:text="제목"
-            android:textColor="@color/black"
-            android:textStyle="normal"
-            android:textSize="15sp"
-            android:maxLines="2"
-            android:ems="10"
-            android:ellipsize="end"/>
+            <!--            </RelativeLayout>-->
 
-        <TextView
-            android:id="@+id/recycler_whole_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:text="내용"
-            android:textStyle="normal"
-            android:textSize="13sp"
-            android:textColor="#384350"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:ems="5"/>
+            <!--            <TextView-->
+            <!--                android:id="@+id/recycler_whole_title"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="37dp"-->
+            <!--                android:text="제목"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textStyle="normal"-->
+            <!--                android:textSize="15sp"-->
+            <!--                android:maxLines="2"-->
+            <!--                android:ems="10"-->
+            <!--                android:ellipsize="end"/>-->
 
-    </LinearLayout>
+            <!--            <TextView-->
+            <!--                android:id="@+id/recycler_whole_content"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="7dp"-->
+            <!--                android:text="내용"-->
+            <!--                android:textStyle="normal"-->
+            <!--                android:textSize="13sp"-->
+            <!--                android:textColor="#384350"-->
+            <!--                android:ellipsize="end"-->
+            <!--                android:maxLines="1"-->
+            <!--                android:ems="5"/>-->
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 </androidx.cardview.widget.CardView>

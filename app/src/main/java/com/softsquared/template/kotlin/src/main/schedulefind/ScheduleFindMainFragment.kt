@@ -1,16 +1,16 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +28,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.LoadingDialog
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,8 @@ import kotlin.collections.ArrayList
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
     IScheduleUpdate{
+
+    lateinit var mLoadingDialog: LoadingDialog
 
     //카테고리 편집으로 보내줄 변수
     var name = ""
@@ -62,6 +65,8 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindTabLayout : TabLayout? = null
     var scheduleFindTvTotaySchedule : TextView? = null
     var scheduleFindName : TextView? = null
+    var scheduleFindMainWholeLayoutNoItem : FrameLayout? = null
+    var scheduleFindMainWholeImageNoItem : ImageView? = null
 
     //메인액티비티 oncreate랑 비슷하다
     @SuppressLint("SetTextI18n")
@@ -81,14 +86,16 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindTabLayout = view.findViewById(R.id.schedule_find_tab_layout)
         scheduleFindtTvTotaySchedule = view.findViewById(R.id.schedule_find_tv_totay_schedule)
         scheduleFindName = view.findViewById(R.id.schedule_find_name)
+        scheduleFindMainWholeLayoutNoItem = view.findViewById(R.id.schedule_find_main_whole_layout_no_item)
+        scheduleFindMainWholeImageNoItem = view.findViewById(R.id.schedule_find_main_whole_image_no_item)
 
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
         scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(9); // 밑줄높이(두께)
 
-
         //전체일정수
         ScheduleFindService(this).tryGetWholeScheduleCount()
         //전체일정조회
+        showLoadingDialog(context!!)
         ScheduleFindService(this).tryGetWholeScheduleInquiry(0, 10)
         //남은일정
         ScheduleFindService(this).tryGetRestScheduleCount("today")
@@ -120,6 +127,13 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             startActivity(intent)
         }
 
+        //메모가없을경우 이미지 클릭 시 메모작성
+        scheduleFindMainWholeImageNoItem!!.setOnClickListener {
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
+
+
 //        한 번에 표시되는 버튼 수 (기본값 : 5)
         scheduleFindPaging!!.setPageItemCount(4);
 
@@ -133,6 +147,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -140,6 +155,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
             override fun onPageCenter(now_page: Int) {
 
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -150,6 +166,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -178,6 +195,17 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 //        }
     }
 
+    fun showLoadingDialog(context: Context) {
+        mLoadingDialog = LoadingDialog(context)
+        mLoadingDialog.show()
+    }
+
+    fun dismissLoadingDialog() {
+        if (mLoadingDialog.isShowing) {
+            mLoadingDialog.dismiss()
+        }
+    }
+
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
     //어댑터에서 color값을 가져오기위한 함수
 
@@ -203,6 +231,9 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
 
                 if (response.data.size > 0) {
+
+                    recyclerviewWhole!!.visibility = View.VISIBLE
+                    scheduleFindMainWholeLayoutNoItem!!.visibility = View.GONE
 
                     for (i in 0 until response.data.size) {
                         //즐겨찾기 X and 카테고리 O인경우
@@ -233,71 +264,48 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                                 )
                             )
                         }
-                        //즐겨찾기O and 카테고리 X
-//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-//                            wholeScheduleList.add(
-//                                ScheduleWholeData(
-//                                    response.data[i].scheduleID,
-//                                    response.data[i].scheduleDate,
-//                                    response.data[i].scheduleName,
-//                                    response.data[i].scheduleMemo,
-//                                    R.drawable.schedule_find_bookmark,
-//                                    response.data[i].scheduleStatus,
-//                                    "#CED5D9"
-//                                )
-//                            )
-//                        }
-//                        //즐겨찾기 O and 카테고리 O
-//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-//                            wholeScheduleList.add(
-//                                ScheduleWholeData(
-//                                    response.data[i].scheduleID,
-//                                    response.data[i].scheduleDate,
-//                                    response.data[i].scheduleName,
-//                                    response.data[i].scheduleMemo,
-//                                    R.drawable.schedule_find_bookmark,
-//                                    response.data[i].scheduleStatus,
-//                                    response.data[i].colorInfo
-//                                )
-//                            )
-//                        }
+
                     }
-                }
 
-                //전체일정 리사이큘러뷰 연결
-                recyclerviewWhole!!.layoutManager =
-                    GridLayoutManager(
-                        context, 2, GridLayoutManager.VERTICAL,
-                        false
-                    )
-                recyclerviewWhole!!.setHasFixedSize(true)
+                    //전체일정 리사이큘러뷰 연결
+                    recyclerviewWhole!!.layoutManager =
+                        GridLayoutManager(
+                            context, 2, GridLayoutManager.VERTICAL,
+                            false
+                        )
+                    recyclerviewWhole!!.setHasFixedSize(true)
 
-                recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList,this) { it ->
-                    val detailDialog = ScheduleDetailDialog(context!!)
-                    val scheduleItem = MemoItem(
-                        it.id,
-                        it.date,
-                        0,
-                        it.name,
-                        it.memo,
-                        false,
-                        null,
-                        null
-                    )
-                    detailDialog.start(scheduleItem, null)
-                    detailDialog.setOnModifyBtnClickedListener {
-                        // 스케쥴 ID 보내기
-                        val edit = ApplicationClass.sSharedPreferences.edit()
-                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
-                        edit.apply()
-                        Constants.IS_EDIT = true
+                    recyclerviewWhole!!.adapter = ScheduleWholeAdapter(wholeScheduleList,this) { it ->
+                        val detailDialog = ScheduleDetailDialog(context!!)
+                        val scheduleItem = MemoItem(
+                            it.id,
+                            it.date,
+                            0,
+                            it.name,
+                            it.memo,
+                            false,
+                            null,
+                            null
+                        )
+                        detailDialog.start(scheduleItem, null)
+                        detailDialog.setOnModifyBtnClickedListener {
+                            // 스케쥴 ID 보내기
+                            val edit = ApplicationClass.sSharedPreferences.edit()
+                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                            edit.apply()
+                            Constants.IS_EDIT = true
 
-                        //바텀 시트 다이얼로그 확장
-                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            //바텀 시트 다이얼로그 확장
+                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                        }
+
                     }
 
                 }
-
+                else{
+                    recyclerviewWhole!!.visibility = View.GONE
+                    scheduleFindMainWholeLayoutNoItem!!.visibility = View.VISIBLE
+                }
 
             }
             else -> {
@@ -307,10 +315,11 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 )
             }
         }
-
+        dismissLoadingDialog()
     }
 
     override fun onGetWholeScheduleInquiryFail(message: String) {
+        dismissLoadingDialog()
     }
 
     override fun onPostBookmarkSuccess(response: BaseResponse) {

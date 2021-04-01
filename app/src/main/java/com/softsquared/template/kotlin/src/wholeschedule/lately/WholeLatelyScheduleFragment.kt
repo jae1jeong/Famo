@@ -12,6 +12,7 @@ import com.softsquared.template.kotlin.databinding.FragmentScheduleFindLatelyBin
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
+import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.lately.adapter.WholeScheduleLatelyAdapter
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
@@ -38,6 +39,10 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
 
         Log.d("TAG", "WholeLatelyScheduleFragment: 확인")
 
+        binding.scheduelFindLatelyImageNoItem.setOnClickListener {
+            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
         //한 번에 표시되는 버튼 수 (기본값 : 5)
         binding.wholeLatelySchedulePaging.setPageItemCount(4);
 //        binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
@@ -49,7 +54,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, now_page)
                 WholeLatelyScheduleService(this@WholeLatelyScheduleFragment)
-                    .tryGetLatelyScheduleInquiry(((now_page - 1)), 10)
+                    .tryGetLatelyScheduleInquiry(((now_page - 1)*10), 10)
 
             }
             override fun onPageCenter(now_page: Int) {
@@ -84,6 +89,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         if (testCnt != 0){
             WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,10)
         }else{
+            showLoadingDialog(context!!)
             WholeLatelyScheduleService(this).tryGetLatelyScheduleInquiry(0,999)
         }
 
@@ -193,7 +199,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                             Constants.IS_EDIT = true
 
                             //바텀 시트 다이얼로그 확장
-                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.EXPAND)
                         }
                     }
                     binding.recyclerViewLately.setHasFixedSize(true)
@@ -205,6 +211,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회실패 - ${response.message.toString()}")
             }
         }
+        dismissLoadingDialog()
     }
 
     override fun onGetLatelyScheduleInquiryFail(message: String) {

@@ -55,8 +55,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         //전체일정
         MyPageService(this).tryGetTotalScheduleCount()
         //내정보조회
+        showLoadingDialog(this)
         MyPageService(this).tryGetMyPage()
         //월별달성
+//        showLoadingDialog(this)
         MyPageService(this).tryGetMonthsAchievement()
 
         //이미지 앞으로 내보내기
@@ -166,10 +168,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 showCustomToast("${response.message.toString()}}")
             }
         }
-
+        dismissLoadingDialog()
     }
 
     override fun onGetMyPageFail(message: String) {
+        dismissLoadingDialog()
     }
 
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
@@ -365,9 +368,11 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
             }
         }
+//        dismissLoadingDialog()
     }
 
     override fun onGetMonthsAchievmentsFailure(message: String) {
+//        dismissLoadingDialog()
     }
 
     //x축 값 설정

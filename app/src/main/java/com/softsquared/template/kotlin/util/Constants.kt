@@ -36,6 +36,7 @@ object Constants {
 
     val CATEGORY_DELETE_CHECK = "CATEGORY_DELETE_CHECK"
 
+    val DEVICE_WIDTH : Int = 1
 
 
 }

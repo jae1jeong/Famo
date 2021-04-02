@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
@@ -27,9 +28,8 @@ import com.softsquared.template.kotlin.util.Constants
 class ScheduleWholeAdapter(
     var wholeList: ArrayList<ScheduleWholeData>,
     myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView,
-    val clickListener: (ScheduleWholeData) -> Unit
-) :
-    RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView,
+    val clickListener: (ScheduleWholeData) -> Unit) :
+    RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(), ScheduleFindView,
     ScheduleBookmarkView {
 
     var cnt = 1
@@ -55,26 +55,20 @@ class ScheduleWholeAdapter(
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
-        holder.linear.layoutParams
 
-        if (wholeList[position].pick == -1){
+        if (wholeList[position].pick == -1) {
             holder.pick.setImageResource(R.drawable.schedule_find_inbookmark)
-        }else{
+        } else {
             holder.pick.setImageResource(R.drawable.schedule_find_bookmark)
         }
 
-        val deviceWidth = ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(),0)
+        val deviceWidth =
+            ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(), 0)
         Log.d("TAG", "width: $deviceWidth")
 
-        val width = deviceWidth - 140
+        val width = deviceWidth - 120
 
-//        val test : LinearLayout.LayoutParams = holder.linear.layoutParams as LinearLayout.LayoutParams
-
-//        test.rightMargin = 30
-//        holder.linear.layoutParams = test
-
-        holder.linear.layoutParams.width = width/2
-//        holder.itemView.layoutParams.width = width/2
+        holder.itemView.layoutParams.width = width / 2
 
 //        val params = LinearLayout.LayoutParams(
 //            ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -110,7 +104,7 @@ class ScheduleWholeAdapter(
     override fun getItemCount(): Int = wholeList.size
 
     inner class ScheduleWholeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-         View.OnClickListener{
+        View.OnClickListener {
 
         //        val cardView = itemView.findViewById<CardView>(R.id.cardview)
         val pick = itemView.findViewById<ImageView>(R.id.recycler_whole_isboolean)
@@ -118,7 +112,6 @@ class ScheduleWholeAdapter(
         val name = itemView.findViewById<TextView>(R.id.recycler_whole_title)
         val memo = itemView.findViewById<TextView>(R.id.recycler_whole_content)
         val border = itemView.findViewById<ImageView>(R.id.wholoe_schedule_border)
-        val linear = itemView.findViewById<LinearLayout>(R.id.whole_linear)
 //        private lateinit var mCategoryRecyclerView: ICategoryRecyclerView
 
         init {
@@ -135,21 +128,21 @@ class ScheduleWholeAdapter(
             )
             Log.d("TAG", "onClick: ${wholeList[0].id}")
 
-           when(v){
-               pick -> {
-                   Log.d("TAG", "onClick확인: ${wholeList[adapterPosition].pick}")
+            when (v) {
+                pick -> {
+                    Log.d("TAG", "onClick확인: ${wholeList[adapterPosition].pick}")
 
-                   if (wholeList[adapterPosition].pick == -1){
-                       pick.setImageResource(R.drawable.schedule_find_bookmark)
-                       wholeList[adapterPosition].pick = 1
-                   }else{
-                       pick.setImageResource(R.drawable.schedule_find_inbookmark)
-                       wholeList[adapterPosition].pick = -1
-                   }
+                    if (wholeList[adapterPosition].pick == -1) {
+                        pick.setImageResource(R.drawable.schedule_find_bookmark)
+                        wholeList[adapterPosition].pick = 1
+                    } else {
+                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
+                        wholeList[adapterPosition].pick = -1
+                    }
 
-                   ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
-                   notifyItemChanged(adapterPosition,null)
-               }
+                    ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
+                    notifyItemChanged(adapterPosition, null)
+                }
 
             }
         }
@@ -165,7 +158,7 @@ class ScheduleWholeAdapter(
 
     override fun onPostBookmarkSuccess(response: BaseResponse) {
 
-        when(response.code){
+        when (response.code) {
             100 -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 성공")
             }

@@ -241,7 +241,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
             }
 
-            Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show()
             dateCnt++
         }
 

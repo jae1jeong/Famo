@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -67,6 +68,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var recyclerviewScheduleFindCategory: RecyclerView? = null
     var scheduleFindCategoryFrameLayoutNoItem: FrameLayout? = null
     var categoryTextNoItem: TextView? = null
+    var scheduleFindCategoryImageNoItem: ImageView? = null
 
     companion object{
         val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
@@ -90,6 +92,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         scheduleFindCategoryFrameLayoutNoItem =
             view.findViewById(R.id.schedule_find_category_frame_layout_no_item)
         categoryTextNoItem = view.findViewById(R.id.category_text_no_item)
+        scheduleFindCategoryImageNoItem = view.findViewById(R.id.schedule_find_category_image_no_item)
 
         var extra = this.arguments
         if (extra != null) {
@@ -103,6 +106,11 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         }
 
         categoryFilter!!.setOnClickListener(this)
+
+        scheduleFindCategoryImageNoItem!!.setOnClickListener {
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
 
         val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
 
@@ -852,10 +860,16 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
     @SuppressLint("InflateParams")
     override fun onDialogButtonClick(view: View) {
+
+//        val layoutInflater: LayoutInflater = activity!!.getSystemService(
+//            Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+//        val view: View =
+//            layoutInflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog, null);
+//        val abc: ImageView = view.findViewById(R.id.filter_btn_remain_squre)
+
         when (view.id) {
             R.id.filter_btn_remain -> {
-                Toast.makeText(activity, "남은", Toast.LENGTH_SHORT).show()
-
                 leftPagintCnt = 1
 
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
@@ -868,8 +882,6 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             }
 
             R.id.filter_btn_completion -> {
-                Toast.makeText(activity, "완료", Toast.LENGTH_SHORT).show()
-
                 donePagintCnt = 2
 
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
@@ -881,8 +893,6 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             }
 
             R.id.filter_btn_recents -> {
-                Toast.makeText(activity, "최신", Toast.LENGTH_SHORT).show()
-
                 recentPagintCnt = 3
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,
@@ -894,8 +904,6 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             }
 
             R.id.filter_btn_bookmark -> {
-                Toast.makeText(activity, "즐겨찾기", Toast.LENGTH_SHORT).show()
-
                 pickPagintCnt = 0
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,

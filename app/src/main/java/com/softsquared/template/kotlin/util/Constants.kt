@@ -38,5 +38,8 @@ object Constants {
 
     val DEVICE_WIDTH : Int = 1
 
+    val ID_PASSWORD_CHECH = "ID_PASSWORD_CHECH"
+
+    val BOOKMARK_LATELY_CHECH = "BOOKMARK_LATELY_CHECH"
 
 }

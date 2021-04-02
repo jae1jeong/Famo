@@ -42,8 +42,6 @@ import kotlin.collections.ArrayList
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
     IScheduleCategoryRecyclerView {
 
-    lateinit var mLoadingDialog: LoadingDialog
-
     //카테고리 편집으로 보내줄 변수
     var name = ""
     var color = ""
@@ -151,15 +149,12 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
-                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
             }
 
             override fun onPageCenter(now_page: Int) {
-
-                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -170,7 +165,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
-                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -200,19 +194,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 //        }
     }
 
-    fun showLoadingDialog(context: Context) {
-        mLoadingDialog = LoadingDialog(context)
-        mLoadingDialog.show()
-    }
-
-    fun dismissLoadingDialog() {
-        if (mLoadingDialog.isShowing) {
-            mLoadingDialog.dismiss()
-        }
-    }
-
-    //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
-    //어댑터에서 color값을 가져오기위한 함수
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
     }
@@ -319,6 +300,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 )
             }
         }
+
     }
 
     override fun onGetWholeScheduleInquiryFail(message: String) {

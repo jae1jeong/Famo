@@ -6,8 +6,12 @@ import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityLoginBinding
+import com.softsquared.template.kotlin.src.auth.find.FindUserActivity
+import com.softsquared.template.kotlin.src.auth.findid.FindIdFragment
+import com.softsquared.template.kotlin.src.auth.findpassword.FindPasswordFragment
 import com.softsquared.template.kotlin.src.auth.login.models.LoginResponse
 import com.softsquared.template.kotlin.src.auth.login.models.PostRequestLogin
+import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
 import com.softsquared.template.kotlin.src.auth.signup.models.SignUpResponse
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.util.Constants
@@ -27,6 +31,26 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inf
                 showLoadingDialog(this)
                 LoginService(this).tryPostLogin(PostRequestLogin(binding.loginEditId.text.toString(),binding.loginEditPassword.text.toString()))
             }
+        }
+
+        val edit = ApplicationClass.sSharedPreferences.edit()
+
+        //아이디찾기
+        binding.loginBtnIdFind.setOnClickListener {
+            edit.putString(Constants.ID_PASSWORD_CHECH,"id")
+            edit.apply()
+            startActivity(Intent(this, FindUserActivity::class.java))
+        }
+        //비밀번호찾기
+        binding.loginBtnPwdFind.setOnClickListener {
+            edit.putString(Constants.ID_PASSWORD_CHECH,"pwd")
+            edit.apply()
+            startActivity(Intent(this, FindUserActivity::class.java))
+        }
+        //회원가입
+        binding.loginBtnSignUp.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
+
         }
     }
 

@@ -114,19 +114,20 @@
         tools:layout_editor_absoluteX="15dp" />
 
     <TextView
+        android:id="@+id/login_btn_id_find"
         android:textColor="@color/auth_text_normal_black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:text="@string/login_text_find_id"
-        app:layout_constraintBottom_toBottomOf="@+id/textView16"
-        app:layout_constraintEnd_toStartOf="@+id/textView16"
-        app:layout_constraintTop_toTopOf="@+id/textView16" />
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_pwd_find"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_pwd_find"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_pwd_find" />
 
     <TextView
         android:textColor="@color/auth_text_normal_black"
         android:layout_marginTop="15dp"
-        android:id="@+id/textView16"
+        android:id="@+id/login_btn_pwd_find"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_text_find_password"
@@ -135,14 +136,15 @@
         app:layout_constraintTop_toBottomOf="@+id/login_btn_login" />
 
     <TextView
+        android:id="@+id/login_btn_sign_up"
         android:textColor="@color/auth_text_normal_black"
         android:layout_marginStart="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_up_text"
-        app:layout_constraintBottom_toBottomOf="@+id/textView16"
-        app:layout_constraintStart_toEndOf="@+id/textView16"
-        app:layout_constraintTop_toTopOf="@+id/textView16" />
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_pwd_find"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_pwd_find"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_pwd_find" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

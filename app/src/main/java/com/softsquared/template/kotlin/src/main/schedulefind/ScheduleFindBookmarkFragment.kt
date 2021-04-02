@@ -55,6 +55,10 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
             false
         )
 
+//        val edit = ApplicationClass.sSharedPreferences.edit()
+//        edit.putString(Constants.BOOKMARK_LATELY_CHECH,"bookmark")
+//        edit.apply()
+
         recyclerViewBookmark = view.findViewById(R.id.recyclerView_bookmark)
         scheduleFindBookmark = view.findViewById(R.id.schedule_find_bookmark)
         scheduleFindBookmarkFrameLayoutNoItem = view.findViewById(R.id.schedule_find_bookmark_frame_layout_no_item)

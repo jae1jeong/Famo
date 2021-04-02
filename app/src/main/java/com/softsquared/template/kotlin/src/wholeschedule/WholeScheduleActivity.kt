@@ -59,8 +59,6 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         val check = intent.getBooleanExtra("boolean",true)
         Log.d("TAG", "WholeScheduleActivity : $check")
 
@@ -80,6 +78,16 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
 
         binding.wholeScheduleTabLayout.setSelectedTabIndicatorColor(Color.parseColor("#000000")); // 밑줄색
         binding.wholeScheduleTabLayout.setSelectedTabIndicatorHeight(9); // 밑줄높이(두께)
+
+        val bookmarkLatelyCheck = ApplicationClass.sSharedPreferences.getString(Constants.BOOKMARK_LATELY_CHECH,null)
+
+//        if (bookmarkLatelyCheck != null){
+//            if (bookmarkLatelyCheck == "bookmark"){
+//                binding.wholeScheduleViewPager.currentItem = 0
+//            }else{
+//                binding.wholeScheduleViewPager.currentItem = 1
+//            }
+//        }
 
         //X버튼
         binding.wholeScheduleXBtn.setOnClickListener {

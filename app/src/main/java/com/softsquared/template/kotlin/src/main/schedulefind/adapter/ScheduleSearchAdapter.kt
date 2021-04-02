@@ -42,6 +42,14 @@ class ScheduleSearchAdapter(
         holder.scheduleDate.text = searchList[position].scheduleDate
         holder.colorInfo.setColorFilter(Color.parseColor(searchList[position].colorInfo))
 
+        val deviceWidth =
+            ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(), 0)
+        Log.d("TAG", "width: $deviceWidth")
+
+        val width = deviceWidth - 120
+
+        holder.itemView.layoutParams.width = width / 2
+
         if (searchList[position].schedulePick == -1) {
             holder.schedulePick.setImageResource(R.drawable.schedule_find_inbookmark)
         } else {

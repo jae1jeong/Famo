@@ -502,7 +502,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 val email = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_EMAIL,
-                    null
+                    "1"
                 )
 
                 val dDayCheck = ApplicationClass.sSharedPreferences
@@ -530,7 +530,13 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                             .centerCrop().into(binding.myPageEditImg)
                     }
 
-                    binding.myPageEditAccountMail.setText(email)
+                    Log.d("TAG", "onGetMyPageSuccess: email : $email")
+                    if (email == "null") {
+                        binding.myPageEditAccountMail.setText("이메일공개를 동의하지 않으셨습니다.")
+                    } else {
+                        binding.myPageEditAccountMail.setText(email)
+                    }
+
 
                 }
 
@@ -565,7 +571,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 }
 
 
-                binding.myPageEditDay.setText("D"+response.Dday)
+                binding.myPageEditDay.setText("D" + response.Dday)
 
 //                if (Integer.parseInt(dday) <= 0){
 //                    binding.myPageEditDay.setText("0")

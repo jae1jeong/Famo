@@ -752,14 +752,14 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     recyclerviewScheduleFindCategory!!.visibility = View.VISIBLE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
 
-                    //페이징수 세팅
-                    if (searchCnt % 10 == 0) {
-                        categorySchedulePagingCnt = searchCnt / 10
-                    } else {
-                        categorySchedulePagingCnt = (searchCnt / 10) + 1
-                    }
-
-                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+//                    //페이징수 세팅
+//                    if (searchCnt % 10 == 0) {
+//                        categorySchedulePagingCnt = searchCnt / 10
+//                    } else {
+//                        categorySchedulePagingCnt = (searchCnt / 10) + 1
+//                    }
+//
+//                    catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
                     val searchList: ArrayList<ScheduleSearchData> = arrayListOf()
 

@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/schedule_find_main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

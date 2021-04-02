@@ -111,6 +111,9 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindViewPager!!.adapter = adapter
         scheduleFindTabLayout!!.setupWithViewPager(scheduleFindViewPager)
 
+        val cnt = scheduleFindViewPager!!.currentItem
+        Log.d("TAG", "onCreateView: cnt: $cnt")
+
 
         val name = ApplicationClass.sSharedPreferences.getString(
             Constants.USER_NICKNAME, null

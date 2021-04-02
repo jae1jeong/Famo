@@ -9,11 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.BookmarkService
 import com.softsquared.template.kotlin.src.main.schedulefind.BookmarkView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
+import com.softsquared.template.kotlin.util.Constants
 
 class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData>,
     val clickListener : (CategoryFilterData) -> Unit) : RecyclerView.Adapter<CategoryFilterAdapter.ScheduleWholeHolder>(),
@@ -34,6 +36,14 @@ class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData
         holder.name.text = categoryFilterList[position].scheduleName
         holder.memo.text = categoryFilterList[position].scheduleMemo
         holder.border.setColorFilter(Color.parseColor(categoryFilterList[position].colorInfo))
+
+        val deviceWidth =
+            ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(), 0)
+        Log.d("TAG", "width: $deviceWidth")
+
+        val width = deviceWidth - 120
+
+        holder.itemView.layoutParams.width = width / 2
 
         if (categoryFilterList[position].schedulePick == -1){
             holder.pick.setImageResource(R.drawable.schedule_find_inbookmark)

@@ -1,7 +1,6 @@
 package com.softsquared.template.kotlin.src.mypageedit.models
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 data class PutMyPageUpdateRequest(
     @SerializedName("nickname") val nickname : String,

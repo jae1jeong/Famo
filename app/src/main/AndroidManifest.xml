@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".config.ApplicationClass"
+        android:name="com.softsquared.template.kotlin.config.ApplicationClass"
         android:allowBackup="false"
         android:icon="@drawable/famo_app_logo"
         android:label="@string/app_name"
@@ -25,30 +25,30 @@
         tools:ignore="AllowBackup">
 
         <activity
-            android:name=".src.auth.agree.AgreeActivity"
+            android:name="com.softsquared.template.kotlin.src.auth.agree.AgreeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- MyPageEdit -->
         <activity
-            android:name=".src.mypageedit.MyPageEditActivity"
+            android:name="com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 일정검색 -->
         <activity
-            android:name=".src.searchhistories.ScheduleSearchActivity"
+            android:name="com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".src.wholeschedule.WholeScheduleActivity"
+            android:name="com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- MyPage -->
         <activity
-            android:name=".src.mypage.MyPageActivity"
+            android:name="com.softsquared.template.kotlin.src.mypage.MyPageActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- CategoryEdit -->
         <activity
-            android:name=".src.main.category.CategoryEditActivity"
+            android:name="com.softsquared.template.kotlin.src.main.category.CategoryEditActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".src.auth.kakaologin.KakaoLoginNumberActivity"
+            android:name="com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".src.splash.SplashActivity"
+            android:name="com.softsquared.template.kotlin.src.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -58,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".src.main.MainActivity"
+            android:name="com.softsquared.template.kotlin.src.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -70,36 +70,36 @@
         <!-- Auth -->
         <!-- Information -->
         <activity
-            android:name=".src.auth.information.InformationActivity"
+            android:name="com.softsquared.template.kotlin.src.auth.information.InformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Login_Information -->
         <activity
-            android:name=".src.auth.loginInformation.LoginInformation"
+            android:name="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Login -->
         <activity
-            android:name=".src.auth.login.LoginActivity"
-            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:name="com.softsquared.template.kotlin.src.auth.login.LoginActivity"
+            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- SignUp -->
         <activity
-            android:name=".src.auth.signup.SignUpActivity"
-            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:name="com.softsquared.template.kotlin.src.auth.signup.SignUpActivity"
+            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 아이디/비밀번호 찾기 -->
         <activity
-            android:name=".src.auth.find.FindUserActivity"
-            android:parentActivityName=".src.auth.loginInformation.LoginInformation"
+            android:name="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
+            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 아이디/비밀번호 찾기 결과 -->
         <activity
-            android:name=".src.auth.findresult.FindResultActivity"
-            android:parentActivityName=".src.auth.find.FindUserActivity"
+            android:name="com.softsquared.template.kotlin.src.auth.findresult.FindResultActivity"
+            android:parentActivityName="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 비밀번호 재설정 -->
         <activity
-            android:name=".src.auth.setnewpassword.SetNewPasswordActivity"
-            android:parentActivityName=".src.auth.find.FindUserActivity"
+            android:name="com.softsquared.template.kotlin.src.auth.setnewpassword.SetNewPasswordActivity"
+            android:parentActivityName="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 카카오 로그인 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">

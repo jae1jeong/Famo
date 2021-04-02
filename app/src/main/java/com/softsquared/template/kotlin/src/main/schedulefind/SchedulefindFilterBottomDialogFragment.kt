@@ -1,29 +1,16 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.CategoryFilterAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleWholeAdapter
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterResponse
-import com.softsquared.template.kotlin.util.Constants
-import kotlinx.android.synthetic.main.fragment_schedule_find.*
-import kotlinx.android.synthetic.main.fragment_schedule_find_category.*
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
-import java.lang.ClassCastException
 
 class SchedulefindFilterBottomDialogFragment() : BottomSheetDialogFragment(),
     CategoryFilterView,View.OnClickListener {

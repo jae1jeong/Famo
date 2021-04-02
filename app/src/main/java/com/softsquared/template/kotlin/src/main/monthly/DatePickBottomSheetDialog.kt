@@ -1,21 +1,15 @@
 package com.softsquared.template.kotlin.src.main.monthly
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_date_pick_bottom_sheet_dialog.*
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.*
 
 class DatePickBottomSheetDialog:BottomSheetDialogFragment() {
 

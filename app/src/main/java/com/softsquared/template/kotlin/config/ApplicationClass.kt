@@ -2,7 +2,6 @@ package com.softsquared.template.kotlin.config
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

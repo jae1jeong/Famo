@@ -1,8 +1,6 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 
 interface CategoryFilterView {
 

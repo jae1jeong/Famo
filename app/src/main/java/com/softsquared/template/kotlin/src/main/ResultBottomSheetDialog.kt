@@ -1,19 +1,16 @@
 package com.softsquared.template.kotlin.src.main
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
 import com.softsquared.template.kotlin.util.Constants
 import kotlinx.android.synthetic.main.fragment_result_bottom_sheet_dialog.*
-import kotlin.random.Random
 
 class ResultBottomSheetDialog:BottomSheetDialogFragment() {
 

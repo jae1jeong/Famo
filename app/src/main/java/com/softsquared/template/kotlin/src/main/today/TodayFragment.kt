@@ -1,11 +1,8 @@
 package com.softsquared.template.kotlin.src.main.today
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Parcel
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager

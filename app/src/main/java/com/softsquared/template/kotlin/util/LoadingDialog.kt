@@ -1,4 +1,4 @@
-package com.softsquared.template.kotlin.util
+package com.softsquared.template.kotlin.src.util
 
 import android.app.Dialog
 import android.content.Context

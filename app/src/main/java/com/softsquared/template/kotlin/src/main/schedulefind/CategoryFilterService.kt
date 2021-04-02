@@ -3,8 +3,6 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryFilterResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

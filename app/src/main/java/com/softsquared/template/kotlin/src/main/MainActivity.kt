@@ -1,23 +1,16 @@
 package com.softsquared.template.kotlin.src.main
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Html
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.BackgroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.view.get
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,13 +28,9 @@ import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.models.PatchMemo
 import com.softsquared.template.kotlin.src.main.models.PostTodayRequestAddMemo
-import com.softsquared.template.kotlin.src.main.monthly.DatePickBottomSheetDialog
 import com.softsquared.template.kotlin.src.main.monthly.MonthlyFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.*
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleBookmarkAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
@@ -50,7 +39,6 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
 import com.softsquared.template.kotlin.src.mypage.MyPageActivity
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.CalendarConverter
 import com.softsquared.template.kotlin.util.Constants

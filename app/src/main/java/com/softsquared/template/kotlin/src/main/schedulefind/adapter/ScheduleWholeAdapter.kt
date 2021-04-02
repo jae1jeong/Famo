@@ -1,18 +1,13 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
-import android.R.id.text1
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass

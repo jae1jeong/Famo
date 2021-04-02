@@ -20,7 +20,6 @@ import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.util.onMyTextChanged
-import kotlinx.android.synthetic.main.fragment_category_add_bottom_dialog.*
 import kotlinx.android.synthetic.main.fragment_category_color_bottom_dialog.*
 
 class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),

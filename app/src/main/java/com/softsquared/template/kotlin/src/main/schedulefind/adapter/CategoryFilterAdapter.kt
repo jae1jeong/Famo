@@ -12,7 +12,6 @@ import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.BookmarkService
 import com.softsquared.template.kotlin.src.main.schedulefind.BookmarkView
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 
 class CategoryFilterAdapter(var categoryFilterList: ArrayList<CategoryFilterData>,

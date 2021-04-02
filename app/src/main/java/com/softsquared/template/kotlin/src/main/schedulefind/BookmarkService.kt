@@ -4,7 +4,6 @@ import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
-import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

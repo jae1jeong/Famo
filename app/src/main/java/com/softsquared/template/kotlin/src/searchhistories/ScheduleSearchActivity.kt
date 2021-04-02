@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.searchhistories
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
@@ -10,18 +9,11 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityScheduleSearchBinding
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleSearchResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.TodayRestScheduleResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleCountResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryResponse
 import com.softsquared.template.kotlin.src.searchhistories.adapter.ScheduleSearchListAdapter
 import com.softsquared.template.kotlin.src.searchhistories.models.SearchHistoriesResponse
 import com.softsquared.template.kotlin.src.searchhistories.models.SearchListData
-import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
-import kotlinx.android.synthetic.main.dialog_detail_schedule.*
 
 
 class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>

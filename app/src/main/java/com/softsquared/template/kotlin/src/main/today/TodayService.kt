@@ -3,7 +3,6 @@ package com.softsquared.template.kotlin.src.main.today
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.AddMemoRetrofitInterface
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.today.models.ChangePositionItemRequest
 import com.softsquared.template.kotlin.src.main.today.models.CheckItemRequest

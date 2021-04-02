@@ -3,7 +3,6 @@ package com.softsquared.template.kotlin.src.mypageedit
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -20,12 +19,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.DatePicker
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -44,7 +39,6 @@ import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResp
 import com.softsquared.template.kotlin.util.AskDialog
 import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.onMyTextChanged
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

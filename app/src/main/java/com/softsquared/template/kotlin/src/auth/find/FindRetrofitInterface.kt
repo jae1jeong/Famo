@@ -2,7 +2,6 @@ package com.softsquared.template.kotlin.src.auth.find
 
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.auth.find.models.FindIdResponse
-import com.softsquared.template.kotlin.src.auth.find.models.GetCompareIdPhoneNumber
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

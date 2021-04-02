@@ -1,12 +1,10 @@
-package com.softsquared.template.kotlin.util
+package com.softsquared.template.kotlin.src.util
 
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button

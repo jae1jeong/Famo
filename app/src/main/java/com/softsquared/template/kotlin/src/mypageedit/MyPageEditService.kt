@@ -11,8 +11,6 @@ import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Multipart
-import java.io.File
 
 class MyPageEditService(val editView : MyPageEditView) {
 

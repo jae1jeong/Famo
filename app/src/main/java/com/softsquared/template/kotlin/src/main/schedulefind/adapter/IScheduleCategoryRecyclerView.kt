@@ -1,7 +1,5 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
-import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
-
 interface IScheduleCategoryRecyclerView {
 
     //카테고리별일정으로 이동

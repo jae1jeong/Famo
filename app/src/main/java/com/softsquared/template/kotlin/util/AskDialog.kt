@@ -1,9 +1,7 @@
-package com.softsquared.template.kotlin.util
+package com.softsquared.template.kotlin.src.util
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View

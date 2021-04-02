@@ -1,9 +1,6 @@
 package com.softsquared.template.kotlin.src.wholeschedule.models
 
 import com.google.gson.annotations.SerializedName
-import com.softsquared.template.kotlin.config.BaseResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleInquiryDataArrayList
-import java.util.*
 
 data class LatelyScheduleInquiryDataArrayList(
 

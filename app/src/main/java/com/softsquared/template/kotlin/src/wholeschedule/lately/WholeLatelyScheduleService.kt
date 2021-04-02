@@ -2,7 +2,6 @@ package com.softsquared.template.kotlin.src.wholeschedule.lately
 
 import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleRetrofitInterface
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback

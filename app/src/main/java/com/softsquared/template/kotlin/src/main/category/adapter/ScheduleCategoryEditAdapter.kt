@@ -1,35 +1,22 @@
 package com.softsquared.template.kotlin.src.main.category.adapter
 
-import android.app.Dialog
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.*
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.CategoryFilterService
-import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
-import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
-import com.softsquared.template.kotlin.src.main.today.TodayFragment
-import com.softsquared.template.kotlin.src.main.today.TodayService
-import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
-import com.softsquared.template.kotlin.util.AskDialog
-import com.softsquared.template.kotlin.util.Constants
 
 class ScheduleCategoryEditAdapter(
     var categoryEditList: ArrayList<ScheduleCategoryData>,

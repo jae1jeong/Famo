@@ -1,8 +1,6 @@
 package com.softsquared.template.kotlin.src.main.today.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView

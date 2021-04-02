@@ -10,14 +10,12 @@ import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.User
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
-import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityLoginInfoBinding
 import com.softsquared.template.kotlin.src.auth.agree.AgreeActivity
 import com.softsquared.template.kotlin.src.auth.find.FindUserActivity
 import com.softsquared.template.kotlin.src.auth.login.LoginActivity
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.KakaoLoginResponse
 import com.softsquared.template.kotlin.src.auth.loginInformation.models.PostKakaoLoginRequest
-import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
 import com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberActivity
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.util.Constants

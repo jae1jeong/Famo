@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.main.monthly
 
-import android.view.View
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.src.main.monthly.models.AllMemoResponse
 import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyMemoItemResponse

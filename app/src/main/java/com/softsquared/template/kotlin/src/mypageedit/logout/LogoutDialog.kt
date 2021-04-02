@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.core.content.ContextCompat.startActivity
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
@@ -16,7 +15,6 @@ import com.softsquared.template.kotlin.src.mypageedit.models.MyPageCommentsRespo
 import com.softsquared.template.kotlin.src.mypage.models.MyPageResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditView
 import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResponse
-import com.softsquared.template.kotlin.util.Constants
 
 
 class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {

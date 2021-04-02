@@ -1,7 +1,6 @@
-package com.softsquared.template.kotlin.util
+package com.softsquared.template.kotlin.src.util
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.Log

@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleLatelyData
 
 class ScheduleLatelyAdapter(var latelyList:ArrayList<WholeScheduleLatelyData>,

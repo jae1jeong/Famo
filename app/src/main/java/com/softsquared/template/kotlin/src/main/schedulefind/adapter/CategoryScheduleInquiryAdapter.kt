@@ -13,7 +13,6 @@ import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.*
 import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkResponse
 
 open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategoryScheduleInquiryData>,
     val clickListener : (CategoryScheduleInquiryData) -> Unit) :

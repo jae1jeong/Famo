@@ -1,35 +1,22 @@
 package com.softsquared.template.kotlin.src.main.category
 
-import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.ActivityCategoryEditBinding
-import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.category.adapter.ScheduleCategoryEditAdapter
-import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryService
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
-import com.softsquared.template.kotlin.src.main.schedulefind.SchedulefindFilterBottomDialogFragment
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.IScheduleCategoryRecyclerView
-import com.softsquared.template.kotlin.src.main.schedulefind.adapter.ScheduleCategoryAdapter
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.today.TodayFragment
-import com.softsquared.template.kotlin.src.main.today.TodayService
-import com.softsquared.template.kotlin.src.mypageedit.logout.LogoutDialog
 import com.softsquared.template.kotlin.util.AskDialog
-import com.softsquared.template.kotlin.util.Constants
 
 class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     (ActivityCategoryEditBinding::inflate), ICategoryRecyclerView, CategoryEditView,

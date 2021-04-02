@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.softsquared.template.kotlin.R
-import com.softsquared.template.kotlin.src.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_date_pick_bottom_sheet_dialog.*
 import java.time.LocalDate
 

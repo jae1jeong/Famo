@@ -1,12 +1,7 @@
 package com.softsquared.template.kotlin.src.wholeschedule.bookmark
 
-import android.util.Log
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleBookmarkView
-import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindBookmarkRetrofitInterface
 import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkResponse
-import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleRetrofitInterface
-import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

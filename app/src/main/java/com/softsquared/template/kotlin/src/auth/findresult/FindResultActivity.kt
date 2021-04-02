@@ -1,8 +1,6 @@
 package com.softsquared.template.kotlin.src.auth.findresult
 
-import android.content.Intent
 import android.os.Bundle
-import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityFindResultBinding
 import com.softsquared.template.kotlin.util.Constants

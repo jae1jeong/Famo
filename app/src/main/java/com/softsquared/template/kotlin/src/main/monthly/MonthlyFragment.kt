@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonElement
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -27,27 +26,21 @@ import com.softsquared.template.kotlin.src.main.monthly.adapter.MonthlyMemoAdapt
 import com.softsquared.template.kotlin.src.main.monthly.models.AllMemoResponse
 import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyMemoItemResponse
 import com.softsquared.template.kotlin.src.main.monthly.models.MonthlyUserDateListResponse
-import com.softsquared.template.kotlin.src.main.today.TodayFragment
 import com.softsquared.template.kotlin.src.main.today.TodayService
 import com.softsquared.template.kotlin.src.main.today.TodayView
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.main.today.models.ScheduleItemsResponse
 import com.softsquared.template.kotlin.src.main.today.models.TopCommentResponse
-import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
-import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
 import com.softsquared.template.kotlin.util.*
 import kotlinx.android.synthetic.main.fragment_monthly.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
-import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.temporal.WeekFields
 import java.util.*
 import kotlin.collections.ArrayList
 

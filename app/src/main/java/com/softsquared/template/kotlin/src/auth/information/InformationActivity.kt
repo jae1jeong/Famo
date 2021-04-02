@@ -7,7 +7,6 @@ import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityInformationBinding
 import com.softsquared.template.kotlin.src.auth.adapter.ViewPagerAdapter
 import com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation
-import com.softsquared.template.kotlin.src.main.MainActivity
 import me.relex.circleindicator.CircleIndicator3
 
 class InformationActivity:BaseActivity<ActivityInformationBinding>(ActivityInformationBinding::inflate) {

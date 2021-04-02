@@ -1,6 +1,5 @@
 package com.softsquared.template.kotlin.src.main.category
 
-import com.bumptech.glide.request.BaseRequestOptions
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertRequest
 import com.softsquared.template.kotlin.src.main.category.models.CategoryInsertResponse

@@ -2,7 +2,6 @@ package com.softsquared.template.kotlin.src.searchhistories
 
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.searchhistories.models.SearchHistoriesResponse
-import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 
 interface SearchHistoriesView {
 

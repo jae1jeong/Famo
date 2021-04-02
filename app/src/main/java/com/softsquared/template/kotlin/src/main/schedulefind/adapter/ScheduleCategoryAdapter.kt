@@ -1,16 +1,13 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
@@ -18,13 +15,6 @@ import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
 import com.softsquared.template.kotlin.src.main.schedulefind.CategoryInquiryView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryInquiryResponse
 import com.softsquared.template.kotlin.src.main.schedulefind.models.UserCategoryInquiryResponse
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
-import com.softsquared.template.kotlin.src.mypageedit.MyPageEditService
-import com.softsquared.template.kotlin.src.mypageedit.models.PutMyPageUpdateRequest
-import org.w3c.dom.Text
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ScheduleCategoryAdapter(var categoryList: ArrayList<MainScheduleCategory>,

@@ -2,7 +2,6 @@ package com.softsquared.template.kotlin.src.auth.login
 
 import com.softsquared.template.kotlin.src.auth.login.models.LoginResponse
 import com.softsquared.template.kotlin.src.auth.login.models.PostRequestLogin
-import com.softsquared.template.kotlin.src.auth.signup.models.SignUpResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

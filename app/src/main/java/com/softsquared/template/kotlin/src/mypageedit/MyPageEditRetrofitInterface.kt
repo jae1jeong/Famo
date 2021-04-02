@@ -8,7 +8,6 @@ import com.softsquared.template.kotlin.src.mypageedit.models.SetProfileImageResp
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.io.File
 
 interface MyPageEditRetrofitInterface {
 

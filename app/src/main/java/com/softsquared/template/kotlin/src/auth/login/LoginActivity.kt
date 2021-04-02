@@ -7,12 +7,9 @@ import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseActivity
 import com.softsquared.template.kotlin.databinding.ActivityLoginBinding
 import com.softsquared.template.kotlin.src.auth.find.FindUserActivity
-import com.softsquared.template.kotlin.src.auth.findid.FindIdFragment
-import com.softsquared.template.kotlin.src.auth.findpassword.FindPasswordFragment
 import com.softsquared.template.kotlin.src.auth.login.models.LoginResponse
 import com.softsquared.template.kotlin.src.auth.login.models.PostRequestLogin
 import com.softsquared.template.kotlin.src.auth.signup.SignUpActivity
-import com.softsquared.template.kotlin.src.auth.signup.models.SignUpResponse
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.util.Constants
 

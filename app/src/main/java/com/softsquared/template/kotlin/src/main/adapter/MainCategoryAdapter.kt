@@ -11,9 +11,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.src.main.models.MainScheduleCategory
-import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleCategoryData
-import org.w3c.dom.Text
 
 class MainCategoryAdapter(private var categoryList:ArrayList<MainScheduleCategory>, private val context: Context, private val clickListener:(MainScheduleCategory)->Unit):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryViewHolder>() {
     private var selectedCategoryView:TextView? = null

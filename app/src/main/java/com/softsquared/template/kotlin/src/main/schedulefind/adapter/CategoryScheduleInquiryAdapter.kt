@@ -9,12 +9,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.*
+import com.softsquared.template.kotlin.src.main.schedulefind.models.BookmarkRequest
 import com.softsquared.template.kotlin.src.main.schedulefind.models.CategoryScheduleInquiryData
-import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleWholeData
+import com.softsquared.template.kotlin.src.main.schedulefind.models.ScheduleBookmarkResponse
 
 open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategoryScheduleInquiryData>,
     val clickListener : (CategoryScheduleInquiryData) -> Unit) :
-    RecyclerView.Adapter<CategoryScheduleInquiryAdapter.ScheduleWholeHolder>() {
+    RecyclerView.Adapter<CategoryScheduleInquiryAdapter.ScheduleWholeHolder>(),
+    BookmarkView {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
 
@@ -29,20 +33,29 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
     override fun onBindViewHolder(holder: ScheduleWholeHolder, position: Int) {
 
         holder.date.text = categoryList[position].date.toString()
-        holder.pick.setImageResource(categoryList[position].pick)
         holder.name.text = categoryList[position].name
         holder.memo.text = categoryList[position].memo
         holder.color.setColorFilter(Color.parseColor(categoryList[position].color))
+
+        if (categoryList[position].pick == -1){
+            holder.pick.setImageResource(R.drawable.schedule_find_inbookmark)
+        }else{
+            holder.pick.setImageResource(R.drawable.schedule_find_bookmark)
+        }
 
         holder.itemView.setOnClickListener {
             clickListener(categoryList[position])
         }
 
+//        holder.pick.setOnClickListener {
+//
+//        }
+
     }
 
-    override fun getItemCount(): Int = categoryList!!.size
+    override fun getItemCount(): Int = categoryList.size
 
-    class ScheduleWholeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+    inner class ScheduleWholeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
          View.OnClickListener{
 
         //        val cardView = itemView.findViewById<CardView>(R.id.cardview)
@@ -59,22 +72,47 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
 
         override fun onClick(v: View?) {
 
-            var bookMarkCnt = 1
-
             when(v){
-//                pick -> {
-//                    if (bookMarkCnt % 2 != 0) {
-//                        pick.setImageResource(R.drawable.schedule_find_bookmark)
-//                        Log.d("TAG", "pick: 클릭")
-//                    } else {
-//                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
-//                        Log.d("TAG", "pick: X")
-//                    }
-//                    bookMarkCnt++
-//                }
+                pick -> {
+                    Log.d("TAG", "onClick확인: ${categoryList[adapterPosition].pick}")
+
+                    val bookmarkRequest = BookmarkRequest(
+                        scheduleID = categoryList[adapterPosition].id
+                    )
+
+                    if (categoryList[adapterPosition].pick == -1){
+                        pick.setImageResource(R.drawable.schedule_find_bookmark)
+                        categoryList[adapterPosition].pick = 1
+                    }else{
+                        pick.setImageResource(R.drawable.schedule_find_inbookmark)
+                        categoryList[adapterPosition].pick = -1
+                    }
+
+                    BookmarkService(this@CategoryScheduleInquiryAdapter).tryPostBookmark(bookmarkRequest)
+                    notifyDataSetChanged()
+                }
+            }
+
+        }
+
+    }
+
+    override fun onPostBookmarkSuccess(response: BaseResponse) {
+
+        when(response.code){
+            100 -> {
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 성공")
+            }
+            else -> {
+                Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 실패 ${response.message.toString()}")
             }
         }
 
+
+
+    }
+
+    override fun onPostBookmarkFail(message: String) {
     }
 
 //    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

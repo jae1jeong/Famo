@@ -1,16 +1,16 @@
 package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +28,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.LoadingDialog
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +40,9 @@ import kotlin.collections.ArrayList
 
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
-    IScheduleUpdate{
+    IScheduleCategoryRecyclerView {
+
+    lateinit var mLoadingDialog: LoadingDialog
 
     //카테고리 편집으로 보내줄 변수
     var name = ""
@@ -62,11 +65,13 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     var scheduleFindTabLayout : TabLayout? = null
     var scheduleFindTvTotaySchedule : TextView? = null
     var scheduleFindName : TextView? = null
+    var scheduleFindMainWholeLayoutNoItem : FrameLayout? = null
+    var scheduleFindMainWholeImageNoItem : ImageView? = null
 
 
-    companion object{
-        lateinit var scheduleWholeAdapter:ScheduleWholeAdapter
-        val wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
+    companion object {
+        lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
+        var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
 
     }
 
@@ -88,10 +93,11 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         scheduleFindTabLayout = view.findViewById(R.id.schedule_find_tab_layout)
         scheduleFindtTvTotaySchedule = view.findViewById(R.id.schedule_find_tv_totay_schedule)
         scheduleFindName = view.findViewById(R.id.schedule_find_name)
+        scheduleFindMainWholeLayoutNoItem = view.findViewById(R.id.schedule_find_main_whole_layout_no_item)
+        scheduleFindMainWholeImageNoItem = view.findViewById(R.id.schedule_find_main_whole_image_no_item)
 
         scheduleFindTabLayout!!.setSelectedTabIndicatorColor(Color.parseColor("#242424")); // 밑줄색
         scheduleFindTabLayout!!.setSelectedTabIndicatorHeight(9); // 밑줄높이(두께)
-
 
         //전체일정수
         ScheduleFindService(this).tryGetWholeScheduleCount()
@@ -104,7 +110,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         adapter.addFragment(ScheduleFindBookmarkFragment(), "즐겨찾기")
         adapter.addFragment(ScheduleFindLatelyFragment(), "최근")
         Log.d("TAG", "ScheduleFindMainFragment onViewCreated: 뷰페이저")
-
         scheduleFindViewPager!!.adapter = adapter
         scheduleFindTabLayout!!.setupWithViewPager(scheduleFindViewPager)
 
@@ -114,7 +119,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         )
 
         //이름설정
-        if (name != null){
+        if (name != null) {
             scheduleFindName!!.text = name + "님,"
         }
 
@@ -126,6 +131,12 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             val intent = Intent(activity, WholeScheduleActivity::class.java)
             startActivity(intent)
         }
+
+        //메모가없을경우 이미지 클릭 시 메모작성
+        scheduleFindMainWholeImageNoItem!!.setOnClickListener {
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
+        }
+
 
 //        한 번에 표시되는 버튼 수 (기본값 : 5)
         scheduleFindPaging!!.setPageItemCount(4);
@@ -140,6 +151,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -147,6 +159,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
             override fun onPageCenter(now_page: Int) {
 
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -157,6 +170,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, now_page)
+                showLoadingDialog(context!!)
                 ScheduleFindService(this@ScheduleFindMainFragment).tryGetWholeScheduleInquiry(
                     ((now_page - 1) * 10), 10
                 )
@@ -170,7 +184,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this){}
+        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this) {}
 //        shimmer_main_layout.startShimmerAnimation()
 //        GlobalScope.launch(Dispatchers.Main) {
 //            delay(1000)
@@ -184,6 +198,17 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 //
 //            }
 //        }
+    }
+
+    fun showLoadingDialog(context: Context) {
+        mLoadingDialog = LoadingDialog(context)
+        mLoadingDialog.show()
+    }
+
+    fun dismissLoadingDialog() {
+        if (mLoadingDialog.isShowing) {
+            mLoadingDialog.dismiss()
+        }
     }
 
     //클릭 시 카테고리 색상변경을 위한 카테고리 색상을 가져와서 분배하는 작업
@@ -206,9 +231,12 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
-
+                wholeScheduleList.clear()
 
                 if (response.data.size > 0) {
+
+                    recyclerviewWhole!!.visibility = View.VISIBLE
+                    scheduleFindMainWholeLayoutNoItem!!.visibility = View.GONE
 
                     for (i in 0 until response.data.size) {
                         //즐겨찾기 X and 카테고리 O인경우
@@ -239,48 +267,20 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                                 )
                             )
                         }
-                        //즐겨찾기O and 카테고리 X
-//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-//                            wholeScheduleList.add(
-//                                ScheduleWholeData(
-//                                    response.data[i].scheduleID,
-//                                    response.data[i].scheduleDate,
-//                                    response.data[i].scheduleName,
-//                                    response.data[i].scheduleMemo,
-//                                    R.drawable.schedule_find_bookmark,
-//                                    response.data[i].scheduleStatus,
-//                                    "#CED5D9"
-//                                )
-//                            )
-//                        }
-//                        //즐겨찾기 O and 카테고리 O
-//                        else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-//                            wholeScheduleList.add(
-//                                ScheduleWholeData(
-//                                    response.data[i].scheduleID,
-//                                    response.data[i].scheduleDate,
-//                                    response.data[i].scheduleName,
-//                                    response.data[i].scheduleMemo,
-//                                    R.drawable.schedule_find_bookmark,
-//                                    response.data[i].scheduleStatus,
-//                                    response.data[i].colorInfo
-//                                )
-//                            )
-//                        }
+
                     }
-                }
 
-                //전체일정 리사이큘러뷰 연결
-                recyclerviewWhole!!.layoutManager =
-                    GridLayoutManager(
-                        context, 2, GridLayoutManager.VERTICAL,
-                        false
-                    )
-                recyclerviewWhole!!.setHasFixedSize(true)
+                    //전체일정 리사이큘러뷰 연결
+                    recyclerviewWhole!!.layoutManager =
+                        GridLayoutManager(
+                            context, 2, GridLayoutManager.VERTICAL,
+                            false
+                        )
+                    recyclerviewWhole!!.setHasFixedSize(true)
 
-                scheduleWholeAdapter =  ScheduleWholeAdapter(wholeScheduleList,this) { it ->
-                    val detailDialog = ScheduleDetailDialog(context!!)
-                    val scheduleItem = MemoItem(
+                    scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) { it ->
+                        val detailDialog = ScheduleDetailDialog(context!!)
+                        val scheduleItem = MemoItem(
                             it.id,
                             it.date,
                             0,
@@ -288,23 +288,28 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                             it.memo,
                             false,
                             null,
-                            null
-                    ,0)
-                    detailDialog.start(scheduleItem, null)
-                    detailDialog.setOnModifyBtnClickedListener {
-                        // 스케쥴 ID 보내기
-                        val edit = ApplicationClass.sSharedPreferences.edit()
-                        edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
-                        edit.apply()
-                        Constants.IS_EDIT = true
+                            null, 0
+                        )
+                        detailDialog.start(scheduleItem, null)
+                        detailDialog.setOnModifyBtnClickedListener {
+                            // 스케쥴 ID 보내기
+                            val edit = ApplicationClass.sSharedPreferences.edit()
+                            edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                            edit.apply()
+                            Constants.IS_EDIT = true
 
-                        //바텀 시트 다이얼로그 확장
-                        (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                            //바텀 시트 다이얼로그 확장
+                            (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                        }
+
                     }
 
-                }
-                recyclerviewWhole!!.adapter = scheduleWholeAdapter
+                    recyclerviewWhole!!.adapter = scheduleWholeAdapter
 
+                } else {
+                    recyclerviewWhole!!.visibility = View.GONE
+                    scheduleFindMainWholeLayoutNoItem!!.visibility = View.VISIBLE
+                }
 
             }
             else -> {
@@ -314,7 +319,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 )
             }
         }
-
     }
 
     override fun onGetWholeScheduleInquiryFail(message: String) {
@@ -404,11 +408,26 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     }
 
 
-    override fun onUpdate() {
-        childFragmentManager.beginTransaction()
-            .replace(R.id.schedule_find_main_fragment, ScheduleFindFragment())
-            .commit()
+    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
     }
+
+    override fun onColor(): ArrayList<String> {
+
+        val ab = ArrayList<String>()
+        return ab
+    }
+
+    override fun onClickedTwice() {
+    }
+
+
+//    override fun onUpdate() {
+//
+//
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.schedule_find_main_fragment, ScheduleFindFragment())
+//            .commit()
+//    }
 
 
 }

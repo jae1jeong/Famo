@@ -19,22 +19,23 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:orientation="vertical">
+
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:layout_marginTop="20dp"
                 android:id="@+id/shimmer_schedule_find_top"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <include layout="@layout/shimmer_schedule_find_main"
-                    />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <include layout="@layout/shimmer_schedule_find_main" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:visibility="gone"
                 android:id="@+id/schedule_find_top_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/schedule_find_iv_search"
@@ -45,39 +46,87 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/schedule_find_btn"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/schedule_find_btn_search"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/background_schedule_find_search_btn"
-                    android:drawableRight="@drawable/schedule_find_search_mike_img"
-                    android:ems="10"
-                    android:hint="@string/schedule_find_et_search_hint"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="17dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="16dp"
-                    android:textSize="18sp"
-                    android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/schedule_find_btn_search_back"
+                        android:layout_width="20dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/schedule_search_back"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/schedule_find_tv_search_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="27dp"
+                        android:hint="검색어를 입력해주세요."
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toBottomOf="@+id/schedule_find_btn_search_back"
+                        app:layout_constraintStart_toEndOf="@+id/schedule_find_btn_search_back"
+                        app:layout_constraintTop_toTopOf="@+id/schedule_find_btn_search_back" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/schedule_find_search_mike_img"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/schedule_find_btn"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="60dp"-->
+                <!--                    android:layout_alignParentBottom="true"-->
+                <!--                    android:layout_marginBottom="10dp"-->
+                <!--                    android:background="@drawable/background_schedule_find_search_btn"-->
+                <!--                    android:drawableRight="@drawable/schedule_find_search_mike_img"-->
+                <!--                    android:drawableLeft="@drawable/schedule_find_search_back"-->
+                <!--                    android:ems="10"-->
+                <!--                    android:hint="@string/schedule_find_et_search_hint"-->
+                <!--                    android:imeOptions="actionSearch"-->
+                <!--                    android:inputType="text"-->
+                <!--                    android:maxLines="1"-->
+                <!--                    android:paddingLeft="20dp"-->
+                <!--                    android:paddingTop="17dp"-->
+                <!--                    android:paddingRight="15dp"-->
+                <!--                    android:paddingBottom="16dp"-->
+                <!--                    android:textSize="18sp"-->
+                <!--                    android:textStyle="normal"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent" />-->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/schedule_find_category_layout"
-                android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="1">
 
                 <ImageView
                     android:id="@+id/schedule_find_btn_category"
@@ -86,9 +135,9 @@
                     android:src="@drawable/category_edit_plus" />
 
                 <androidx.core.widget.NestedScrollView
-                    android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerview_category"

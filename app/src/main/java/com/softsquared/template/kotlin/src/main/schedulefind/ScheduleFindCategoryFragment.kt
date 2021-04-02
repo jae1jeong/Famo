@@ -70,7 +70,9 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
     companion object{
         val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
+        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
         lateinit var categoryScheduleInquiryAdapter:CategoryScheduleInquiryAdapter
+        lateinit var categoryFilterAdapter: CategoryFilterAdapter
     }
     @SuppressLint("InflateParams")
     override fun onCreateView(
@@ -160,6 +162,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList){}
+        categoryFilterAdapter = CategoryFilterAdapter(categoryFilterList){}
     }
 
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -206,7 +209,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                         categoryInquiryResponse.data[i].scheduleDate,
                                         categoryInquiryResponse.data[i].scheduleName,
                                         categoryInquiryResponse.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_inbookmark,
+                                        categoryInquiryResponse.data[i].schedulePick,
                                         categoryInquiryResponse.data[i].colorInfo
                                     )
                                 )
@@ -217,7 +220,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                         categoryInquiryResponse.data[i].scheduleDate,
                                         categoryInquiryResponse.data[i].scheduleName,
                                         categoryInquiryResponse.data[i].scheduleMemo,
-                                        R.drawable.schedule_find_bookmark,
+                                        categoryInquiryResponse.data[i].schedulePick,
                                         categoryInquiryResponse.data[i].colorInfo
                                     )
                                 )
@@ -287,6 +290,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetCategoryFilterInquirySuccess: 필터조회성공")
+                categoryFilterList.clear()
 
                 //일정이 있으면
                 if (response.data.size > 0) {
@@ -316,55 +320,32 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         )
 
                     }else if(totalCnt > 0){
-                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
                         if (response.data.size > 0) {
 
                             for (i in 0 until response.data.size) {
 
                                 //즐겨찾기가 아닌경우
-                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                if (response.data[i].colorInfo != null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             response.data[i].colorInfo
                                         )
                                     )
-                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                } else if (response.data[i].colorInfo == null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            response.data[i].colorInfo
                                         )
                                     )
                                 }
@@ -431,55 +412,32 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
 
                     }else if(totalCnt > 0){
-                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
                         if (response.data.size > 0) {
 
                             for (i in 0 until response.data.size) {
 
                                 //즐겨찾기가 아닌경우
-                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                if (response.data[i].colorInfo != null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             response.data[i].colorInfo
                                         )
                                     )
-                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                } else if (response.data[i].colorInfo == null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            response.data[i].colorInfo
                                         )
                                     )
                                 }
@@ -548,55 +506,32 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
 
                     }else if(totalCnt > 0){
-                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
                         if (response.data.size > 0) {
 
                             for (i in 0 until response.data.size) {
 
                                 //즐겨찾기가 아닌경우
-                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                if (response.data[i].colorInfo != null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             response.data[i].colorInfo
                                         )
                                     )
-                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                } else if (response.data[i].colorInfo == null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            response.data[i].colorInfo
                                         )
                                     )
                                 }
@@ -664,55 +599,32 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         )
 
                     }else if(totalCnt > 0){
-                        val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
 
                         if (response.data.size > 0) {
 
                             for (i in 0 until response.data.size) {
 
                                 //즐겨찾기가 아닌경우
-                                if (response.data[i].schedulePick == -1 && response.data[i].colorInfo != null) {
+                                if (response.data[i].colorInfo != null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             response.data[i].colorInfo
                                         )
                                     )
-                                } else if (response.data[i].schedulePick == -1 && response.data[i].colorInfo == null) {
+                                } else if (response.data[i].colorInfo == null) {
                                     categoryFilterList.add(
                                         CategoryFilterData(
                                             response.data[i].scheduleID,
                                             response.data[i].scheduleDate,
                                             response.data[i].scheduleName,
                                             response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_inbookmark,
+                                            response.data[i].schedulePick,
                                             "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo == null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            "#CED5D9"
-                                        )
-                                    )
-                                } else if (response.data[i].schedulePick == 1 && response.data[i].colorInfo != null) {
-                                    categoryFilterList.add(
-                                        CategoryFilterData(
-                                            response.data[i].scheduleID,
-                                            response.data[i].scheduleDate,
-                                            response.data[i].scheduleName,
-                                            response.data[i].scheduleMemo,
-                                            R.drawable.schedule_find_bookmark,
-                                            response.data[i].colorInfo
                                         )
                                     )
                                 }

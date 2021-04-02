@@ -1,8 +1,10 @@
 package com.softsquared.template.kotlin.src.main.schedulefind.adapter
 
 import android.R.id.text1
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,22 +14,26 @@ import android.widget.TextView
 import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
+import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleBookmarkView
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindService
 import com.softsquared.template.kotlin.src.main.schedulefind.ScheduleFindView
 import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
+import com.softsquared.template.kotlin.util.Constants
 
 
 class ScheduleWholeAdapter(
     var wholeList: ArrayList<ScheduleWholeData>,
-    myScheduleCategoryRecyclerView: IScheduleUpdate,
+    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView,
     val clickListener: (ScheduleWholeData) -> Unit
 ) :
-    RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView {
+    RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(),ScheduleFindView,
+    ScheduleBookmarkView {
 
     var cnt = 1
-    private var iScheduleCategoryRecyclerView: IScheduleUpdate? = null
+    private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
 
     init {
         this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
@@ -42,12 +48,14 @@ class ScheduleWholeAdapter(
 
     }
 
+    @SuppressLint("RtlHardcoded")
     override fun onBindViewHolder(holder: ScheduleWholeHolder, position: Int) {
 
         holder.date.text = wholeList[position].date
         holder.name.text = wholeList[position].name
         holder.memo.text = wholeList[position].memo
         holder.border.setColorFilter(Color.parseColor(wholeList[position].color))
+        holder.linear.layoutParams
 
         if (wholeList[position].pick == -1){
             holder.pick.setImageResource(R.drawable.schedule_find_inbookmark)
@@ -55,33 +63,47 @@ class ScheduleWholeAdapter(
             holder.pick.setImageResource(R.drawable.schedule_find_bookmark)
         }
 
+        val deviceWidth = ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(),0)
+        Log.d("TAG", "width: $deviceWidth")
 
-        val params = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val width = deviceWidth - 140
 
-        val secondParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+//        val test : LinearLayout.LayoutParams = holder.linear.layoutParams as LinearLayout.LayoutParams
 
-        params.setMargins(0, 0,  0,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
-        secondParams.setMargins(40, 0,  2,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+//        test.rightMargin = 30
+//        holder.linear.layoutParams = test
 
-        if (cnt % 2 != 0){
-            Log.d("TAG", "onBindViewHolder: 마진테스트")
-            holder.itemView.layoutParams = params
-            cnt++
-        }else{
-            Log.d("TAG", "onBindViewHolder: 마진테스트")
+        holder.linear.layoutParams.width = width/2
+//        holder.itemView.layoutParams.width = width/2
 
-            cnt++
-        }
+//        val params = LinearLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+
+//        val secondParams = LinearLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+
+//        params.setMargins(0, 0,  0,50) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+//        secondParams.setMargins(50, 0,  0,0) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+//        secondParams.gravity = Gravity.RIGHT
+////
+//        if (cnt % 2 != 0){
+//            Log.d("TAG", "onBindViewHolder: 마진테스트1")
+////            holder.itemView.layoutParams = secondParams
+//            cnt++
+//        }else{
+//            Log.d("TAG", "onBindViewHolder: 마진테스트2")
+//            holder.itemView.layoutParams = secondParams
+//            cnt++
+//        }
 
         holder.itemView.setOnClickListener {
             clickListener(wholeList[position])
         }
+
 
     }
 
@@ -96,6 +118,7 @@ class ScheduleWholeAdapter(
         val name = itemView.findViewById<TextView>(R.id.recycler_whole_title)
         val memo = itemView.findViewById<TextView>(R.id.recycler_whole_content)
         val border = itemView.findViewById<ImageView>(R.id.wholoe_schedule_border)
+        val linear = itemView.findViewById<LinearLayout>(R.id.whole_linear)
 //        private lateinit var mCategoryRecyclerView: ICategoryRecyclerView
 
         init {
@@ -125,6 +148,7 @@ class ScheduleWholeAdapter(
                    }
 
                    ScheduleFindService(this@ScheduleWholeAdapter).tryPostBookmark(bookmarkRequest)
+                   notifyItemChanged(adapterPosition,null)
                }
 
             }
@@ -144,7 +168,6 @@ class ScheduleWholeAdapter(
         when(response.code){
             100 -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 성공")
-//                iScheduleCategoryRecyclerView!!.onUpdate()
             }
             else -> {
                 Log.d("TAG", "onPostBookmarkSuccess: 즐겨찾기등록 실패 ${response.message.toString()}")
@@ -178,6 +201,12 @@ class ScheduleWholeAdapter(
     }
 
     override fun onGetScheduleSearchFail(message: String) {
+    }
+
+    override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
+    }
+
+    override fun onGetScheduleBookmarkFail(message: String) {
     }
 
 //    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

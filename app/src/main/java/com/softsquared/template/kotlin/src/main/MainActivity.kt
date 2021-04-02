@@ -327,10 +327,15 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         val size = Point()
         display.getRealSize(size)
         val deviceHeight = size.y
+        val deviceWidth = size.x
         // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
         val bottomSheetDialogHeight = deviceHeight - 430
         val params = binding.mainFrameBottomSheet.layoutParams
         params.height = bottomSheetDialogHeight
+
+        val edit = ApplicationClass.sSharedPreferences.edit()
+        edit.putInt(Constants.DEVICE_WIDTH.toString(),deviceWidth)
+        edit.apply()
     }
 
     // 바텀시트 다이얼로그 상태 관리

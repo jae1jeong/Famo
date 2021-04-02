@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
@@ -35,6 +37,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
     var recyclerViewBookmark: RecyclerView? = null
     var scheduleFindBookmark: NestedScrollView? = null
     var scheduleFindBookmarkFrameLayoutNoItem: FrameLayout? = null
+    var scheduelFindBookmarkImageNoItem : ImageView? = null
 
 
     companion object{
@@ -55,10 +58,15 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
         recyclerViewBookmark = view.findViewById(R.id.recyclerView_bookmark)
         scheduleFindBookmark = view.findViewById(R.id.schedule_find_bookmark)
         scheduleFindBookmarkFrameLayoutNoItem = view.findViewById(R.id.schedule_find_bookmark_frame_layout_no_item)
+        scheduelFindBookmarkImageNoItem = view.findViewById(R.id.scheduel_find_bookmark_image_no_item)
 
         GlobalScope.launch(Dispatchers.IO) {
             delay(1000)
             ScheduleBookmarkService(this@ScheduleFindBookmarkFragment).tryGetScheduleBookmark(0, 2)
+        }
+
+        scheduelFindBookmarkImageNoItem!!.setOnClickListener {
+            (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
         }
 
         return view
@@ -74,12 +82,15 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
-
+                bookmarkList.clear()
 
                 if (response.data.size == 0){
                     scheduleFindBookmark!!.visibility = View.GONE
                     scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.VISIBLE
                 }else{
+
+                    scheduleFindBookmark!!.visibility = View.VISIBLE
+                    scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.GONE
                     for (i in 0 until response.data.size) {
 
                         if (response.data[i].colorInfo != null) {
@@ -142,7 +153,6 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                     }
                     recyclerViewBookmark!!.adapter = scheduleBookmarkAdapter
                 }
-
 
 
             }

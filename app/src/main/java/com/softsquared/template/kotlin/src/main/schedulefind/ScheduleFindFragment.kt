@@ -71,9 +71,17 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         binding.scheduleFindBtnCategory.setColorFilter(Color.parseColor("#bfc5cf"))
 
         //검색창 클릭 시
-        binding.scheduleFindBtn.setOnClickListener {
+        binding.scheduleFindBtnSearch.setOnClickListener {
             val intent = Intent(activity, ScheduleSearchActivity::class.java)
             startActivity(intent)
+        }
+
+        //-> 클릭 시 일정찾기 메인으로 이동
+        binding.scheduleFindBtnSearchBack.setOnClickListener {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
+                .commit()
+            binding.scheduleFindTvSearchText.text = ""
         }
 
         // +버튼 클릭 시 카테고리 편집으로 이동
@@ -86,12 +94,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
             startActivity(intent)
         }
 
-        binding.scheduleFindIvSearch.setOnClickListener {
-            childFragmentManager.beginTransaction()
-                .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
-                .commit()
-            CategoryInquiryService(this).tryGetUserCategoryInquiry()
-        }
+
 
     }
 
@@ -116,10 +119,17 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         }
     }
 
+    @Override fun onBackPressed() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
+            .commit()
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+    }
+
     //카테고리 클릭 시 카테고리별 일정으로 이동
     override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
 
-        binding.scheduleFindBtn.text = ""
+        binding.scheduleFindTvSearchText.text = ""
 
         val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
         val bundle = Bundle()
@@ -201,6 +211,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                 .replace(R.id.schedule_find_main_fragment, ScheduleFindMainFragment())
                 .commit()
     }
+
 
     //유저별 카테고리조회 성공
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
@@ -316,7 +327,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
         if (word != null) {
             Log.d("TAG", "onResume: 안 $word")
 
-            binding.scheduleFindBtn.text = word
+            binding.scheduleFindTvSearchText.text = word
 
             if (Constants.SEARCH_CHECK) {
                 val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()

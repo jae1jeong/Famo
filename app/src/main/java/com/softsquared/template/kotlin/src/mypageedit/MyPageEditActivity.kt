@@ -241,7 +241,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 strDate = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
             }
 
-            Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show()
             dateCnt++
         }
 
@@ -578,7 +577,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             }
             else -> {
                 Log.d("TAG", "onGetMyPageSuccess: ${response.message.toString()}")
-                showCustomToast("${response.message.toString()}}")
             }
         }
         dismissLoadingDialog()
@@ -626,7 +624,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             }
             else -> {
                 Log.d("TAG", "onPutMyPageUpdateSuccess: ${response.message.toString()}")
-                showCustomToast("${response.message.toString()}}")
             }
         }
 
@@ -640,14 +637,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
         }
         if (response.isSuccess && response.code == 100) {
-            showCustomToast(response.message.toString())
 
 //            val edit = ApplicationClass.sSharedPreferences.edit()
 //            edit.putString(Constants.PROFILE_GALLERY, response.profileImageURL)
 //            edit.apply()
 
         } else {
-            showCustomToast(response.message.toString())
             Log.d("TAG", "onPostProfileImageSuccess: ${response.message}")
 
         }
@@ -656,7 +651,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
     override fun onPostProfileImageFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
         Log.d("TAG", "onPostProfileImageFailure: $message")
     }
 
@@ -670,14 +664,12 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             edit.putString(Constants.PROFILE_KAMERA, null)
             edit.apply()
         } else {
-            showCustomToast(response.message.toString())
         }
         dismissLoadingDialog()
     }
 
     override fun onPatchProfileFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun selectImageGallery() {

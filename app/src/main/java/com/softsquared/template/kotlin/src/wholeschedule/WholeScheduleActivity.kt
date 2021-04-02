@@ -207,7 +207,6 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                     showCustomToast("수정 오류 스케줄 아이디를 볼러오지 못하였습니다.")
                 }
             } else {
-                showCustomToast("수정 모드가 아님")
             }
         }
 
@@ -319,7 +318,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                     MainActivity.editingDate = null
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
-                    showCustomToast("일정이 성공적으로 수정되었습니다.")
+                    showCustomToast("일정이 성공적으로 수정되었습니다. :)")
                     stateChangeBottomSheet(Constants.HIDE_SHEET)
 //                    TodayFragment.todayMemoAdapter?.let {
 //                        TodayFragment.todayMemoAdapter!!.memoList.forEach {
@@ -437,12 +436,10 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                 }
                 else -> {
                     dismissLoadingDialog()
-                    showCustomToast(response.message.toString())
                 }
             }
         } else {
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
@@ -458,23 +455,21 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                     responseJsonArray.forEach {
                         val memoJsonObject = it.asJsonObject
                         val memoTitle = memoJsonObject.get("scheduleName").asString
-                        val memoDate = memoJsonObject.get("scheduleDate").asString
+                        val memoDate = memoJsonObject.get("scheduleForm").asString
                         val memoContentJsonElement: JsonElement? =
                                 memoJsonObject.get("scheduleMemo")
                         var memoContent = ""
                         if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
                         }
-                        setFormBottomSheetDialog(memoTitle, memoContent, memoDate)
+                        setFormBottomSheetDialog(memoTitle, memoContent, "${memoDate} (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(memoDate).dayOfWeek.name)})")
                     }
                 }
                 else -> {
-                    showCustomToast(response.message.toString())
                 }
             }
         }
         else {
-            showCustomToast(response.message.toString())
         }
     }
 

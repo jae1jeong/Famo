@@ -42,6 +42,10 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
         val view = inflater.inflate(R.layout.fragment_schedule_find_lately, container,
             false)
 
+//        val edit = ApplicationClass.sSharedPreferences.edit()
+//        edit.putString(Constants.BOOKMARK_LATELY_CHECH,"lately")
+//        edit.apply()
+
         recyclerViewLately = view.findViewById(R.id.recyclerView_lately)
         scheduleFindLatelyFrameLayoutNoItem = view.findViewById(R.id.schedule_find_lately_frame_layout_no_item)
         scheduelFindLatelyImageNoItem = view.findViewById(R.id.scheduel_find_lately_image_no_item)

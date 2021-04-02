@@ -190,7 +190,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     BottomSheetBehavior.STATE_HIDDEN->{
                         if(Constants.IS_EDIT){
                             Constants.IS_EDIT = false
-                            setFormBottomSheetDialog("","","")
+                            setFormBottomSheetDialog("","","${LocalDate.now()} ${CalendarConverter.dayToKoreanShortDayName(LocalDate.now().dayOfWeek.name)}")
                             editScheduleID = -1
                             binding.addMemoBottomSheetTextTopTitle.text = "오늘 일정 추가하기"
                         }
@@ -353,7 +353,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                             .setTitle("일정 수정 취소")
                             .setMessage("일정 수정을 취소하시겠습니까?")
                             .setNegativeButton("나가기"){
-                                setFormBottomSheetDialog("","","")
+                                setFormBottomSheetDialog("","","${LocalDate.now()} ${CalendarConverter.dayToKoreanShortDayName(LocalDate.now().dayOfWeek.name)}")
                                 categoryList.forEach {
                                     if(it.selected){
                                         it.selected = false
@@ -398,7 +398,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
         if (response.isSuccess) {
             when (response.code) {
                 100 -> {
-                    showCustomToast("일정이 작성 되었습니다!")
+                    showCustomToast("일정이 작성 되었습니다 :)")
                     stateChangeBottomSheet(Constants.COLLASPE)
                     TodayService(this).onGetScheduleItems()
                     editingDate = null
@@ -438,7 +438,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     binding.addMemoTextDateInfo.text = ""
                     Constants.IS_EDIT = false
                     dismissLoadingDialog()
-                    showCustomToast("일정이 성공적으로 수정되었습니다.")
+                    showCustomToast("일정이 성공적으로 수정되었습니다 :)")
                     stateChangeBottomSheet(Constants.HIDE_SHEET)
                     TodayFragment.todayMemoAdapter?.let {
                         TodayFragment.todayMemoAdapter!!.memoList.forEach {
@@ -503,22 +503,48 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                         }
                     }catch (e:UninitializedPropertyAccessException){
                     }
+                    try{
+                        ScheduleFindBookmarkFragment.scheduleBookmarkAdapter?.let {
+                            ScheduleFindBookmarkFragment.scheduleBookmarkAdapter.bookmarkListWhole.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindBookmarkFragment.scheduleBookmarkAdapter?.notifyItemChanged(ScheduleFindBookmarkFragment.bookmarkList.indexOf(it))
+                                }
+                            }
+                        }
+                    }
+                    catch(e:UninitializedPropertyAccessException){}
+
+
+                    try{
+                        ScheduleFindLatelyFragment.scheduleLatelyAdapter?.let {
+                            ScheduleFindLatelyFragment.scheduleLatelyAdapter.latelyList.forEach {
+                                if (it.scheduleID == editScheduleID) {
+                                    it.scheduleName = binding.addMemoEditTitle.text.toString()
+                                    it.scheduleMemo = binding.addMemoEditContent.text.toString()
+                                    ScheduleFindLatelyFragment.scheduleLatelyAdapter.notifyItemChanged(ScheduleFindLatelyFragment.latelyListWhole.indexOf(it))
+                                }
+                            }
+                        }
+                    }catch (e:UninitializedPropertyAccessException){
+
+                    }
                     selectedCategoryId = null
                     categoryList.forEach {
                         if(it.selected){
                             it.selected = false
                         }
                     }
+                    setFormBottomSheetDialog("","","${LocalDate.now()} ${CalendarConverter.dayToKoreanShortDayName(LocalDate.now().dayOfWeek.name)}")
                     initializeCategoryAdapter(categoryList)
                 }
                 else -> {
                     dismissLoadingDialog()
-                    showCustomToast(response.message.toString())
                 }
             }
         } else {
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
@@ -542,8 +568,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                             memoContent = memoContentJsonElement.asString
                         }
 
-//                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
-//                        val memoColor = memoJsonObject.get("colorInfo").asString
                         Log.d("TAG", "onGetDetailMemoSuccess: $memoDate")
                         setFormBottomSheetDialog(memoTitle, memoContent, "${memoDate} (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(memoDate).dayOfWeek.name)})")
                     }
@@ -558,7 +582,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     fun setFormBottomSheetDialog(memoTitle: String, memoContent: String, memoDate: String){
         binding.addMemoTextDateInfo.text = memoDate
-        Log.d("TAG", "setFormBottomSheetDialog: $memoDate")
         binding.addMemoEditTitle.setText(memoTitle)
         binding.addMemoEditContent.setText(memoContent)
 

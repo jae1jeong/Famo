@@ -429,12 +429,10 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
             }
             initializeMonthlyAdapter(memoList)
         }else{
-            showCustomToast(response.message.toString())
         }
     }
 
     override fun onGetMonthlyMemoItemFailure(message: String) {
-        showCustomToast(message)
     }
 
     override fun onGetAllMemosSuccess(response: AllMemoResponse) {
@@ -459,7 +457,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     override fun onGetUserDateListFailure(message: String) {
-        showCustomToast(message)
     }
 
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
@@ -480,18 +477,15 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     dismissLoadingDialog()
                 }else->{
                 dismissLoadingDialog()
-                showCustomToast(response.message.toString())
             }
             }
         }else{
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
     override fun onDeleteMemoFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onPostItemCheckSuccess(response: BaseResponse) {

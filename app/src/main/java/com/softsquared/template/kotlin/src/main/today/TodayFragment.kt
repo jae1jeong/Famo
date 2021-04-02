@@ -280,20 +280,18 @@ class TodayFragment() :
                     todayMemoAdapter?.setNewMemoList(memoList)
                     checkIsMemoListEmpty()
                     dismissLoadingDialog()
+                    showCustomToast("일정이 성공적으로 삭제 되었습니다. :)")
                 }else->{
                 dismissLoadingDialog()
-                showCustomToast(response.message.toString())
             }
             }
         }else{
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
     override fun onDeleteMemoFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onPostItemCheckSuccess(response: BaseResponse) {
@@ -301,11 +299,10 @@ class TodayFragment() :
             Log.d("todayFragment", "onPostItemCheckSuccess: 일정 체크 성공")
 
             // 오늘 일정을 모두 완료할 경우
-            if(initialMemoListCount != 0 && restScheduleCount == 0){
-                showResultFragment()
-            }
+//            if(initialMemoListCount != 0 && restScheduleCount == 0){
+//                showResultFragment()
+//            }
         }else{
-            showCustomToast(response.message.toString())
         }
 
     }

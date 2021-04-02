@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<!--    <com.facebook.shimmer.ShimmerFrameLayout-->
-<!--        android:id="@+id/shimmer_main_layout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        >-->
-<!--        <include layout="@layout/shimmer_find_schedule"/>-->
-<!--    </com.facebook.shimmer.ShimmerFrameLayout>-->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <include layout="@layout/shimmer_find_schedule"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

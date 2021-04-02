@@ -35,7 +35,7 @@
                 android:id="@+id/schedule_find_top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/schedule_find_iv_search"

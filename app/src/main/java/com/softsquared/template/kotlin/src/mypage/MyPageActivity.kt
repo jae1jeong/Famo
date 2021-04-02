@@ -85,7 +85,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetMyPageSuccess: MyPage조회성공")
-                showCustomToast("MyPage조회성공")
 
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_THUMBNAILIMAGEURL, null
@@ -170,7 +169,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             }
             else -> {
                 Log.d("TAG", "onGetMyPageSuccess: ${response.message.toString()}")
-                showCustomToast("${response.message.toString()}}")
             }
         }
         dismissLoadingDialog()
@@ -182,7 +180,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
     override fun onGetRestScheduleCountSuccess(response: RestScheduleCountResponse) {
 
-        showCustomToast(response.message.toString())
         if (response.isSuccess && response.code == 100) {
             val responseJsonArray = response.data.asJsonArray
             responseJsonArray.forEach {

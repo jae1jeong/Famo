@@ -250,7 +250,6 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
 
             }
             else -> {
-                showCustomToast("실패 메시지 : ${responseUser.message}")
             }
         }
     }

@@ -179,19 +179,19 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this) {}
-//        shimmer_main_layout.startShimmerAnimation()
-//        GlobalScope.launch(Dispatchers.Main) {
-//            delay(1000)
-//            try{
-//                if(shimmer_main_layout.isAnimationStarted){
-//                    shimmer_main_layout.stopShimmerAnimation()
-//                    shimmer_main_layout.visibility = View.GONE
-//                    schedule_find_main_layout.visibility = View.VISIBLE
-//                }
-//            }catch (e: NullPointerException){
-//
-//            }
-//        }
+        shimmer_main_layout.startShimmerAnimation()
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(1000)
+            try{
+                if(shimmer_main_layout.isAnimationStarted){
+                    shimmer_main_layout.stopShimmerAnimation()
+                    shimmer_main_layout.visibility = View.GONE
+                    schedule_find_main_layout.visibility = View.VISIBLE
+                }
+            }catch (e: NullPointerException){
+
+            }
+        }
     }
 
 

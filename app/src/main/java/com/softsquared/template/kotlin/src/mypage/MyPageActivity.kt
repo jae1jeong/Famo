@@ -2,16 +2,13 @@ package com.softsquared.template.kotlin.src.mypage
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.*
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
@@ -32,7 +29,6 @@ import com.softsquared.template.kotlin.src.mypage.models.RestScheduleCountRespon
 import com.softsquared.template.kotlin.src.mypage.models.TotalScheduleCountResponse
 import com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity
 import com.softsquared.template.kotlin.util.Constants
-import java.io.ByteArrayOutputStream
 
 class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding::inflate),
     MyPageView {
@@ -92,15 +88,24 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 showCustomToast("MyPage조회성공")
 
                 val kakaoImg: String? = ApplicationClass.sSharedPreferences.getString(
-                    Constants.KAKAO_THUMBNAILIMAGEURL, null)
-                val day = ApplicationClass.sSharedPreferences.getString(Constants.DAY,
-                    null)
-                val name = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,
-                    null)
-                val goalTitle = ApplicationClass.sSharedPreferences.getString(Constants.GOALTITLE,
-                    null)
-                val dDayCheck = ApplicationClass.sSharedPreferences.getString(Constants.DDAY_CHECK,
-                    null)
+                    Constants.KAKAO_THUMBNAILIMAGEURL, null
+                )
+                val day = ApplicationClass.sSharedPreferences.getString(
+                    Constants.DAY,
+                    null
+                )
+                val name = ApplicationClass.sSharedPreferences.getString(
+                    Constants.USER_NICKNAME,
+                    null
+                )
+                val goalTitle = ApplicationClass.sSharedPreferences.getString(
+                    Constants.GOALTITLE,
+                    null
+                )
+                val dDayCheck = ApplicationClass.sSharedPreferences.getString(
+                    Constants.DDAY_CHECK,
+                    null
+                )
                 val comments = ApplicationClass.sSharedPreferences.getString(
                     Constants.COMMENTS, null
                 )
@@ -218,10 +223,14 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         when (response.code) {
             100 -> {
                 val achievement = response.data.asJsonObject
-                val hashMap: HashMap<String, Int> = Gson().fromJson(
-                    achievement.toString(), HashMap::class.java
-                ) as HashMap<String, Int>
-                Log.d("TAG", "onGetMonthsAchievmentsSuccess: ${hashMap}")
+                val hashMap: Map<String, Int> = Gson().fromJson(
+                    achievement.toString(), Map::class.java
+                ) as Map<String, Int>
+                Log.d("TAG", "onGetMonthsAchievmentsSuccess: $hashMap")
+
+
+//                val scheduleId = memoJsonObject.get("scheduleID").asInt
+                val month = hashMap.get("")
 
                 val list = hashMap.toString()
                 val temList = list.substring(1, list.length - 1)
@@ -246,8 +255,17 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 val test = 1
 
+//                for (i in test.size() - 1 downTo 0) {
+//                    System.out.println(test.get(i))
+//                }
+
+
                 //그래프 마커좌표
                 val entries: ArrayList<Entry> = ArrayList()
+//                for (i in temList4.size - 1 downTo 0) {
+//                    entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
+//                    Log.d("TAG", "값 : ${(i + 1)} : ${temList4[i]}")
+//                }
                 for (i in 0 until temList10.size) {
                     entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
                 }
@@ -381,6 +399,10 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
 
             val test = ArrayList<String>()
+
+//            for (i in temList10.size - 1 downTo 0) {
+//                test.add(temList10[i] + "월")
+//            }
 
             for (i in 0 until temList10.size) {
                 test.add(temList10[i] + "월")

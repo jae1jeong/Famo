@@ -40,7 +40,7 @@ import kotlin.collections.ArrayList
 
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
-    IScheduleUpdate {
+    IScheduleCategoryRecyclerView {
 
     lateinit var mLoadingDialog: LoadingDialog
 
@@ -184,20 +184,20 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) {}
-        shimmer_main_layout.startShimmerAnimation()
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(1000)
-            try{
-                if(shimmer_main_layout.isAnimationStarted){
-                    shimmer_main_layout.stopShimmerAnimation()
-                    shimmer_main_layout.visibility = View.GONE
-                    schedule_find_main_layout.visibility = View.VISIBLE
-                }
-            }catch (e: NullPointerException){
-
-            }
-        }
+        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this) {}
+//        shimmer_main_layout.startShimmerAnimation()
+//        GlobalScope.launch(Dispatchers.Main) {
+//            delay(1000)
+//            try{
+//                if(shimmer_main_layout.isAnimationStarted){
+//                    shimmer_main_layout.stopShimmerAnimation()
+//                    shimmer_main_layout.visibility = View.GONE
+//                    schedule_find_main_layout.visibility = View.VISIBLE
+//                }
+//            }catch (e: NullPointerException){
+//
+//            }
+//        }
     }
 
     fun showLoadingDialog(context: Context) {
@@ -231,6 +231,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetWholeScheduleInquirySuccess 성공")
+                wholeScheduleList.clear()
 
                 if (response.data.size > 0) {
 
@@ -302,6 +303,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                         }
 
                     }
+
                     recyclerviewWhole!!.adapter = scheduleWholeAdapter
 
                 } else {
@@ -406,11 +408,26 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     }
 
 
-    override fun onUpdate() {
-        childFragmentManager.beginTransaction()
-            .replace(R.id.schedule_find_main_fragment, ScheduleFindFragment())
-            .commit()
+    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
     }
+
+    override fun onColor(): ArrayList<String> {
+
+        val ab = ArrayList<String>()
+        return ab
+    }
+
+    override fun onClickedTwice() {
+    }
+
+
+//    override fun onUpdate() {
+//
+//
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.schedule_find_main_fragment, ScheduleFindFragment())
+//            .commit()
+//    }
 
 
 }

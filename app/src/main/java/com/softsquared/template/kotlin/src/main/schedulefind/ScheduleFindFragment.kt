@@ -212,6 +212,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                 .commit()
     }
 
+
     //유저별 카테고리조회 성공
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         when (responseUser.code) {

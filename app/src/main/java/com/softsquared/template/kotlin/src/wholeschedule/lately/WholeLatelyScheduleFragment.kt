@@ -102,6 +102,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
         when(response.code){
             100 -> {
                 Log.d("TAG", "onGetLatelyScheduleInquirySuccess: 최근일정조회성공")
+                latelyListWhole.clear()
 
                 if (testCnt == 0){
 

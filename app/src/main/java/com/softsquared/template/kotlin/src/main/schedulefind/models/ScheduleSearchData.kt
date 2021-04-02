@@ -6,5 +6,5 @@ data class ScheduleSearchData(val scheduleID : Int,
                               val scheduleName : String,
                               val scheduleMemo : String,
                               val scheduleDate : String,
-                              val schedulePick: Int,
+                              var schedulePick: Int,
                               val colorInfo : String)

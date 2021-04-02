@@ -1,6 +1,7 @@
 package com.softsquared.template.kotlin.src.wholeschedule.bookmark.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.softsquared.template.kotlin.R
+import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.src.main.schedulefind.models.WholeScheduleBookmarkData
+import com.softsquared.template.kotlin.util.Constants
 
 class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeScheduleBookmarkData>,
     val clickListener:(WholeScheduleBookmarkData)->Unit):
@@ -34,6 +37,13 @@ class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeSchedule
         }else{
             holder.color.setColorFilter(Color.parseColor("#ced5d9"))
         }
+
+        val deviceWidth = ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(),0)
+        Log.d("TAG", "width: $deviceWidth")
+
+        val width = deviceWidth - 160
+
+        holder.itemView.layoutParams.width = width/2
 
         holder.itemView.setOnClickListener {
             clickListener(bookmarkListWhole[position])

@@ -82,12 +82,15 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
         when (response.code) {
             100 -> {
                 Log.d("TAG", "onGetScheduleBookmarkSuccess: 즐겨찾기 일정조회성공")
-
+                bookmarkList.clear()
 
                 if (response.data.size == 0){
                     scheduleFindBookmark!!.visibility = View.GONE
                     scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.VISIBLE
                 }else{
+
+                    scheduleFindBookmark!!.visibility = View.VISIBLE
+                    scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.GONE
                     for (i in 0 until response.data.size) {
 
                         if (response.data[i].colorInfo != null) {
@@ -150,7 +153,6 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                     }
                     recyclerViewBookmark!!.adapter = scheduleBookmarkAdapter
                 }
-
 
 
             }

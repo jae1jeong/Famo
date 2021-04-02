@@ -109,7 +109,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                     //바텀 시트 다이얼로그 확장
                     (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                 }
-                detailDialog.start(memo, memo.formDateStr)
+                detailDialog.start(memo, null)
 
             }, {
                 // 일정삭제

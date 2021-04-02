@@ -17,6 +17,7 @@ import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.databinding.FragmentTodayBinding
 import com.softsquared.template.kotlin.src.main.MainActivity
+import com.softsquared.template.kotlin.src.main.ResultBottomSheetDialog
 import com.softsquared.template.kotlin.src.main.models.DetailMemoResponse
 import com.softsquared.template.kotlin.src.main.today.adapter.MemoAdapter
 import com.softsquared.template.kotlin.src.main.today.models.*
@@ -39,6 +40,7 @@ class TodayFragment() :
     BaseFragment<FragmentTodayBinding>(FragmentTodayBinding::bind, R.layout.fragment_today)
     ,TodayView, MyPageView {
 
+    private var initialMemoListCount = 0
 
     companion object{
         val memoList:ArrayList<MemoItem> = arrayListOf()
@@ -157,6 +159,11 @@ class TodayFragment() :
         }
     }
 
+    fun showResultFragment(){
+        val resultFragment = ResultBottomSheetDialog()
+        resultFragment.show(childFragmentManager,resultFragment.tag)
+    }
+
     override fun viewPagerApiRequest() {
         super.viewPagerApiRequest()
 
@@ -249,6 +256,7 @@ class TodayFragment() :
                         )
                     }
                     todayMemoAdapter?.setNewMemoList(memoList)
+                    initialMemoListCount=  memoList.size
                 }
                 else->{
                 }
@@ -291,6 +299,11 @@ class TodayFragment() :
     override fun onPostItemCheckSuccess(response: BaseResponse) {
         if(response.isSuccess && response.code == 100){
             Log.d("todayFragment", "onPostItemCheckSuccess: 일정 체크 성공")
+
+            // 오늘 일정을 모두 완료할 경우
+            if(initialMemoListCount != 0 && restScheduleCount == 0){
+                showResultFragment()
+            }
         }else{
             showCustomToast(response.message.toString())
         }

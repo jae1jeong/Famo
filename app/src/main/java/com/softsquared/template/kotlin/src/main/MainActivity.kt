@@ -117,11 +117,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
             }
 
         })
-        // 처음 앱 실행시 탭 밑줄
-//        val firstCreateTabSpannable = SpannableString("월간")
-//        firstCreateTabSpannable.setSpan(UnderlineSpan(),0,firstCreateTabSpannable.length,0)
-//        firstCreateTabSpannable.setSpan(StyleSpan(Typeface.BOLD),0,firstCreateTabSpannable.length,0)
-//        (binding.mainTabLayout.get(0) as TabLayout).text = firstCreateTabSpannable
 
         binding.mainViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -190,6 +185,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                                 )
                             })"
                         }
+
                     }
                     BottomSheetBehavior.STATE_HIDDEN->{
                         if(Constants.IS_EDIT){
@@ -242,7 +238,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
         // 바텀 시트 다이얼로그 카테고리 추가 버튼
         binding.addMemoBtnCategoryAdd.setOnClickListener {
-//            startActivity(Intent(this, CategoryEditActivity::class.java))
             val intent = Intent(this,CategoryEditActivity::class.java)
             intent.putExtra("name", name)
             intent.putExtra("color", color)
@@ -321,19 +316,19 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     }
 
+
     fun receiveDateFromDatePicker(strDate:String){
         editingDate = strDate
         binding.addMemoTextDateInfo.text = "$strDate (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(strDate).dayOfWeek.toString())})"
     }
 
     fun setHeightBottomSheetDialog(){
-        // 디바이스 화면 높이 구하기
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getRealSize(size)
         val deviceHeight = size.y
         // 탭 레이아웃 높이와 디바이스 화면 높이 빼기
-        val bottomSheetDialogHeight = deviceHeight - 445
+        val bottomSheetDialogHeight = deviceHeight - 430
         val params = binding.mainFrameBottomSheet.layoutParams
         params.height = bottomSheetDialogHeight
     }
@@ -418,19 +413,16 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     today_text_rest_schedule.text = "남은 일정 ${TodayFragment.restScheduleCount}개"
                 }
                 else -> {
-                    showCustomToast(response.message.toString())
                 }
             }
             dismissLoadingDialog()
         } else {
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
     override fun onPostAddMemoFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onPatchMemoSuccess(response: BaseResponse) {
@@ -527,7 +519,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onPatchMemoFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onGetDetailMemoSuccess(response: DetailMemoResponse) {
@@ -538,9 +529,9 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     responseJsonArray.forEach {
                         val memoJsonObject = it.asJsonObject
                         val memoTitle = memoJsonObject.get("scheduleName").asString
-                        val memoDate = memoJsonObject.get("scheduleDate").asString
+                        val memoDate = memoJsonObject.get("scheduleForm").asString
                         val memoContentJsonElement: JsonElement? =
-                            memoJsonObject.get("scheduleMemo")
+                                memoJsonObject.get("scheduleMemo")
                         var memoContent = ""
                         if (!memoContentJsonElement!!.isJsonNull) {
                             memoContent = memoContentJsonElement.asString
@@ -548,21 +539,21 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
 //                        val scheduleTime:String? = memoJsonObject.get("scheduleTime").asString
 //                        val memoColor = memoJsonObject.get("colorInfo").asString
-                        setFormBottomSheetDialog(memoTitle, memoContent, memoDate)
+                        Log.d("TAG", "onGetDetailMemoSuccess: $memoDate")
+                        setFormBottomSheetDialog(memoTitle, memoContent, "${memoDate} (${CalendarConverter.dayToKoreanShortDayName(LocalDate.parse(memoDate).dayOfWeek.name)})")
                     }
                 }
                 else -> {
-                    showCustomToast(response.message.toString())
                 }
             }
         }
         else {
-            showCustomToast(response.message.toString())
         }
     }
 
     fun setFormBottomSheetDialog(memoTitle: String, memoContent: String, memoDate: String){
         binding.addMemoTextDateInfo.text = memoDate
+        Log.d("TAG", "setFormBottomSheetDialog: $memoDate")
         binding.addMemoEditTitle.setText(memoTitle)
         binding.addMemoEditContent.setText(memoContent)
 
@@ -570,7 +561,6 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
 
     override fun onGetDetailMemoFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onGetScheduleItemsSuccess(response: ScheduleItemsResponse) {
@@ -638,19 +628,16 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                 }
                 else -> {
                     dismissLoadingDialog()
-                    showCustomToast(response.message.toString())
                 }
             }
         } else {
             dismissLoadingDialog()
-            showCustomToast(response.message.toString())
         }
     }
 
 
     override fun onGetScheduleItemsFailure(message: String) {
         dismissLoadingDialog()
-        showCustomToast(message)
     }
 
     override fun onDeleteMemoSuccess(response: BaseResponse, scheduleID: Int) {

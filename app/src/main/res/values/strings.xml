@@ -63,6 +63,10 @@
     <string name="login_info_find_id_password"><u>아이디/비밀번호 찾기</u></string>
 
 
+    <string name="result_today_text_schedule_finished">오늘의 일정 완료</string>
+    <string name="result_today_btn_head_to_my_result_page">나의 성과 확인하러 가기!</string>
+    <string name="result_today_btn_next_time">다음에 할게요.</string>
+
     <string name="information_get_start">시작하기</string>
 
     <!--Add Memo -->

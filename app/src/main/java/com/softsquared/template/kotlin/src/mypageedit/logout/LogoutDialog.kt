@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.core.content.ContextCompat.startActivity
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.user.UserApiClient
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
 import com.softsquared.template.kotlin.config.BaseResponse
@@ -25,6 +27,9 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logout_dialog);
 
+        //카카오 로그인 초기화
+        KakaoSdk.init(context, "850f56e3e5ba5613faf68a8aaa4b95bc")
+
         val logout : Button = findViewById(R.id.logout_check)
         val cancel : Button = findViewById(R.id.logout_cancel)
 
@@ -33,6 +38,14 @@ class LogoutDialog(context:Context) : Dialog(context), MyPageEditView {
             val edit = ApplicationClass.sSharedPreferences.edit()
             edit.remove(ApplicationClass.X_ACCESS_TOKEN)
             edit.apply()
+
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    Log.e("TAG", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+                } else {
+                    Log.i("TAG", "로그아웃 성공. SDK에서 토큰 삭제됨")
+                }
+            }
 
             val intent = Intent(context,LoginInformation::class.java)
             context.startActivity(intent)

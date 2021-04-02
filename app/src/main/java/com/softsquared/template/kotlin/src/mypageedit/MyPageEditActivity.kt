@@ -152,6 +152,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditMentTopArrow.visibility = View.GONE
 
                 binding.myPageEditTopMentView.visibility = View.VISIBLE
+
+                binding.myPageEditLinearDdaySetting.visibility = View.GONE
             }
 
             topMentCnt++

@@ -106,7 +106,7 @@ class AskDialog(private val context: Context) {
         }
         val params = WindowManager.LayoutParams()
         params.copyFrom(dialog?.window?.attributes)
-        params.width = 1100
+        params.width = 800
         params.height = WindowManager.LayoutParams.WRAP_CONTENT
         dialog?.show()
         val window = dialog?.window

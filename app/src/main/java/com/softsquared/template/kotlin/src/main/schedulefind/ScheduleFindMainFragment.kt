@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
-import com.softsquared.template.kotlin.util.LoadingDialog
+import com.softsquared.template.kotlin.util.MovieItemDecoration
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import kotlinx.android.synthetic.main.fragment_schedule_main_find.*
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +70,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
     companion object {
         lateinit var scheduleWholeAdapter: ScheduleWholeAdapter
         var wholeScheduleList: ArrayList<ScheduleWholeData> = arrayListOf()
-
     }
 
     //메인액티비티 oncreate랑 비슷하다
@@ -179,9 +178,18 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     }
 
+    private fun dpToPx(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        )
+            .toInt()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList,this) {}
+        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) {}
         shimmer_main_layout.startShimmerAnimation()
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000)
@@ -260,7 +268,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-                    recyclerviewWhole!!.setHasFixedSize(true)
+//                    recyclerviewWhole!!.setHasFixedSize(true)
 
                     scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
@@ -343,6 +351,14 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
                 Log.e("TAG", "onGetWholeScheduleCountSuccess: $wholePagingCnt")
                 scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, 1)
+
+                var size5 = 0
+                size5 = dpToPx(context!!, 10)
+
+                var size10 = 0
+                size10 = dpToPx(context!!, 3)
+
+                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(size10, size5))
 
             }
             else -> {

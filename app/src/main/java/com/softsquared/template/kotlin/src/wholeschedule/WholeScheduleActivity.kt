@@ -307,7 +307,7 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
                     LinearLayoutManager.HORIZONTAL,
                     false
             )
-            setHasFixedSize(true)
+//            setHasFixedSize(true)
             adapter = MainActivity.categoryScheduleAdapter
         }
     }

@@ -89,7 +89,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
             this,
             LinearLayoutManager.VERTICAL, false
         )
-        binding.recyclerviewSearchList.setHasFixedSize(true)
+//        binding.recyclerviewSearchList.setHasFixedSize(true)
         binding.recyclerviewSearchList.adapter = ScheduleSearchListAdapter(searchList)
     }
 
@@ -113,7 +113,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
                     this,
                     LinearLayoutManager.VERTICAL, false
                 )
-                binding.recyclerviewSearchList.setHasFixedSize(true)
+//                binding.recyclerviewSearchList.setHasFixedSize(true)
                 binding.recyclerviewSearchList.adapter = ScheduleSearchListAdapter(searchList)
             }
             else -> {

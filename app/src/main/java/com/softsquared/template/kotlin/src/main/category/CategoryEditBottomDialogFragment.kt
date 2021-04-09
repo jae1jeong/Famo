@@ -281,7 +281,6 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
                     categoryUpdateRequest
                 )
             }
-
         }
 
         //EditText 변화에 따른 완료버튼 활성화

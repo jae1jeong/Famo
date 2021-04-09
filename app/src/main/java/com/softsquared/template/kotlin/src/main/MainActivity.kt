@@ -728,7 +728,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                     LinearLayoutManager.HORIZONTAL,
                     false
             )
-            setHasFixedSize(true)
+//            setHasFixedSize(true)
             adapter = categoryScheduleAdapter
         }
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.softsquared.template.kotlin.src.main.schedulefind.models.*
 import com.softsquared.template.kotlin.src.main.today.models.MemoItem
 import com.softsquared.template.kotlin.src.wholeschedule.models.LatelyScheduleInquiryResponse
 import com.softsquared.template.kotlin.util.Constants
+import com.softsquared.template.kotlin.util.MovieItemDecoration
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
 
@@ -62,6 +64,10 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var completionCnt = 1
     var recentsCnt = 1
     var bookmarkCnt = 1
+
+    //아이템마진을 위한 변수
+    var size5 = 0
+    var size10 = 0
 
     var categoryFilter: ImageView? = null
     var catogorySchedulePaging: LakuePagingButton? = null
@@ -128,7 +134,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             if (categoryPagintCnt != 0) {
                 CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
             } else {
-                CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 999)
+                CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 9999)
             }
         }
 
@@ -173,6 +179,15 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         categoryFilterAdapter = CategoryFilterAdapter(categoryFilterList){}
     }
 
+    private fun dpToPx(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        )
+            .toInt()
+    }
+
     override fun onGetUserCategoryInquirySuccess(responseUser: UserCategoryInquiryResponse) {
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
     }
@@ -202,6 +217,11 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             categorySchedulePagingCnt = (cnt / 10) + 1
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
+
+                        size5 = dpToPx(context!!, 10)
+                        size10 = dpToPx(context!!, 3)
+
+                        recyclerviewScheduleFindCategory!!.addItemDecoration(MovieItemDecoration(size10,size5))
                         categoryPagintCnt++
                         CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
                     }
@@ -237,8 +257,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false
-                            )
+                                false)
+
                         categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList) {
                             val detailDialog = ScheduleDetailDialog(context!!)
                             val scheduleItem = MemoItem(
@@ -263,7 +283,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
                         }
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter =categoryScheduleInquiryAdapter
 
                     }
@@ -364,9 +384,9 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false
-                            )
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false)
+
+//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                             categoryFilterList){
 
@@ -456,9 +476,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false
-                            )
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false)
+//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                             categoryFilterList){
 
@@ -550,9 +569,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false
-                            )
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false)
+//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                             categoryFilterList){
 
@@ -643,9 +661,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false
-                            )
-                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false)
+//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
                             categoryFilterList){
 
@@ -797,10 +814,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
                     recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL,
-                            false
-                        )
-                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                            context, 2, GridLayoutManager.VERTICAL, false)
+
+                    size5 = dpToPx(context!!, 10)
+                    size10 = dpToPx(context!!, 3)
+
+                    recyclerviewScheduleFindCategory!!.addItemDecoration(MovieItemDecoration(size10,size5))
+//                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                     recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList) {
 
                         val detailDialog = ScheduleDetailDialog(context!!)
@@ -876,7 +896,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleCategoryID,
                     "left",
                     0,
-                    999
+                    9999
                 )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
@@ -888,7 +908,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleCategoryID,
                     "done",
                     0,
-                    999)
+                    9999)
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 
@@ -898,7 +918,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleCategoryID,
                     "recent",
                     0,
-                    999
+                    9999
                 )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
@@ -909,7 +929,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleCategoryID,
                     "pick",
                     0,
-                    999
+                    9999
                 )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }

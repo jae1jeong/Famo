@@ -265,7 +265,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                 binding.recyclerviewEditCategory.layoutManager = LinearLayoutManager(
                     this, LinearLayoutManager.VERTICAL, false
                 )
-                binding.recyclerviewEditCategory.setHasFixedSize(true)
+//                binding.recyclerviewEditCategory.setHasFixedSize(true)
                 binding.recyclerviewEditCategory.adapter = ScheduleCategoryEditAdapter(categoryList,this)
 //                scheduleCategoryAdapter.notifyDataSetChanged()
 

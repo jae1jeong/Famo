@@ -22,10 +22,24 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+
+        release {
+
+            storeFile file('keystore.old') // 기준은 App 폴더 기준이다.
+            storePassword "wpfl1011503"
+            keyAlias "famo_app_key"
+            keyPassword "wpfl1011503"
+
+        }
+
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

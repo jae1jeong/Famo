@@ -43,8 +43,7 @@ open class CategoryScheduleInquiryAdapter(var categoryList: ArrayList<CategorySc
             ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(), 0)
         Log.d("TAG", "width: $deviceWidth")
 
-        val width = deviceWidth - 120
-
+        val width = deviceWidth - 150
         holder.itemView.layoutParams.width = width / 2
 
         if (categoryList[position].pick == -1){

@@ -233,7 +233,7 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                                 (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
                         }
-//                    binding.recyclerViewLately.setHasFixedSize(true)
+                    binding.recyclerViewLately.setHasFixedSize(true)
                         binding.recyclerViewLately.adapter = wholeScheduleLatelyAdapter
                     }
                 }

@@ -268,7 +268,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                             context, 2, GridLayoutManager.VERTICAL,
                             false
                         )
-//                    recyclerviewWhole!!.setHasFixedSize(true)
+                    recyclerviewWhole!!.setHasFixedSize(true)
 
                     scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)

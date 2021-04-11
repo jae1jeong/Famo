@@ -128,7 +128,7 @@ class ScheduleFindBookmarkFragment : Fragment(), ScheduleBookmarkView, AddMemoVi
                     recyclerViewBookmark!!.layoutManager = LinearLayoutManager(
                         context, LinearLayoutManager.VERTICAL, false
                     )
-//                    recyclerViewBookmark!!.setHasFixedSize(true)
+                    recyclerViewBookmark!!.setHasFixedSize(true)
                     scheduleBookmarkAdapter= ScheduleBookmarkAdapter(bookmarkList) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(

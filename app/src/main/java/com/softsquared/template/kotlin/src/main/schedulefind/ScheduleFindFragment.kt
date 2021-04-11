@@ -243,7 +243,7 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
                 binding.recyclerviewCategory.layoutManager = LinearLayoutManager(
                     context, LinearLayoutManager.HORIZONTAL, false
                 )
-//                binding.recyclerviewCategory.setHasFixedSize(true)
+                binding.recyclerviewCategory.setHasFixedSize(true)
                 binding.recyclerviewCategory.adapter = ScheduleCategoryAdapter(categoryList, this,context!!)
 
 //                scheduleCategoryAdapter.notifyDataSetChanged()

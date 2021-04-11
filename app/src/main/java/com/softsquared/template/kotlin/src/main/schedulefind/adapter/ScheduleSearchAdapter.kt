@@ -122,9 +122,9 @@ class ScheduleSearchAdapter(
 //            Log.d("TAG", "onBindViewHolder: 어댑터확인")
 //        }
 
-        holder.itemView.setOnClickListener {
-            clickListener(searchList[position])
-        }
+//        holder.itemView.setOnClickListener {
+//            clickListener(searchList[position])
+//        }
 
     }
 

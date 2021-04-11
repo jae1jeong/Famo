@@ -3,18 +3,17 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lakue.pagingbutton.LakuePagingButton
 import com.lakue.pagingbutton.OnPageSelectListener
@@ -76,12 +75,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var categoryTextNoItem: TextView? = null
     var scheduleFindCategoryImageNoItem: ImageView? = null
 
-    companion object{
+    companion object {
         val categoryList: ArrayList<CategoryScheduleInquiryData> = arrayListOf()
         val categoryFilterList: ArrayList<CategoryFilterData> = arrayListOf()
-        lateinit var categoryScheduleInquiryAdapter:CategoryScheduleInquiryAdapter
+        lateinit var categoryScheduleInquiryAdapter: CategoryScheduleInquiryAdapter
         lateinit var categoryFilterAdapter: CategoryFilterAdapter
     }
+
     @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,27 +98,27 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         scheduleFindCategoryFrameLayoutNoItem =
             view.findViewById(R.id.schedule_find_category_frame_layout_no_item)
         categoryTextNoItem = view.findViewById(R.id.category_text_no_item)
-        scheduleFindCategoryImageNoItem = view.findViewById(R.id.schedule_find_category_image_no_item)
+        scheduleFindCategoryImageNoItem =
+            view.findViewById(R.id.schedule_find_category_image_no_item)
 
         var extra = this.arguments
         if (extra != null) {
             extra = arguments
             scheduleCategoryID = extra!!.getInt("scheduleCategoryID", -1)
             searchWord = extra!!.getString("searchWord").toString()
-
-
             Log.d("ScheduleFindCategoryFragment scheduleCategoryID", "값: $scheduleCategoryID")
             Log.d("ScheduleFindCategoryFragment searchWord", "값: $searchWord")
         }
 
+        val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
+
+        //필터클릭연결
         categoryFilter!!.setOnClickListener(this)
 
+        //일정없을 떄 나오는 이미지 클릭 시 생성
         scheduleFindCategoryImageNoItem!!.setOnClickListener {
             (activity as MainActivity).stateChangeBottomSheet(Constants.COLLASPE)
         }
-
-
-        val word = ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
 
         //검색
         if (word != null) {
@@ -142,7 +142,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         catogorySchedulePaging!!.setPageItemCount(4);
         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-        //페이지 리스너를 클릭했을 때의 이벤트
+//        페이지 리스너를 클릭했을 때의 이벤트
         catogorySchedulePaging!!.setOnPageSelectListener(object : OnPageSelectListener {
             //PrevButton Click
             override fun onPageBefore(now_page: Int) {
@@ -175,8 +175,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList){}
-        categoryFilterAdapter = CategoryFilterAdapter(categoryFilterList){}
+        categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList) {}
+        categoryFilterAdapter = CategoryFilterAdapter(categoryFilterList) {}
     }
 
     private fun dpToPx(context: Context, dp: Int): Int {
@@ -221,9 +221,18 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         size5 = dpToPx(context!!, 10)
                         size10 = dpToPx(context!!, 3)
 
-                        recyclerviewScheduleFindCategory!!.addItemDecoration(MovieItemDecoration(size10,size5))
+                        recyclerviewScheduleFindCategory!!.addItemDecoration(
+                            MovieItemDecoration(
+                                size10,
+                                size5
+                            )
+                        )
                         categoryPagintCnt++
-                        CategoryInquiryService(this).tryGetCategoryInquiry(scheduleCategoryID, 0, 10)
+                        CategoryInquiryService(this).tryGetCategoryInquiry(
+                            scheduleCategoryID,
+                            0,
+                            10
+                        )
                     }
 
                     if (categoryPagintCnt != 0) {
@@ -257,11 +266,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false)
+                                false
+                            )
 
-                        categoryScheduleInquiryAdapter = CategoryScheduleInquiryAdapter(categoryList) {
-                            val detailDialog = ScheduleDetailDialog(context!!)
-                            val scheduleItem = MemoItem(
+                        categoryScheduleInquiryAdapter =
+                            CategoryScheduleInquiryAdapter(categoryList) {
+                                val detailDialog = ScheduleDetailDialog(context!!)
+                                val scheduleItem = MemoItem(
                                     it.id,
                                     it.date,
                                     0,
@@ -269,27 +280,26 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                     it.memo,
                                     false,
                                     null,
-                                    null
-                            ,0)
-                            detailDialog.start(scheduleItem, null)
-                            detailDialog.setOnModifyBtnClickedListener {
-                                // 스케쥴 ID 보내기
-                                val edit = ApplicationClass.sSharedPreferences.edit()
-                                edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
-                                edit.apply()
-                                Constants.IS_EDIT = true
+                                    null, 0
+                                )
+                                detailDialog.start(scheduleItem, null)
+                                detailDialog.setOnModifyBtnClickedListener {
+                                    // 스케쥴 ID 보내기
+                                    val edit = ApplicationClass.sSharedPreferences.edit()
+                                    edit.putInt(Constants.EDIT_SCHEDULE_ID, it.id)
+                                    edit.apply()
+                                    Constants.IS_EDIT = true
 
-                                //바텀 시트 다이얼로그 확장
-                                (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                                    //바텀 시트 다이얼로그 확장
+                                    (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
+                                }
                             }
-                        }
-//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
-                        recyclerviewScheduleFindCategory!!.adapter =categoryScheduleInquiryAdapter
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.adapter = categoryScheduleInquiryAdapter
 
                     }
 
-                }
-                else{
+                } else {
                     recyclerviewScheduleFindCategory!!.visibility = View.GONE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.VISIBLE
                     categoryTextNoItem!!.text = "관련 카테고리 일정이 없습니다."
@@ -300,7 +310,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             else -> {
                 Log.d(
                     "TAG",
-                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}")
+                    "onGetWholeScheduleInquirySuccess 100이 아닌: ${categoryInquiryResponse.message.toString()}"
+                )
             }
         }
 
@@ -327,7 +338,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
 
                     //남은일정필터
-                    if (leftPagintCnt % 4 == 1){
+                    if (leftPagintCnt % 4 == 1) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -347,7 +358,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             10
                         )
 
-                    }else if(totalCnt > 0){
+                    } else if (totalCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -384,11 +395,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false)
+                                false
+                            )
 
-//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                            categoryFilterList){
+                            categoryFilterList
+                        ) {
 
                             val detailDialog = ScheduleDetailDialog(context!!)
                             val scheduleItem = MemoItem(
@@ -399,8 +412,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 it.scheduleMemo,
                                 false,
                                 null,
-                                null
-                            ,0)
+                                null, 0
+                            )
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -418,7 +431,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     }
 
                     //완료일정필터
-                    if (donePagintCnt % 4 == 2){
+                    if (donePagintCnt % 4 == 2) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -439,7 +452,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         )
 
 
-                    }else if(totalCnt > 0){
+                    } else if (totalCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -476,10 +489,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false)
-//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                            categoryFilterList){
+                            categoryFilterList
+                        ) {
 
                             val detailDialog = ScheduleDetailDialog(context!!)
                             val scheduleItem = MemoItem(
@@ -490,8 +505,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 it.scheduleMemo,
                                 false,
                                 null,
-                                null
-                            ,0)
+                                null, 0
+                            )
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -511,7 +526,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
 
                     //최근일정필터
-                    if (recentPagintCnt % 4 == 3){
+                    if (recentPagintCnt % 4 == 3) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -532,7 +547,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         )
 
 
-                    }else if(totalCnt > 0){
+                    } else if (totalCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -569,10 +584,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false)
-//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                            categoryFilterList){
+                            categoryFilterList
+                        ) {
 
                             val detailDialog = ScheduleDetailDialog(context!!)
                             val scheduleItem = MemoItem(
@@ -583,8 +600,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 it.scheduleMemo,
                                 false,
                                 null,
-                                null
-                            ,0)
+                                null, 0
+                            )
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -604,7 +621,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
 
                     //즐겨찾기일정필터
-                    if (pickPagintCnt % 4 == 0){
+                    if (pickPagintCnt % 4 == 0) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -624,7 +641,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             10
                         )
 
-                    }else if(totalCnt > 0){
+                    } else if (totalCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -661,10 +678,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         recyclerviewScheduleFindCategory!!.layoutManager =
                             GridLayoutManager(
                                 context, 2, GridLayoutManager.VERTICAL,
-                                false)
-//                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                                false
+                            )
+                        recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                         recyclerviewScheduleFindCategory!!.adapter = CategoryFilterAdapter(
-                            categoryFilterList){
+                            categoryFilterList
+                        ) {
 
                             val detailDialog = ScheduleDetailDialog(context!!)
                             val scheduleItem = MemoItem(
@@ -675,8 +694,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 it.scheduleMemo,
                                 false,
                                 null,
-                                null
-                            ,0)
+                                null, 0
+                            )
                             detailDialog.start(scheduleItem, null)
                             detailDialog.setOnModifyBtnClickedListener {
                                 // 스케쥴 ID 보내기
@@ -695,12 +714,11 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     }
                 }
                 //메모가 없으면
-                else{
+                else {
                     recyclerviewScheduleFindCategory!!.visibility = View.GONE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.VISIBLE
                     categoryTextNoItem!!.text = "필터조회한 메모가 없습니다."
                 }
-
 
 
             }
@@ -820,7 +838,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     size10 = dpToPx(context!!, 3)
 
                     recyclerviewScheduleFindCategory!!.addItemDecoration(MovieItemDecoration(size10,size5))
-//                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
+                    recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                     recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList) {
 
                         val detailDialog = ScheduleDetailDialog(context!!)
@@ -833,7 +851,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             false,
                             null,
                             null
-                        ,0)
+                            ,0)
                         detailDialog.start(scheduleItem, null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
@@ -908,7 +926,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     scheduleCategoryID,
                     "done",
                     0,
-                    9999)
+                    9999
+                )
                 schedulefindFilterBottomDialogFragment!!.dismiss()
             }
 

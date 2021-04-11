@@ -64,6 +64,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
                     val refreshToken = token.refreshToken
                     if (user.kakaoAccount?.profile!!.thumbnailImageUrl != null){
                         kakaoUrl = user.kakaoAccount!!.profile!!.thumbnailImageUrl
+                        Log.d("TAG", "kakaoUrl: $kakaoUrl")
                     }
 
                     kakaoEmail = user.kakaoAccount!!.email.toString()

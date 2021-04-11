@@ -119,7 +119,7 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
                     recyclerViewLately!!.layoutManager = LinearLayoutManager(
                         context, LinearLayoutManager.VERTICAL, false
                     )
-//                    recyclerViewLately!!.setHasFixedSize(true)
+                    recyclerViewLately!!.setHasFixedSize(true)
                     scheduleLatelyAdapter = ScheduleLatelyAdapter(latelyListWhole) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(

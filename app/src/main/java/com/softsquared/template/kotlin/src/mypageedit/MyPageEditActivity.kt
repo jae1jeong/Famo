@@ -520,7 +520,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 if (response.loginMethod == "K") {
 
-                    if (response.profileImageURL == null) {
+                    if (response.profileImageURL == "null") {
                         //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
                         Glide.with(this).load(kakaoImg)
                             .error(R.drawable.my_page_img2)

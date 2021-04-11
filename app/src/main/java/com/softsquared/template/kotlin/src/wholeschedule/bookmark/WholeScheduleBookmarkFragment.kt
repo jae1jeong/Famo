@@ -227,7 +227,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                                 (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
                         }
-//                        binding.recyclerViewBookmark.setHasFixedSize(true)
+                        binding.recyclerViewBookmark.setHasFixedSize(true)
                         binding.recyclerViewBookmark.adapter = wholeScheduleBookmarkAdapter
 
                     }

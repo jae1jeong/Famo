@@ -50,6 +50,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
                         val edit = ApplicationClass.sSharedPreferences.edit()
                         edit.putString(Constants.SEARCHWROD, searchWord)
                         edit.putString(Constants.SEARCH_WROD_COLOR, searchWord)
+                        edit.putString(Constants.SEARCH_TEST, searchWord)
                         edit.apply()
                         Constants.SEARCH_CHECK = true
                         finish()
@@ -89,7 +90,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
             this,
             LinearLayoutManager.VERTICAL, false
         )
-//        binding.recyclerviewSearchList.setHasFixedSize(true)
+        binding.recyclerviewSearchList.setHasFixedSize(true)
         binding.recyclerviewSearchList.adapter = ScheduleSearchListAdapter(searchList)
     }
 
@@ -113,7 +114,7 @@ class ScheduleSearchActivity() : BaseActivity<ActivityScheduleSearchBinding>
                     this,
                     LinearLayoutManager.VERTICAL, false
                 )
-//                binding.recyclerviewSearchList.setHasFixedSize(true)
+                binding.recyclerviewSearchList.setHasFixedSize(true)
                 binding.recyclerviewSearchList.adapter = ScheduleSearchListAdapter(searchList)
             }
             else -> {

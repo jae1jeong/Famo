@@ -653,6 +653,7 @@ class CategoryEditBottomDialogFragment : BottomSheetDialogFragment(),
                 intent.putExtra("size", inputSize)
                 intent.putExtra("categoryID", inputCategoryID)
                 startActivity(intent)
+                dismiss()
             }
             else -> {
 

@@ -61,8 +61,9 @@ class MovieItemDecoration(
         } else if (spanIndex == 1) {
             //오른쪽 아이템
             outRect.left = size5
-//            outRect.right = Gravity.RIGHT
             outRect.right = size10
+//            outRect.right = Gravity.RIGHT
+
         }
         outRect.top = size5
 //        outRect.right = size10

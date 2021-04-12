@@ -319,6 +319,8 @@ class ScheduleFindFragment() : BaseFragment<FragmentScheduleFindBinding>
     override fun onResume() {
         super.onResume()
 
+        CategoryInquiryService(this).tryGetUserCategoryInquiry()
+
         val word: String? =
             ApplicationClass.sSharedPreferences.getString(Constants.SEARCHWROD, null)
         Log.d("TAG", "onResume: ㅇㅇㅇㅇ $word")

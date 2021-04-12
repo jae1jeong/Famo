@@ -70,7 +70,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
     var dDaySettingCnt = 1
     var accountSettingCnt = 1
 
-    var dDayCheck = 0
+    var dDayCheck = -1
 
     // 날짜
     var strDate = ""
@@ -287,7 +287,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
             }
             false
         }
-
 
         //로그아웃
         binding.mypageEditBtnLogout.setOnClickListener {
@@ -512,8 +511,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 Log.d("TAG", "onGetMyPageSuccess: kakaoImg :$kakaoImg")
                 Log.d("TAG", "onGetMyPageSuccess: dday :$dday")
-
-
                 Log.d("TAG", "onGetMyPageSuccess: imgCnt :$imgCnt")
 
                 checkDday = response.goalStatus
@@ -553,7 +550,6 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                     binding.myPageEditAccountMail.setText("페모 회원입니다!")
                 }
 
-
                 //이름 적용
                 binding.myPageEditEtName.setText(name)
                 //멘트
@@ -570,6 +566,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 } else {
                     binding.myPageEditBtnDdayCheck.visibility = View.GONE
                     binding.myPageEditBtnDdayCheck2.visibility = View.GONE
+                    this.dDayCheck = -1
                 }
 
 

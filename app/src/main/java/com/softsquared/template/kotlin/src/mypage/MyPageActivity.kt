@@ -156,17 +156,19 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                         .centerCrop().into(binding.myPageImg)
 
                 }
+                Log.d("TAG", "myPage: $name")
 
                 //이름 적용
                 binding.myPageTvName.text = name
 
-                //디데이가 설정되어있지 않으면 기본문구
-                if (response.goalStatus == -1 || response.Dday >= 0) {
+                //디데이가 설정X
+                if (response.goalStatus == -1) {
                     binding.myPageTvComments.text = response.titleComment
                 }
 
-                if (response.goalStatus == 1 && response.Dday < 0) {
-                    binding.myPageTvComments.text = response.goalTitle + "까지 D" + response.Dday + "일\n남았어요!"
+                if (response.goalStatus == 1 && response.Dday <= 0) {
+                    binding.myPageTvComments.text =
+                        response.goalTitle + "까지 D" + response.Dday + "일\n남았어요!"
                 }
 
             }
@@ -234,40 +236,36 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                 val list = hashMap.toString()
                 val temList = list.substring(1, list.length - 1)
-                val temList2 = temList.split(",".toRegex()).toTypedArray()
-                //월
-                val temList3: ArrayList<String> = ArrayList()
-                //달성률
-                val temList4: ArrayList<String> = ArrayList()
-
-                for (i in temList2.indices) {
-                    temList3.add(temList2[i].split("=".toRegex()).toTypedArray()[0])
-                    temList4.add(temList2[i].split("=".toRegex()).toTypedArray()[1])
-                }
-
-                for (i in 0 until temList3.size) {
-                    temList10.add(temList3[i].split("-")[1])
-                }
 
                 //그래프 시작
-
                 val lineChart = findViewById<View>(R.id.chart) as LineChart
-
-                val test = 1
-
-//                for (i in test.size() - 1 downTo 0) {
-//                    System.out.println(test.get(i))
-//                }
-
 
                 //그래프 마커좌표
                 val entries: ArrayList<Entry> = ArrayList()
-//                for (i in temList4.size - 1 downTo 0) {
-//                    entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
-//                    Log.d("TAG", "값 : ${(i + 1)} : ${temList4[i]}")
-//                }
-                for (i in 0 until temList10.size) {
-                    entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
+
+                //일정이없으면 그래프는 0으로
+                if (temList.isNotEmpty()){
+
+                    val temList2 = temList.split(",".toRegex()).toTypedArray()
+                    //월
+                    val temList3: ArrayList<String> = ArrayList()
+                    //달성률
+                    val temList4: ArrayList<String> = ArrayList()
+
+                    for (i in temList2.indices) {
+                        temList3.add(temList2[i].split("=".toRegex()).toTypedArray()[0])
+                        temList4.add(temList2[i].split("=".toRegex()).toTypedArray()[1])
+                    }
+
+                    for (i in 0 until temList3.size) {
+                        temList10.add(temList3[i].split("-")[1])
+                    }
+
+                    for (i in 0 until temList10.size) {
+                        entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
+                    }
+                }else{
+                    entries.add(Entry(0F,0F))
                 }
 
                 //라벨
@@ -282,7 +280,6 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 lineDataSet.setDrawHighlightIndicators(false)
                 //값보여주기
                 lineDataSet.setDrawValues(false)
-
 
                 val lineData = LineData(lineDataSet)
                 lineChart.data = lineData
@@ -346,7 +343,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                         axisLineColor =
                             ContextCompat.getColor(context, R.color.graph_color) // 축 색깔 설정
-                        gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
+                        gridColor =
+                            ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
 //                textColor = ContextCompat.getColor(context,R.color.colorSemi50Black) // 라벨 텍스트 컬러 설정
                         textSize = 11f //라벨 텍스트 크기
                     }
@@ -381,6 +379,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                 val marker = MyMarkerView(this, R.layout.markerviewtext)
                 marker.chartView = lineChart
                 lineChart.marker = marker
+
+
             }
             else -> {
 

@@ -358,7 +358,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 var size10 = 0
                 size10 = dpToPx(context!!, 3)
 
-                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(size10, size5))
+                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(9, 30))
 
             }
             else -> {

@@ -408,11 +408,11 @@ class WholeScheduleActivity : BaseActivity<ActivityWholeScheduleBinding>
 
 
                     ScheduleFindMainFragment.scheduleWholeAdapter?.let {
-                        ScheduleFindMainFragment.scheduleWholeAdapter.wholeList.forEach {
-                            if (it.id == editScheduleID) {
-                                it.name = binding.addMemoEditTitle.text.toString()
-                                it.memo = binding.addMemoEditContent.text.toString()
-                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList.indexOf(it))
+                        ScheduleFindMainFragment.scheduleWholeAdapter.wholeList!!.forEach {
+                            if (it!!.id == editScheduleID) {
+                                it!!.name = binding.addMemoEditTitle.text.toString()
+                                it!!.memo = binding.addMemoEditContent.text.toString()
+                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList!!.indexOf(it))
                             }
                         }
                     }

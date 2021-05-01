@@ -71,13 +71,19 @@ class MyPageEditService(val editView : MyPageEditView) {
     // 프로필 사진 설정
     fun tryPostMyProfileImage(file:MultipartBody.Part){
         val homeRetrofitInterface = ApplicationClass.sRetrofit.create(MyPageEditRetrofitInterface::class.java)
-        homeRetrofitInterface.postMyProfileImage(file).enqueue(object:Callback<SetProfileImageResponse>{
-            override fun onResponse(call: Call<SetProfileImageResponse>, response: Response<SetProfileImageResponse>) {
+        homeRetrofitInterface.postMyProfileImage(file).enqueue(object :
+            Callback<SetProfileImageResponse> {
+            override fun onResponse(
+                call: Call<SetProfileImageResponse>,
+                response: Response<SetProfileImageResponse>
+            ) {
                 editView.onPostProfileImageSuccess(response.body() as SetProfileImageResponse)
+                Log.d("TAG", "이미지onResponse: ")
             }
 
             override fun onFailure(call: Call<SetProfileImageResponse>, t: Throwable) {
                 editView.onPostProfileImageFailure(t.message ?: "프로필 사진 설정 관련 통신 오류")
+                Log.d("TAG", "이미지onFailure: ${t.message}")
             }
 
         })

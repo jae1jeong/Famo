@@ -102,7 +102,6 @@ class AskDialog(private val context: Context) {
         dialog = builder.create()
         dialog?.let{
             dialog!!.window?.setBackgroundDrawableResource(R.drawable.background_ask_dialog)
-
         }
         val params = WindowManager.LayoutParams()
         params.copyFrom(dialog?.window?.attributes)
@@ -113,6 +112,7 @@ class AskDialog(private val context: Context) {
         window?.attributes = params
         window?.setDimAmount(0.7f)
         window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        window?.setBackgroundDrawableResource(R.color.test)
     }
 
     fun dismiss() {

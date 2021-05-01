@@ -9,7 +9,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
@@ -109,23 +109,23 @@
                     android:layout_height="27dp"
                     android:src="@drawable/category_edit_plus" />
 
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+<!--                <androidx.core.widget.NestedScrollView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1">-->
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerview_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                </androidx.core.widget.NestedScrollView>
+<!--                </androidx.core.widget.NestedScrollView>-->
 
             </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/schedule_find_main_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

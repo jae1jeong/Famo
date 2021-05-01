@@ -482,7 +482,7 @@ class MainActivity() : BaseActivity<ActivityMainBinding>(ActivityMainBinding::in
                             if (it.id == editScheduleID) {
                                 it.name = binding.addMemoEditTitle.text.toString()
                                 it.memo = binding.addMemoEditContent.text.toString()
-                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList.indexOf(it))
+                                ScheduleFindMainFragment.scheduleWholeAdapter.notifyItemChanged(ScheduleFindMainFragment.wholeScheduleList!!.indexOf(it))
                             }
                         }
                     }}

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -37,7 +38,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindView,
     IScheduleCategoryRecyclerView {
@@ -143,7 +143,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
 //        총 페이지 버튼 수와 현재 페이지 설정
         Log.d("TAG", "wholePagingCnt : ${wholePagingCnt} ")
-        scheduleFindPaging!!.addBottomPageButton(10, 1);
+        scheduleFindPaging!!.addBottomPageButton(wholePagingCnt, 1);
 
 //        페이지 리스너를 클릭했을 때의 이벤트
         scheduleFindPaging!!.setOnPageSelectListener(object : OnPageSelectListener {
@@ -189,7 +189,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) {}
+        scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList) {}
         shimmer_main_layout.startShimmerAnimation()
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000)
@@ -270,7 +270,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                         )
                     recyclerviewWhole!!.setHasFixedSize(true)
 
-                    scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList, this) { it ->
+                    scheduleWholeAdapter = ScheduleWholeAdapter(wholeScheduleList) { it ->
                         val detailDialog = ScheduleDetailDialog(context!!)
                         val scheduleItem = MemoItem(
                             it.id,
@@ -358,7 +358,7 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
                 var size10 = 0
                 size10 = dpToPx(context!!, 3)
 
-                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(9, 30))
+                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(3, 20))
 
             }
             else -> {

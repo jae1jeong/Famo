@@ -138,10 +138,10 @@ class WholeLatelyScheduleFragment : BaseFragment<FragmentScheduleFindLatelyBindi
                         binding.wholeLatelySchedulePaging.addBottomPageButton(latelySchedulePagingCnt, 1)
 
                         var size5 = 0
-                        size5 = dpToPx(context!!, 10)
+                        size5 = dpToPx(context!!, 7)
 
                         var size10 = 0
-                        size10 = dpToPx(context!!, 3)
+                        size10 = dpToPx(context!!, 1)
 
                         binding.recyclerViewLately.addItemDecoration(MovieItemDecoration(size10,size5))
                         testCnt++

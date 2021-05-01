@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.marginLeft
@@ -27,17 +28,9 @@ import com.softsquared.template.kotlin.util.Constants
 
 class ScheduleWholeAdapter(
     var wholeList: ArrayList<ScheduleWholeData>,
-    myScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView,
     val clickListener: (ScheduleWholeData) -> Unit) :
     RecyclerView.Adapter<ScheduleWholeAdapter.ScheduleWholeHolder>(), ScheduleFindView,
     ScheduleBookmarkView {
-
-    var cnt = 1
-    private var iScheduleCategoryRecyclerView: IScheduleCategoryRecyclerView? = null
-
-    init {
-        this.iScheduleCategoryRecyclerView = myScheduleCategoryRecyclerView
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleWholeHolder {
 
@@ -68,7 +61,7 @@ class ScheduleWholeAdapter(
 
         val width = deviceWidth - 150
         holder.itemView.layoutParams.width = width / 2
-//
+
 //        val params = LinearLayout.LayoutParams(
 //            ViewGroup.LayoutParams.WRAP_CONTENT,
 //            ViewGroup.LayoutParams.WRAP_CONTENT
@@ -199,13 +192,5 @@ class ScheduleWholeAdapter(
 
     override fun onGetScheduleBookmarkFail(message: String) {
     }
-
-//    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        private val progressBar: ProgressBar
-//
-//        init {
-//            progressBar = itemView.findViewById(R.id.progressBar)
-//        }
-//    }
 
 }

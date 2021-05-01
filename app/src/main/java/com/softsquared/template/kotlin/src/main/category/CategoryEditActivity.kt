@@ -47,8 +47,6 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     var size: Int? = null
     var getCategoryID: String? = null
 
-    val intCategoryID = ArrayList<Int>()
-
     var dataSize = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,27 +54,12 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
         CategoryInquiryService(this).tryGetUserCategoryInquiry()
 
-        wholeName = intent.getStringExtra("name")
-        wholeColor = intent.getStringExtra("color")
-        size = intent.getIntExtra("size", 0)
-        getCategoryID = intent.getStringExtra("categoryID")
-        Log.d("TAG", "CategoryEditActivity : name : $wholeName")
-        Log.d("TAG", "CategoryEditActivity : wholeColor : $wholeColor")
-        Log.d("TAG", "CategoryEditActivity : size : $size")
-        Log.d("TAG", "CategoryEditActivity : categoryID : $getCategoryID")
-
-        if (wholeName != null && wholeColor != null && getCategoryID != null) {
-            name = wholeName!!.split(":")
-            color = wholeColor!!.split(":")
-            tempCategoryID = getCategoryID!!.split(":")
-        }
-
-        if (tempCategoryID != null) {
-            for (i in 0 until size!!) {
-                intCategoryID.add(tempCategoryID?.get(i)!!.toInt())
-                Log.d("TAG", "intCategoryID: $intCategoryID")
-            }
-        }
+//        if (tempCategoryID != null) {
+//            for (i in 0 until size!!) {
+//                intCategoryID.add(tempCategoryID?.get(i)!!.toInt())
+//                Log.d("TAG", "intCategoryID: $intCategoryID")
+//            }
+//        }
 
         //카테고리 추가
         binding.categoryEditBtnPlus.setOnClickListener {
@@ -99,6 +82,14 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
             finish()
         }
 
+    }
+
+    fun intentData(){
+        if (wholeName != null && wholeColor != null && getCategoryID != null) {
+            name = wholeName!!.split(":")
+            color = wholeColor!!.split(":")
+            tempCategoryID = getCategoryID!!.split(":")
+        }
     }
 
     //삭제다이얼로그
@@ -194,12 +185,12 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
     }
 
     override fun onMoveDeleteUpdate() {
-        val intent = Intent(this, CategoryEditActivity::class.java)
-        intent.putExtra("color", wholeColor)
-        intent.putExtra("name", wholeName)
-        intent.putExtra("size", size)
-        intent.putExtra("categoryID", getCategoryID)
-        startActivity(intent)
+//        val intent = Intent(this, CategoryEditActivity::class.java)
+//        intent.putExtra("color", wholeColor)
+//        intent.putExtra("name", wholeName)
+//        intent.putExtra("size", size)
+//        intent.putExtra("categoryID", getCategoryID)
+//        startActivity(intent)
     }
 
 
@@ -260,6 +251,16 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                             responseUser.data[i].colorInfo
                         )
                     )
+                    wholeName = intent.getStringExtra("name")
+                    wholeColor = intent.getStringExtra("color")
+                    size = responseUser.data.size
+                    getCategoryID = intent.getStringExtra("categoryID")
+                    Log.d("TAG", "CategoryEditActivity : name : $wholeName")
+                    Log.d("TAG", "CategoryEditActivity : wholeColor : $wholeColor")
+                    Log.d("TAG", "CategoryEditActivity : size : $size")
+                    Log.d("TAG", "CategoryEditActivity : categoryID : $getCategoryID")
+
+                    intentData()
                 }
 
                 binding.recyclerviewEditCategory.layoutManager = LinearLayoutManager(
@@ -268,7 +269,7 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
                 binding.recyclerviewEditCategory.setHasFixedSize(true)
                 binding.recyclerviewEditCategory.adapter = ScheduleCategoryEditAdapter(categoryList,this)
 //                scheduleCategoryAdapter.notifyDataSetChanged()
-
+                intentData()
             }
             else -> {
                 showCustomToast("실패 메시지 : ${responseUser.message}")
@@ -287,8 +288,5 @@ class CategoryEditActivity() : BaseActivity<ActivityCategoryEditBinding>
 
     override fun onGetCategoryInquiryFail(message: String) {
     }
-
-
-
 
 }

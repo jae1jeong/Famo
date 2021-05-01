@@ -2,24 +2,22 @@ package com.softsquared.template.kotlin.src.main.schedulefind
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lakue.pagingbutton.LakuePagingButton
 import com.lakue.pagingbutton.OnPageSelectListener
 import com.softsquared.template.kotlin.R
 import com.softsquared.template.kotlin.config.ApplicationClass
-import com.softsquared.template.kotlin.config.BaseFragment
 import com.softsquared.template.kotlin.config.BaseResponse
 import com.softsquared.template.kotlin.src.main.MainActivity
 import com.softsquared.template.kotlin.src.main.schedulefind.adapter.*
@@ -30,11 +28,13 @@ import com.softsquared.template.kotlin.util.Constants
 import com.softsquared.template.kotlin.util.MovieItemDecoration
 import com.softsquared.template.kotlin.util.ScheduleDetailDialog
 import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.*
+import kotlinx.android.synthetic.main.fragment_schedule_find_filter_bottom_dialog.view.*
 
 
 class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFilterInterface,
     CategoryFilterView, ScheduleFindView, View.OnClickListener,
-    SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener {
+    SchedulefindFilterBottomDialogFragment.OnDialogButtonClickListener,
+    IScheduleCategoryRecyclerView, DialogInterface.OnDismissListener {
 
     private var schedulefindFilterBottomDialogFragment: SchedulefindFilterBottomDialogFragment? =
         null
@@ -46,13 +46,17 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
     var categoryPagintCnt = 0
 
     // 카테고리-필터 조회 4가지 구분을 위한 변수
-    var leftPagintCnt = -1
-    var donePagintCnt = -1
-    var recentPagintCnt = -1
-    var pickPagintCnt = -1
+    var leftPagingCnt = -1
+    var donePagingCnt = -1
+    var recentPagingCnt = -1
+    var pickPagingCnt = -1
 
     //필터별 전체수를 위한 변수
     var totalCnt = 0
+    var leftCnt = 0
+    var doneCnt = 0
+    var recentCnt = 0
+    var pickCnt = 0
 
     //카테고리를 클릭한 것인지 확인하기 위한 변수
     var scheduleCategoryID = -1
@@ -148,15 +152,29 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             override fun onPageBefore(now_page: Int) {
                 //prev 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, now_page)
-                CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
 
+                if (pickPagingCnt > 0) {
+                    CategoryFilterService(this@ScheduleFindCategoryFragment)
+                        .tryGetFilterCategoryInquiry(
+                            scheduleCategoryID, "pick", ((now_page - 1) * 10), 10
+                        )
+                } else {
+                    CategoryInquiryService(this@ScheduleFindCategoryFragment)
+                        .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
+                }
             }
 
             override fun onPageCenter(now_page: Int) {
 
-                CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
+                if (pickPagingCnt > 0) {
+                    CategoryFilterService(this@ScheduleFindCategoryFragment)
+                        .tryGetFilterCategoryInquiry(
+                            scheduleCategoryID, "pick", ((now_page - 1) * 10), 10
+                        )
+                } else {
+                    CategoryInquiryService(this@ScheduleFindCategoryFragment)
+                        .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
+                }
 
             }
 
@@ -164,8 +182,18 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
             override fun onPageNext(now_page: Int) {
                 //next 버튼을 클릭하면 버튼이 재설정되고 버튼이 그려집니다.
                 catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, now_page)
-                CategoryInquiryService(this@ScheduleFindCategoryFragment)
-                    .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
+
+                if (pickPagingCnt > 0) {
+                    Log.d("TAG", "onPageNext: 확인")
+                    CategoryFilterService(this@ScheduleFindCategoryFragment)
+                        .tryGetFilterCategoryInquiry(
+                            scheduleCategoryID, "pick", ((now_page - 1) * 10), 10
+                        )
+                } else {
+                    CategoryInquiryService(this@ScheduleFindCategoryFragment)
+                        .tryGetCategoryInquiry(scheduleCategoryID, ((now_page - 1) * 10), 10)
+                }
+
             }
         })
 
@@ -192,6 +220,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         Log.d("TAG", "55555555555: 유져벌카테고일정조회 성공")
     }
 
+    //시간 1 > 3 > 2 순
     override fun onGetUserCategoryInquiryFail(message: String) {
     }
 
@@ -218,13 +247,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        size5 = dpToPx(context!!, 10)
-                        size10 = dpToPx(context!!, 3)
+                        size5 = dpToPx(context!!, 7)
+                        size10 = dpToPx(context!!, 1)
 
                         recyclerviewScheduleFindCategory!!.addItemDecoration(
                             MovieItemDecoration(
-                                size10,
-                                size5
+                                size10, size5
                             )
                         )
                         categoryPagintCnt++
@@ -337,8 +365,10 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                     recyclerviewScheduleFindCategory!!.visibility = View.VISIBLE
                     scheduleFindCategoryFrameLayoutNoItem!!.visibility = View.GONE
 
+                    //1+1 = 2
+
                     //남은일정필터
-                    if (leftPagintCnt % 4 == 1) {
+                    if (leftPagingCnt % 4 == 1) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -348,8 +378,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        leftPagintCnt++
-                        totalCnt++
+                        leftPagingCnt++
+                        leftCnt++
 
                         CategoryFilterService(this).tryGetFilterCategoryInquiry(
                             scheduleCategoryID,
@@ -358,7 +388,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             10
                         )
 
-                    } else if (totalCnt > 0) {
+                    } else if (leftCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -426,12 +456,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                                 (activity as MainActivity).stateChangeBottomSheet(Constants.EXPAND)
                             }
                         }
-                        totalCnt--
-                        leftPagintCnt--
+                        leftCnt--
+                        leftPagingCnt--
                     }
 
                     //완료일정필터
-                    if (donePagintCnt % 4 == 2) {
+                    if (donePagingCnt % 4 == 2) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -441,8 +471,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        donePagintCnt++
-                        totalCnt++
+                        donePagingCnt++
+                        doneCnt++
 
                         CategoryFilterService(this).tryGetFilterCategoryInquiry(
                             scheduleCategoryID,
@@ -451,8 +481,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             10
                         )
 
-
-                    } else if (totalCnt > 0) {
+                    } else if (doneCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -520,13 +549,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             }
 
                         }
-                        totalCnt--
-                        donePagintCnt--
+                        doneCnt--
+                        donePagingCnt--
                     }
 
 
                     //최근일정필터
-                    if (recentPagintCnt % 4 == 3) {
+                    if (recentPagingCnt % 4 == 3) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -536,8 +565,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        recentPagintCnt++
-                        totalCnt++
+                        recentPagingCnt++
+                        recentCnt++
 
                         CategoryFilterService(this).tryGetFilterCategoryInquiry(
                             scheduleCategoryID,
@@ -547,7 +576,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         )
 
 
-                    } else if (totalCnt > 0) {
+                    } else if (recentCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -615,13 +644,13 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             }
 
                         }
-                        totalCnt--
-                        recentPagintCnt--
+                        recentCnt--
+                        recentPagingCnt--
                     }
 
 
                     //즐겨찾기일정필터
-                    if (pickPagintCnt % 4 == 0) {
+                    if (pickPagingCnt % 4 == 0) {
                         val filterCnt = response.data.size
                         //페이징수 세팅
                         if (filterCnt % 10 == 0) {
@@ -631,8 +660,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        pickPagintCnt++
-                        totalCnt++
+                        pickPagingCnt++
+                        pickCnt++
 
                         CategoryFilterService(this).tryGetFilterCategoryInquiry(
                             scheduleCategoryID,
@@ -641,7 +670,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             10
                         )
 
-                    } else if (totalCnt > 0) {
+                    } else if (pickCnt > 0) {
 
                         if (response.data.size > 0) {
 
@@ -709,8 +738,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             }
 
                         }
-                        totalCnt--
-                        pickPagintCnt--
+//                        pickCnt--
+//                        pickPagingCnt--
                     }
                 }
                 //메모가 없으면
@@ -832,12 +861,18 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 
                     recyclerviewScheduleFindCategory!!.layoutManager =
                         GridLayoutManager(
-                            context, 2, GridLayoutManager.VERTICAL, false)
+                            context, 2, GridLayoutManager.VERTICAL, false
+                        )
 
-                    size5 = dpToPx(context!!, 10)
-                    size10 = dpToPx(context!!, 3)
+                    size5 = dpToPx(context!!, 7)
+                    size10 = dpToPx(context!!, 1)
+                    recyclerviewScheduleFindCategory!!.addItemDecoration(
+                        MovieItemDecoration(
+                            size10,
+                            size5
+                        )
+                    )
 
-                    recyclerviewScheduleFindCategory!!.addItemDecoration(MovieItemDecoration(size10,size5))
                     recyclerviewScheduleFindCategory!!.setHasFixedSize(true)
                     recyclerviewScheduleFindCategory!!.adapter = ScheduleSearchAdapter(searchList) {
 
@@ -850,8 +885,8 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                             it.scheduleMemo,
                             false,
                             null,
-                            null
-                            ,0)
+                            null, 0
+                        )
                         detailDialog.start(scheduleItem, null)
                         detailDialog.setOnModifyBtnClickedListener {
                             // 스케쥴 ID 보내기
@@ -884,7 +919,7 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
         when (v!!.id) {
             R.id.category_filter -> {
                 schedulefindFilterBottomDialogFragment =
-                    SchedulefindFilterBottomDialogFragment()
+                    SchedulefindFilterBottomDialogFragment(this)
                 schedulefindFilterBottomDialogFragment!!.setOnDialogButtonClickListener(this)
                 schedulefindFilterBottomDialogFragment!!.isCancelable = true
                 schedulefindFilterBottomDialogFragment!!.show(
@@ -906,54 +941,128 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
 //            layoutInflater.inflate(R.layout.fragment_schedule_find_filter_bottom_dialog, null);
 //        val abc: ImageView = view.findViewById(R.id.filter_btn_remain_squre)
 
-        when (view.id) {
-            R.id.filter_btn_remain -> {
-                leftPagintCnt = 1
+//        when (view.id) {
+//            R.id.filter_btn_remain_squre -> {
+//                leftPagingCnt = 1
+//
+//                Log.d("TAG", "onDialogButtonClick: 색변화좀")
+////                val abc: ImageView = view.findViewById(R.id.filter_btn_remain_squre)
+////                abc.visibility = View.VISIBLE
+////                R.id.filter_btn_remain_squre.visibility = View.VISIBLE
+//
+////                filter_btn_remain_squre.visibility = View.VISIBLE
+//
+//                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+//                    scheduleCategoryID,
+//                    "left",
+//                    0,
+//                    9999
+//                )
+////                schedulefindFilterBottomDialogFragment!!.dismiss()
+//            }
 
+//            R.id.filter_btn_completion -> {
+//                donePagingCnt = 2
+//
+//                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+//                    scheduleCategoryID,
+//                    "done",
+//                    0,
+//                    9999
+//                )
+//                schedulefindFilterBottomDialogFragment!!.dismiss()
+//            }
+//
+//            R.id.filter_btn_recents -> {
+//                recentPagingCnt = 3
+//                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+//                    scheduleCategoryID,
+//                    "recent",
+//                    0,
+//                    9999
+//                )
+//                schedulefindFilterBottomDialogFragment!!.dismiss()
+//            }
+//
+//            R.id.filter_btn_bookmark -> {
+//                pickPagingCnt = 0
+//                CategoryFilterService(this).tryGetFilterCategoryInquiry(
+//                    scheduleCategoryID,
+//                    "pick",
+//                    0,
+//                    9999
+//                )
+//                schedulefindFilterBottomDialogFragment!!.dismiss()
+//            }
+
+
+//        }
+    }
+
+    override fun onItemMoveBtnClicked(scheduleCategoryID: Int) {
+
+        val scheduleFindCategoryFragment = ScheduleFindCategoryFragment()
+        val bundle = Bundle()
+//        bundle.putInt("categoryID", position)
+        bundle.putInt("scheduleCategoryID", scheduleCategoryID)
+        scheduleFindCategoryFragment.arguments = bundle
+        childFragmentManager.beginTransaction()
+            .replace(R.id.schedule_find_main_fragment, scheduleFindCategoryFragment)
+            .commit()
+    }
+
+    override fun onColor(): ArrayList<String> {
+
+        val aa = ArrayList<String>()
+        return aa
+    }
+
+    override fun onClickedTwice() {
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+
+        val checkNum = ApplicationClass.sSharedPreferences.getInt(Constants.FILTER_CHECH_NUM,0)
+
+        when(checkNum){
+            1 -> {
+                leftPagingCnt = 1
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,
                     "left",
                     0,
                     9999
                 )
-                schedulefindFilterBottomDialogFragment!!.dismiss()
             }
-
-            R.id.filter_btn_completion -> {
-                donePagintCnt = 2
-
+            2 -> {
+                donePagingCnt = 2
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,
                     "done",
                     0,
                     9999
                 )
-                schedulefindFilterBottomDialogFragment!!.dismiss()
             }
-
-            R.id.filter_btn_recents -> {
-                recentPagintCnt = 3
+            3 -> {
+                recentPagingCnt = 3
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,
                     "recent",
                     0,
                     9999
                 )
-                schedulefindFilterBottomDialogFragment!!.dismiss()
             }
-
-            R.id.filter_btn_bookmark -> {
-                pickPagintCnt = 0
+            4 -> {
+                pickPagingCnt = 0
                 CategoryFilterService(this).tryGetFilterCategoryInquiry(
                     scheduleCategoryID,
                     "pick",
                     0,
                     9999
                 )
-                schedulefindFilterBottomDialogFragment!!.dismiss()
             }
-
-
         }
+
     }
+
 }

@@ -46,6 +46,8 @@
 
     <color name="graph_color">#e8ebf2</color>
 
+    <color name="test">#00000000</color>
+
 
 
 </resources>

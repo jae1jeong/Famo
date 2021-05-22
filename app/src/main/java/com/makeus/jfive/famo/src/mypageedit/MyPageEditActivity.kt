@@ -146,6 +146,8 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 binding.myPageEditMentTopArrow.visibility = View.GONE
 
                 binding.myPageEditTopMentView.visibility = View.VISIBLE
+
+                binding.myPageEditLinearDdaySetting.visibility = View.GONE
             }
 
             topMentCnt++
@@ -496,7 +498,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 val email = ApplicationClass.sSharedPreferences.getString(
                     Constants.KAKAO_EMAIL,
-                    null
+                    "1"
                 )
 
                 val dDayCheck = ApplicationClass.sSharedPreferences
@@ -512,7 +514,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
 
                 if (response.loginMethod == "K") {
 
-                    if (response.profileImageURL == null) {
+                    if (response.profileImageURL == "null") {
                         //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
                         Glide.with(this).load(kakaoImg)
                             .error(R.drawable.my_page_img2)
@@ -524,7 +526,13 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                             .centerCrop().into(binding.myPageEditImg)
                     }
 
-                    binding.myPageEditAccountMail.setText(email)
+                    Log.d("TAG", "onGetMyPageSuccess: email : $email")
+                    if (email == "null") {
+                        binding.myPageEditAccountMail.setText("이메일공개를 동의하지 않으셨습니다.")
+                    } else {
+                        binding.myPageEditAccountMail.setText(email)
+                    }
+
 
                 }
 
@@ -559,7 +567,7 @@ class MyPageEditActivity : BaseActivity<ActivityMyPageEditBinding>
                 }
 
 
-                binding.myPageEditDay.setText("D"+response.Dday)
+                binding.myPageEditDay.setText("D" + response.Dday)
 
 //                if (Integer.parseInt(dday) <= 0){
 //                    binding.myPageEditDay.setText("0")

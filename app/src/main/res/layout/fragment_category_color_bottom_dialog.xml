@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -65,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:gravity="center">
+            android:gravity="center_horizontal">
 
             <TableRow>
 
@@ -78,7 +80,8 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/category_color_1"
-                        android:visibility="visible"/>
+                        android:visibility="visible"
+                    />
 
                     <ImageView
                         android:id="@+id/category_edit_color1_check"
@@ -286,20 +289,30 @@
 
         </TableLayout>
 
-        <android.widget.Button
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/category_edit_no_save"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/category_edit_tv_complete"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="#909192"
-            android:lineSpacingExtra="8sp"
-            android:layout_marginTop="50dp"
             android:background="@drawable/background_in_btn"
-            android:visibility="visible"/>
+            android:layout_marginTop="50dp">
 
-        <android.widget.Button
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_edit_tv_complete"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#909192"
+                android:lineSpacingExtra="8sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
             android:id="@+id/category_edit_save"
             android:layout_width="match_parent"
             android:layout_height="50dp"

@@ -63,7 +63,7 @@
 
             <TextView
                 android:layout_marginTop="10dp"
-                android:id="@+id/today_text_no_item"
+                android:id="@+id/whole_bookmark_tv_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"

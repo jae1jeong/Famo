@@ -1,7 +1,9 @@
 package com.makeus.jfive.famo.src.wholeschedule.bookmark
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lakue.pagingbutton.OnPageSelectListener
@@ -16,6 +18,7 @@ import com.makeus.jfive.famo.src.wholeschedule.WholeScheduleActivity
 import com.makeus.jfive.famo.src.wholeschedule.bookmark.adapter.WholeScheduleBookmarkAdapter
 import com.makeus.jfive.famo.util.Constants
 import com.makeus.jfive.famo.util.ScheduleDetailDialog
+import com.softsquared.template.kotlin.util.MovieItemDecoration
 import kotlinx.android.synthetic.main.category_delete_impossible_dialog.*
 import java.util.ArrayList
 
@@ -37,16 +40,17 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
         wholeScheduleBookmarkAdapter = WholeScheduleBookmarkAdapter(bookmarkListWhole){}
 
-        binding.scheduelFindBookmarkImageNoItem.setOnClickListener {
-            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.COLLASPE)
-        }
+        //일정이 없을 떄 클릭 시 작성
+//        binding.scheduelFindBookmarkImageNoItem.setOnClickListener {
+//            (activity as WholeScheduleActivity).stateChangeBottomSheet(Constants.COLLASPE)
+//        }
 
         //페이징 수를 위해 설정
         if (testCnt > 0) {
             WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 10)
         } else {
             showLoadingDialog(context!!)
-            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 999)
+            WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 9999)
         }
 
 
@@ -88,6 +92,14 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
 
     }
 
+    private fun dpToPx(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.resources.displayMetrics
+        )
+            .toInt()
+    }
 
     override fun onGetScheduleBookmarkSuccess(response: ScheduleBookmarkResponse) {
 
@@ -99,6 +111,7 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                 if (response.data.size == 0) {
                     binding.scheduleFindBookmark!!.visibility = View.GONE
                     binding.scheduleFindBookmarkFrameLayoutNoItem!!.visibility = View.VISIBLE
+                    binding.wholeBookmarkTvItem.text = "즐겨찾기한 메모가 없습니다.\n이곳에서는 작성이 불가능합니다."
 
                 } else {
                     binding.scheduleFindBookmark!!.visibility = View.VISIBLE
@@ -112,9 +125,15 @@ class WholeScheduleBookmarkFragment : BaseFragment<FragmentScheduleFindBookmarkB
                             bookmarkSchedulePagingCnt = (cnt / 10) + 1
                         }
                         binding.wholeBookmarkSchedulePaging.addBottomPageButton(
-                                bookmarkSchedulePagingCnt,
-                                1
-                        )
+                                bookmarkSchedulePagingCnt, 1)
+
+                        var size5 = 0
+                        size5 = dpToPx(context!!, 10)
+
+                        var size10 = 0
+                        size10 = dpToPx(context!!, 3)
+
+                        binding.recyclerViewBookmark.addItemDecoration(MovieItemDecoration(size10,size5))
                         testCnt++
                         WholeBookmarkScheduleService(this).tryGetScheduleBookmark(0, 10)
 

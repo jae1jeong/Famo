@@ -65,6 +65,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
             val intent = Intent(this, MyPageEditActivity::class.java)
             intent.putExtra("check", check)
             startActivity(intent)
+            finish()
         }
 
         //뒤로가기
@@ -126,10 +127,12 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //                val kakaoName:String? = ApplicationClass.sSharedPreferences.getString(Constants.KAKAO_USER_NICKNAME,null)
 //                val famoName = ApplicationClass.sSharedPreferences.getString(Constants.USER_NICKNAME,null)
 
+                Log.d("TAG", "사전 확인 profileImageURL: ${response.profileImageURL}")
                 if (response.loginMethod == "K") {
 
-                    if (response.profileImageURL == null) {
+                    if (response.profileImageURL == "null") {
                         //카톡프사가 없을때 기본이미지 적용, 있으면 있는거 적용
+                        Log.d("TAG", "profileImageURL: ㅇㅇㅇ")
                         Glide.with(this).load(kakaoImg)
                             .error(R.drawable.my_page_img2)
                             .centerCrop().into(binding.myPageImg)

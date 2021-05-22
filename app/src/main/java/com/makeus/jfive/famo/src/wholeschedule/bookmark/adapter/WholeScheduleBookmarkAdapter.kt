@@ -41,9 +41,8 @@ class WholeScheduleBookmarkAdapter(var bookmarkListWhole:ArrayList<WholeSchedule
         val deviceWidth = ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(),0)
         Log.d("TAG", "width: $deviceWidth")
 
-        val width = deviceWidth - 160
-
-        holder.itemView.layoutParams.width = width/2
+        val width = deviceWidth - 150
+        holder.itemView.layoutParams.width = width / 2
 
         holder.itemView.setOnClickListener {
             clickListener(bookmarkListWhole[position])

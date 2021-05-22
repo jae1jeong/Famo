@@ -44,6 +44,7 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
 
         //카카오 로그인 초기화
         KakaoSdk.init(this, "850f56e3e5ba5613faf68a8aaa4b95bc")
+        // / : 릴리즈 zn : 앱서명키
 
 //        카카오로그인 공통 callback
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
@@ -61,9 +62,11 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
                     val refreshToken = token.refreshToken
                     if (user.kakaoAccount?.profile!!.thumbnailImageUrl != null){
                         kakaoUrl = user.kakaoAccount!!.profile!!.thumbnailImageUrl
+                        Log.d("TAG", "kakaoUrl: $kakaoUrl")
                     }
 
                     kakaoEmail = user.kakaoAccount!!.email.toString()
+                    Log.d("TAG", "kakaoEmail: $kakaoEmail")
 
 //                    val intent = Intent(this, MainActivity::class.java)
 //                    intent.putExtra("accessToken",accessToken)
@@ -122,7 +125,6 @@ class LoginInformation:BaseActivity<ActivityLoginInfoBinding>(ActivityLoginInfoB
 
             101 -> {
                 Log.d("TAG", "onGetKakaoLoginSuccess: 소셜로그인 요청 성공,  계정인 경우첫 번호 입력 화면으로 이")
-                showCustomToast("카카오 로그인 성공")
                 val intent = Intent(this,KakaoLoginNumberActivity::class.java)
                 startActivity(intent)
             }

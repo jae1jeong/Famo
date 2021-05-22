@@ -61,31 +61,29 @@ class ScheduleWholeAdapter(
             ApplicationClass.sSharedPreferences.getInt(Constants.DEVICE_WIDTH.toString(), 0)
         Log.d("TAG", "width: $deviceWidth")
 
-        val width = deviceWidth - 120
-
+        val width = deviceWidth - 150
         holder.itemView.layoutParams.width = width / 2
-
+//
 //        val params = LinearLayout.LayoutParams(
 //            ViewGroup.LayoutParams.WRAP_CONTENT,
 //            ViewGroup.LayoutParams.WRAP_CONTENT
 //        )
-
-//        val secondParams = LinearLayout.LayoutParams(
+//
+//        val params2 = LinearLayout.LayoutParams(
 //            ViewGroup.LayoutParams.WRAP_CONTENT,
 //            ViewGroup.LayoutParams.WRAP_CONTENT
 //        )
-
-//        params.setMargins(0, 0,  0,50) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
-//        secondParams.setMargins(50, 0,  0,0) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
-//        secondParams.gravity = Gravity.RIGHT
-////
+//
+//        params.setMargins(40, 0,  2,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
+//        params2.setMargins(0, 0,  0,40) // 왼쪽, 위, 오른쪽, 아래 순서입니다.
 //        if (cnt % 2 != 0){
-//            Log.d("TAG", "onBindViewHolder: 마진테스트1")
-////            holder.itemView.layoutParams = secondParams
+//            Log.d("TAG", "onBindViewHolder: 마진테스트1 : ${holder.itemView.layoutParams.width}")
+//
+////            holder.itemView.layoutParams = params2
 //            cnt++
 //        }else{
-//            Log.d("TAG", "onBindViewHolder: 마진테스트2")
-//            holder.itemView.layoutParams = secondParams
+//            Log.d("TAG", "onBindViewHolder: 마진테스트2 : ${holder.itemView.layoutParams.width}")
+////            holder.itemView.layoutParams = params
 //            cnt++
 //        }
 

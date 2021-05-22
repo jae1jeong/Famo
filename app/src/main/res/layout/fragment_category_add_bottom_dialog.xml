@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:src="@drawable/background_bottom_sheet_dialog_add_memo"
-    android:paddingBottom="50dp">
+    android:paddingBottom="50dp"
+    android:src="@drawable/background_bottom_sheet_dialog_add_memo">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,8 +24,8 @@
                 android:id="@+id/category_add_x_btn"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/category_edit_x_btn" />
 
             <TextView
@@ -33,35 +33,35 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/category_edit_tv_add"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:textColor="@color/black" />
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <EditText
             android:id="@+id/category_add_et"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="@string/category_edit_et_add"
-            android:text=""
-            android:textStyle="normal"
-            android:textSize="16sp"
-            android:textColor="#a7adb5"
-            android:maxLines="1"
-            android:background="@drawable/background_category_edit"
             android:layout_marginTop="32dp"
+            android:background="@drawable/background_category_edit"
+            android:hint="@string/category_edit_et_add"
+            android:maxLines="1"
             android:paddingLeft="15dp"
+            android:paddingTop="13dp"
             android:paddingBottom="13dp"
-            android:paddingTop="13dp"/>
+            android:text=""
+            android:textColor="#a7adb5"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
             android:text="@string/category_edit_tv_color"
-            android:textStyle="normal"
-            android:textSize="16sp"
             android:textColor="#6e7a8b"
-            android:layout_marginTop="36dp" />
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
         <TableLayout
             android:layout_width="match_parent"
@@ -94,10 +94,9 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
                 <RelativeLayout
@@ -296,35 +295,42 @@
 
         </TableLayout>
 
-        <android.widget.Button
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/category_add_no_save"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/category_edit_tv_complete"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="#909192"
-            android:lineSpacingExtra="8sp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/background_in_btn"
-            android:visibility="visible"/>
+            android:background="@drawable/background_in_btn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="8sp"
+                android:text="@string/category_edit_tv_complete"
+                android:textColor="#909192"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <android.widget.Button
             android:id="@+id/category_add_save"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/category_edit_tv_complete"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            android:lineSpacingExtra="8sp"
             android:layout_marginTop="50dp"
             android:background="@drawable/background_btn"
-            android:visibility="gone"/>
+            android:lineSpacingExtra="8sp"
+            android:text="@string/category_edit_tv_complete"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </LinearLayout>
-
-
 
 
 </LinearLayout>

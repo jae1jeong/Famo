@@ -7,7 +7,7 @@
     <data>
         <variable
             name="todayMemo"
-            type="com.softsquared.template.kotlin.src.main.today.models.MemoItem" />
+            type="com.makeus.jfive.famo.src.main.today.models.MemoItem" />
     </data>
 
     <androidx.cardview.widget.CardView

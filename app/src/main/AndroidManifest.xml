@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.softsquared.template.kotlin">
+    package="com.makeus.jfive.famo">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 카메라 -->
     <uses-feature
@@ -15,40 +15,42 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name="com.softsquared.template.kotlin.config.ApplicationClass"
+        android:name="com.makeus.jfive.famo.config.ApplicationClass"
         android:allowBackup="false"
         android:icon="@drawable/famo_app_logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup">
+        android:debuggable="false"
+        tools:ignore="HardcodedDebugMode"
+        >
 
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.agree.AgreeActivity"
+            android:name="com.makeus.jfive.famo.src.auth.agree.AgreeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- MyPageEdit -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.mypageedit.MyPageEditActivity"
+            android:name="com.makeus.jfive.famo.src.mypageedit.MyPageEditActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 일정검색 -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.searchhistories.ScheduleSearchActivity"
+            android:name="com.makeus.jfive.famo.src.searchhistories.ScheduleSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.softsquared.template.kotlin.src.wholeschedule.WholeScheduleActivity"
+            android:name="com.makeus.jfive.famo.src.wholeschedule.WholeScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- MyPage -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.mypage.MyPageActivity"
+            android:name="com.makeus.jfive.famo.src.mypage.MyPageActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- CategoryEdit -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.main.category.CategoryEditActivity"
+            android:name="com.makeus.jfive.famo.src.main.category.CategoryEditActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.kakaologin.KakaoLoginNumberActivity"
+            android:name="com.makeus.jfive.famo.src.auth.kakaologin.KakaoLoginNumberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.softsquared.template.kotlin.src.splash.SplashActivity"
+            android:name="com.makeus.jfive.famo.src.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -58,7 +60,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.softsquared.template.kotlin.src.main.MainActivity"
+            android:name="com.makeus.jfive.famo.src.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -70,36 +72,36 @@
         <!-- Auth -->
         <!-- Information -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.information.InformationActivity"
+            android:name="com.makeus.jfive.famo.src.auth.information.InformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Login_Information -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
+            android:name="com.makeus.jfive.famo.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Login -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.login.LoginActivity"
-            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
+            android:name="com.makeus.jfive.famo.src.auth.login.LoginActivity"
+            android:parentActivityName="com.makeus.jfive.famo.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- SignUp -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.signup.SignUpActivity"
-            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
+            android:name="com.makeus.jfive.famo.src.auth.signup.SignUpActivity"
+            android:parentActivityName="com.makeus.jfive.famo.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 아이디/비밀번호 찾기 -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
-            android:parentActivityName="com.softsquared.template.kotlin.src.auth.loginInformation.LoginInformation"
+            android:name="com.makeus.jfive.famo.src.auth.find.FindUserActivity"
+            android:parentActivityName="com.makeus.jfive.famo.src.auth.loginInformation.LoginInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 아이디/비밀번호 찾기 결과 -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.findresult.FindResultActivity"
-            android:parentActivityName="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
+            android:name="com.makeus.jfive.famo.src.auth.findresult.FindResultActivity"
+            android:parentActivityName="com.makeus.jfive.famo.src.auth.find.FindUserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 비밀번호 재설정 -->
         <activity
-            android:name="com.softsquared.template.kotlin.src.auth.setnewpassword.SetNewPasswordActivity"
-            android:parentActivityName="com.softsquared.template.kotlin.src.auth.find.FindUserActivity"
+            android:name="com.makeus.jfive.famo.src.auth.setnewpassword.SetNewPasswordActivity"
+            android:parentActivityName="com.makeus.jfive.famo.src.auth.find.FindUserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- 카카오 로그인 -->
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
@@ -117,7 +119,7 @@
         </activity> <!-- 카메라 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.softsquared.template.kotlin.fileprovider"
+            android:authorities="com.makeus.jfive.famo.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

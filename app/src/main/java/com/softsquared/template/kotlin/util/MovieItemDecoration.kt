@@ -41,8 +41,12 @@ class MovieItemDecoration(
             // 첫번 째 줄 아이템
 //            outRect.top = size10
 //            outRect.bottom = size10
+            outRect.top = size5
+            outRect.bottom = size5
         } else {
 //            outRect.bottom = size10
+            outRect.top = size5
+            outRect.bottom = size5
         }
 
         // spanIndex = 0 -> 왼쪽
@@ -60,15 +64,14 @@ class MovieItemDecoration(
 //            outRect.right = size10
         } else if (spanIndex == 1) {
             //오른쪽 아이템
-            outRect.right = size10
             outRect.left = size5
+            outRect.right = size10
 
 //            outRect.right = Gravity.RIGHT
 
         }
-        outRect.top = size5
+
 //        outRect.right = size10
-        outRect.bottom = size5
 //        outRect.left = size10
     }
 

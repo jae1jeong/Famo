@@ -247,12 +247,12 @@ class ScheduleFindCategoryFragment : Fragment(), CategoryInquiryView, CategoryFi
                         }
                         catogorySchedulePaging!!.addBottomPageButton(categorySchedulePagingCnt, 1)
 
-                        size5 = dpToPx(context!!, 7)
-                        size10 = dpToPx(context!!, 1)
+//                        size5 = dpToPx(context!!, 7)
+//                        size10 = dpToPx(context!!, 1)
 
                         recyclerviewScheduleFindCategory!!.addItemDecoration(
                             MovieItemDecoration(
-                                size10, size5
+                                3, 16
                             )
                         )
                         categoryPagintCnt++

@@ -174,6 +174,8 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
             }
         })
 
+        recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(3, 16))
+
         return view
 
     }
@@ -357,8 +359,6 @@ class ScheduleFindMainFragment : Fragment(), CategoryInquiryView, ScheduleFindVi
 
                 var size10 = 0
                 size10 = dpToPx(context!!, 3)
-
-                recyclerviewWhole!!.addItemDecoration(MovieItemDecoration(3, 20))
 
             }
             else -> {

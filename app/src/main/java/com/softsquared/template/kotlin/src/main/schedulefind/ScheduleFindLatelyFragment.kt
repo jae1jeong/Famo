@@ -34,7 +34,6 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
     var scheduleFindLatelyFrameLayoutNoItem: FrameLayout? = null
     var scheduelFindLatelyImageNoItem : ImageView? = null
 
-
     companion object{
         val latelyListWhole: ArrayList<WholeScheduleLatelyData> = arrayListOf()
         lateinit var scheduleLatelyAdapter:ScheduleLatelyAdapter
@@ -148,8 +147,6 @@ class ScheduleFindLatelyFragment : Fragment(), WholeLatelyScheduleView {
                     }
                     recyclerViewLately!!.adapter = scheduleLatelyAdapter
                 }
-
-
 
             }
             else -> {

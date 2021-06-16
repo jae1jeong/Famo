@@ -39,7 +39,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
     var cameraImg: Bitmap? = null
     val monthsAchievementsMap: Map<String, Int> = mapOf()
 
-    val temList10: ArrayList<String> = ArrayList()
+    val monthlyList: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -234,8 +234,8 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 //                val scheduleId = memoJsonObject.get("scheduleID").asInt
                 val month = hashMap.get("")
 
-                val list = hashMap.toString()
-                val temList = list.substring(1, list.length - 1)
+                val wholeList = hashMap.toString()
+                val temList = wholeList.substring(1, wholeList.length - 1)
 
                 //그래프 시작
                 val lineChart = findViewById<View>(R.id.chart) as LineChart
@@ -248,21 +248,21 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
                     val temList2 = temList.split(",".toRegex()).toTypedArray()
                     //월
-                    val temList3: ArrayList<String> = ArrayList()
+                    val monthlyTemp: ArrayList<String> = ArrayList()
                     //달성률
-                    val temList4: ArrayList<String> = ArrayList()
+                    val achievementList: ArrayList<String> = ArrayList()
 
                     for (i in temList2.indices) {
-                        temList3.add(temList2[i].split("=".toRegex()).toTypedArray()[0])
-                        temList4.add(temList2[i].split("=".toRegex()).toTypedArray()[1])
+                        monthlyTemp.add(temList2[i].split("=".toRegex()).toTypedArray()[0])
+                        achievementList.add(temList2[i].split("=".toRegex()).toTypedArray()[1])
                     }
 
-                    for (i in 0 until temList3.size) {
-                        temList10.add(temList3[i].split("-")[1])
+                    for (i in 0 until monthlyTemp.size) {
+                        monthlyList.add(monthlyTemp[i].split("-")[1])
                     }
 
-                    for (i in 0 until temList10.size) {
-                        entries.add(Entry((i + 1).toFloat(), temList4[i].toFloat()))
+                    for (i in 0 until monthlyList.size) {
+                        entries.add(Entry((i + 1).toFloat(), achievementList[i].toFloat()))
                     }
                 }else{
                     entries.add(Entry(0F,0F))
@@ -351,7 +351,7 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
                     xAxis.run {
                         position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
                         axisMaximum =
-                            (temList10.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                            (monthlyList.size.toFloat()) //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
                         axisMinimum = 0f // 최소값 0
 //                        axisMinimum = 0F // 최소값 0
                         granularity = 1f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
@@ -398,16 +398,16 @@ class MyPageActivity : BaseActivity<ActivityMyPageBinding>(ActivityMyPageBinding
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
 
-            val test = ArrayList<String>()
+            val xList = ArrayList<String>()
 
 //            for (i in temList10.size - 1 downTo 0) {
 //                test.add(temList10[i] + "월")
 //            }
 
-            for (i in 0 until temList10.size) {
-                test.add(temList10[i] + "월")
+            for (i in 0 until monthlyList.size) {
+                xList.add(monthlyList[i] + "월")
             }
-            return test.getOrNull(value.toInt() - 1) ?: value.toString()
+            return xList.getOrNull(value.toInt() - 1) ?: value.toString()
 
         }
 

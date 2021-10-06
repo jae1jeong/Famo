@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="3dp"
+    >
+    <TextView
+        android:layout_margin="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/calendar_header_text_month_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="46sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/calendar_header_layout_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/calendar_header_text_month_title"
+        app:layout_constraintStart_toEndOf="@id/calendar_header_text_month_title">
+
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:id="@+id/calendar_header_text_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_marginStart="7dp"
+            android:layout_width="10dp"
+            android:layout_height="15dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/today_write_down_arrow" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/calendar_header_btn_left"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/monthly_arrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintEnd_toStartOf="@+id/textView17"
+        app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+    <ImageView
+        android:id="@+id/calendar_header_btn_right"
+        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/monthly_header_right"
+        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+    <TextView
+        android:gravity="center"
+        android:background="@drawable/background_text_monthly_today"
+        android:id="@+id/textView17"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="45dp"
+        android:text="@string/today"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/calendar_header_text_month_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/calendar_header_text_month_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
+        android:weightSum="7"
+        app:layout_constraintTop_toBottomOf="@+id/calendar_header_layout_year">
+
+        <TextView
+            android:id="@+id/calendar_header_text_sun"
+            android:fontFamily="sans-serif-medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="sun"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_mon"
+            android:fontFamily="sans-serif-medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="mon"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_tue"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="tue"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_wed"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="wed"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_thu"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="thu"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_fri"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="fri"
+            android:textColor="@color/schedule_find_text" />
+
+        <TextView
+            android:id="@+id/calendar_header_text_sat"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="sat"
+            android:textColor="@color/schedule_find_text" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

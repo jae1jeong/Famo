@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:weightSum="20"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_marginTop="35dp"
+        android:layout_weight="2"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/login_info_image_logo"
+        android:layout_width="100dp"
+        android:layout_height="26dp"
+        android:src="@drawable/login_home_famo_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:layout_marginTop="13dp"
+        android:textSize="20sp"
+        android:text="@string/login_info_title"
+        android:gravity="center_horizontal"
+        android:id="@+id/login_info_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/login_info_image_logo" />
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="15"
+        android:id="@+id/imageView2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/login_home_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_info_text_title" />
+
+    <Button
+        android:background="@drawable/background_btn_kakao"
+        android:text="카카오 계정으로 로그인"
+        android:layout_marginHorizontal="20dp"
+        android:id="@+id/login_info_btn_kakao_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#3a1d1e"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:layout_marginHorizontal="20dp"
+        android:id="@+id/login_info_btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_btn"
+        android:text="@string/login_info_btn_login"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_marginStart="20dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="15dp"
+            android:id="@+id/login_info_text_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_info_sign_up"
+            app:layout_constraintStart_toStartOf="@+id/login_info_btn_login"
+            app:layout_constraintTop_toBottomOf="@+id/login_info_btn_login" />
+
+        <View
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            />
+        <TextView
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="15dp"
+            android:id="@+id/login_info_text_find_id_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_info_find_id_password"
+            app:layout_constraintEnd_toEndOf="@+id/login_info_btn_login"
+            app:layout_constraintTop_toBottomOf="@+id/login_info_btn_login" />
+
+    </LinearLayout>
+
+</LinearLayout>

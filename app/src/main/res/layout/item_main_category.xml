@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_category_text"
+    android:layout_width="wrap_content"
+    android:layout_height="27dp"
+    android:layout_marginEnd="5dp"
+    android:background="@drawable/background_main_category"
+    android:gravity="center"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="2dp"
+    android:text="글많이길지롱하하하하하하"
+    android:textColor="#aeb7c4"
+    android:textSize="12sp"
+    android:textStyle="bold" />

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="회원탈퇴"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginRight="8.5dp"
+            android:background="@color/view_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="41dp"
+            android:gravity="center_horizontal"
+            android:textColor="#a7adb5"
+            android:textSize="13sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18"
+            android:text="정말 탈퇴하시겠습니?" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19">
+
+
+            <Button
+                android:id="@+id/account_cancel"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:background="@color/view_color"
+                android:text="아니오"
+                android:textStyle="normal"
+                android:textSize="15sp"
+                android:textColor="#a7adb5"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <Button
+                android:id="@+id/account_check"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="#ffae2a"
+                android:text="네"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textStyle="normal"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

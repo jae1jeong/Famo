@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="50dp"
+    android:src="@drawable/background_bottom_sheet_dialog_add_memo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="21dp">
+
+            <ImageView
+                android:id="@+id/category_add_x_btn"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/category_edit_x_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/category_edit_tv_add"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/category_add_et"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/background_category_edit"
+            android:hint="@string/category_edit_et_add"
+            android:maxLines="1"
+            android:paddingLeft="15dp"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:text=""
+            android:textColor="#a7adb5"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="@string/category_edit_tv_color"
+            android:textColor="#6e7a8b"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:gravity="center">
+
+            <TableRow>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/category_color1_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_2" />
+
+                    <ImageView
+                        android:id="@+id/category_color2_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_3" />
+
+                    <ImageView
+                        android:id="@+id/category_color3_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_4" />
+
+                    <ImageView
+                        android:id="@+id/category_color4_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="12dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_5" />
+
+                    <ImageView
+                        android:id="@+id/category_color5_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </TableRow>
+
+            <TableRow android:layout_marginTop="20dp">
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_6"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_6" />
+
+                    <ImageView
+                        android:id="@+id/category_color6_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_7"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_7" />
+
+                    <ImageView
+                        android:id="@+id/category_color7_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_8"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_8" />
+
+                    <ImageView
+                        android:id="@+id/category_color8_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="22dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_9"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_9" />
+
+                    <ImageView
+                        android:id="@+id/category_color9_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="12dp">
+
+                    <ImageView
+                        android:id="@+id/category_color_10"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/category_color_10" />
+
+                    <ImageView
+                        android:id="@+id/category_color10_check"
+                        android:layout_width="18dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/category_color_check"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </TableRow>
+
+        </TableLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/category_add_no_save"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/background_in_btn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="8sp"
+                android:text="@string/category_edit_tv_complete"
+                android:textColor="#909192"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <android.widget.Button
+            android:id="@+id/category_add_save"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/background_btn"
+            android:lineSpacingExtra="8sp"
+            android:text="@string/category_edit_tv_complete"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

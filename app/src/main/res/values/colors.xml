@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fcfcfc</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FFAE2A</color>
+
+    <!-- 기본 -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="view_color">#f2f3f7</color>
+    <!-- 스테이터스 바-->
+    <color name="colorForStatusBar">#D7D6D7</color>
+    <color name="whiteForBackground">#FFFFFF</color>
+    <color name="blackForText">#4a4a4a</color>
+    <color name="redForText">#d9534f</color>
+    <color name="gray">#888484</color>
+
+    <color name="transparent_black">#77000000</color>
+    <color name="light_gray">#F9FAFC</color>
+    <color name="text_gray">#AEB7C4</color>
+
+    <!-- 프로젝트 컬러-->
+    <color name="orange">#FFAE2A</color>
+    <color name="white_orange">#FCBC71</color>
+    <color name="white_red">#FF8484</color>
+    <color name="purple">#AB93FA</color>
+    <color name="blue">#7CC3FF</color>
+    <color name="green">#7ED391</color>
+
+    <color name="stroke_gray">#B0B7C3</color>
+    <color name="button_gray">#E7E8ED</color>
+    <color name="light_dark">#32363C</color>
+
+    <color name="transparent">#00000000</color>
+
+
+    <color name="auth_button_gray">#F2F3F7</color>
+    <color name="auth_button_text">#CED5D9</color>
+    <color name="auth_text_normal_black">#79879A</color>
+
+    <color name="add_btn">#FFAE2A</color>
+
+    <color name="item_today_month_text">#505C6C</color>
+
+    <color name="schedule_find_text">#aeb7c4</color>
+    <color name="shimmer_loading_color">#dddddd</color>
+
+    <color name="graph_color">#e8ebf2</color>
+
+
+
+</resources>

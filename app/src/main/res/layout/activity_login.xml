@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/login_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/login_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_text"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:lineSpacingExtra="4dp"
+        android:layout_marginTop="60dp"
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/login_greeting_text"
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_appbar" />
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_marginTop="35dp"
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_text_id"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <EditText
+        android:textSize="15sp"
+        android:textColorHint="@color/auth_button_text"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="7dp"
+        android:id="@+id/login_edit_id"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/background_edit_auth"
+        android:hint="@string/login_hint_id"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <EditText
+        android:textSize="15sp"
+        android:textColorHint="@color/auth_button_text"
+        android:background="@drawable/background_edit_auth"
+        android:paddingLeft="15dp"
+        android:layout_marginTop="7dp"
+        android:id="@+id/login_edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="20dp"
+        android:hint="@string/login_hint_password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_text_password"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/login_edit_id"
+        app:layout_constraintTop_toBottomOf="@+id/login_edit_id" />
+
+    <Button
+        android:id="@+id/login_btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_btn"
+        android:text="@string/login_text"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/login_edit_password"
+        tools:layout_editor_absoluteX="15dp" />
+
+    <TextView
+        android:id="@+id/login_btn_id_find"
+        android:textColor="@color/auth_text_normal_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/login_text_find_id"
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_pwd_find"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_pwd_find"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_pwd_find" />
+
+    <TextView
+        android:textColor="@color/auth_text_normal_black"
+        android:layout_marginTop="15dp"
+        android:id="@+id/login_btn_pwd_find"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_text_find_password"
+        app:layout_constraintEnd_toEndOf="@+id/login_btn_login"
+        app:layout_constraintStart_toStartOf="@+id/login_btn_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_login" />
+
+    <TextView
+        android:id="@+id/login_btn_sign_up"
+        android:textColor="@color/auth_text_normal_black"
+        android:layout_marginStart="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_text"
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_pwd_find"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_pwd_find"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_pwd_find" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

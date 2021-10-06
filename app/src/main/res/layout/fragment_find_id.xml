@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="15dp"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_text_phone_number"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <EditText
+            android:id="@+id/find_id_edit_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_weight="10"
+            android:background="@drawable/background_edit_auth"
+            android:hint="@string/login_text_phone_number"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:paddingVertical="10dp"
+            android:paddingLeft="15dp"
+            android:singleLine="true"
+            android:textColorHint="@color/auth_button_text"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+        <Button
+
+            android:textStyle="bold"
+            android:id="@+id/find_id_btn_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_btn_auth"
+            android:text="인증요청"
+            android:textColor="@color/auth_button_text"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/sign_up_edit_phone_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sign_up_edit_phone_number" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="12dp"
+        android:id="@+id/find_id_linear_auth_zone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <EditText
+            android:inputType="number"
+            android:id="@+id/find_id_edit_auth_number"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_weight="10"
+            android:background="@drawable/background_edit_auth"
+            android:hint="6자리 입력"
+            android:maxLines="1"
+            android:paddingVertical="10dp"
+            android:paddingLeft="15dp"
+            android:singleLine="true"
+            android:textColorHint="@color/auth_button_text"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@+id/textView12"
+            tools:layout_editor_absoluteX="30dp" />
+
+        <Button
+            android:textStyle="bold"
+            android:id="@+id/find_id_btn_auth_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_btn_auth"
+            android:text="@string/check"
+            android:textColor="@color/auth_button_text"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/sign_up_edit_phone_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sign_up_edit_phone_number" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/find_id_btn_find_id"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_btn"
+        android:text="@string/find_id_text_find_id"
+        app:layout_constraintTop_toBottomOf="@+id/find_id_linear_auth_zone" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

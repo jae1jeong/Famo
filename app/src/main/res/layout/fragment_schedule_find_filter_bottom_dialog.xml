@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_bottom_sheet_dialog_add_memo"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        >
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:background="@color/view_color"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="7dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/filter_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="남은 일정순"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/filter_btn_remain"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/my_page_edit_dday_incheck" />
+
+            <ImageView
+                android:id="@+id/filter_btn_remain_squre"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/my_page_edit_dday_setting_check2"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/filter_btn_remain_check"
+                android:layout_width="9dp"
+                android:layout_height="5dp"
+                android:layout_alignLeft="@+id/filter_btn_remain_squre"
+                android:layout_alignRight="@+id/filter_btn_remain_squre"
+                android:layout_alignTop="@+id/filter_btn_remain_squre"
+                android:layout_alignBottom="@+id/filter_btn_remain_squre"
+                android:layout_centerInParent="true"
+                android:src="@drawable/my_page_edit_dday_setting_check"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color"
+            android:layout_marginTop="17dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="완료한 일정순"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/filter_btn_completion"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/my_page_edit_dday_incheck" />
+
+            <ImageView
+                android:id="@+id/filter_btn_completion_squre"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/my_page_edit_dday_setting_check2"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/filter_btn_completion_check"
+                android:layout_width="9dp"
+                android:layout_height="5dp"
+                android:layout_alignLeft="@+id/filter_btn_completion_squre"
+                android:layout_alignRight="@+id/filter_btn_completion_squre"
+                android:layout_alignTop="@+id/filter_btn_completion_squre"
+                android:layout_alignBottom="@+id/filter_btn_completion_squre"
+                android:layout_centerInParent="true"
+                android:src="@drawable/my_page_edit_dday_setting_check"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color"
+            android:layout_marginTop="17dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="최신순"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/filter_btn_recents"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/my_page_edit_dday_incheck" />
+
+            <ImageView
+                android:id="@+id/filter_btn_recents_squre"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/my_page_edit_dday_setting_check2"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/filter_btn_recents_check"
+                android:layout_width="9dp"
+                android:layout_height="5dp"
+                android:layout_alignLeft="@+id/filter_btn_recents_squre"
+                android:layout_alignRight="@+id/filter_btn_recents_squre"
+                android:layout_alignTop="@+id/filter_btn_recents_squre"
+                android:layout_alignBottom="@+id/filter_btn_recents_squre"
+                android:layout_centerInParent="true"
+                android:src="@drawable/my_page_edit_dday_setting_check"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color"
+            android:layout_marginTop="17dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="즐겨찾기순"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/filter_btn_bookmark"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/my_page_edit_dday_incheck" />
+
+            <ImageView
+                android:id="@+id/filter_btn_bookmark_squre"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/my_page_edit_dday_setting_check2"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/filter_btn_bookmark_check"
+                android:layout_width="9dp"
+                android:layout_height="5dp"
+                android:layout_alignLeft="@+id/filter_btn_bookmark_squre"
+                android:layout_alignRight="@+id/filter_btn_bookmark_squre"
+                android:layout_alignTop="@+id/filter_btn_bookmark_squre"
+                android:layout_alignBottom="@+id/filter_btn_bookmark_squre"
+                android:layout_centerInParent="true"
+                android:src="@drawable/my_page_edit_dday_setting_check"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color"
+            android:layout_marginTop="17dp"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

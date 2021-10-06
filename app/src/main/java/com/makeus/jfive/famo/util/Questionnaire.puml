@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Activity{
+}
+
+class BottomSheetDialog{
+
+}
+
+interface QuestionBottomSheetDialog{
+initDialog()
+setOkBtnListener()
+}
+
+abstract class QbottomSheetDialog(){
+Button okBtn
+Button closeBtn
+}
+
+class QuestionnaireHelper{
+Int resId
+ViewGroup? root
+Boolean attachToRoot
+initDialog(BottomSheetDialog bottomSheetDialog)
+}
+
+Activity *-- QuestionnaireHelper
+
+QuestionnaireHelper *-- BottomSheetDialog
+
+@enduml

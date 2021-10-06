@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/detail_dialog_radius"
+    android:insetRight="@dimen/detail_dialog_horizontal_margin"
+    android:insetLeft="@dimen/detail_dialog_horizontal_margin"
+/>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="21dp">
+
+    <ImageView
+        android:id="@+id/recycler_part_color"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_day_text" />
+
+    <TextView
+        android:id="@+id/recycler_part_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="TextView"
+        android:textColor="@color/black"
+        android:textStyle="normal"
+        android:textSize="14sp"
+        android:lineSpacingExtra="11sp"
+        app:layout_constraintStart_toEndOf="@+id/recycler_part_color"
+        app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="1"
+        android:ems="20"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/recycler_part_times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textStyle="normal"
+        android:textSize="12sp"
+        android:textColor="#a7adb5"
+        android:lineSpacingExtra="13sp"
+        app:layout_constraintStart_toStartOf="@+id/recycler_part_title"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_part_title" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="6dp"
+        android:layout_height="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_part_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recycler_part_color"
+        app:srcCompat="@drawable/my_info_setting_arrow" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

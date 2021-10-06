@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:weightSum="20"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_weight="20"
+        android:id="@+id/viewPager2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/information_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <me.relex.circleindicator.CircleIndicator3
+        app:ci_drawable="@drawable/gray_indicator"
+        android:backgroundTint="#79879A"
+        android:id="@+id/information_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/information_start_button" />
+    <Button
+        android:id="@+id/information_start_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:text="@string/information_get_start"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</LinearLayout>
